@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.github.davidmoten.util.ImmutableStack;
+import com.google.common.base.Preconditions;
 
 public class Leaf implements Node {
 
@@ -27,7 +28,7 @@ public class Leaf implements Node {
 	}
 
 	@Override
-	public NonLeaf add(Entry entry, ImmutableStack<NonLeaf> stack) {
+	public Node add(Entry entry, ImmutableStack<NonLeaf> stack) {
 		if (entries.size() < context.maxChildren()) {
 			final Leaf leaf = new Leaf(Util.add(entries, entry), context);
 			return replace(this, leaf, stack, context);
@@ -37,17 +38,22 @@ public class Leaf implements Node {
 		}
 	}
 
-	private NonLeaf replace(Node node, Node replacement,
+	private Node replace(Node node, Node replacement,
 			ImmutableStack<NonLeaf> stack, Context context) {
 		return replace(node, Collections.singletonList(replacement), stack,
 				context);
 	}
 
-	private NonLeaf replace(Node node, List<Node> replacements,
+	private Node replace(Node node, List<Node> replacements,
 			ImmutableStack<NonLeaf> stack, Context context) {
-		if (stack.isEmpty())
-			return (NonLeaf) replacements;
-		else {
+		Preconditions
+				.checkArgument(replacements.size() < context.maxChildren());
+		if (stack.isEmpty() && replacements.size() == 1)
+			return replacements.get(0);
+		else if (stack.isEmpty()) {
+			// make a parent for the replacements and return tha
+			return new NonLeaf(replacements, context);
+		} else {
 			final NonLeaf n = stack.peek();
 			if (n.children().size() < context.maxChildren()) {
 				final NonLeaf newNode = new NonLeaf(Util.replace(n.children(),

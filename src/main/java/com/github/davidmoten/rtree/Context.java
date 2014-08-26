@@ -2,9 +2,9 @@ package com.github.davidmoten.rtree;
 
 public class Context {
 	private final int maxChildren;
-	private final EntiriesSplitter splitter;
+	private final Splitter splitter;
 
-	public Context(int maxChildren, EntiriesSplitter splitter) {
+	public Context(int maxChildren, Splitter splitter) {
 		this.maxChildren = maxChildren;
 		this.splitter = splitter;
 	}
@@ -13,7 +13,7 @@ public class Context {
 		return maxChildren;
 	}
 
-	public EntiriesSplitter splitter() {
+	public Splitter splitter() {
 		return splitter;
 	}
 

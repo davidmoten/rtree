@@ -7,5 +7,5 @@ public interface Node extends HasMbr {
 	@Override
 	Rectangle mbr();
 
-	NonLeaf add(Entry entry, ImmutableStack<NonLeaf> stack);
+	Node add(Entry entry, ImmutableStack<NonLeaf> stack);
 }
