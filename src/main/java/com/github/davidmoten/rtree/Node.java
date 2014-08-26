@@ -1,11 +1,11 @@
 package com.github.davidmoten.rtree;
 
-import java.util.Stack;
+import com.github.davidmoten.util.ImmutableStack;
 
 public interface Node extends HasMbr {
 
 	@Override
 	Rectangle mbr();
 
-	NonLeaf add(Entry entry, Stack<NonLeaf> stack);
+	NonLeaf add(Entry entry, ImmutableStack<NonLeaf> stack);
 }

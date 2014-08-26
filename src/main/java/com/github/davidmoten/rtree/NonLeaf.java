@@ -1,8 +1,8 @@
 package com.github.davidmoten.rtree;
 
 import java.util.List;
-import java.util.Stack;
 
+import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Preconditions;
 
 public class NonLeaf implements Node {
@@ -28,7 +28,7 @@ public class NonLeaf implements Node {
 	}
 
 	@Override
-	public NonLeaf add(Entry entry, Stack<NonLeaf> stack) {
+	public NonLeaf add(Entry entry, ImmutableStack<NonLeaf> stack) {
 		return null;
 	}
 }
