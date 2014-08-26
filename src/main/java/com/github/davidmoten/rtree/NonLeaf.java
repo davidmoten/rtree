@@ -8,11 +8,14 @@ public class NonLeaf implements Node {
 	private final Optional<NonLeaf> parent;
 	private final List<Node> children;
 	private final Rectangle mbr;
+	private final Context context;
 
-	public NonLeaf(Optional<NonLeaf> parent, List<Node> children, Rectangle mbr) {
+	public NonLeaf(Optional<NonLeaf> parent, List<Node> children,
+			Rectangle mbr, Context context) {
 		this.parent = parent;
 		this.children = children;
 		this.mbr = mbr;
+		this.context = context;
 	}
 
 	@Override
@@ -29,6 +32,12 @@ public class NonLeaf implements Node {
 		return mbr;
 	}
 
+	/**
+	 * Returns new root node after addition of entry.
+	 * 
+	 * @param entry
+	 * @return
+	 */
 	public NonLeaf add(Entry entry) {
 		// TODO
 		return null;
