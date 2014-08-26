@@ -11,10 +11,10 @@ public class NonLeaf implements Node {
 	private final Rectangle mbr;
 	private final Context context;
 
-	public NonLeaf(List<Node> children, Rectangle mbr, Context context) {
+	public NonLeaf(List<Node> children, Context context) {
 		Preconditions.checkArgument(!children.isEmpty());
 		this.children = children;
-		this.mbr = mbr;
+		this.mbr = Util.mbr(children);
 		this.context = context;
 	}
 

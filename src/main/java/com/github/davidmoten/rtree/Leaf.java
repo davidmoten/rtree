@@ -1,7 +1,6 @@
 package com.github.davidmoten.rtree;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Stack;
 
 public class Leaf implements Node {
@@ -10,7 +9,7 @@ public class Leaf implements Node {
 	private final Rectangle mbr;
 	private final Context context;
 
-	public Leaf(List<Entry> entries, Optional<NonLeaf> parent, Context context) {
+	public Leaf(List<Entry> entries, Context context) {
 		this.entries = entries;
 		this.context = context;
 		this.mbr = Util.mbr(entries);
@@ -27,8 +26,29 @@ public class Leaf implements Node {
 
 	@Override
 	public NonLeaf add(Entry entry, Stack<NonLeaf> stack) {
-		// TODO Auto-generated method stub
-		return null;
+		if (entries.size() < context.maxChildren()) {
+			final Leaf leaf = new Leaf(Util.add(entries, entry), context);
+			return replace(this, leaf, stack, context);
+		} else {
+			// TODO
+			return null;
+		}
 	}
 
+	private NonLeaf replace(Node node, Node replacement, Stack<NonLeaf> stack,
+			Context context) {
+		if (stack.isEmpty())
+			return (NonLeaf) replacement;
+		else {
+			final NonLeaf n = stack.pop();
+			if (n.children().size() < context.maxChildren()) {
+				final NonLeaf newNode = new NonLeaf(Util.replace(n.children(),
+						node, replacement), context);
+				return replace(n, newNode, stack, context);
+			} else {
+				// TODO
+				return null;
+			}
+		}
+	}
 }
