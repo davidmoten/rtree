@@ -1,26 +1,21 @@
 package com.github.davidmoten.rtree;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Stack;
+
+import com.google.common.base.Preconditions;
 
 public class NonLeaf implements Node {
 
-	private final Optional<NonLeaf> parent;
 	private final List<Node> children;
 	private final Rectangle mbr;
 	private final Context context;
 
-	public NonLeaf(Optional<NonLeaf> parent, List<Node> children,
-			Rectangle mbr, Context context) {
-		this.parent = parent;
+	public NonLeaf(List<Node> children, Rectangle mbr, Context context) {
+		Preconditions.checkArgument(!children.isEmpty());
 		this.children = children;
 		this.mbr = mbr;
 		this.context = context;
-	}
-
-	@Override
-	public Optional<NonLeaf> parent() {
-		return parent;
 	}
 
 	public List<Node> children() {
@@ -32,14 +27,8 @@ public class NonLeaf implements Node {
 		return mbr;
 	}
 
-	/**
-	 * Returns new root node after addition of entry.
-	 * 
-	 * @param entry
-	 * @return
-	 */
-	public NonLeaf add(Entry entry) {
-		// TODO
+	@Override
+	public NonLeaf add(Entry entry, Stack<NonLeaf> stack) {
 		return null;
 	}
 }

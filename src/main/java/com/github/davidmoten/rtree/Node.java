@@ -1,10 +1,10 @@
 package com.github.davidmoten.rtree;
 
-import java.util.Optional;
+import java.util.Stack;
 
 public interface Node {
 
-	Optional<NonLeaf> parent();
-
 	Rectangle mbr();
+
+	NonLeaf add(Entry entry, Stack<NonLeaf> stack);
 }
