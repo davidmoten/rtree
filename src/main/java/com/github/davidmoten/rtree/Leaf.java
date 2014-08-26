@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.github.davidmoten.util.ImmutableStack;
@@ -38,13 +39,19 @@ public class Leaf implements Node {
 
 	private NonLeaf replace(Node node, Node replacement,
 			ImmutableStack<NonLeaf> stack, Context context) {
+		return replace(node, Collections.singletonList(replacement), stack,
+				context);
+	}
+
+	private NonLeaf replace(Node node, List<Node> replacements,
+			ImmutableStack<NonLeaf> stack, Context context) {
 		if (stack.isEmpty())
-			return (NonLeaf) replacement;
+			return (NonLeaf) replacements;
 		else {
 			final NonLeaf n = stack.peek();
 			if (n.children().size() < context.maxChildren()) {
 				final NonLeaf newNode = new NonLeaf(Util.replace(n.children(),
-						node, replacement), context);
+						node, replacements), context);
 				return replace(n, newNode, stack.pop(), context);
 			} else {
 				// TODO

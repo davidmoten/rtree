@@ -17,10 +17,10 @@ public class Util {
 		return result;
 	}
 
-	public static <T> List<T> replace(List<T> list, T value, T replacement) {
+	public static <T> List<T> replace(List<T> list, T node, List<T> replacements) {
 		final ArrayList<T> result = new ArrayList<T>(list);
-		result.remove(value);
-		result.add(replacement);
+		result.remove(node);
+		result.addAll(replacements);
 		return result;
 	}
 }
