@@ -15,5 +15,5 @@ Features
 * search is O(log(N)) on average
 * backpressure (TODO)
 
-<img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/rtree.png">rtree</img>
+<img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/rtree.png"/>
 
