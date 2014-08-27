@@ -93,7 +93,8 @@ public class Visualizer {
 		for (RectangleDepth node : nodes) {
 			Color color = Color.getHSBColor(node.getDepth() / (maxDepth + 1f),
 					1f, 1f);
-			g.setStroke(new BasicStroke((maxDepth - node.getDepth() + 1)));
+			g.setStroke(new BasicStroke(
+					2 * (maxDepth - node.getDepth() + 2) - 1));
 			g.setColor(color);
 			Rectangle r = node.getRectangle();
 			drawRectangle(g, r);

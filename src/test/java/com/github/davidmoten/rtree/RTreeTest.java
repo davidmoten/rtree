@@ -50,12 +50,12 @@ public class RTreeTest {
 	@Test
 	public void testVisualizer() {
 		RTree tree = new RTree();
-		int n = 1000;
+		int n = 100;
 		for (int i = 0; i < n; i++) {
 			Entry entry = new Entry(new Object(), random());
 			tree = tree.add(entry);
 		}
-		tree.visualize(800, 800, new Rectangle(0, 0, 1000, 1000), 5).save(
+		tree.visualize(800, 800, new Rectangle(-20, -20, 1100, 1100), 5).save(
 				new File("target/tree.png"), "PNG");
 		;
 	}
