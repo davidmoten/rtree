@@ -45,4 +45,19 @@ public class NonLeaf implements Node {
 			}
 		}
 	}
+
+	@Override
+	public void children(Subscriber<? super Node> subscriber) {
+		for (Node child : children)
+			if (subscriber.isUnsubscribed())
+				return;
+			else
+				subscriber.onNext(child);
+	}
+
+	@Override
+	public String toString() {
+		return "NonLeaf [mbr=" + mbr + "]";
+	}
+
 }

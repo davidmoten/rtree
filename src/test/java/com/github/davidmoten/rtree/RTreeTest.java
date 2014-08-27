@@ -27,6 +27,8 @@ public class RTreeTest {
 		tree = tree.add(entry);
 		assertEquals(Arrays.asList(entry), tree.search(r(1)).toList()
 				.toBlocking().single());
+		System.out.println("nodes="
+				+ tree.nodes().toList().toBlocking().single());
 	}
 
 	private static Rectangle r(int n) {

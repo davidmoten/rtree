@@ -22,4 +22,9 @@ public class Entry implements HasMbr {
 		return mbr;
 	}
 
+	@Override
+	public String toString() {
+		return "Entry [object=" + object + ", mbr=" + mbr + "]";
+	}
+
 }

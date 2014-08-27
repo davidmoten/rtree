@@ -94,4 +94,14 @@ public class Leaf implements Node {
 		}
 	}
 
+	@Override
+	public void children(Subscriber<? super Node> subscriber) {
+		// do nothing
+	}
+
+	@Override
+	public String toString() {
+		return "Leaf [entries=" + entries + ", mbr=" + mbr + "]";
+	}
+
 }

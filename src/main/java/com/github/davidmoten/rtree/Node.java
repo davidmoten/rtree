@@ -12,4 +12,6 @@ public interface Node extends HasMbr {
 	Node add(Entry entry, ImmutableStack<NonLeaf> stack);
 
 	void search(Rectangle r, Subscriber<? super Entry> subscriber);
+
+	void children(Subscriber<? super Node> subscriber);
 }

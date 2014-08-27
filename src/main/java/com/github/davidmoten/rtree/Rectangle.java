@@ -54,4 +54,11 @@ public class Rectangle {
 	public boolean overlaps(Rectangle r) {
 		return overlapsOnce(r) || r.overlapsOnce(this);
 	}
+
+	@Override
+	public String toString() {
+		return "Rectangle [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2="
+				+ y2 + "]";
+	}
+
 }

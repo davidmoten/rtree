@@ -40,4 +40,11 @@ public class RTree {
 		else
 			return Observable.empty();
 	}
+
+	public Observable<Node> nodes() {
+		if (root.isPresent())
+			return Observable.create(new OnSubscribeNodes(root.get()));
+		else
+			return Observable.empty();
+	}
 }
