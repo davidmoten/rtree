@@ -80,7 +80,6 @@ public class RTree {
 
 	public Observable<Entry> search(final Rectangle r) {
 		return search(new Func1<Rectangle, Boolean>() {
-
 			@Override
 			public Boolean call(Rectangle rectangle) {
 				return r.overlaps(rectangle);
