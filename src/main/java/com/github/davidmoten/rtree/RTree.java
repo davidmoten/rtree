@@ -29,6 +29,10 @@ public class RTree {
 				new QuadraticSplitter()));
 	}
 
+	public RTree(int maxChildren, Splitter splitter) {
+		this(Optional.<Node> absent(), new Context(maxChildren, splitter));
+	}
+
 	public RTree add(Entry entry) {
 		if (root.isPresent())
 			return new RTree(root.get().add(entry,

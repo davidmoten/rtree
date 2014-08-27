@@ -13,6 +13,10 @@ public class Entry implements HasMbr {
 		this.mbr = mbr;
 	}
 
+	public Entry(Object object, double x, double y) {
+		this(object, Rectangle.create(x, y, x, y));
+	}
+
 	public Object object() {
 		return object;
 	}
