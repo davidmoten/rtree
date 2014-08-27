@@ -49,7 +49,7 @@ public class RTreeTest {
 
 	@Test
 	public void testVisualizer() {
-		RTree tree = new RTree();
+		RTree tree = new RTree(8);
 		int n = 100;
 		for (int i = 0; i < n; i++) {
 			Entry entry = new Entry(new Object(), random());

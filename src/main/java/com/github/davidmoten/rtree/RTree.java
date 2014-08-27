@@ -24,6 +24,11 @@ public class RTree {
 		this(Optional.<Node> absent(), Context.DEFAULT);
 	}
 
+	public RTree(int maxChildren) {
+		this(Optional.<Node> absent(), new Context(maxChildren,
+				new QuadraticSplitter()));
+	}
+
 	public RTree add(Entry entry) {
 		if (root.isPresent())
 			return new RTree(root.get().add(entry,
