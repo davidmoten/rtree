@@ -26,4 +26,12 @@ public class Rectangle {
 		return y2;
 	}
 
+	public double area() {
+		return Math.abs(x1 - x2) * Math.abs(y1 - y2);
+	}
+
+	public Rectangle add(Rectangle r) {
+		return new Rectangle(Math.min(x1, r.x1), Math.min(y2, r.y2), Math.max(
+				x2, r.x2), Math.max(y2, r.y2));
+	}
 }

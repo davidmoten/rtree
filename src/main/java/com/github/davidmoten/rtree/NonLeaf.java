@@ -27,7 +27,7 @@ public class NonLeaf implements Node {
 
 	@Override
 	public Node add(Entry entry, ImmutableStack<NonLeaf> stack) {
-		final HasMbr child = Util.findLeastIncreaseInMbr(entry.mbr(), children);
+		final HasMbr child = Util.findLeastIncreaseInMbrArea(entry.mbr(), children);
 		return ((Node) child).add(entry, stack.push(this));
 	}
 }
