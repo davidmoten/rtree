@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.github.davidmoten.util.Pair;
+import com.google.common.collect.Sets;
 
 public class QuadraticSplitterTest {
 
@@ -77,6 +78,45 @@ public class QuadraticSplitterTest {
 		Mbr r = QuadraticSplitter.getBestCandidateForGroup(list, group,
 				Util.mbr(group));
 		assertEquals(r2, r);
+	}
+
+	@Test
+	public void testSplit() {
+		QuadraticSplitter q = new QuadraticSplitter();
+		Mbr r1 = r(1);
+		Mbr r2 = r(2);
+		Mbr r3 = r(100);
+		Mbr r4 = r(101);
+		ListPair<Mbr> pair = q.split(Arrays.asList(r1, r2, r3, r4));
+		assertEquals(Sets.newHashSet(r1, r2), Sets.newHashSet(pair.list1()));
+		assertEquals(Sets.newHashSet(r3, r4), Sets.newHashSet(pair.list2()));
+	}
+
+	@Test
+	public void testSplit2() {
+		QuadraticSplitter q = new QuadraticSplitter();
+		Mbr r1 = r(1);
+		Mbr r2 = r(2);
+		Mbr r3 = r(100);
+		Mbr r4 = r(101);
+		Mbr r5 = r(103);
+		ListPair<Mbr> pair = q.split(Arrays.asList(r1, r2, r3, r4, r5));
+		assertEquals(Sets.newHashSet(r1, r2), Sets.newHashSet(pair.list1()));
+		assertEquals(Sets.newHashSet(r3, r4, r5), Sets.newHashSet(pair.list2()));
+	}
+
+	@Test
+	public void testSplit3() {
+		QuadraticSplitter q = new QuadraticSplitter();
+		Mbr r1 = r(1);
+		Mbr r2 = r(2);
+		Mbr r3 = r(100);
+		Mbr r4 = r(101);
+		Mbr r5 = r(103);
+		Mbr r6 = r(104);
+		ListPair<Mbr> pair = q.split(Arrays.asList(r1, r2, r3, r4, r5, r6));
+		assertEquals(Sets.newHashSet(r1, r2, r3), Sets.newHashSet(pair.list1()));
+		assertEquals(Sets.newHashSet(r4, r5, r6), Sets.newHashSet(pair.list2()));
 	}
 
 	private static Mbr r(int n) {
