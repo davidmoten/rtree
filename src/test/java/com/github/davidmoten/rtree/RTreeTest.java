@@ -50,7 +50,7 @@ public class RTreeTest {
 	@Test
 	public void testVisualizer() {
 		RTree tree = new RTree();
-		int n = 300;
+		int n = 100;
 		for (int i = 0; i < n; i++) {
 			Entry entry = new Entry(new Object(), random());
 			tree = tree.add(entry);
@@ -69,8 +69,7 @@ public class RTreeTest {
 	}
 
 	private static Rectangle random() {
-		return r((int) Math.round(Math.random() * 1000),
-				(int) Math.round(Math.random() * 1000));
+		return r((int) Math.round(Math.sqrt(Math.random()) * 1000),
+				(int) Math.round(Math.sqrt(Math.random()) * 1000));
 	}
-
 }

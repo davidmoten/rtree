@@ -49,7 +49,7 @@ public class RTree {
 
 	public Visualizer visualize(int width, int height, Rectangle view,
 			int maxDepth) {
-		return new Visualizer(this, width, height, view, maxDepth);
+		return new Visualizer(this, width, height, view);
 	}
 
 	public Optional<Node> root() {
