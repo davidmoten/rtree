@@ -27,11 +27,11 @@ Example
 --------------
 ```java
 RTree tree = new RTree(5)
-    .add(new Entry("DAVE", 10,20)
-    .add(new Entry("FRED", 12,25)
-    .add(new Entry("MARY", 97,125);
+    .add(new Entry("DAVE", 10, 20)
+    .add(new Entry("FRED", 12, 25)
+    .add(new Entry("MARY", 97, 125);
  
- Observable<Entry> entries = tree.search(Rectangle.create(8,15,30,35));
+ Observable<Entry> entries = tree.search(Rectangle.create(8, 15, 30, 35));
  ```
 
 
