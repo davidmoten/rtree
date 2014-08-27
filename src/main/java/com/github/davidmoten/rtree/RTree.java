@@ -36,7 +36,7 @@ public class RTree {
 
 	public Observable<Entry> search(Rectangle r) {
 		if (root.isPresent())
-			return root.get().search(r);
+			return Observable.create(new OnSubscribeSearch(root.get(), r));
 		else
 			return Observable.empty();
 	}

@@ -2,7 +2,7 @@ package com.github.davidmoten.rtree;
 
 import java.util.List;
 
-import rx.Observable;
+import rx.Subscriber;
 
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Preconditions;
@@ -35,7 +35,7 @@ public class NonLeaf implements Node {
 	}
 
 	@Override
-	public Observable<Entry> search(Rectangle r) {
-		return null;
+	public void search(Rectangle r, Subscriber<? super Entry> subscriber) {
+
 	}
 }

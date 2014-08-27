@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree;
 
+import com.google.common.base.Preconditions;
+
 public class Context {
 	private static final int MAX_CHILDREN_DEFAULT = 8;
 	public static final Context DEFAULT = new Context(MAX_CHILDREN_DEFAULT,
@@ -9,6 +11,7 @@ public class Context {
 	private final Splitter splitter;
 
 	public Context(int maxChildren, Splitter splitter) {
+		Preconditions.checkNotNull(splitter);
 		this.maxChildren = maxChildren;
 		this.splitter = splitter;
 	}

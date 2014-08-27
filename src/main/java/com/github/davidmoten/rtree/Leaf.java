@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
+import rx.Subscriber;
 
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Preconditions;
@@ -16,6 +16,8 @@ public class Leaf implements Node {
 	private final Context context;
 
 	public Leaf(List<Entry> entries, Context context) {
+		Preconditions.checkNotNull(entries);
+		Preconditions.checkNotNull(context);
 		this.entries = entries;
 		this.context = context;
 		this.mbr = Util.mbr(entries);
@@ -32,6 +34,7 @@ public class Leaf implements Node {
 
 	@Override
 	public Node add(Entry entry, ImmutableStack<NonLeaf> stack) {
+		Preconditions.checkNotNull(stack);
 		if (entries.size() < context.maxChildren()) {
 			final Leaf leaf = new Leaf(Util.add(entries, entry), context);
 			return replace(this, leaf, stack, context);
@@ -80,8 +83,9 @@ public class Leaf implements Node {
 	}
 
 	@Override
-	public Observable<Entry> search(Rectangle r) {
+	public void search(Rectangle r, Subscriber<? super Entry> subscriber) {
 		// TODO Auto-generated method stub
-		return null;
+
 	}
+
 }

@@ -1,10 +1,14 @@
 package com.github.davidmoten.rtree;
 
+import com.google.common.base.Preconditions;
+
 public class Entry implements HasMbr {
 	private final Object object;
 	private final Rectangle mbr;
 
 	public Entry(Object object, Rectangle mbr) {
+		Preconditions.checkNotNull(object);
+		Preconditions.checkNotNull(mbr);
 		this.object = object;
 		this.mbr = mbr;
 	}
