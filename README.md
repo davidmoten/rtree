@@ -15,5 +15,7 @@ Features
 * search is O(log(N)) on average
 * backpressure (TODO)
 
+Number of points = 100, max children per node 4:
+
 <img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/rtree.png"/>
 
