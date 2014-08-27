@@ -55,7 +55,7 @@ public class RTreeTest {
 			Entry entry = new Entry(new Object(), random());
 			tree = tree.add(entry);
 		}
-		tree.visualize(800, 800, new Rectangle(-20, -20, 1100, 1100), 5).save(
+		tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100), 5).save(
 				new File("target/tree.png"), "PNG");
 		;
 	}
