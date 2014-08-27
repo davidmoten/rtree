@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import com.google.common.base.Optional;
 
-public class ImmutableStack<T> implements Iterable<T> {
+public final class ImmutableStack<T> implements Iterable<T> {
 	private final Optional<T> head;
 	private final Optional<ImmutableStack<T>> tail;
 

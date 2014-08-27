@@ -1,8 +1,8 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.util;
 
 import java.util.List;
 
-public class ListPair<T> {
+public final class ListPair<T> {
 	private final List<T> list1;
 	private final List<T> list2;
 

@@ -1,6 +1,6 @@
 package com.github.davidmoten.util;
 
-public class Pair<T> {
+public final class Pair<T> {
 
 	private final T value1;
 	private final T value2;

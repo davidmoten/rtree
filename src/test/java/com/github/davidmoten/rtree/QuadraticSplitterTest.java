@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.github.davidmoten.util.ListPair;
 import com.github.davidmoten.util.Pair;
 import com.google.common.collect.Sets;
 

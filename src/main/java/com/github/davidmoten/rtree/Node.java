@@ -4,7 +4,7 @@ import rx.Subscriber;
 
 import com.github.davidmoten.util.ImmutableStack;
 
-public interface Node extends HasMbr {
+interface Node extends HasMbr {
 
 	@Override
 	Rectangle mbr();

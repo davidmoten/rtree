@@ -1,20 +1,20 @@
 package com.github.davidmoten.rtree;
 
-public class RectangleDepth {
+final class RectangleDepth {
 	private final Rectangle rectangle;
 	private final int depth;
 
-	public RectangleDepth(Rectangle rectangle, int depth) {
+	RectangleDepth(Rectangle rectangle, int depth) {
 		super();
 		this.rectangle = rectangle;
 		this.depth = depth;
 	}
 
-	public Rectangle getRectangle() {
+	Rectangle getRectangle() {
 		return rectangle;
 	}
 
-	public int getDepth() {
+	int getDepth() {
 		return depth;
 	}
 

@@ -7,9 +7,10 @@ import java.util.List;
 import rx.Subscriber;
 
 import com.github.davidmoten.util.ImmutableStack;
+import com.github.davidmoten.util.ListPair;
 import com.google.common.base.Preconditions;
 
-public class Leaf implements Node {
+final class Leaf implements Node {
 
 	private final List<Entry> entries;
 	private final Rectangle mbr;
@@ -28,7 +29,7 @@ public class Leaf implements Node {
 		return mbr;
 	}
 
-	public List<Entry> entries() {
+	List<Entry> entries() {
 		return entries;
 	}
 

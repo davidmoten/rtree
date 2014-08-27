@@ -57,7 +57,7 @@ public class RTree {
 		return new Visualizer(this, width, height, view);
 	}
 
-	public Optional<Node> root() {
+	Optional<Node> root() {
 		return root;
 	}
 

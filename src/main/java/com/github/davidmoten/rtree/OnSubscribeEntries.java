@@ -3,11 +3,11 @@ package com.github.davidmoten.rtree;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 
-public class OnSubscribeEntries implements OnSubscribe<Entry> {
+final class OnSubscribeEntries implements OnSubscribe<Entry> {
 
 	private final Node node;
 
-	public OnSubscribeEntries(Node node) {
+	OnSubscribeEntries(Node node) {
 		this.node = node;
 	}
 

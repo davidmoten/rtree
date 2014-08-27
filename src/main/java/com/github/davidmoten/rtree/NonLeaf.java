@@ -7,18 +7,18 @@ import rx.Subscriber;
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Preconditions;
 
-public class NonLeaf implements Node {
+final class NonLeaf implements Node {
 
 	private final List<? extends Node> children;
 	private final Rectangle mbr;
 
-	public NonLeaf(List<? extends Node> children) {
+	NonLeaf(List<? extends Node> children) {
 		Preconditions.checkArgument(!children.isEmpty());
 		this.children = children;
 		this.mbr = Util.mbr(children);
 	}
 
-	public List<? extends Node> children() {
+	List<? extends Node> children() {
 		return children;
 	}
 
