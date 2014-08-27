@@ -28,7 +28,7 @@
 
 		<cobertura.version>2.6</cobertura.version>
 		<checkstyle.version>2.11</checkstyle.version>
-		<findbugs.version>2.5.3</findbugs.version>
+		<findbugs.version>3.0.0</findbugs.version>
 		<javadoc.version>2.9.1</javadoc.version>
 		<pmd.version>3.0.1</pmd.version>
 		<jdepend.version>2.0-beta-2</jdepend.version>
