@@ -34,8 +34,12 @@ public class Leaf implements Node {
 			final Leaf leaf = new Leaf(Util.add(entries, entry), context);
 			return replace(this, leaf, stack, context);
 		} else {
-			// TODO
-			return null;
+			final List<Entry> newChildren = Util.add(entries, entry);
+			final ListPair<Entry> pair = context.splitter().split(newChildren);
+			final Leaf leaf1 = new Leaf(pair.list1(), context);
+			final Leaf leaf2 = new Leaf(pair.list2(), context);
+			final List<Leaf> list = Arrays.asList(leaf1, leaf2);
+			return replace(this, list, stack, context);
 		}
 	}
 
