@@ -31,7 +31,6 @@ public class RTree {
 		else
 			return new RTree(new Leaf(Lists.newArrayList(entry), context),
 					context);
-
 	}
 
 	public Observable<Entry> search(Rectangle r) {
