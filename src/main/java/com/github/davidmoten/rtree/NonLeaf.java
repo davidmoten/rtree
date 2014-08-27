@@ -2,6 +2,8 @@ package com.github.davidmoten.rtree;
 
 import java.util.List;
 
+import rx.Observable;
+
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Preconditions;
 
@@ -27,7 +29,13 @@ public class NonLeaf implements Node {
 
 	@Override
 	public Node add(Entry entry, ImmutableStack<NonLeaf> stack) {
-		final HasMbr child = Util.findLeastIncreaseInMbrArea(entry.mbr(), children);
+		final HasMbr child = Util.findLeastIncreaseInMbrArea(entry.mbr(),
+				children);
 		return ((Node) child).add(entry, stack.push(this));
+	}
+
+	@Override
+	public Observable<Entry> search(Rectangle r) {
+		return null;
 	}
 }

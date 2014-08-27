@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import rx.Observable;
+
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Preconditions;
 
@@ -75,5 +77,11 @@ public class Leaf implements Node {
 						context);
 			}
 		}
+	}
+
+	@Override
+	public Observable<Entry> search(Rectangle r) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
