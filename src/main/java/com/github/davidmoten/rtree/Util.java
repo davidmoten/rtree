@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree;
 
+import static com.google.common.base.Optional.of;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,11 +14,11 @@ public class Util {
 	public static Rectangle mbr(Collection<? extends HasMbr> items) {
 		Preconditions.checkArgument(!items.isEmpty());
 		Optional<Rectangle> r = Optional.absent();
-		for (HasMbr mbr : items) {
+		for (final HasMbr mbr : items) {
 			if (r.isPresent())
-				r = Optional.of(r.get().add(mbr.mbr()));
+				r = of(r.get().add(mbr.mbr()));
 			else
-				r = Optional.of(mbr.mbr());
+				r = of(mbr.mbr());
 		}
 		return r.get();
 	}
@@ -40,11 +42,11 @@ public class Util {
 		Preconditions.checkArgument(!list.isEmpty());
 		Optional<Double> minDifference = Optional.absent();
 		Optional<HasMbr> minDiffItem = Optional.absent();
-		for (HasMbr m : list) {
-			double diff = m.mbr().add(r).area() - m.mbr().area();
-			if (!minDifference.isPresent() || (diff < minDifference.get())) {
-				minDifference = Optional.of(diff);
-				minDiffItem = Optional.of(m);
+		for (final HasMbr m : list) {
+			final double diff = m.mbr().add(r).area() - m.mbr().area();
+			if (!minDifference.isPresent() || diff < minDifference.get()) {
+				minDifference = of(diff);
+				minDiffItem = of(m);
 			}
 		}
 		return minDiffItem.get();

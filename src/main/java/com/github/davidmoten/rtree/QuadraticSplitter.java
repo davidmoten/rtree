@@ -67,7 +67,7 @@ public class QuadraticSplitter implements Splitter {
 	static <T extends HasMbr> T getBestCandidateForGroup(List<T> list,
 			List<T> group, Rectangle groupMbr) {
 		Preconditions.checkArgument(!list.isEmpty());
-		Optional<T> minEntry = Optional.absent();
+		Optional<T> minEntry = absent();
 		Optional<Double> minArea = absent();
 		for (final T entry : list) {
 			final double area = groupMbr.add(entry.mbr()).area();
