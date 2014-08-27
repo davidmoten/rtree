@@ -33,6 +33,33 @@ public class RTree {
 		this(Optional.<Node> absent(), new Context(maxChildren, splitter));
 	}
 
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+
+		private int maxChildren = 8;
+		private Splitter splitter = new QuadraticSplitter();
+
+		private Builder() {
+		}
+
+		public Builder maxChildren(int maxChildren) {
+			this.maxChildren = maxChildren;
+			return this;
+		}
+
+		public Builder splitter(Splitter splitter) {
+			this.splitter = splitter;
+			return this;
+		}
+
+		public RTree build() {
+			return new RTree(maxChildren, splitter);
+		}
+	}
+
 	public RTree add(Entry entry) {
 		if (root.isPresent())
 			return new RTree(root.get().add(entry,

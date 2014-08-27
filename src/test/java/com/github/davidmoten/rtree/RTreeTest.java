@@ -36,7 +36,7 @@ public class RTreeTest {
 	@Test
 	public void testPerformance() {
 		long t = System.currentTimeMillis();
-		RTree tree = new RTree();
+		RTree tree = RTree.builder().maxChildren(4).build();
 		int n = 10000;
 		for (int i = 0; i < n; i++) {
 			Entry entry = new Entry(new Object(), random());
@@ -49,7 +49,7 @@ public class RTreeTest {
 
 	@Test
 	public void testVisualizer() {
-		RTree tree = new RTree(4);
+		RTree tree = RTree.builder().maxChildren(4).build();
 		int n = 1000;
 		for (int i = 0; i < n; i++) {
 			Entry entry = new Entry(new Object(), random());

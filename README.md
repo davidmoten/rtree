@@ -15,7 +15,7 @@ Features
 * Pluggable splitting heuristic (default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf)).
 * Search returns Observable 
 * Search can be cancelled by unsubscription
-* over 100K inserts a second on i7 single thread
+* over 80K inserts per second on i7 single thread
 * search is O(log(N)) on average
 * backpressure (TODO)
 
@@ -26,7 +26,7 @@ Number of points = 100, max children per node 4:
 Example
 --------------
 ```java
-RTree tree = new RTree(5)
+RTree tree = RTree.builder().maxChildren(5).build()
     .add(new Entry("DAVE", 10, 20)
     .add(new Entry("FRED", 12, 25)
     .add(new Entry("MARY", 97, 125);
