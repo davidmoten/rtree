@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -44,6 +45,19 @@ public class RTreeTest {
 		long diff = System.currentTimeMillis() - t;
 		System.out.println("inserts/second = " + ((double) n / diff * 1000));
 		assertEquals(n, (int) tree.entries().count().toBlocking().single());
+	}
+
+	@Test
+	public void testVisualizer() {
+		RTree tree = new RTree();
+		int n = 30;
+		for (int i = 0; i < n; i++) {
+			Entry entry = new Entry(new Object(), random());
+			tree = tree.add(entry);
+		}
+		tree.visualize(800, 800, new Rectangle(0, 0, 1000, 1000), 5).save(
+				new File("target/tree.png"), "PNG");
+		;
 	}
 
 	private static Rectangle r(int n) {

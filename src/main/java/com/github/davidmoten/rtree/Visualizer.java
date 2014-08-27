@@ -14,25 +14,30 @@ public class Visualizer {
 	private final int width;
 	private final int height;
 	private final Rectangle view;
+	private final int maxDepth;
 
-	public Visualizer(RTree tree, int width, int height, Rectangle view) {
+	public Visualizer(RTree tree, int width, int height, Rectangle view,
+			int maxDepth) {
 		this.tree = tree;
 		this.width = width;
 		this.height = height;
 		this.view = view;
+		this.maxDepth = maxDepth;
 	}
 
 	public BufferedImage create() {
 		final BufferedImage image = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D g = (Graphics2D) image.getGraphics();
+		g.setBackground(Color.white);
+		g.clearRect(0, 0, width, height);
 		if (tree.root().isPresent())
 			drawNode((Graphics2D) image.getGraphics(), tree.root().get(), 0);
 		return image;
 	}
 
 	private void drawNode(Graphics2D g, Node node, int depth) {
-		Color color = Color.getHSBColor(depth / 10f, 1f, 1f);
+		Color color = Color.getHSBColor(depth / (float) maxDepth, 1f, 1f);
 		g.setColor(color);
 		Rectangle r = node.mbr();
 		drawRectangle(g, r);
@@ -40,7 +45,12 @@ public class Visualizer {
 			g.setColor(Color.black);
 			Leaf leaf = (Leaf) node;
 			for (Entry entry : leaf.entries()) {
-
+				drawRectangle(g, entry.mbr());
+			}
+		} else {
+			NonLeaf n = (NonLeaf) node;
+			for (Node child : n.children()) {
+				drawNode(g, child, depth + 1);
 			}
 		}
 
