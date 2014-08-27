@@ -49,7 +49,7 @@ public class RTreeTest {
 
 	@Test
 	public void testVisualizer() {
-		RTree tree = new RTree(8);
+		RTree tree = new RTree(4);
 		int n = 100;
 		for (int i = 0; i < n; i++) {
 			Entry entry = new Entry(new Object(), random());
@@ -57,7 +57,6 @@ public class RTreeTest {
 		}
 		tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100), 5).save(
 				new File("target/tree.png"), "PNG");
-		;
 	}
 
 	private static Rectangle r(int n) {
