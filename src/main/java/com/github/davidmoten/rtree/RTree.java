@@ -47,4 +47,13 @@ public class RTree {
 		else
 			return Observable.empty();
 	}
+
+	public Visualizer visualize(int width, int height, Rectangle view) {
+		return new Visualizer(this, width, height, view);
+	}
+
+	public Optional<Node> root() {
+		return root;
+	}
+
 }
