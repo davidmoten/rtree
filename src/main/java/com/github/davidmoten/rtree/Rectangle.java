@@ -1,9 +1,13 @@
 package com.github.davidmoten.rtree;
 
+import com.google.common.base.Preconditions;
+
 public class Rectangle {
 	private final double x1, y1, x2, y2;
 
 	public Rectangle(double x1, double y1, double x2, double y2) {
+		Preconditions.checkArgument(x2 >= x1);
+		Preconditions.checkArgument(y2 >= y1);
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
@@ -37,5 +41,17 @@ public class Rectangle {
 
 	public static Rectangle create(double x1, double y1, double x2, double y2) {
 		return new Rectangle(x1, y1, x2, y2);
+	}
+
+	public boolean in(double x, double y) {
+		return x >= x1 && x <= x2 && y >= y1 && y <= y2;
+	}
+
+	private boolean overlapsOnce(Rectangle r) {
+		return r.in(x1, y1) || r.in(x2, y2);
+	}
+
+	public boolean overlaps(Rectangle r) {
+		return overlapsOnce(r) || r.overlapsOnce(this);
 	}
 }
