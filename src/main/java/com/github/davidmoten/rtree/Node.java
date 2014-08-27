@@ -1,7 +1,7 @@
 package com.github.davidmoten.rtree;
 
 import rx.Subscriber;
-import rx.functions.Func2;
+import rx.functions.Func1;
 
 import com.github.davidmoten.util.ImmutableStack;
 
@@ -12,13 +12,7 @@ interface Node extends HasMbr {
 
 	Node add(Entry entry, ImmutableStack<NonLeaf> stack);
 
-	void search(Rectangle r, Subscriber<? super Entry> subscriber);
-
-	void entries(Subscriber<? super Entry> subscriber);
-
-	void nearest(Rectangle r, int k, Subscriber<? super Entry> subscriber);
-
-	void nearest(Rectangle r, int k,
-			Func2<Rectangle, Rectangle, Double> distanceFunction,
+	void search(Func1<? super Rectangle, Boolean> criterion,
 			Subscriber<? super Entry> subscriber);
+
 }

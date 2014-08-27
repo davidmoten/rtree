@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Optional;
@@ -69,25 +70,31 @@ public class RTree {
 					context);
 	}
 
-	public Observable<Entry> search(Rectangle r) {
+	public Observable<Entry> search(Func1<? super Rectangle, Boolean> criterion) {
 		if (root.isPresent())
-			return Observable.create(new OnSubscribeSearch(root.get(), r));
+			return Observable.create(new OnSubscribeSearch(root.get(),
+					criterion));
 		else
 			return Observable.empty();
+	}
+
+	public Observable<Entry> search(final Rectangle r) {
+		return search(new Func1<Rectangle, Boolean>() {
+
+			@Override
+			public Boolean call(Rectangle rectangle) {
+				return r.overlaps(rectangle);
+			}
+		});
 	}
 
 	public Observable<Entry> entries() {
-		if (root.isPresent())
-			return Observable.create(new OnSubscribeEntries(root.get()));
-		else
-			return Observable.empty();
-	}
-
-	public Observable<Entry> nearest(Rectangle r, int k) {
-		if (root.isPresent())
-			return Observable.create(new OnSubscribeNearest(root.get(), r, k));
-		else
-			return Observable.empty();
+		return search(new Func1<Rectangle, Boolean>() {
+			@Override
+			public Boolean call(Rectangle rectangle) {
+				return true;
+			}
+		});
 	}
 
 	public Visualizer visualize(int width, int height, Rectangle view,

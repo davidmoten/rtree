@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import rx.Subscriber;
-import rx.functions.Func2;
+import rx.functions.Func1;
 
 import com.github.davidmoten.util.ImmutableStack;
 import com.github.davidmoten.util.ListPair;
@@ -85,43 +85,21 @@ final class Leaf implements Node {
 	}
 
 	@Override
-	public void search(Rectangle r, Subscriber<? super Entry> subscriber) {
+	public void search(Func1<? super Rectangle, Boolean> criterion,
+			Subscriber<? super Entry> subscriber) {
 		for (Entry entry : entries) {
 			if (subscriber.isUnsubscribed())
 				return;
 			else {
-				if (r.overlaps(entry.mbr()))
+				if (criterion.call(entry.mbr()))
 					subscriber.onNext(entry);
 			}
 		}
 	}
 
 	@Override
-	public void entries(Subscriber<? super Entry> subscriber) {
-		for (Entry entry : entries) {
-			if (subscriber.isUnsubscribed())
-				return;
-			else
-				subscriber.onNext(entry);
-		}
-	}
-
-	@Override
 	public String toString() {
 		return "Leaf [entries=" + entries + ", mbr=" + mbr + "]";
-	}
-
-	@Override
-	public void nearest(Rectangle r, int k, Subscriber<? super Entry> subscriber) {
-
-	}
-
-	@Override
-	public void nearest(Rectangle r, int k,
-			Func2<Rectangle, Rectangle, Double> distanceFunction,
-			Subscriber<? super Entry> subscriber) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
