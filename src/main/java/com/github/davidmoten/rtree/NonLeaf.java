@@ -47,12 +47,12 @@ public class NonLeaf implements Node {
 	}
 
 	@Override
-	public void children(Subscriber<? super Node> subscriber) {
+	public void entries(Subscriber<? super Entry> subscriber) {
 		for (Node child : children)
 			if (subscriber.isUnsubscribed())
 				return;
 			else
-				subscriber.onNext(child);
+				child.entries(subscriber);
 	}
 
 	@Override

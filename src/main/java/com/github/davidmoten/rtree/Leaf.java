@@ -95,8 +95,13 @@ public class Leaf implements Node {
 	}
 
 	@Override
-	public void children(Subscriber<? super Node> subscriber) {
-		// do nothing
+	public void entries(Subscriber<? super Entry> subscriber) {
+		for (Entry entry : entries) {
+			if (subscriber.isUnsubscribed())
+				return;
+			else
+				subscriber.onNext(entry);
+		}
 	}
 
 	@Override

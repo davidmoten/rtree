@@ -13,5 +13,5 @@ public interface Node extends HasMbr {
 
 	void search(Rectangle r, Subscriber<? super Entry> subscriber);
 
-	void children(Subscriber<? super Node> subscriber);
+	void entries(Subscriber<? super Entry> subscriber);
 }
