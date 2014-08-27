@@ -24,4 +24,10 @@ public class Util {
 		result.addAll(replacements);
 		return result;
 	}
+
+	public static HasMbr findLeastIncreaseInMbr(Rectangle mbr,
+			List<? extends HasMbr> children) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

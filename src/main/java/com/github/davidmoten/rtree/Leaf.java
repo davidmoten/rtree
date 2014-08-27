@@ -43,13 +43,13 @@ public class Leaf implements Node {
 		}
 	}
 
-	private Node replace(Node node, Node replacement,
+	private static Node replace(Node node, Node replacement,
 			ImmutableStack<NonLeaf> stack, Context context) {
 		return replace(node, Collections.singletonList(replacement), stack,
 				context);
 	}
 
-	private Node replace(Node node, List<? extends Node> replacements,
+	private static Node replace(Node node, List<? extends Node> replacements,
 			ImmutableStack<NonLeaf> stack, Context context) {
 		Preconditions
 				.checkArgument(replacements.size() < context.maxChildren());
@@ -58,19 +58,19 @@ public class Leaf implements Node {
 			return replacements.get(0);
 		else if (stack.isEmpty()) {
 			// make a parent for the replacements and return that
-			return new NonLeaf(replacements, context);
+			return new NonLeaf(replacements);
 		} else {
 			final NonLeaf n = stack.peek();
 			final List<? extends Node> newChildren = Util.replace(n.children(),
 					node, replacements);
 			if (n.children().size() < context.maxChildren()) {
-				final NonLeaf newNode = new NonLeaf(newChildren, context);
+				final NonLeaf newNode = new NonLeaf(newChildren);
 				return replace(n, newNode, stack.pop(), context);
 			} else {
 				final ListPair<? extends Node> pair = context.splitter().split(
 						newChildren);
-				final NonLeaf node1 = new NonLeaf(pair.list1(), context);
-				final NonLeaf node2 = new NonLeaf(pair.list2(), context);
+				final NonLeaf node1 = new NonLeaf(pair.list1());
+				final NonLeaf node2 = new NonLeaf(pair.list2());
 				return replace(n, Arrays.asList(node1, node2), stack.pop(),
 						context);
 			}
