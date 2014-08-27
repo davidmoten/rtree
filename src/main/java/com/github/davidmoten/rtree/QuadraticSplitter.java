@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.davidmoten.util.Pair;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -76,7 +77,8 @@ public class QuadraticSplitter implements Splitter {
 		return minEntry.get();
 	}
 
-	private static <T extends HasMbr> Pair<T> worstCombination(List<T> entries) {
+	@VisibleForTesting
+	static <T extends HasMbr> Pair<T> worstCombination(List<T> entries) {
 		Optional<T> e1 = absent();
 		Optional<T> e2 = absent();
 		{

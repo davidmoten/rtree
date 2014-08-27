@@ -34,4 +34,8 @@ public class Rectangle {
 		return new Rectangle(Math.min(x1, r.x1), Math.min(y2, r.y2), Math.max(
 				x2, r.x2), Math.max(y2, r.y2));
 	}
+
+	public static Rectangle create(double x1, double y1, double x2, double y2) {
+		return new Rectangle(x1, y1, x2, y2);
+	}
 }
