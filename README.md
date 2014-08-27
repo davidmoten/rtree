@@ -12,7 +12,7 @@ Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) incl
 Features
 ------------
 * Immutable R-tree suitable for concurrency
-* Pluggable splitting heuristic (default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf).
+* Pluggable splitting heuristic (default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf)).
 * Search returns Observable 
 * Search can be cancelled by unsubscription
 * over 100K inserts a second on i7 single thread
