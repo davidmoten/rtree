@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree;
 import java.util.List;
 
 import rx.Subscriber;
+import rx.functions.Func2;
 
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Preconditions;
@@ -58,6 +59,19 @@ final class NonLeaf implements Node {
 	@Override
 	public String toString() {
 		return "NonLeaf [mbr=" + mbr + "]";
+	}
+
+	@Override
+	public void nearest(Rectangle r, int k, Subscriber<? super Entry> subscriber) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void nearest(Rectangle r, int k,
+			Func2<Rectangle, Rectangle, Double> distanceFunction,
+			Subscriber<? super Entry> subscriber) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

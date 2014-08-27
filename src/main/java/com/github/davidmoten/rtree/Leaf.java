@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import rx.Subscriber;
+import rx.functions.Func2;
 
 import com.github.davidmoten.util.ImmutableStack;
 import com.github.davidmoten.util.ListPair;
@@ -108,6 +109,19 @@ final class Leaf implements Node {
 	@Override
 	public String toString() {
 		return "Leaf [entries=" + entries + ", mbr=" + mbr + "]";
+	}
+
+	@Override
+	public void nearest(Rectangle r, int k, Subscriber<? super Entry> subscriber) {
+
+	}
+
+	@Override
+	public void nearest(Rectangle r, int k,
+			Func2<Rectangle, Rectangle, Double> distanceFunction,
+			Subscriber<? super Entry> subscriber) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -83,6 +83,13 @@ public class RTree {
 			return Observable.empty();
 	}
 
+	public Observable<Entry> nearest(Rectangle r, int k) {
+		if (root.isPresent())
+			return Observable.create(new OnSubscribeNearest(root.get(), r, k));
+		else
+			return Observable.empty();
+	}
+
 	public Visualizer visualize(int width, int height, Rectangle view,
 			int maxDepth) {
 		return new Visualizer(this, width, height, view);
