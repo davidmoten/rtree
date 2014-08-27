@@ -16,6 +16,8 @@ public class OnSubscribeSearch implements OnSubscribe<Entry> {
 	@Override
 	public void call(Subscriber<? super Entry> subscriber) {
 		node.search(rectangle, subscriber);
+		if (!subscriber.isUnsubscribed())
+			subscriber.onCompleted();
 	}
 
 }

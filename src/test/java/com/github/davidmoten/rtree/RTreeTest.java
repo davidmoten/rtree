@@ -3,6 +3,8 @@ package com.github.davidmoten.rtree;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 public class RTreeTest {
@@ -23,7 +25,8 @@ public class RTreeTest {
 		RTree tree = new RTree();
 		Entry entry = new Entry(new Object(), r(1));
 		tree = tree.add(entry);
-		assertEquals(entry, tree.search(r(1)).first().toBlocking().single());
+		assertEquals(Arrays.asList(entry), tree.search(r(1)).toList()
+				.toBlocking().single());
 	}
 
 	private static Rectangle r(int n) {
