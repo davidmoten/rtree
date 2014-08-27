@@ -84,8 +84,14 @@ public class Leaf implements Node {
 
 	@Override
 	public void search(Rectangle r, Subscriber<? super Entry> subscriber) {
-		// TODO Auto-generated method stub
-
+		for (Entry entry : entries) {
+			if (subscriber.isUnsubscribed())
+				return;
+			else {
+				if (r.overlaps(entry.mbr()))
+					subscriber.onNext(entry);
+			}
+		}
 	}
 
 }

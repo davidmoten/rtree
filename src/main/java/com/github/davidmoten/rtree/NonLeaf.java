@@ -36,6 +36,13 @@ public class NonLeaf implements Node {
 
 	@Override
 	public void search(Rectangle r, Subscriber<? super Entry> subscriber) {
-
+		for (Node child : children) {
+			if (subscriber.isUnsubscribed())
+				return;
+			else {
+				if (r.overlaps(child.mbr()))
+					child.search(r, subscriber);
+			}
+		}
 	}
 }
