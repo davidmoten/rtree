@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -38,6 +39,10 @@ public class Visualizer {
 
 	private void drawNode(Graphics2D g, Node node, int depth) {
 		Color color = Color.getHSBColor(depth / (float) maxDepth, 1f, 1f);
+		if (depth == 0)
+			g.setStroke(new BasicStroke(8.0f));
+		else
+			g.setStroke(new BasicStroke(1.0f));
 		g.setColor(color);
 		Rectangle r = node.mbr();
 		drawRectangle(g, r);
