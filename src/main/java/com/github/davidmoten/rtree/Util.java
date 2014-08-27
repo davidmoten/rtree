@@ -17,7 +17,8 @@ public class Util {
 		return result;
 	}
 
-	public static <T> List<T> replace(List<T> list, T node, List<T> replacements) {
+	public static <T> List<? extends T> replace(List<? extends T> list, T node,
+			List<? extends T> replacements) {
 		final ArrayList<T> result = new ArrayList<T>(list);
 		result.remove(node);
 		result.addAll(replacements);

@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,24 +45,30 @@ public class Leaf implements Node {
 				context);
 	}
 
-	private Node replace(Node node, List<Node> replacements,
+	private Node replace(Node node, List<? extends Node> replacements,
 			ImmutableStack<NonLeaf> stack, Context context) {
 		Preconditions
 				.checkArgument(replacements.size() < context.maxChildren());
 		if (stack.isEmpty() && replacements.size() == 1)
+			// the singleton replacement can be the new root node
 			return replacements.get(0);
 		else if (stack.isEmpty()) {
-			// make a parent for the replacements and return tha
+			// make a parent for the replacements and return that
 			return new NonLeaf(replacements, context);
 		} else {
 			final NonLeaf n = stack.peek();
+			final List<? extends Node> newChildren = Util.replace(n.children(),
+					node, replacements);
 			if (n.children().size() < context.maxChildren()) {
-				final NonLeaf newNode = new NonLeaf(Util.replace(n.children(),
-						node, replacements), context);
+				final NonLeaf newNode = new NonLeaf(newChildren, context);
 				return replace(n, newNode, stack.pop(), context);
 			} else {
-				// TODO
-				return null;
+				final ListPair<? extends Node> pair = context.splitter().split(
+						newChildren);
+				final NonLeaf node1 = new NonLeaf(pair.list1(), context);
+				final NonLeaf node2 = new NonLeaf(pair.list2(), context);
+				return replace(n, Arrays.asList(node1, node2), stack.pop(),
+						context);
 			}
 		}
 	}
