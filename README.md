@@ -45,13 +45,14 @@ List<String> list =
     tree.search(Rectangle.create(8, 15, 30, 35))
         .take(2)
         .map(entry-> entry.object().toString())
+        .filter(name -> name >= "E")
         .toList()
         .toBlocking().single();
 System.out.println(list);
 ```
 output is 
 ```
-[DAVE, FRED]
+[FRED]
  ```
  
 
