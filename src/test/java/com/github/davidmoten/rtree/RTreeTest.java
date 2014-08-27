@@ -36,7 +36,7 @@ public class RTreeTest {
 	public void testPerformance() {
 		long t = System.currentTimeMillis();
 		RTree tree = new RTree();
-		int n = 100000;
+		int n = 10000;
 		for (int i = 0; i < n; i++) {
 			Entry entry = new Entry(new Object(), random());
 			tree = tree.add(entry);
