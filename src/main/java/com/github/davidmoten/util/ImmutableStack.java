@@ -23,6 +23,10 @@ public class ImmutableStack<T> implements Iterable<T> {
 		this(Optional.<T> absent(), Optional.<ImmutableStack<T>> absent());
 	}
 
+	public static <S> ImmutableStack<S> empty() {
+		return new ImmutableStack<S>();
+	}
+
 	public boolean isEmpty() {
 		return !head.isPresent();
 	}
