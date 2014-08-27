@@ -13,4 +13,5 @@ Features
 * Search can be cancelled by unsubscription
 * over 100K inserts a second on i7 single thread
 * search is O(log(N)) on average
+* backpressure (TODO)
 
