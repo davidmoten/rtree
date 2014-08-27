@@ -33,6 +33,27 @@ RTree tree = new RTree(5)
  
  Observable<Entry> entries = tree.search(Rectangle.create(8, 15, 30, 35));
  ```
+ 
+ What do I do with the Observable thing?
+ ----------------------------------------
+ Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).
+ 
+ As an simple example:
+ 
+ ```java
+ List<String> list = 
+     tree.search(Rectangle.create(8, 15, 30, 35))
+         .take(2)
+         .map(entry-> entry.object().toString())
+         .toList()
+         .toBlocking().single();
+ System.out.println(list);
+ ```
+ output is 
+ ```
+ [DAVE, FRED]
+ ```
+ 
 
 
 
