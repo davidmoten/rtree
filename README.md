@@ -38,7 +38,7 @@ What do I do with the Observable thing?
 ----------------------------------------
 Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).
 
-As an simple example:
+As a simple example:
 
 ```java
 List<String> list = 
