@@ -12,6 +12,7 @@ public class RTreeTest {
 	@Test
 	public void testInstantiation() {
 		RTree tree = new RTree();
+		assertTrue(tree.nodes().isEmpty().toBlocking().single());
 	}
 
 	@Test
@@ -29,6 +30,20 @@ public class RTreeTest {
 				.toBlocking().single());
 		System.out.println("nodes="
 				+ tree.nodes().toList().toBlocking().single());
+	}
+
+	@Test
+	public void testPerformance() {
+		long t = System.currentTimeMillis();
+		RTree tree = new RTree();
+		int n = 10000;
+		for (int i = 0; i < n; i++) {
+			Entry entry = new Entry(new Object(), r((int) Math.round(Math
+					.random() * 1000)));
+			tree = tree.add(entry);
+		}
+		long diff = System.currentTimeMillis() - t;
+		System.out.println("inserts/second = " + ((double) n / diff * 1000));
 	}
 
 	private static Rectangle r(int n) {
