@@ -12,6 +12,7 @@ public class Context {
 
 	public Context(int maxChildren, Splitter splitter) {
 		Preconditions.checkNotNull(splitter);
+		Preconditions.checkArgument(maxChildren > 2);
 		this.maxChildren = maxChildren;
 		this.splitter = splitter;
 	}

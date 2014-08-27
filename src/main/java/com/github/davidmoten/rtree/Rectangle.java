@@ -35,7 +35,7 @@ public class Rectangle {
 	}
 
 	public Rectangle add(Rectangle r) {
-		return new Rectangle(Math.min(x1, r.x1), Math.min(y2, r.y2), Math.max(
+		return new Rectangle(Math.min(x1, r.x1), Math.min(y1, r.y1), Math.max(
 				x2, r.x2), Math.max(y2, r.y2));
 	}
 
