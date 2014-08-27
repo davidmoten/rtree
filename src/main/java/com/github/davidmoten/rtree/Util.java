@@ -4,11 +4,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+
 public class Util {
 
 	public static Rectangle mbr(Collection<? extends HasMbr> items) {
-		// TODO
-		return null;
+		Preconditions.checkArgument(!items.isEmpty());
+		Optional<Rectangle> r = Optional.absent();
+		for (HasMbr mbr : items) {
+			if (r.isPresent())
+				r = Optional.of(r.get().add(mbr.mbr()));
+			else
+				r = Optional.of(mbr.mbr());
+		}
+		return r.get();
 	}
 
 	public static <T> List<T> add(List<T> list, T element) {

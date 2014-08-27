@@ -62,7 +62,8 @@ public class QuadraticSplitter implements Splitter {
 		return new ListPair<T>(group1, group2);
 	}
 
-	private static <T extends HasMbr> T getBestCandidateForGroup(List<T> list,
+	@VisibleForTesting
+	static <T extends HasMbr> T getBestCandidateForGroup(List<T> list,
 			List<T> group, Rectangle groupMbr) {
 		Preconditions.checkArgument(!list.isEmpty());
 		Optional<T> minEntry = Optional.absent();
