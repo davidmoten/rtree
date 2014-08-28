@@ -5,7 +5,7 @@ In-memory immutable [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation
 
 Status: *pre-alpha*
 
-This was fun to make, the immutable implementation is elegant if I do say so myself!), really concise, readable, thread-safe and pretty fast to use.
+This was fun to make, the implementation has really concise and readable source (despite pre-lambda verbosity),is thread-safe and pretty fast.
 
 Continuous integration with Jenkins: <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/rtree/badge/icon"/></a>
 
