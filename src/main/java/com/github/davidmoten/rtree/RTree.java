@@ -106,7 +106,7 @@ public class RTree {
 		};
 	}
 
-	public static Func1<Geometry, Boolean> ALL = new Func1<Geometry, Boolean>() {
+	public static Func1<Geometry, Boolean> ALWAYS_TRUE = new Func1<Geometry, Boolean>() {
 		@Override
 		public Boolean call(Geometry rectangle) {
 			return true;
@@ -134,7 +134,7 @@ public class RTree {
 	}
 
 	public Observable<Entry> entries() {
-		return search(ALL);
+		return search(ALWAYS_TRUE);
 	}
 
 	public Visualizer visualize(int width, int height, Rectangle view,
