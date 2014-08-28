@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree;
 
+import static com.google.common.base.Optional.of;
+
 import java.util.Comparator;
 
 import rx.Observable;
@@ -20,7 +22,7 @@ public class RTree {
 	}
 
 	private RTree(Node root, Context context) {
-		this(Optional.of(root), context);
+		this(of(root), context);
 	}
 
 	public RTree() {
@@ -72,8 +74,7 @@ public class RTree {
 					context);
 	}
 
-	public Observable<Entry> search(
-			Func1<? super Rectangle, Boolean> criterion,
+	public Observable<Entry> search(Func1<Rectangle, Boolean> criterion,
 			Optional<Comparator<Rectangle>> comparator) {
 		if (root.isPresent())
 			return Observable.create(new OnSubscribeSearch(root.get(),
@@ -92,6 +93,16 @@ public class RTree {
 		};
 	}
 
+	public static final Comparator<Rectangle> descendingDistance(
+			final Rectangle r) {
+		return new Comparator<Rectangle>() {
+			@Override
+			public int compare(Rectangle r1, Rectangle r2) {
+				return ((Double) r.distance(r2)).compareTo(r.distance(r1));
+			}
+		};
+	}
+
 	public static Func1<Rectangle, Boolean> overlaps(final Rectangle r) {
 		return new Func1<Rectangle, Boolean>() {
 			@Override
@@ -102,10 +113,14 @@ public class RTree {
 	}
 
 	public Observable<Entry> nearest(Rectangle r) {
-		return search(overlaps(r), Optional.of(ascendingDistance(r)));
+		return search(overlaps(r), of(ascendingDistance(r)));
 	}
 
-	public Observable<Entry> search(Func1<? super Rectangle, Boolean> criterion) {
+	public Observable<Entry> furthest(Rectangle r) {
+		return search(overlaps(r), of(descendingDistance(r)));
+	}
+
+	public Observable<Entry> search(Func1<Rectangle, Boolean> criterion) {
 		return search(criterion, Optional.<Comparator<Rectangle>> absent());
 	}
 
