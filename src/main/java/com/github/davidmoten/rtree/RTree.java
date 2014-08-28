@@ -74,6 +74,10 @@ public class RTree {
 					context);
 	}
 
+	public RTree add(Object object, Rectangle mbr) {
+		return add(new Entry(object, mbr));
+	}
+
 	public Observable<Entry> search(Func1<Rectangle, Boolean> criterion,
 			Optional<Comparator<Rectangle>> comparator) {
 		if (root.isPresent())
@@ -112,12 +116,19 @@ public class RTree {
 		};
 	}
 
+	public static Func1<Rectangle, Boolean> ALL = new Func1<Rectangle, Boolean>() {
+		@Override
+		public Boolean call(Rectangle rectangle) {
+			return true;
+		}
+	};
+
 	public Observable<Entry> nearest(Rectangle r) {
-		return search(overlaps(r), of(ascendingDistance(r)));
+		return search(ALL, of(ascendingDistance(r)));
 	}
 
 	public Observable<Entry> furthest(Rectangle r) {
-		return search(overlaps(r), of(descendingDistance(r)));
+		return search(ALL, of(descendingDistance(r)));
 	}
 
 	public Observable<Entry> search(Func1<Rectangle, Boolean> criterion) {
@@ -138,12 +149,7 @@ public class RTree {
 	}
 
 	public Observable<Entry> entries() {
-		return search(new Func1<Rectangle, Boolean>() {
-			@Override
-			public Boolean call(Rectangle rectangle) {
-				return true;
-			}
-		});
+		return search(ALL);
 	}
 
 	public Visualizer visualize(int width, int height, Rectangle view,

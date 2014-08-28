@@ -5,10 +5,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
 public class RTreeTest {
+
+	private static final double PRECISION = 0.000001;
 
 	@Test
 	public void testInstantiation() {
@@ -59,6 +62,22 @@ public class RTreeTest {
 		}
 		tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100), 5).save(
 				new File("target/tree.png"), "PNG");
+	}
+
+	@Test
+	public void testSearchDescendingDistance() {
+		RTree tree = RTree.builder().maxChildren(4).build().add(e(1)).add(e(2))
+				.add(e(4)).add(e(100));
+		List<Entry> list = tree.furthest(r(90)).toList().toBlocking().single();
+		assertEquals(1, list.get(0).mbr().x1(), PRECISION);
+		assertEquals(2, list.get(1).mbr().x1(), PRECISION);
+		assertEquals(4, list.get(2).mbr().x1(), PRECISION);
+		assertEquals(100, list.get(3).mbr().x1(), PRECISION);
+
+	}
+
+	private static Entry e(int n) {
+		return new Entry(new Object(), r(n));
 	}
 
 	private static Rectangle r(int n) {
