@@ -74,7 +74,7 @@ public class RTree {
 
 	public Observable<Entry> search(
 			Func1<? super Rectangle, Boolean> criterion,
-			Optional<Comparator<? super Rectangle>> comparator) {
+			Optional<Comparator<Rectangle>> comparator) {
 		if (root.isPresent())
 			return Observable.create(new OnSubscribeSearch(root.get(),
 					criterion, comparator));
@@ -82,18 +82,35 @@ public class RTree {
 			return Observable.empty();
 	}
 
-	public Observable<Entry> search(Func1<? super Rectangle, Boolean> criterion) {
-		return search(criterion,
-				Optional.<Comparator<? super Rectangle>> absent());
+	public static final Comparator<Rectangle> ascendingDistance(
+			final Rectangle r) {
+		return new Comparator<Rectangle>() {
+			@Override
+			public int compare(Rectangle r1, Rectangle r2) {
+				return ((Double) r.distance(r1)).compareTo(r.distance(r2));
+			}
+		};
 	}
 
-	public Observable<Entry> search(final Rectangle r) {
-		return search(new Func1<Rectangle, Boolean>() {
+	public static Func1<Rectangle, Boolean> overlaps(final Rectangle r) {
+		return new Func1<Rectangle, Boolean>() {
 			@Override
 			public Boolean call(Rectangle rectangle) {
 				return r.overlaps(rectangle);
 			}
-		});
+		};
+	}
+
+	public Observable<Entry> nearest(Rectangle r) {
+		return search(overlaps(r), Optional.of(ascendingDistance(r)));
+	}
+
+	public Observable<Entry> search(Func1<? super Rectangle, Boolean> criterion) {
+		return search(criterion, Optional.<Comparator<Rectangle>> absent());
+	}
+
+	public Observable<Entry> search(final Rectangle r) {
+		return search(overlaps(r));
 	}
 
 	public Observable<Entry> search(final Rectangle r, final double maxDistance) {

@@ -67,7 +67,7 @@ public class Util {
 	}
 
 	static <T extends HasMbr> List<T> sort(List<T> list,
-			Optional<Comparator<? super Rectangle>> comparator) {
+			Optional<Comparator<Rectangle>> comparator) {
 		if (!comparator.isPresent())
 			return list;
 		else

@@ -17,6 +17,6 @@ interface Node extends HasMbr {
 
 	void search(Func1<? super Rectangle, Boolean> criterion,
 			Subscriber<? super Entry> subscriber,
-			Optional<Comparator<? super Rectangle>> comparator);
+			Optional<Comparator<Rectangle>> comparator);
 
 }

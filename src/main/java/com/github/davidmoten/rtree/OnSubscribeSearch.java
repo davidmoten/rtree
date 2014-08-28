@@ -12,10 +12,10 @@ final class OnSubscribeSearch implements OnSubscribe<Entry> {
 
 	private final Node node;
 	private final Func1<? super Rectangle, Boolean> criterion;
-	private final Optional<Comparator<? super Rectangle>> comparator;
+	private final Optional<Comparator<Rectangle>> comparator;
 
 	OnSubscribeSearch(Node node, Func1<? super Rectangle, Boolean> criterion,
-			Optional<Comparator<? super Rectangle>> comparator) {
+			Optional<Comparator<Rectangle>> comparator) {
 		this.node = node;
 		this.criterion = criterion;
 		this.comparator = comparator;

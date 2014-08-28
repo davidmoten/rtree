@@ -89,7 +89,7 @@ final class Leaf implements Node {
 	@Override
 	public void search(Func1<? super Rectangle, Boolean> criterion,
 			Subscriber<? super Entry> subscriber,
-			Optional<Comparator<? super Rectangle>> comparator) {
+			Optional<Comparator<Rectangle>> comparator) {
 
 		for (Entry entry : Util.sort(entries, comparator)) {
 			if (subscriber.isUnsubscribed())
