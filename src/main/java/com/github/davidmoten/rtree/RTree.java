@@ -14,37 +14,79 @@ import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
+/**
+ * Immutable in-memory R-Tree with configurable splitter heuristic.
+ */
 public class RTree {
+
+	private static final int MAX_CHILDREN_DEFAULT = 32;
 
 	private final Optional<Node> root;
 	private final Context context;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param root
+	 * @param context
+	 */
 	private RTree(Optional<Node> root, Context context) {
 		this.root = root;
 		this.context = context;
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param root
+	 * @param context
+	 */
 	private RTree(Node root, Context context) {
 		this(of(root), context);
 	}
 
+	/**
+	 * Constructor. Creates an empty R-tree with maxChildren at 32 and using a
+	 * {@link QuadraticSplitter}.
+	 */
 	public RTree() {
-		this(Optional.<Node> absent(), Context.DEFAULT);
+		this(Optional.<Node> absent(), new Context(MAX_CHILDREN_DEFAULT,
+				new QuadraticSplitter()));
 	}
 
+	/**
+	 * Constructor. Creates an empty R-tree using specified maxChildren and a
+	 * {@link QuadraticSplitter}.
+	 * 
+	 * @param maxChildren
+	 */
 	public RTree(int maxChildren) {
 		this(Optional.<Node> absent(), new Context(maxChildren,
 				new QuadraticSplitter()));
 	}
 
+	/**
+	 * Constructor. Creates an empty R-tree using specified maxChildren and
+	 * splitter.
+	 * 
+	 * @param maxChildren
+	 * @param splitter
+	 *            for example {@link QuadraticSplitter}
+	 */
 	public RTree(int maxChildren, Splitter splitter) {
 		this(Optional.<Node> absent(), new Context(maxChildren, splitter));
 	}
 
+	/**
+	 * Returns a new Builder instance for {@link RTree}.
+	 */
 	public static Builder builder() {
 		return new Builder();
 	}
 
+	/**
+	 * RTree Builder
+	 */
 	public static class Builder {
 
 		private int maxChildren = 8;
@@ -53,21 +95,43 @@ public class RTree {
 		private Builder() {
 		}
 
+		/**
+		 * Sets the max number of children in an R-tree node.
+		 * 
+		 * @param maxChildren
+		 * @return
+		 */
 		public Builder maxChildren(int maxChildren) {
 			this.maxChildren = maxChildren;
 			return this;
 		}
 
+		/**
+		 * Sets the {@link Splitter} to use when maxChildren is reached.
+		 * 
+		 * @param splitter
+		 * @return
+		 */
 		public Builder splitter(Splitter splitter) {
 			this.splitter = splitter;
 			return this;
 		}
 
+		/**
+		 * Builds the {@link RTree}.
+		 */
 		public RTree build() {
 			return new RTree(maxChildren, splitter);
 		}
 	}
 
+	/**
+	 * Adds an entry to the R-tree.
+	 * 
+	 * @param entry
+	 *            item to add to the R-tree.
+	 * @return a new immutable R-tree
+	 */
 	public RTree add(Entry entry) {
 		if (root.isPresent())
 			return new RTree(root.get().add(entry,
