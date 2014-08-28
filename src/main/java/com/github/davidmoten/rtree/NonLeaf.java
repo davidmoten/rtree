@@ -6,7 +6,6 @@ import rx.Subscriber;
 import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.HasMbr;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Preconditions;
@@ -31,12 +30,11 @@ final class NonLeaf<T> implements Node<T> {
 		return mbr;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack) {
-		final HasMbr child = Util.findLeastIncreaseInMbrArea(entry.mbr(),
+		final Node<T> child = Util.findLeastIncreaseInMbrArea(entry.mbr(),
 				children);
-		return ((Node<T>) child).add(entry, stack.push(this));
+		return child.add(entry, stack.push(this));
 	}
 
 	@Override

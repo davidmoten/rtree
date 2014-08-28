@@ -41,12 +41,12 @@ final class Util {
 		return result;
 	}
 
-	static HasMbr findLeastIncreaseInMbrArea(Rectangle r,
-			List<? extends HasMbr> list) {
+	static <T> Node<T> findLeastIncreaseInMbrArea(Rectangle r,
+			List<? extends Node<T>> list) {
 		Preconditions.checkArgument(!list.isEmpty());
 		Optional<Double> minDifference = Optional.absent();
-		Optional<HasMbr> minDiffItem = Optional.absent();
-		for (final HasMbr m : list) {
+		Optional<Node<T>> minDiffItem = Optional.absent();
+		for (final Node<T> m : list) {
 			final double diff = m.mbr().add(r).area() - m.mbr().area();
 			if (!minDifference.isPresent() || diff < minDifference.get()) {
 				minDifference = of(diff);
