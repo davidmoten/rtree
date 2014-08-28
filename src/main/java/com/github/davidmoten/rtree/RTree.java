@@ -132,6 +132,7 @@ public class RTree<R> {
 	 *            item to add to the R-tree.
 	 * @return a new immutable R-trees
 	 */
+	@SuppressWarnings("unchecked")
 	public RTree<R> add(Entry<R> entry) {
 		if (root.isPresent())
 			return new RTree<R>(root.get().add(entry,

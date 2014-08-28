@@ -27,6 +27,7 @@ public class RTreeTest {
 		assertTrue(tree.search(r(1)).isEmpty().toBlocking().single());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testSearchOnOneItem() {
 		RTree<Object> tree = new RTree<Object>();

@@ -31,6 +31,7 @@ final class NonLeaf<T> implements Node<T> {
 		return mbr;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack) {
 		final HasMbr child = Util.findLeastIncreaseInMbrArea(entry.mbr(),

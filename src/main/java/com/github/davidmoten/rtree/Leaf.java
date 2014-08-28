@@ -48,6 +48,7 @@ final class Leaf<T> implements Node<T> {
 					newChildren);
 			final Leaf<T> leaf1 = new Leaf<T>(pair.list1(), context);
 			final Leaf<T> leaf2 = new Leaf<T>(pair.list2(), context);
+			@SuppressWarnings("unchecked")
 			final List<Leaf<T>> list = Arrays.asList(leaf1, leaf2);
 			return replace(this, list, stack, context);
 		}
@@ -59,6 +60,7 @@ final class Leaf<T> implements Node<T> {
 				context);
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <R> Node<R> replace(Node<R> node,
 			List<? extends Node<R>> replacements,
 			ImmutableStack<NonLeaf<R>> stack, Context context) {
@@ -92,7 +94,7 @@ final class Leaf<T> implements Node<T> {
 	public void search(Func1<? super Geometry, Boolean> criterion,
 			Subscriber<? super Entry<T>> subscriber) {
 
-		for (Entry entry : entries) {
+		for (Entry<T> entry : entries) {
 			if (subscriber.isUnsubscribed())
 				return;
 			else {
