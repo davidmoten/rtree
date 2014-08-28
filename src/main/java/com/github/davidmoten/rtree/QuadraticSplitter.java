@@ -19,15 +19,15 @@ public class QuadraticSplitter implements Splitter {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends HasMbr> ListPair<T> split(List<T> entries) {
-		Preconditions.checkArgument(entries.size() >= 2);
+	public <T extends HasMbr> ListPair<T> split(List<T> items) {
+		Preconditions.checkArgument(items.size() >= 2);
 
 		// according to
 		// http://en.wikipedia.org/wiki/R-tree#Splitting_an_overflowing_node
 
 		// find the worst combination pairwise in the list and use them to start
 		// the two groups
-		final Pair<T> worstCombination = worstCombination(entries);
+		final Pair<T> worstCombination = worstCombination(items);
 
 		// worst combination to have in the same node is now e1,e2.
 
@@ -35,11 +35,11 @@ public class QuadraticSplitter implements Splitter {
 		final List<T> group1 = Lists.newArrayList(worstCombination.value1());
 		final List<T> group2 = Lists.newArrayList(worstCombination.value2());
 
-		final List<T> remaining = new ArrayList<T>(entries);
+		final List<T> remaining = new ArrayList<T>(items);
 		remaining.remove(worstCombination.value1());
 		remaining.remove(worstCombination.value2());
 
-		final int minGroupSize = entries.size() / 2;
+		final int minGroupSize = items.size() / 2;
 
 		// now add the remainder to the groups using least mbr area increase
 		// except in the case where minimumSize would be contradicted
@@ -88,13 +88,13 @@ public class QuadraticSplitter implements Splitter {
 	}
 
 	@VisibleForTesting
-	static <T extends HasMbr> Pair<T> worstCombination(List<T> entries) {
+	static <T extends HasMbr> Pair<T> worstCombination(List<T> items) {
 		Optional<T> e1 = absent();
 		Optional<T> e2 = absent();
 		{
 			Optional<Double> maxArea = absent();
-			for (final T entry1 : entries) {
-				for (final T entry2 : entries) {
+			for (final T entry1 : items) {
+				for (final T entry2 : items) {
 					if (entry1 != entry2) {
 						final double area = entry1.mbr().add(entry2.mbr())
 								.area();
