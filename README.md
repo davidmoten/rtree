@@ -43,7 +43,7 @@ if you want to do something fancy, check that method out first. Bear in mind tha
 ```Observable``` api (```Observable.filter```).
 
 ```java
-RTree.search(Func1<Rectangle,Boolean>, Optional<Comparator,Rectangle>)
+RTree.search(Func1<Rectangle,Boolean>, Optional<Comparator<Rectangle>>)
 ```
 
 Nearest and Furthest
