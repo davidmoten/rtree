@@ -13,13 +13,13 @@ import com.github.davidmoten.util.ImmutableStack;
 import com.github.davidmoten.util.ListPair;
 import com.google.common.base.Preconditions;
 
-final class Leaf implements Node {
+final class Leaf<T> implements Node<T> {
 
-	private final List<Entry> entries;
+	private final List<Entry<T>> entries;
 	private final Rectangle mbr;
 	private final Context context;
 
-	Leaf(List<Entry> entries, Context context) {
+	Leaf(List<Entry<T>> entries, Context context) {
 		Preconditions.checkNotNull(entries);
 		Preconditions.checkNotNull(context);
 		this.entries = entries;
@@ -32,34 +32,36 @@ final class Leaf implements Node {
 		return mbr;
 	}
 
-	List<Entry> entries() {
+	List<Entry<T>> entries() {
 		return entries;
 	}
 
 	@Override
-	public Node add(Entry entry, ImmutableStack<NonLeaf> stack) {
+	public Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack) {
 		Preconditions.checkNotNull(stack);
 		if (entries.size() < context.maxChildren()) {
-			final Leaf leaf = new Leaf(Util.add(entries, entry), context);
+			final Leaf<T> leaf = new Leaf<T>(Util.add(entries, entry), context);
 			return replace(this, leaf, stack, context);
 		} else {
-			final List<Entry> newChildren = Util.add(entries, entry);
-			final ListPair<Entry> pair = context.splitter().split(newChildren);
-			final Leaf leaf1 = new Leaf(pair.list1(), context);
-			final Leaf leaf2 = new Leaf(pair.list2(), context);
-			final List<Leaf> list = Arrays.asList(leaf1, leaf2);
+			final List<Entry<T>> newChildren = Util.add(entries, entry);
+			final ListPair<Entry<T>> pair = context.splitter().split(
+					newChildren);
+			final Leaf<T> leaf1 = new Leaf<T>(pair.list1(), context);
+			final Leaf<T> leaf2 = new Leaf<T>(pair.list2(), context);
+			final List<Leaf<T>> list = Arrays.asList(leaf1, leaf2);
 			return replace(this, list, stack, context);
 		}
 	}
 
-	private static Node replace(Node node, Node replacement,
-			ImmutableStack<NonLeaf> stack, Context context) {
+	private static <R> Node<R> replace(Node<R> node, Node<R> replacement,
+			ImmutableStack<NonLeaf<R>> stack, Context context) {
 		return replace(node, Collections.singletonList(replacement), stack,
 				context);
 	}
 
-	private static Node replace(Node node, List<? extends Node> replacements,
-			ImmutableStack<NonLeaf> stack, Context context) {
+	private static <R> Node<R> replace(Node<R> node,
+			List<? extends Node<R>> replacements,
+			ImmutableStack<NonLeaf<R>> stack, Context context) {
 		Preconditions
 				.checkArgument(replacements.size() < context.maxChildren());
 		if (stack.isEmpty() && replacements.size() == 1)
@@ -67,19 +69,19 @@ final class Leaf implements Node {
 			return replacements.get(0);
 		else if (stack.isEmpty()) {
 			// make a parent for the replacements and return that
-			return new NonLeaf(replacements);
+			return new NonLeaf<R>(replacements);
 		} else {
-			final NonLeaf n = stack.peek();
-			final List<? extends Node> newChildren = Util.replace(n.children(),
-					node, replacements);
+			final NonLeaf<R> n = stack.peek();
+			final List<? extends Node<R>> newChildren = Util.replace(
+					n.children(), node, replacements);
 			if (n.children().size() < context.maxChildren()) {
-				final NonLeaf newNode = new NonLeaf(newChildren);
+				final NonLeaf<R> newNode = new NonLeaf<R>(newChildren);
 				return replace(n, newNode, stack.pop(), context);
 			} else {
-				final ListPair<? extends Node> pair = context.splitter().split(
-						newChildren);
-				final NonLeaf node1 = new NonLeaf(pair.list1());
-				final NonLeaf node2 = new NonLeaf(pair.list2());
+				final ListPair<? extends Node<R>> pair = context.splitter()
+						.split(newChildren);
+				final NonLeaf<R> node1 = new NonLeaf<R>(pair.list1());
+				final NonLeaf<R> node2 = new NonLeaf<R>(pair.list2());
 				return replace(n, Arrays.asList(node1, node2), stack.pop(),
 						context);
 			}
@@ -88,7 +90,7 @@ final class Leaf implements Node {
 
 	@Override
 	public void search(Func1<? super Geometry, Boolean> criterion,
-			Subscriber<? super Entry> subscriber) {
+			Subscriber<? super Entry<T>> subscriber) {
 
 		for (Entry entry : entries) {
 			if (subscriber.isUnsubscribed())

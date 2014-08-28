@@ -18,13 +18,13 @@ import com.google.common.base.Optional;
 
 public class Visualizer {
 
-	private final RTree tree;
+	private final RTree<?> tree;
 	private final int width;
 	private final int height;
 	private final Rectangle view;
 	private final int maxDepth;
 
-	public Visualizer(RTree tree, int width, int height, Rectangle view) {
+	public Visualizer(RTree<?> tree, int width, int height, Rectangle view) {
 		this.tree = tree;
 		this.width = width;
 		this.height = height;
@@ -32,18 +32,19 @@ public class Visualizer {
 		this.maxDepth = calculateMaxDepth(tree.root());
 	}
 
-	private static int calculateMaxDepth(Optional<Node> root) {
+	private static <R> int calculateMaxDepth(Optional<Node<R>> root) {
 		if (!root.isPresent())
 			return 0;
 		else
 			return calculateDepth(root.get(), 0);
 	}
 
-	private static int calculateDepth(Node node, int depth) {
+	private static <R> int calculateDepth(Node<R> node, int depth) {
 		if (node instanceof Leaf)
 			return depth + 1;
 		else
-			return calculateDepth(((NonLeaf) node).children().get(0), depth + 1);
+			return calculateDepth(((NonLeaf<R>) node).children().get(0),
+					depth + 1);
 	}
 
 	public BufferedImage create() {
@@ -61,7 +62,7 @@ public class Visualizer {
 		return image;
 	}
 
-	private List<RectangleDepth> getNodeDepthsSortedByDepth(Node root) {
+	private <T> List<RectangleDepth> getNodeDepthsSortedByDepth(Node<T> root) {
 		List<RectangleDepth> list = getRectangleDepths(root, 0);
 		Collections.sort(list, new Comparator<RectangleDepth>() {
 
@@ -73,17 +74,17 @@ public class Visualizer {
 		return list;
 	}
 
-	private List<RectangleDepth> getRectangleDepths(Node node, int depth) {
+	private <T> List<RectangleDepth> getRectangleDepths(Node<T> node, int depth) {
 		List<RectangleDepth> list = new ArrayList<RectangleDepth>();
 		list.add(new RectangleDepth(node.mbr(), depth));
 		if (node instanceof Leaf) {
-			Leaf leaf = (Leaf) node;
-			for (Entry entry : leaf.entries()) {
+			Leaf<T> leaf = (Leaf<T>) node;
+			for (Entry<T> entry : leaf.entries()) {
 				list.add(new RectangleDepth(entry.mbr(), depth + 2));
 			}
 		} else {
-			NonLeaf n = (NonLeaf) node;
-			for (Node child : n.children()) {
+			NonLeaf<T> n = (NonLeaf<T>) node;
+			for (Node<T> child : n.children()) {
 				list.addAll(getRectangleDepths(child, depth + 1));
 			}
 		}

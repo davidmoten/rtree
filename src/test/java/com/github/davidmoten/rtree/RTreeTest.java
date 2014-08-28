@@ -17,20 +17,20 @@ public class RTreeTest {
 
 	@Test
 	public void testInstantiation() {
-		RTree tree = new RTree();
+		RTree<Object> tree = new RTree<Object>();
 		assertTrue(tree.entries().isEmpty().toBlocking().single());
 	}
 
 	@Test
 	public void testSearchEmptyTree() {
-		RTree tree = new RTree();
+		RTree<Object> tree = new RTree<Object>();
 		assertTrue(tree.search(r(1)).isEmpty().toBlocking().single());
 	}
 
 	@Test
 	public void testSearchOnOneItem() {
-		RTree tree = new RTree();
-		Entry entry = new Entry(new Object(), r(1));
+		RTree<Object> tree = new RTree<Object>();
+		Entry<Object> entry = new Entry<Object>(new Object(), r(1));
 		tree = tree.add(entry);
 		assertEquals(Arrays.asList(entry), tree.search(r(1)).toList()
 				.toBlocking().single());
@@ -42,10 +42,10 @@ public class RTreeTest {
 	public void testPerformanceAndEntriesCount() {
 
 		long t = System.currentTimeMillis();
-		RTree tree = RTree.builder().maxChildren(4).build();
+		RTree<Object> tree = RTree.builder().maxChildren(4).build();
 		long n = 10000;
 		for (int i = 0; i < n; i++) {
-			Entry entry = new Entry(new Object(), random());
+			Entry<Object> entry = new Entry<Object>(new Object(), random());
 			tree = tree.add(entry);
 		}
 		long diff = System.currentTimeMillis() - t;
@@ -53,8 +53,8 @@ public class RTreeTest {
 		assertEquals(n, (int) tree.entries().count().toBlocking().single());
 
 		t = System.currentTimeMillis();
-		Entry entry = tree.search(Rectangle.create(0, 0, 500, 500)).first()
-				.toBlocking().single();
+		Entry<Object> entry = tree.search(Rectangle.create(0, 0, 500, 500))
+				.first().toBlocking().single();
 		diff = System.currentTimeMillis() - t;
 		System.out.println("found " + entry);
 		System.out
@@ -64,10 +64,10 @@ public class RTreeTest {
 
 	@Test
 	public void testNearest() {
-		RTree tree = RTree.builder().maxChildren(4).build().add(e(1)).add(e(2))
-				.add(e(10)).add(e(11));
-		List<Entry> list = tree.nearest(r(9), 10, 2).toList().toBlocking()
-				.single();
+		RTree<Object> tree = RTree.builder().maxChildren(4).build().add(e(1))
+				.add(e(2)).add(e(10)).add(e(11));
+		List<Entry<Object>> list = tree.nearest(r(9), 10, 2).toList()
+				.toBlocking().single();
 		assertEquals(2, list.size());
 		assertEquals(10, list.get(0).mbr().x1(), PRECISION);
 		assertEquals(11, list.get(1).mbr().x1(), PRECISION);
@@ -75,18 +75,18 @@ public class RTreeTest {
 
 	@Test
 	public void testVisualizer() {
-		RTree tree = RTree.builder().maxChildren(4).build();
+		RTree<Object> tree = RTree.builder().maxChildren(4).build();
 		int n = 100;
 		for (int i = 0; i < n; i++) {
-			Entry entry = new Entry(new Object(), random());
+			Entry<Object> entry = new Entry<Object>(new Object(), random());
 			tree = tree.add(entry);
 		}
 		tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100), 5).save(
 				new File("target/tree.png"), "PNG");
 	}
 
-	private static Entry e(int n) {
-		return new Entry(new Object(), r(n));
+	private static Entry<Object> e(int n) {
+		return new Entry<Object>(new Object(), r(n));
 	}
 
 	private static Rectangle r(int n) {

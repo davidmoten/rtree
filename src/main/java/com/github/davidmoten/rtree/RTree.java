@@ -17,11 +17,11 @@ import com.google.common.collect.Lists;
 /**
  * Immutable in-memory R-Tree with configurable splitter heuristic.
  */
-public class RTree {
+public class RTree<R> {
 
 	private static final int MAX_CHILDREN_DEFAULT = 32;
 
-	private final Optional<Node> root;
+	private final Optional<Node<R>> root;
 	private final Context context;
 
 	/**
@@ -30,7 +30,7 @@ public class RTree {
 	 * @param root
 	 * @param context
 	 */
-	private RTree(Optional<Node> root, Context context) {
+	private RTree(Optional<Node<R>> root, Context context) {
 		this.root = root;
 		this.context = context;
 	}
@@ -41,7 +41,7 @@ public class RTree {
 	 * @param root
 	 * @param context
 	 */
-	private RTree(Node root, Context context) {
+	private RTree(Node<R> root, Context context) {
 		this(of(root), context);
 	}
 
@@ -50,7 +50,7 @@ public class RTree {
 	 * {@link QuadraticSplitter}.
 	 */
 	public RTree() {
-		this(Optional.<Node> absent(), new Context(MAX_CHILDREN_DEFAULT,
+		this(Optional.<Node<R>> absent(), new Context(MAX_CHILDREN_DEFAULT,
 				new QuadraticSplitter()));
 	}
 
@@ -61,7 +61,7 @@ public class RTree {
 	 * @param maxChildren
 	 */
 	public RTree(int maxChildren) {
-		this(Optional.<Node> absent(), new Context(maxChildren,
+		this(Optional.<Node<R>> absent(), new Context(maxChildren,
 				new QuadraticSplitter()));
 	}
 
@@ -74,7 +74,7 @@ public class RTree {
 	 *            for example {@link QuadraticSplitter}
 	 */
 	public RTree(int maxChildren, Splitter splitter) {
-		this(Optional.<Node> absent(), new Context(maxChildren, splitter));
+		this(Optional.<Node<R>> absent(), new Context(maxChildren, splitter));
 	}
 
 	/**
@@ -120,8 +120,8 @@ public class RTree {
 		/**
 		 * Builds the {@link RTree}.
 		 */
-		public RTree build() {
-			return new RTree(maxChildren, splitter);
+		public <S> RTree<S> build() {
+			return new RTree<S>(maxChildren, splitter);
 		}
 	}
 
@@ -132,13 +132,13 @@ public class RTree {
 	 *            item to add to the R-tree.
 	 * @return a new immutable R-trees
 	 */
-	public RTree add(Entry entry) {
+	public RTree<R> add(Entry<R> entry) {
 		if (root.isPresent())
-			return new RTree(root.get().add(entry,
-					ImmutableStack.<NonLeaf> empty()), context);
+			return new RTree<R>(root.get().add(entry,
+					ImmutableStack.<NonLeaf<R>> empty()), context);
 		else
-			return new RTree(new Leaf(Lists.newArrayList(entry), context),
-					context);
+			return new RTree<R>(
+					new Leaf<R>(Lists.newArrayList(entry), context), context);
 	}
 
 	/**
@@ -149,8 +149,8 @@ public class RTree {
 	 * @param geometry
 	 * @return
 	 */
-	public RTree add(Object object, Geometry geometry) {
-		return add(new Entry(object, geometry));
+	public RTree<R> add(R object, Geometry geometry) {
+		return add(new Entry<R>(object, geometry));
 	}
 
 	/**
@@ -161,9 +161,10 @@ public class RTree {
 	 * @param criterion
 	 * @return
 	 */
-	public Observable<Entry> search(Func1<? super Geometry, Boolean> criterion) {
+	public Observable<Entry<R>> search(
+			Func1<? super Geometry, Boolean> criterion) {
 		if (root.isPresent())
-			return Observable.create(new OnSubscribeSearch(root.get(),
+			return Observable.create(new OnSubscribeSearch<R>(root.get(),
 					criterion));
 		else
 			return Observable.empty();
@@ -181,10 +182,11 @@ public class RTree {
 	 * @param r
 	 * @return
 	 */
-	public static final Comparator<Entry> ascendingDistance(final Rectangle r) {
-		return new Comparator<Entry>() {
+	public static final <S> Comparator<Entry<S>> ascendingDistance(
+			final Rectangle r) {
+		return new Comparator<Entry<S>>() {
 			@Override
-			public int compare(Entry e1, Entry e2) {
+			public int compare(Entry<S> e1, Entry<S> e2) {
 				return ((Double) e1.geometry().distance(r)).compareTo(e2
 						.geometry().distance(r));
 			}
@@ -207,11 +209,12 @@ public class RTree {
 		}
 	};
 
-	public Observable<Entry> search(final Rectangle r) {
+	public Observable<Entry<R>> search(final Rectangle r) {
 		return search(intersects(r));
 	}
 
-	public Observable<Entry> search(final Rectangle r, final double maxDistance) {
+	public Observable<Entry<R>> search(final Rectangle r,
+			final double maxDistance) {
 		return search(new Func1<Geometry, Boolean>() {
 			@Override
 			public Boolean call(Geometry g) {
@@ -220,14 +223,14 @@ public class RTree {
 		});
 	}
 
-	public Observable<Entry> nearest(final Rectangle r,
+	public Observable<Entry<R>> nearest(final Rectangle r,
 			final double maxDistance, int maxCount) {
 		return search(r, maxDistance).lift(
-				new OperatorBoundedPriorityQueue<Entry>(maxCount,
-						ascendingDistance(r)));
+				new OperatorBoundedPriorityQueue<Entry<R>>(maxCount, RTree
+						.<R> ascendingDistance(r)));
 	}
 
-	public Observable<Entry> entries() {
+	public Observable<Entry<R>> entries() {
 		return search(ALWAYS_TRUE);
 	}
 
@@ -236,7 +239,7 @@ public class RTree {
 		return new Visualizer(this, width, height, view);
 	}
 
-	Optional<Node> root() {
+	Optional<Node<R>> root() {
 		return root;
 	}
 

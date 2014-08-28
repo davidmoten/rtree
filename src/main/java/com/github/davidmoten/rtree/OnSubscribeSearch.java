@@ -1,23 +1,23 @@
 package com.github.davidmoten.rtree;
 
-import com.github.davidmoten.rtree.geometry.Geometry;
-
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-final class OnSubscribeSearch implements OnSubscribe<Entry> {
+import com.github.davidmoten.rtree.geometry.Geometry;
 
-	private final Node node;
+final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
+
+	private final Node<T> node;
 	private final Func1<? super Geometry, Boolean> criterion;
 
-	OnSubscribeSearch(Node node, Func1<? super Geometry, Boolean> criterion) {
+	OnSubscribeSearch(Node<T> node, Func1<? super Geometry, Boolean> criterion) {
 		this.node = node;
 		this.criterion = criterion;
 	}
 
 	@Override
-	public void call(Subscriber<? super Entry> subscriber) {
+	public void call(Subscriber<? super Entry<T>> subscriber) {
 		node.search(criterion, subscriber);
 		if (!subscriber.isUnsubscribed())
 			subscriber.onCompleted();

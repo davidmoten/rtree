@@ -8,14 +8,14 @@ import com.github.davidmoten.rtree.geometry.HasMbr;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
 
-interface Node extends HasMbr {
+interface Node<T> extends HasMbr {
 
 	@Override
 	Rectangle mbr();
 
-	Node add(Entry entry, ImmutableStack<NonLeaf> stack);
+	Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
 
 	void search(Func1<? super Geometry, Boolean> criterion,
-			Subscriber<? super Entry> subscriber);
+			Subscriber<? super Entry<T>> subscriber);
 
 }

@@ -5,18 +5,18 @@ import com.github.davidmoten.rtree.geometry.HasMbr;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Preconditions;
 
-public class Entry implements HasMbr {
-	private final Object object;
+public class Entry<T> implements HasMbr {
+	private final T object;
 	private final Geometry geometry;
 
-	public Entry(Object object, Geometry geometry) {
+	public Entry(T object, Geometry geometry) {
 		Preconditions.checkNotNull(object);
 		Preconditions.checkNotNull(geometry);
 		this.object = object;
 		this.geometry = geometry;
 	}
 
-	public Entry(Object object, double x, double y) {
+	public Entry(T object, double x, double y) {
 		this(object, Rectangle.create(x, y, x, y));
 	}
 
