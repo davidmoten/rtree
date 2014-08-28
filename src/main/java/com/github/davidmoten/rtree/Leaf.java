@@ -7,6 +7,8 @@ import java.util.List;
 import rx.Subscriber;
 import rx.functions.Func1;
 
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
 import com.github.davidmoten.util.ListPair;
 import com.google.common.base.Preconditions;

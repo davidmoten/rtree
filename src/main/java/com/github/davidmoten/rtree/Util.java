@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.github.davidmoten.rtree.geometry.HasMbr;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 

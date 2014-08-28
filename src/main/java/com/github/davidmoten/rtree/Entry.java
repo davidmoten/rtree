@@ -1,5 +1,8 @@
 package com.github.davidmoten.rtree;
 
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.HasMbr;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Preconditions;
 
 public class Entry implements HasMbr {

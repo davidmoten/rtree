@@ -7,6 +7,8 @@ import java.util.Comparator;
 import rx.Observable;
 import rx.functions.Func1;
 
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Optional;

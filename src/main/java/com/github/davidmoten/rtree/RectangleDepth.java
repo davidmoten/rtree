@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree;
 
+import com.github.davidmoten.rtree.geometry.Rectangle;
+
 final class RectangleDepth {
 	private final Rectangle rectangle;
 	private final int depth;

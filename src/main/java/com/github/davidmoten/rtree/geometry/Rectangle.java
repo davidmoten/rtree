@@ -1,4 +1,4 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.rtree.geometry;
 
 import com.google.common.base.Preconditions;
 

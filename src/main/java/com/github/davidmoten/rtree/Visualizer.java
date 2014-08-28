@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
 
 public class Visualizer {

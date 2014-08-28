@@ -1,4 +1,5 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.rtree.geometry;
+
 
 public interface Geometry extends HasMbr {
 

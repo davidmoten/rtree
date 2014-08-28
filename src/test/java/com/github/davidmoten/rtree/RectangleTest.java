@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.geometry.Rectangle;
+
 public class RectangleTest {
 
 	private static final double PRECISION = 0.00001;

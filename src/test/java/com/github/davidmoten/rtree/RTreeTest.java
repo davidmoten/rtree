@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.geometry.Rectangle;
+
 public class RTreeTest {
 
 	private static final double PRECISION = 0.000001;

@@ -6,6 +6,8 @@ import static com.google.common.base.Optional.of;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.davidmoten.rtree.geometry.HasMbr;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ListPair;
 import com.github.davidmoten.util.Pair;
 import com.google.common.annotations.VisibleForTesting;

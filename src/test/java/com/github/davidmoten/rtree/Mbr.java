@@ -1,5 +1,8 @@
 package com.github.davidmoten.rtree;
 
+import com.github.davidmoten.rtree.geometry.HasMbr;
+import com.github.davidmoten.rtree.geometry.Rectangle;
+
 public class Mbr implements HasMbr {
 
 	private final Rectangle r;
