@@ -35,18 +35,6 @@ RTree tree = RTree.builder().maxChildren(5).build()
  
 Observable<Entry> entries = tree.search(Rectangle.create(8, 15, 30, 35));
 ```
- 
-Search
-------------
-All search methods (```nearest```,```furthest```,```entries```, ```search```) themselves call the one super-duper search method below. So
-if you want to do something fancy, check that method out first. Bear in mind that filtering on ```Entry``` is best done by the 
-```Observable``` api (```Observable.filter```).
-
-```java
-RTree.search(Func1<Rectangle,Boolean>, Optional<Comparator<Rectangle>>)
-```
-
-Check out [RTree javadoc](http://davidmoten.github.io/rtree/apidocs/com/github/davidmoten/rtree/RTree.html) for more details.
 
 What do I do with the Observable thing?
 ----------------------------------------
