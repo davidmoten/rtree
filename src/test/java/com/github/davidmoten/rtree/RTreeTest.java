@@ -65,7 +65,7 @@ public class RTreeTest {
 	}
 
 	@Test
-	public void testSearchDescendingDistance() {
+	public void testFurthest() {
 		RTree tree = RTree.builder().maxChildren(4).build().add(e(1)).add(e(2))
 				.add(e(4)).add(e(100));
 		List<Entry> list = tree.furthest(r(90)).toList().toBlocking().single();
@@ -73,7 +73,17 @@ public class RTreeTest {
 		assertEquals(2, list.get(1).mbr().x1(), PRECISION);
 		assertEquals(4, list.get(2).mbr().x1(), PRECISION);
 		assertEquals(100, list.get(3).mbr().x1(), PRECISION);
+	}
 
+	@Test
+	public void testNearest() {
+		RTree tree = RTree.builder().maxChildren(4).build().add(e(1)).add(e(2))
+				.add(e(4)).add(e(100));
+		List<Entry> list = tree.nearest(r(90)).toList().toBlocking().single();
+		assertEquals(100, list.get(0).mbr().x1(), PRECISION);
+		assertEquals(4, list.get(1).mbr().x1(), PRECISION);
+		assertEquals(2, list.get(2).mbr().x1(), PRECISION);
+		assertEquals(1, list.get(3).mbr().x1(), PRECISION);
 	}
 
 	private static Entry e(int n) {
