@@ -35,7 +35,7 @@ public class RectangleTest {
 	@Test
 	public void testDistanceWhenSeparatedByXOnlyAndOverlapOnY() {
 		Rectangle r = new Rectangle(0, 0, 2, 2);
-		Rectangle r2 = new Rectangle(3, 1.5, 4, 3.5);
+		Rectangle r2 = new Rectangle(3, 1.5f, 4, 3.5f);
 
 		assertEquals(1, r.distance(r2), PRECISION);
 		assertEquals(1, r2.distance(r), PRECISION);

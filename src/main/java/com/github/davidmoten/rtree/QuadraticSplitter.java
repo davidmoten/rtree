@@ -42,25 +42,31 @@ public class QuadraticSplitter implements Splitter {
 		// now add the remainder to the groups using least mbr area increase
 		// except in the case where minimumSize would be contradicted
 		while (remaining.size() > 0) {
-			final Rectangle mbr1 = Util.mbr(group1);
-			final Rectangle mbr2 = Util.mbr(group2);
-			final T item1 = getBestCandidateForGroup(remaining, group1, mbr1);
-			final T item2 = getBestCandidateForGroup(remaining, group2, mbr2);
-			final boolean area1LessThan2 = item1.mbr().add(mbr1).area() <= item2
-					.mbr().add(mbr2).area();
-
-			if (area1LessThan2
-					&& (group2.size() + remaining.size() - 1 >= minGroupSize)
-					|| !area1LessThan2
-					&& (group1.size() + remaining.size() == minGroupSize)) {
-				group1.add(item1);
-				remaining.remove(item1);
-			} else {
-				group2.add(item2);
-				remaining.remove(item2);
-			}
+			assignRemaining(group1, group2, remaining, minGroupSize);
 		}
 		return new ListPair<T>(group1, group2);
+	}
+
+	private <T extends HasMbr> void assignRemaining(final List<T> group1,
+			final List<T> group2, final List<T> remaining,
+			final int minGroupSize) {
+		final Rectangle mbr1 = Util.mbr(group1);
+		final Rectangle mbr2 = Util.mbr(group2);
+		final T item1 = getBestCandidateForGroup(remaining, group1, mbr1);
+		final T item2 = getBestCandidateForGroup(remaining, group2, mbr2);
+		final boolean area1LessThanArea2 = item1.mbr().add(mbr1).area() <= item2
+				.mbr().add(mbr2).area();
+
+		if (area1LessThanArea2
+				&& (group2.size() + remaining.size() - 1 >= minGroupSize)
+				|| !area1LessThanArea2
+				&& (group1.size() + remaining.size() == minGroupSize)) {
+			group1.add(item1);
+			remaining.remove(item1);
+		} else {
+			group2.add(item2);
+			remaining.remove(item2);
+		}
 	}
 
 	@VisibleForTesting

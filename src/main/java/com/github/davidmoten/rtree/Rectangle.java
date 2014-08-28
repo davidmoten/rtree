@@ -3,10 +3,10 @@ package com.github.davidmoten.rtree;
 import com.google.common.base.Preconditions;
 
 public class Rectangle {
-	private final double x1, y1, x2, y2;
-	private final double area;
+	private final float x1, y1, x2, y2;
+	private final float area;
 
-	public Rectangle(double x1, double y1, double x2, double y2) {
+	public Rectangle(float x1, float y1, float x2, float y2) {
 		Preconditions.checkArgument(x2 >= x1);
 		Preconditions.checkArgument(y2 >= y1);
 		this.x1 = x1;
@@ -16,28 +16,24 @@ public class Rectangle {
 		this.area = Math.abs((x1 - x2) * (y1 - y2));
 	}
 
-	public double x1() {
+	public float x1() {
 		return x1;
 	}
 
-	public double y1() {
+	public float y1() {
 		return y1;
 	}
 
-	public double x2() {
+	public float x2() {
 		return x2;
 	}
 
-	public double y2() {
+	public float y2() {
 		return y2;
 	}
 
-	public double area() {
+	public float area() {
 		return area;
-	}
-
-	public double width() {
-		return x2 - x1;
 	}
 
 	public Rectangle add(Rectangle r) {
@@ -46,6 +42,10 @@ public class Rectangle {
 	}
 
 	public static Rectangle create(double x1, double y1, double x2, double y2) {
+		return new Rectangle((float) x1, (float) y1, (float) x2, (float) y2);
+	}
+
+	public static Rectangle create(float x1, float y1, float x2, float y2) {
 		return new Rectangle(x1, y1, x2, y2);
 	}
 
