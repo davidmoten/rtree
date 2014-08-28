@@ -141,10 +141,26 @@ public class RTree {
 					context);
 	}
 
-	public RTree add(Object object, Geometry mbr) {
-		return add(new Entry(object, mbr));
+	/**
+	 * Adds an {@link Entry} comprised of the object and the given geometry to
+	 * the RTree.
+	 * 
+	 * @param object
+	 * @param geometry
+	 * @return
+	 */
+	public RTree add(Object object, Geometry geometry) {
+		return add(new Entry(object, geometry));
 	}
 
+	/**
+	 * Returns an Observable sequence of {@link Entry} where the criterion is
+	 * satisfied both for the returned entries and the minimum bounding
+	 * rectangles in the ancestor nodes.
+	 * 
+	 * @param criterion
+	 * @return
+	 */
 	public Observable<Entry> search(Func1<? super Geometry, Boolean> criterion) {
 		if (root.isPresent())
 			return Observable.create(new OnSubscribeSearch(root.get(),
@@ -153,6 +169,18 @@ public class RTree {
 			return Observable.empty();
 	}
 
+	/**
+	 * <p>
+	 * Returns a comparator that can be used to sort entries returned by search
+	 * methods. For example:
+	 * </p>
+	 * <p>
+	 * <code>search(100).toSortedList(ascendingDistance(r))</code>
+	 * </p>
+	 * 
+	 * @param r
+	 * @return
+	 */
 	public static final Comparator<Entry> ascendingDistance(final Rectangle r) {
 		return new Comparator<Entry>() {
 			@Override
