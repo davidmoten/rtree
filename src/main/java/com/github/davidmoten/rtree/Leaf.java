@@ -19,7 +19,7 @@ final class Leaf implements Node {
 	private final Rectangle mbr;
 	private final Context context;
 
-	public Leaf(List<Entry> entries, Context context) {
+	Leaf(List<Entry> entries, Context context) {
 		Preconditions.checkNotNull(entries);
 		Preconditions.checkNotNull(context);
 		this.entries = entries;

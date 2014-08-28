@@ -46,6 +46,8 @@ if you want to do something fancy, check that method out first. Bear in mind tha
 RTree.search(Func1<Rectangle,Boolean>, Optional<Comparator<Rectangle>>)
 ```
 
+Check out [RTree javadoc](http://davidmoten.github.io/rtree/apidocs/com/github/davidmoten/rtree/RTree.html) for more details.
+
 Nearest and Furthest
 ----------------------
 To find the nearest k neighbours to a rectangle:
