@@ -16,7 +16,7 @@ Features
 * Immutable R-tree suitable for concurrency
 * Pluggable splitting heuristic (default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf)).
 * Search returns Observable 
-* Search can be cancelled by unsubscription
+* Search is cancelled by unsubscription
 * over 80K inserts per second on i7 single thread
 * search is O(log(N)) on average
 * all search methods including ```nearest``` and ```furthest``` are streaming instead of *nearest-k* so much more flexible
