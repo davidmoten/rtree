@@ -4,6 +4,8 @@ import static com.google.common.base.Optional.of;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.base.Optional;
@@ -51,4 +53,25 @@ public class Util {
 		}
 		return minDiffItem.get();
 	}
+
+	private static <T extends HasMbr> List<T> sort(List<T> entries,
+			final Comparator<? super Rectangle> comparator) {
+		List<T> list = new ArrayList<T>(entries);
+		Collections.sort(list, new Comparator<T>() {
+			@Override
+			public int compare(T e1, T e2) {
+				return comparator.compare(e1.mbr(), e2.mbr());
+			}
+		});
+		return list;
+	}
+
+	static <T extends HasMbr> List<T> sort(List<T> list,
+			Optional<Comparator<? super Rectangle>> comparator) {
+		if (!comparator.isPresent())
+			return list;
+		else
+			return sort(list, comparator.get());
+	}
+
 }

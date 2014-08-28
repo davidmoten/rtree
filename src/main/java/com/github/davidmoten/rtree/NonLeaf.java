@@ -1,11 +1,13 @@
 package com.github.davidmoten.rtree;
 
+import java.util.Comparator;
 import java.util.List;
 
 import rx.Subscriber;
 import rx.functions.Func1;
 
 import com.github.davidmoten.util.ImmutableStack;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 final class NonLeaf implements Node {
@@ -37,13 +39,15 @@ final class NonLeaf implements Node {
 
 	@Override
 	public void search(Func1<? super Rectangle, Boolean> criterion,
-			Subscriber<? super Entry> subscriber) {
-		for (Node child : children) {
+			Subscriber<? super Entry> subscriber,
+			Optional<Comparator<? super Rectangle>> comparator) {
+
+		for (Node child : Util.sort(children, comparator)) {
 			if (subscriber.isUnsubscribed())
 				return;
 			else {
 				if (criterion.call(child.mbr()))
-					child.search(criterion, subscriber);
+					child.search(criterion, subscriber, comparator);
 			}
 		}
 	}

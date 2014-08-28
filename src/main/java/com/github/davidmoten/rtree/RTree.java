@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree;
 
+import java.util.Comparator;
+
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -70,12 +72,19 @@ public class RTree {
 					context);
 	}
 
-	public Observable<Entry> search(Func1<? super Rectangle, Boolean> criterion) {
+	public Observable<Entry> search(
+			Func1<? super Rectangle, Boolean> criterion,
+			Optional<Comparator<? super Rectangle>> comparator) {
 		if (root.isPresent())
 			return Observable.create(new OnSubscribeSearch(root.get(),
-					criterion));
+					criterion, comparator));
 		else
 			return Observable.empty();
+	}
+
+	public Observable<Entry> search(Func1<? super Rectangle, Boolean> criterion) {
+		return search(criterion,
+				Optional.<Comparator<? super Rectangle>> absent());
 	}
 
 	public Observable<Entry> search(final Rectangle r) {
@@ -83,6 +92,15 @@ public class RTree {
 			@Override
 			public Boolean call(Rectangle rectangle) {
 				return r.overlaps(rectangle);
+			}
+		});
+	}
+
+	public Observable<Entry> search(final Rectangle r, final double maxDistance) {
+		return search(new Func1<Rectangle, Boolean>() {
+			@Override
+			public Boolean call(Rectangle rectangle) {
+				return r.distance(rectangle) <= maxDistance;
 			}
 		});
 	}
