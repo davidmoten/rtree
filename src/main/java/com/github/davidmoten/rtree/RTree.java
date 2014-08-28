@@ -130,7 +130,7 @@ public class RTree {
 	 * 
 	 * @param entry
 	 *            item to add to the R-tree.
-	 * @return a new immutable R-tree
+	 * @return a new immutable R-trees
 	 */
 	public RTree add(Entry entry) {
 		if (root.isPresent())
@@ -141,7 +141,7 @@ public class RTree {
 					context);
 	}
 
-	public RTree add(Object object, Rectangle mbr) {
+	public RTree add(Object object, Geometry mbr) {
 		return add(new Entry(object, mbr));
 	}
 
