@@ -36,6 +36,10 @@ public class Rectangle {
 		return area;
 	}
 
+	public double width() {
+		return x2 - x1;
+	}
+
 	public Rectangle add(Rectangle r) {
 		return new Rectangle(Math.min(x1, r.x1), Math.min(y1, r.y1), Math.max(
 				x2, r.x2), Math.max(y2, r.y2));
@@ -55,6 +59,26 @@ public class Rectangle {
 
 	public boolean overlaps(Rectangle r) {
 		return overlapsOnce(r) || r.overlapsOnce(this);
+	}
+
+	public double distance(Rectangle r) {
+		if (overlaps(r))
+			return 0;
+		else {
+			Rectangle mostLeft = x1 < r.x1 ? this : r;
+			Rectangle mostRight = x1 > r.x1 ? this : r;
+			double xDifference = Math.max(0, mostLeft.x1 == mostRight.x1 ? 0
+					: mostRight.x1 - mostLeft.x2);
+
+			Rectangle upper = y1 < r.y1 ? this : r;
+			Rectangle lower = y1 > r.y1 ? this : r;
+
+			double yDifference = Math.max(0, upper.y1 == lower.y1 ? 0
+					: lower.y1 - upper.y2);
+
+			return Math.sqrt(xDifference * xDifference + yDifference
+					* yDifference);
+		}
 	}
 
 	@Override
