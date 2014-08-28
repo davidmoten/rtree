@@ -13,9 +13,9 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
-public class Util {
+final class Util {
 
-	public static Rectangle mbr(Collection<? extends HasMbr> items) {
+	static Rectangle mbr(Collection<? extends HasMbr> items) {
 		Preconditions.checkArgument(!items.isEmpty());
 		Optional<Rectangle> r = Optional.absent();
 		for (final HasMbr mbr : items) {
@@ -27,13 +27,13 @@ public class Util {
 		return r.get();
 	}
 
-	public static <T> List<T> add(List<T> list, T element) {
+	static <T> List<T> add(List<T> list, T element) {
 		final ArrayList<T> result = new ArrayList<T>(list);
 		result.add(element);
 		return result;
 	}
 
-	public static <T> List<? extends T> replace(List<? extends T> list, T node,
+	static <T> List<? extends T> replace(List<? extends T> list, T node,
 			List<? extends T> replacements) {
 		final ArrayList<T> result = new ArrayList<T>(list);
 		result.remove(node);
@@ -41,7 +41,7 @@ public class Util {
 		return result;
 	}
 
-	public static HasMbr findLeastIncreaseInMbrArea(Rectangle r,
+	static HasMbr findLeastIncreaseInMbrArea(Rectangle r,
 			List<? extends HasMbr> list) {
 		Preconditions.checkArgument(!list.isEmpty());
 		Optional<Double> minDifference = Optional.absent();
