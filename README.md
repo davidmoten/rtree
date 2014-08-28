@@ -19,7 +19,7 @@ Features
 * Search can be cancelled by unsubscription
 * over 80K inserts per second on i7 single thread
 * search is O(log(N)) on average
-* ```nearest``` and ```furthest``` methods are streaming instead of *nearest-k* so much more flexible
+* all search methods including ```nearest``` and ```furthest``` are streaming instead of *nearest-k* so much more flexible
 
 
 TODO implement ```RTree.delete```
