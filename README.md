@@ -19,9 +19,11 @@ Features
 * Search can be cancelled by unsubscription
 * over 80K inserts per second on i7 single thread
 * search is O(log(N)) on average
-* backpressure (TODO)
+* ```nearest``` and ```furthest``` methods are streaming instead of *nearest-k* so much more flexible
+
 
 TODO implement ```RTree.delete```
+TODO implement backpressure (?)
 
 Number of points = 100, max children per node 4:
 
@@ -37,6 +39,24 @@ RTree tree = RTree.builder().maxChildren(5).build()
  
  Observable<Entry> entries = tree.search(Rectangle.create(8, 15, 30, 35));
  ```
+
+Nearest and Furthest
+----------------------
+To find the nearest k neighbours to a rectangle:
+
+```java
+RTree tree = ...
+Observable<Entry> entries = 
+    tree.nearest(Rectangle.create(8, 15 ,20 ,35)).take(k);
+```
+    
+To find the furthest k neighbours to a rectangle:
+
+```java
+RTree tree = ...
+Observable<Entry> entries = 
+    tree.furthest(Rectangle.create(8, 15 ,20 ,35)).take(k);
+```
  
 What do I do with the Observable thing?
 ----------------------------------------
