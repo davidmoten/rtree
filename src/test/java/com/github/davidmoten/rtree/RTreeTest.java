@@ -50,7 +50,7 @@ public class RTreeTest {
 		assertEquals(n, (int) tree.entries().count().toBlocking().single());
 
 		t = System.currentTimeMillis();
-		Entry entry = tree.search(Rectangle.create(100, 100, 101, 101)).first()
+		Entry entry = tree.search(Rectangle.create(0, 0, 500, 500)).first()
 				.toBlocking().single();
 		diff = System.currentTimeMillis() - t;
 		System.out.println("found " + entry);
