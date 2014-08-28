@@ -7,6 +7,7 @@ import java.util.Comparator;
 import rx.Observable;
 import rx.functions.Func1;
 
+import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -86,21 +87,12 @@ public class RTree {
 			return Observable.empty();
 	}
 
-	public static final Comparator<Geometry> ascendingDistance(final Rectangle r) {
-		return new Comparator<Geometry>() {
+	public static final Comparator<Entry> ascendingDistance(final Rectangle r) {
+		return new Comparator<Entry>() {
 			@Override
-			public int compare(Geometry g1, Geometry g2) {
-				return ((Double) g1.distance(r)).compareTo(g2.distance(r));
-			}
-		};
-	}
-
-	public static final Comparator<Geometry> descendingDistance(
-			final Rectangle r) {
-		return new Comparator<Geometry>() {
-			@Override
-			public int compare(Geometry g1, Geometry g2) {
-				return ((Double) g2.distance(r)).compareTo(g1.distance(r));
+			public int compare(Entry e1, Entry e2) {
+				return ((Double) e1.geometry().distance(r)).compareTo(e2
+						.geometry().distance(r));
 			}
 		};
 	}
@@ -132,6 +124,13 @@ public class RTree {
 				return g.distance(r) < maxDistance;
 			}
 		});
+	}
+
+	public Observable<Entry> nearest(final Rectangle r,
+			final double maxDistance, int maxCount) {
+		return search(r, maxDistance).lift(
+				new OperatorBoundedPriorityQueue<Entry>(maxCount,
+						ascendingDistance(r)));
 	}
 
 	public Observable<Entry> entries() {

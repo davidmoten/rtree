@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -57,6 +58,17 @@ public class RTreeTest {
 		System.out
 				.println("time to get nearest with " + n + " entries=" + diff);
 
+	}
+
+	@Test
+	public void testNearest() {
+		RTree tree = RTree.builder().maxChildren(4).build().add(e(1)).add(e(2))
+				.add(e(10)).add(e(11));
+		List<Entry> list = tree.nearest(r(9), 10, 2).toList().toBlocking()
+				.single();
+		assertEquals(2, list.size());
+		assertEquals(10, list.get(0).mbr().x1(), PRECISION);
+		assertEquals(11, list.get(1).mbr().x1(), PRECISION);
 	}
 
 	@Test
