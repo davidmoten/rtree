@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 
 public class Rectangle {
 	private final double x1, y1, x2, y2;
+	private final double area;
 
 	public Rectangle(double x1, double y1, double x2, double y2) {
 		Preconditions.checkArgument(x2 >= x1);
@@ -12,6 +13,7 @@ public class Rectangle {
 		this.y1 = y1;
 		this.x2 = x2;
 		this.y2 = y2;
+		this.area = Math.abs((x1 - x2) * (y1 - y2));
 	}
 
 	public double x1() {
@@ -31,7 +33,7 @@ public class Rectangle {
 	}
 
 	public double area() {
-		return Math.abs((x1 - x2) * (y1 - y2));
+		return area;
 	}
 
 	public Rectangle add(Rectangle r) {

@@ -34,10 +34,11 @@ public class RTreeTest {
 	}
 
 	@Test
-	public void testPerformance() {
+	public void testPerformanceAndEntriesCount() {
+
 		long t = System.currentTimeMillis();
 		RTree tree = RTree.builder().maxChildren(4).build();
-		int n = 10000;
+		long n = 10000;
 		for (int i = 0; i < n; i++) {
 			Entry entry = new Entry(new Object(), random());
 			tree = tree.add(entry);
@@ -45,12 +46,13 @@ public class RTreeTest {
 		long diff = System.currentTimeMillis() - t;
 		System.out.println("inserts/second = " + ((double) n / diff * 1000));
 		assertEquals(n, (int) tree.entries().count().toBlocking().single());
+
 	}
 
 	@Test
 	public void testVisualizer() {
 		RTree tree = RTree.builder().maxChildren(4).build();
-		int n = 1000;
+		int n = 100;
 		for (int i = 0; i < n; i++) {
 			Entry entry = new Entry(new Object(), random());
 			tree = tree.add(entry);
