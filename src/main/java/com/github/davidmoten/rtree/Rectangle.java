@@ -2,7 +2,7 @@ package com.github.davidmoten.rtree;
 
 import com.google.common.base.Preconditions;
 
-public class Rectangle {
+public class Rectangle implements Geometry {
 	private final float x1, y1, x2, y2;
 	private final float area;
 
@@ -79,6 +79,11 @@ public class Rectangle {
 			return Math.sqrt(xDifference * xDifference + yDifference
 					* yDifference);
 		}
+	}
+
+	@Override
+	public Rectangle mbr() {
+		return this;
 	}
 
 	@Override

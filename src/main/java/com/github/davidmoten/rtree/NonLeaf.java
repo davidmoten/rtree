@@ -36,7 +36,7 @@ final class NonLeaf implements Node {
 	}
 
 	@Override
-	public void search(Func1<? super Rectangle, Boolean> criterion,
+	public void search(Func1<? super Geometry, Boolean> criterion,
 			Subscriber<? super Entry> subscriber) {
 
 		for (Node child : children) {

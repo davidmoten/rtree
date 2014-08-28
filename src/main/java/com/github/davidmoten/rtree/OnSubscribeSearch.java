@@ -7,9 +7,9 @@ import rx.functions.Func1;
 final class OnSubscribeSearch implements OnSubscribe<Entry> {
 
 	private final Node node;
-	private final Func1<? super Rectangle, Boolean> criterion;
+	private final Func1<? super Geometry, Boolean> criterion;
 
-	OnSubscribeSearch(Node node, Func1<? super Rectangle, Boolean> criterion) {
+	OnSubscribeSearch(Node node, Func1<? super Geometry, Boolean> criterion) {
 		this.node = node;
 		this.criterion = criterion;
 	}

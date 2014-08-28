@@ -85,14 +85,14 @@ final class Leaf implements Node {
 	}
 
 	@Override
-	public void search(Func1<? super Rectangle, Boolean> criterion,
+	public void search(Func1<? super Geometry, Boolean> criterion,
 			Subscriber<? super Entry> subscriber) {
 
 		for (Entry entry : entries) {
 			if (subscriber.isUnsubscribed())
 				return;
 			else {
-				if (criterion.call(entry.mbr()))
+				if (criterion.call(entry.geometry()))
 					subscriber.onNext(entry);
 			}
 		}

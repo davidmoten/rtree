@@ -12,7 +12,7 @@ interface Node extends HasMbr {
 
 	Node add(Entry entry, ImmutableStack<NonLeaf> stack);
 
-	void search(Func1<? super Rectangle, Boolean> criterion,
+	void search(Func1<? super Geometry, Boolean> criterion,
 			Subscriber<? super Entry> subscriber);
 
 }

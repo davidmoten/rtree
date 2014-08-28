@@ -78,7 +78,7 @@ public class RTree {
 		return add(new Entry(object, mbr));
 	}
 
-	public Observable<Entry> search(Func1<Rectangle, Boolean> criterion) {
+	public Observable<Entry> search(Func1<? super Geometry, Boolean> criterion) {
 		if (root.isPresent())
 			return Observable.create(new OnSubscribeSearch(root.get(),
 					criterion));
@@ -86,38 +86,37 @@ public class RTree {
 			return Observable.empty();
 	}
 
-	public static final Comparator<Rectangle> ascendingDistance(
+	public static final Comparator<Geometry> ascendingDistance(final Rectangle r) {
+		return new Comparator<Geometry>() {
+			@Override
+			public int compare(Geometry g1, Geometry g2) {
+				return ((Double) g1.distance(r)).compareTo(g2.distance(r));
+			}
+		};
+	}
+
+	public static final Comparator<Geometry> descendingDistance(
 			final Rectangle r) {
-		return new Comparator<Rectangle>() {
+		return new Comparator<Geometry>() {
 			@Override
-			public int compare(Rectangle r1, Rectangle r2) {
-				return ((Double) r.distance(r1)).compareTo(r.distance(r2));
+			public int compare(Geometry g1, Geometry g2) {
+				return ((Double) g2.distance(r)).compareTo(g1.distance(r));
 			}
 		};
 	}
 
-	public static final Comparator<Rectangle> descendingDistance(
-			final Rectangle r) {
-		return new Comparator<Rectangle>() {
+	public static Func1<Geometry, Boolean> intersects(final Rectangle r) {
+		return new Func1<Geometry, Boolean>() {
 			@Override
-			public int compare(Rectangle r1, Rectangle r2) {
-				return ((Double) r.distance(r2)).compareTo(r.distance(r1));
+			public Boolean call(Geometry g) {
+				return g.intersects(r);
 			}
 		};
 	}
 
-	public static Func1<Rectangle, Boolean> intersects(final Rectangle r) {
-		return new Func1<Rectangle, Boolean>() {
-			@Override
-			public Boolean call(Rectangle rectangle) {
-				return r.intersects(rectangle);
-			}
-		};
-	}
-
-	public static Func1<Rectangle, Boolean> ALL = new Func1<Rectangle, Boolean>() {
+	public static Func1<Geometry, Boolean> ALL = new Func1<Geometry, Boolean>() {
 		@Override
-		public Boolean call(Rectangle rectangle) {
+		public Boolean call(Geometry rectangle) {
 			return true;
 		}
 	};
@@ -127,10 +126,10 @@ public class RTree {
 	}
 
 	public Observable<Entry> search(final Rectangle r, final double maxDistance) {
-		return search(new Func1<Rectangle, Boolean>() {
+		return search(new Func1<Geometry, Boolean>() {
 			@Override
-			public Boolean call(Rectangle rectangle) {
-				return r.distance(rectangle) <= maxDistance;
+			public Boolean call(Geometry g) {
+				return g.distance(r) < maxDistance;
 			}
 		});
 	}

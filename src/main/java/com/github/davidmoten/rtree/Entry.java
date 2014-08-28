@@ -4,13 +4,13 @@ import com.google.common.base.Preconditions;
 
 public class Entry implements HasMbr {
 	private final Object object;
-	private final Rectangle mbr;
+	private final Geometry geometry;
 
-	public Entry(Object object, Rectangle mbr) {
+	public Entry(Object object, Geometry geometry) {
 		Preconditions.checkNotNull(object);
-		Preconditions.checkNotNull(mbr);
+		Preconditions.checkNotNull(geometry);
 		this.object = object;
-		this.mbr = mbr;
+		this.geometry = geometry;
 	}
 
 	public Entry(Object object, double x, double y) {
@@ -23,12 +23,16 @@ public class Entry implements HasMbr {
 
 	@Override
 	public Rectangle mbr() {
-		return mbr;
+		return geometry.mbr();
+	}
+
+	public Geometry geometry() {
+		return geometry;
 	}
 
 	@Override
 	public String toString() {
-		return "Entry [object=" + object + ", mbr=" + mbr + "]";
+		return "Entry [object=" + object + ", geometry=" + geometry + "]";
 	}
 
 }
