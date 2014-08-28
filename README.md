@@ -21,10 +21,6 @@ Features
 * search is O(log(N)) on average
 * all search methods including ```nearest``` and ```furthest``` are streaming instead of *nearest-k* so much more flexible
 
-
-TODO implement ```RTree.delete```
-TODO implement backpressure (?)
-
 Number of points = 100, max children per node 4:
 
 <img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/rtree.png"/>
@@ -78,6 +74,11 @@ output is
 ```
 [FRED]
  ```
+
+Todo
+---------- 
+* implement ```RTree.delete```
+* backpressure (?)
  
 
 
