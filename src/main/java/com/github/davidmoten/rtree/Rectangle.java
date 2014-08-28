@@ -53,16 +53,16 @@ public class Rectangle {
 		return x >= x1 && x <= x2 && y >= y1 && y <= y2;
 	}
 
-	private boolean overlapsOnce(Rectangle r) {
+	private boolean instersectsOnce(Rectangle r) {
 		return r.in(x1, y1) || r.in(x2, y2);
 	}
 
-	public boolean overlaps(Rectangle r) {
-		return overlapsOnce(r) || r.overlapsOnce(this);
+	public boolean intersects(Rectangle r) {
+		return instersectsOnce(r) || r.instersectsOnce(this);
 	}
 
 	public double distance(Rectangle r) {
-		if (overlaps(r))
+		if (intersects(r))
 			return 0;
 		else {
 			Rectangle mostLeft = x1 < r.x1 ? this : r;

@@ -106,11 +106,11 @@ public class RTree {
 		};
 	}
 
-	public static Func1<Rectangle, Boolean> overlaps(final Rectangle r) {
+	public static Func1<Rectangle, Boolean> intersects(final Rectangle r) {
 		return new Func1<Rectangle, Boolean>() {
 			@Override
 			public Boolean call(Rectangle rectangle) {
-				return r.overlaps(rectangle);
+				return r.intersects(rectangle);
 			}
 		};
 	}
@@ -123,7 +123,7 @@ public class RTree {
 	};
 
 	public Observable<Entry> search(final Rectangle r) {
-		return search(overlaps(r));
+		return search(intersects(r));
 	}
 
 	public Observable<Entry> search(final Rectangle r, final double maxDistance) {
