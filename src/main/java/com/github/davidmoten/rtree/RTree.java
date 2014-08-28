@@ -78,11 +78,10 @@ public class RTree {
 		return add(new Entry(object, mbr));
 	}
 
-	public Observable<Entry> search(Func1<Rectangle, Boolean> criterion,
-			Optional<Comparator<Rectangle>> comparator) {
+	public Observable<Entry> search(Func1<Rectangle, Boolean> criterion) {
 		if (root.isPresent())
 			return Observable.create(new OnSubscribeSearch(root.get(),
-					criterion, comparator));
+					criterion));
 		else
 			return Observable.empty();
 	}
@@ -122,18 +121,6 @@ public class RTree {
 			return true;
 		}
 	};
-
-	public Observable<Entry> nearest(Rectangle r) {
-		return search(ALL, of(ascendingDistance(r)));
-	}
-
-	public Observable<Entry> furthest(Rectangle r) {
-		return search(ALL, of(descendingDistance(r)));
-	}
-
-	public Observable<Entry> search(Func1<Rectangle, Boolean> criterion) {
-		return search(criterion, Optional.<Comparator<Rectangle>> absent());
-	}
 
 	public Observable<Entry> search(final Rectangle r) {
 		return search(overlaps(r));

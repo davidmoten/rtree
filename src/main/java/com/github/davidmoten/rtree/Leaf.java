@@ -2,7 +2,6 @@ package com.github.davidmoten.rtree;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import rx.Subscriber;
@@ -10,7 +9,6 @@ import rx.functions.Func1;
 
 import com.github.davidmoten.util.ImmutableStack;
 import com.github.davidmoten.util.ListPair;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 final class Leaf implements Node {
@@ -88,10 +86,9 @@ final class Leaf implements Node {
 
 	@Override
 	public void search(Func1<? super Rectangle, Boolean> criterion,
-			Subscriber<? super Entry> subscriber,
-			Optional<Comparator<Rectangle>> comparator) {
+			Subscriber<? super Entry> subscriber) {
 
-		for (Entry entry : Util.sort(entries, comparator)) {
+		for (Entry entry : entries) {
 			if (subscriber.isUnsubscribed())
 				return;
 			else {

@@ -48,24 +48,6 @@ RTree.search(Func1<Rectangle,Boolean>, Optional<Comparator<Rectangle>>)
 
 Check out [RTree javadoc](http://davidmoten.github.io/rtree/apidocs/com/github/davidmoten/rtree/RTree.html) for more details.
 
-Nearest and Furthest
-----------------------
-To find the nearest k neighbours to a rectangle:
-
-```java
-RTree tree = ...
-Observable<Entry> entries = 
-    tree.nearest(Rectangle.create(8, 15 ,20 ,35)).take(k);
-```
-    
-To find the furthest k neighbours to a rectangle:
-
-```java
-RTree tree = ...
-Observable<Entry> entries = 
-    tree.furthest(Rectangle.create(8, 15 ,20 ,35)).take(k);
-```
- 
 What do I do with the Observable thing?
 ----------------------------------------
 Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).

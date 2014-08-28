@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Test;
 
@@ -51,8 +50,8 @@ public class RTreeTest {
 		assertEquals(n, (int) tree.entries().count().toBlocking().single());
 
 		t = System.currentTimeMillis();
-		Entry entry = tree.nearest(Rectangle.create(100, 100, 101, 101))
-				.first().toBlocking().single();
+		Entry entry = tree.search(Rectangle.create(100, 100, 101, 101)).first()
+				.toBlocking().single();
 		diff = System.currentTimeMillis() - t;
 		System.out.println("found " + entry);
 		System.out
@@ -70,28 +69,6 @@ public class RTreeTest {
 		}
 		tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100), 5).save(
 				new File("target/tree.png"), "PNG");
-	}
-
-	@Test
-	public void testFurthest() {
-		RTree tree = RTree.builder().maxChildren(4).build().add(e(1)).add(e(2))
-				.add(e(4)).add(e(100));
-		List<Entry> list = tree.furthest(r(90)).toList().toBlocking().single();
-		assertEquals(1, list.get(0).mbr().x1(), PRECISION);
-		assertEquals(2, list.get(1).mbr().x1(), PRECISION);
-		assertEquals(4, list.get(2).mbr().x1(), PRECISION);
-		assertEquals(100, list.get(3).mbr().x1(), PRECISION);
-	}
-
-	@Test
-	public void testNearest() {
-		RTree tree = RTree.builder().maxChildren(4).build().add(e(1)).add(e(2))
-				.add(e(4)).add(e(100));
-		List<Entry> list = tree.nearest(r(90)).toList().toBlocking().single();
-		assertEquals(100, list.get(0).mbr().x1(), PRECISION);
-		assertEquals(4, list.get(1).mbr().x1(), PRECISION);
-		assertEquals(2, list.get(2).mbr().x1(), PRECISION);
-		assertEquals(1, list.get(3).mbr().x1(), PRECISION);
 	}
 
 	private static Entry e(int n) {
