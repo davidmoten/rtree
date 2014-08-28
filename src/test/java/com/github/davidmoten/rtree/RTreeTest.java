@@ -50,6 +50,14 @@ public class RTreeTest {
 		System.out.println("inserts/second = " + ((double) n / diff * 1000));
 		assertEquals(n, (int) tree.entries().count().toBlocking().single());
 
+		t = System.currentTimeMillis();
+		Entry entry = tree.nearest(Rectangle.create(100, 100, 101, 101))
+				.first().toBlocking().single();
+		diff = System.currentTimeMillis() - t;
+		System.out.println("found " + entry);
+		System.out
+				.println("time to get nearest with " + n + " entries=" + diff);
+
 	}
 
 	@Test
