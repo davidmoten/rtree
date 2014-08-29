@@ -18,20 +18,20 @@ public class RTreeTest {
 
 	@Test
 	public void testInstantiation() {
-		RTree<Object> tree = new RTree<Object>();
+		RTree<Object> tree = RTree.create();
 		assertTrue(tree.entries().isEmpty().toBlocking().single());
 	}
 
 	@Test
 	public void testSearchEmptyTree() {
-		RTree<Object> tree = new RTree<Object>();
+		RTree<Object> tree = RTree.create();
 		assertTrue(tree.search(r(1)).isEmpty().toBlocking().single());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testSearchOnOneItem() {
-		RTree<Object> tree = new RTree<Object>();
+		RTree<Object> tree = RTree.create();
 		Entry<Object> entry = new Entry<Object>(new Object(), r(1));
 		tree = tree.add(entry);
 		assertEquals(Arrays.asList(entry), tree.search(r(1)).toList()

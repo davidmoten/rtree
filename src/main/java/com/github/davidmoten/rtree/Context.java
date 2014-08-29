@@ -17,10 +17,6 @@ public class Context {
 		this.splitter = splitter;
 	}
 
-	public Context(int maxChildren, Splitter splitter) {
-		this(maxChildren / 2, maxChildren, splitter);
-	}
-
 	public int maxChildren() {
 		return maxChildren;
 	}

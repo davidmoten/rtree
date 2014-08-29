@@ -49,42 +49,14 @@ public class RTree<R> {
 	}
 
 	/**
-	 * Constructor. Creates an empty R-tree with maxChildren at 32 and using a
-	 * {@link QuadraticSplitter}.
-	 */
-	public RTree() {
-		this(Optional.<Node<R>> absent(), new Context(MAX_CHILDREN_DEFAULT,
-				new QuadraticSplitter()));
-	}
-
-	/**
-	 * Constructor. Creates an empty R-tree using specified maxChildren and a
-	 * {@link QuadraticSplitter}.
-	 * 
-	 * @param maxChildren
-	 */
-	public RTree(int maxChildren) {
-		this(Optional.<Node<R>> absent(), new Context(maxChildren,
-				new QuadraticSplitter()));
-	}
-
-	/**
-	 * Constructor. Creates an empty R-tree using specified maxChildren and
-	 * splitter.
-	 * 
-	 * @param maxChildren
-	 * @param splitter
-	 *            for example {@link QuadraticSplitter}
-	 */
-	public RTree(int maxChildren, Splitter splitter) {
-		this(Optional.<Node<R>> absent(), new Context(maxChildren, splitter));
-	}
-
-	/**
 	 * Returns a new Builder instance for {@link RTree}.
 	 */
 	public static <T> RTree<T> create() {
 		return new Builder().create();
+	}
+
+	public static Builder minChildren(int minChildren) {
+		return new Builder().minChildren(minChildren);
 	}
 
 	public static Builder maxChildren(int maxChildren) {
@@ -101,9 +73,15 @@ public class RTree<R> {
 	public static class Builder {
 
 		private int maxChildren = 8;
+		private Integer minChildren = null;
 		private Splitter splitter = new QuadraticSplitter();
 
 		private Builder() {
+		}
+
+		public Builder minChildren(int minChildren) {
+			this.minChildren = minChildren;
+			return this;
 		}
 
 		/**
@@ -132,7 +110,10 @@ public class RTree<R> {
 		 * Builds the {@link RTree}.
 		 */
 		public <S> RTree<S> create() {
-			return new RTree<S>(maxChildren, splitter);
+			if (minChildren == null)
+				minChildren = maxChildren / 2;
+			return new RTree<S>(Optional.<Node<S>> absent(), new Context(
+					minChildren, maxChildren, splitter));
 		}
 	}
 
