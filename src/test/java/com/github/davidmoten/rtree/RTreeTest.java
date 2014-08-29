@@ -121,7 +121,7 @@ public class RTreeTest {
 		Entry<Object> e1 = e(1);
 		Entry<Object> e2 = e(2);
 		RTree<Object> tree = RTree.builder().build().add(e1);
-		assertEquals(tree, tree.delete(e2));
+		assertTrue(tree == tree.delete(e2));
 	}
 
 	private static Entry<Object> e(int n) {
