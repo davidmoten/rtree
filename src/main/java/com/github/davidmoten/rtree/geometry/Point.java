@@ -1,12 +1,15 @@
 package com.github.davidmoten.rtree.geometry;
 
-
 public class Point implements Geometry {
 
 	private final Rectangle mbr;
 
 	public Point(float x, float y) {
 		this.mbr = Rectangle.create(x, y, x, y);
+	}
+
+	public static Point create(double x, double y) {
+		return new Point((float) x, (float) y);
 	}
 
 	@Override
