@@ -103,7 +103,7 @@ final class Leaf<T> implements Node<T> {
 			final NonLeaf<R> node1 = new NonLeaf<R>(pair.list1(), context);
 			final NonLeaf<R> node2 = new NonLeaf<R>(pair.list2(), context);
 			@SuppressWarnings("unchecked")
-			List<NonLeaf<R>> nodes = Lists.newArrayList(node1, node2);
+			final List<NonLeaf<R>> nodes = Lists.newArrayList(node1, node2);
 			return replace(n, nodes, stack.pop(), context);
 		}
 	}
@@ -120,17 +120,17 @@ final class Leaf<T> implements Node<T> {
 				// indicates not found to parent
 				return Optional.absent();
 		}
-		List<Entry<T>> newChildren = Util.remove(entries, entry);
+		final List<Entry<T>> newChildren = Util.remove(entries, entry);
 		if (newChildren.size() >= context.minChildren()) {
 			final Leaf<T> leaf = new Leaf<T>(newChildren, context);
 			return replace(this, leaf, stack, context);
 		} else {
 			// we have less than the minimum number of children so remove all
 			// children and add them to the RTree again
-			Optional<Node<T>> afterRemoveAllChildren = replace(this,
+			final Optional<Node<T>> afterRemoveAllChildren = replace(this,
 					Collections.<Node<T>> emptyList(), stack, context);
 			Optional<Node<T>> result = Optional.absent();
-			for (Entry<T> child : newChildren) {
+			for (final Entry<T> child : newChildren) {
 				if (!result.isPresent()) {
 					if (afterRemoveAllChildren.isPresent()) {
 						result = afterRemoveAllChildren;
@@ -152,7 +152,7 @@ final class Leaf<T> implements Node<T> {
 	public void search(Func1<? super Geometry, Boolean> criterion,
 			Subscriber<? super Entry<T>> subscriber) {
 
-		for (Entry<T> entry : entries) {
+		for (final Entry<T> entry : entries) {
 			if (subscriber.isUnsubscribed())
 				return;
 			else {

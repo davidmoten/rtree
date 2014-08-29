@@ -49,7 +49,7 @@ final class Util {
 
 	private static <T extends HasMbr> List<T> sort(List<T> entries,
 			final Comparator<? super Rectangle> comparator) {
-		List<T> list = new ArrayList<T>(entries);
+		final List<T> list = new ArrayList<T>(entries);
 		Collections.sort(list, new Comparator<T>() {
 			@Override
 			public int compare(T e1, T e2) {
