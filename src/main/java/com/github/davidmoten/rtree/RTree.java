@@ -22,10 +22,10 @@ public class RTree<R> {
 	private final ImmutableStack<NonLeaf<R>> emptyStack = ImmutableStack
 			.<NonLeaf<R>> empty();
 
-	private static final int MAX_CHILDREN_DEFAULT = 32;
-
 	private final Optional<Node<R>> root;
 	private final Context context;
+
+	public static final int MAX_CHILDREN_DEFAULT = 128;
 
 	/**
 	 * Constructor.
@@ -49,20 +49,42 @@ public class RTree<R> {
 	}
 
 	/**
-	 * Returns a new Builder instance for {@link RTree}.
+	 * Returns a new Builder instance for {@link RTree}. Defaults to
+	 * maxChildren=128, minChildren=64, splitter=QuadraticSplitter.
+	 * 
+	 * @return a new RTree instance
 	 */
 	public static <T> RTree<T> create() {
 		return new Builder().create();
 	}
 
+	/**
+	 * When the number of children in an R-tree node drops below this number the
+	 * node is deleted and the children are added on to the R-tree again.
+	 * 
+	 * @param minChildren
+	 * @return
+	 */
 	public static Builder minChildren(int minChildren) {
 		return new Builder().minChildren(minChildren);
 	}
 
+	/**
+	 * Sets the max number of children in an R-tree node.
+	 * 
+	 * @param maxChildren
+	 * @return
+	 */
 	public static Builder maxChildren(int maxChildren) {
 		return new Builder().maxChildren(maxChildren);
 	}
 
+	/**
+	 * Sets the {@link Splitter} to use when maxChildren is reached.
+	 * 
+	 * @param splitter
+	 * @return
+	 */
 	public static Builder splitter(Splitter splitter) {
 		return new Builder().splitter(splitter);
 	}
@@ -72,13 +94,21 @@ public class RTree<R> {
 	 */
 	public static class Builder {
 
-		private int maxChildren = 8;
+		private int maxChildren = MAX_CHILDREN_DEFAULT;
 		private Integer minChildren = null;
 		private Splitter splitter = new QuadraticSplitter();
 
 		private Builder() {
 		}
 
+		/**
+		 * When the number of children in an R-tree node drops below this number
+		 * the node is deleted and the children are added on to the R-tree
+		 * again.
+		 * 
+		 * @param minChildren
+		 * @return
+		 */
 		public Builder minChildren(int minChildren) {
 			this.minChildren = minChildren;
 			return this;
