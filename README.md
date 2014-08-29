@@ -46,6 +46,9 @@ Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).
 As an example, suppose you want filter the search results then apply a function on each in parallel and reduce to some best answer:
 
 ```java
+import rx.Observable;
+import rx.functions.*;
+
 Func1<Entry<String>, Character> firstCharacter = entry -> entry.object().charAt(0);
 Func2<Character,Character,Character> firstAlphabetically = (x,y) -> x <=y ? x : y;
 
