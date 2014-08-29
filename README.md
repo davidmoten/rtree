@@ -7,6 +7,10 @@ Status: *pre-alpha*
 
 This was fun to make, has an elegant concise algorithm, is thread-safe and fast.
 
+The algorithm to achieve immutability is cute. For insertion/deletion it involves recursion down to the 
+required leaf node then recursion back up using a recorded stack to replace the parent nodes up to the root. The guts of 
+it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/Leaf.java).
+
 Continuous integration with Jenkins: <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/rtree/badge/icon"/></a>
 
 Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) including [javadoc](http://davidmoten.github.io/rtree/apidocs/index.html).
@@ -48,8 +52,6 @@ git clone https://github.com/davidmoten/rtree.git
 cd rtree
 mvn clean install
 ```
-
-
 Example
 --------------
 ```java
