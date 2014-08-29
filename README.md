@@ -14,8 +14,8 @@ Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) incl
 Features
 ------------
 * Immutable R-tree suitable for concurrency
-* Pluggable splitting heuristic ([```Splitter```](src/main/java/com/github/davidmoten/rtree/Splitter)). Default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf)).
-* Pluggable insert heuristic ([```Selector```](src/main/java/com/github/davidmoten/rtree/Splitter)). Default is least mbr area increase.
+* Pluggable splitting heuristic ([```Splitter```](src/main/java/com/github/davidmoten/rtree/Splitter.java)). Default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf)).
+* Pluggable insert heuristic ([```Selector```](src/main/java/com/github/davidmoten/rtree/Selector.java)). Default is least mbr area increase.
 * Search returns Observable 
 * Search is cancelled by unsubscription
 * over 80K inserts per second on i7 single thread
