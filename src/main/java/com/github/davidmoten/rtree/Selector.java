@@ -11,6 +11,6 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
  */
 public interface Selector {
 
-	<T> Node<T> select(Rectangle r, List<? extends Node<T>> nodes);
+    <T> Node<T> select(Rectangle r, List<? extends Node<T>> nodes);
 
 }

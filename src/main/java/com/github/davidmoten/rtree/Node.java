@@ -10,11 +10,10 @@ import com.google.common.base.Optional;
 
 interface Node<T> extends HasGeometry {
 
-	Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
+    Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
 
-	void search(Func1<? super Geometry, Boolean> criterion,
-			Subscriber<? super Entry<T>> subscriber);
+    void search(Func1<? super Geometry, Boolean> criterion, Subscriber<? super Entry<T>> subscriber);
 
-	Optional<Node<T>> delete(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
+    Optional<Node<T>> delete(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
 
 }

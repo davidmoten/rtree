@@ -6,5 +6,5 @@ import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.util.ListPair;
 
 public interface Splitter {
-	<T extends HasGeometry> ListPair<T> split(List<T> items);
+    <T extends HasGeometry> ListPair<T> split(List<T> items);
 }

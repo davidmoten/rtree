@@ -20,286 +20,276 @@ import com.google.common.collect.Lists;
  */
 public class RTree<R> {
 
-	private final ImmutableStack<NonLeaf<R>> emptyStack = ImmutableStack
-			.<NonLeaf<R>> empty();
+    private final ImmutableStack<NonLeaf<R>> emptyStack = ImmutableStack.<NonLeaf<R>> empty();
 
-	private final Optional<Node<R>> root;
-	private final Context context;
+    private final Optional<Node<R>> root;
+    private final Context context;
 
-	public static final int MAX_CHILDREN_DEFAULT = 128;
+    public static final int MAX_CHILDREN_DEFAULT = 128;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param root
-	 * @param context
-	 */
-	private RTree(Optional<Node<R>> root, Context context) {
-		this.root = root;
-		this.context = context;
-	}
+    /**
+     * Constructor.
+     * 
+     * @param root
+     * @param context
+     */
+    private RTree(Optional<Node<R>> root, Context context) {
+        this.root = root;
+        this.context = context;
+    }
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param root
-	 * @param context
-	 */
-	private RTree(Node<R> root, Context context) {
-		this(of(root), context);
-	}
+    /**
+     * Constructor.
+     * 
+     * @param root
+     * @param context
+     */
+    private RTree(Node<R> root, Context context) {
+        this(of(root), context);
+    }
 
-	/**
-	 * Returns a new Builder instance for {@link RTree}. Defaults to
-	 * maxChildren=128, minChildren=64, splitter=QuadraticSplitter.
-	 * 
-	 * @return a new RTree instance
-	 */
-	public static <T> RTree<T> create() {
-		return new Builder().create();
-	}
+    /**
+     * Returns a new Builder instance for {@link RTree}. Defaults to
+     * maxChildren=128, minChildren=64, splitter=QuadraticSplitter.
+     * 
+     * @return a new RTree instance
+     */
+    public static <T> RTree<T> create() {
+        return new Builder().create();
+    }
 
-	/**
-	 * When the number of children in an R-tree node drops below this number the
-	 * node is deleted and the children are added on to the R-tree again.
-	 * 
-	 * @param minChildren
-	 * @return
-	 */
-	public static Builder minChildren(int minChildren) {
-		return new Builder().minChildren(minChildren);
-	}
+    /**
+     * When the number of children in an R-tree node drops below this number the
+     * node is deleted and the children are added on to the R-tree again.
+     * 
+     * @param minChildren
+     * @return
+     */
+    public static Builder minChildren(int minChildren) {
+        return new Builder().minChildren(minChildren);
+    }
 
-	/**
-	 * Sets the max number of children in an R-tree node.
-	 * 
-	 * @param maxChildren
-	 * @return
-	 */
-	public static Builder maxChildren(int maxChildren) {
-		return new Builder().maxChildren(maxChildren);
-	}
+    /**
+     * Sets the max number of children in an R-tree node.
+     * 
+     * @param maxChildren
+     * @return
+     */
+    public static Builder maxChildren(int maxChildren) {
+        return new Builder().maxChildren(maxChildren);
+    }
 
-	/**
-	 * Sets the {@link Splitter} to use when maxChildren is reached.
-	 * 
-	 * @param splitter
-	 * @return
-	 */
-	public static Builder splitter(Splitter splitter) {
-		return new Builder().splitter(splitter);
-	}
+    /**
+     * Sets the {@link Splitter} to use when maxChildren is reached.
+     * 
+     * @param splitter
+     * @return
+     */
+    public static Builder splitter(Splitter splitter) {
+        return new Builder().splitter(splitter);
+    }
 
-	/**
-	 * RTree Builder
-	 */
-	public static class Builder {
+    /**
+     * RTree Builder
+     */
+    public static class Builder {
 
-		private int maxChildren = MAX_CHILDREN_DEFAULT;
-		private Optional<Integer> minChildren = absent();
-		private Splitter splitter = new QuadraticSplitter();
-		private Selector selector = new SelectorMinimalAreaIncrease();
+        private int maxChildren = MAX_CHILDREN_DEFAULT;
+        private Optional<Integer> minChildren = absent();
+        private Splitter splitter = new QuadraticSplitter();
+        private Selector selector = new SelectorMinimalAreaIncrease();
 
-		private Builder() {
-		}
+        private Builder() {
+        }
 
-		/**
-		 * When the number of children in an R-tree node drops below this number
-		 * the node is deleted and the children are added on to the R-tree
-		 * again.
-		 * 
-		 * @param minChildren
-		 * @return
-		 */
-		public Builder minChildren(int minChildren) {
-			this.minChildren = of(minChildren);
-			return this;
-		}
+        /**
+         * When the number of children in an R-tree node drops below this number
+         * the node is deleted and the children are added on to the R-tree
+         * again.
+         * 
+         * @param minChildren
+         * @return
+         */
+        public Builder minChildren(int minChildren) {
+            this.minChildren = of(minChildren);
+            return this;
+        }
 
-		/**
-		 * Sets the max number of children in an R-tree node.
-		 * 
-		 * @param maxChildren
-		 * @return
-		 */
-		public Builder maxChildren(int maxChildren) {
-			this.maxChildren = maxChildren;
-			return this;
-		}
+        /**
+         * Sets the max number of children in an R-tree node.
+         * 
+         * @param maxChildren
+         * @return
+         */
+        public Builder maxChildren(int maxChildren) {
+            this.maxChildren = maxChildren;
+            return this;
+        }
 
-		/**
-		 * Sets the {@link Splitter} to use when maxChildren is reached.
-		 * 
-		 * @param splitter
-		 * @return
-		 */
-		public Builder splitter(Splitter splitter) {
-			this.splitter = splitter;
-			return this;
-		}
+        /**
+         * Sets the {@link Splitter} to use when maxChildren is reached.
+         * 
+         * @param splitter
+         * @return
+         */
+        public Builder splitter(Splitter splitter) {
+            this.splitter = splitter;
+            return this;
+        }
 
-		public <T> Builder selector(Selector selector) {
-			this.selector = selector;
-			return this;
-		}
+        public <T> Builder selector(Selector selector) {
+            this.selector = selector;
+            return this;
+        }
 
-		/**
-		 * Builds the {@link RTree}.
-		 */
-		public <S> RTree<S> create() {
-			if (!minChildren.isPresent())
-				minChildren = of(maxChildren / 2);
-			return new RTree<S>(Optional.<Node<S>> absent(), new Context(
-					minChildren.get(), maxChildren, selector, splitter));
-		}
-	}
+        /**
+         * Builds the {@link RTree}.
+         */
+        public <S> RTree<S> create() {
+            if (!minChildren.isPresent())
+                minChildren = of(maxChildren / 2);
+            return new RTree<S>(Optional.<Node<S>> absent(), new Context(minChildren.get(),
+                    maxChildren, selector, splitter));
+        }
+    }
 
-	/**
-	 * Adds an entry to the R-tree.
-	 * 
-	 * @param entry
-	 *            item to add to the R-tree.
-	 * @return a new immutable R-trees
-	 */
-	@SuppressWarnings("unchecked")
-	public RTree<R> add(Entry<R> entry) {
-		if (root.isPresent())
-			return new RTree<R>(root.get().add(entry, emptyStack), context);
-		else
-			return new RTree<R>(
-					new Leaf<R>(Lists.newArrayList(entry), context), context);
-	}
+    /**
+     * Adds an entry to the R-tree.
+     * 
+     * @param entry
+     *            item to add to the R-tree.
+     * @return a new immutable R-trees
+     */
+    @SuppressWarnings("unchecked")
+    public RTree<R> add(Entry<R> entry) {
+        if (root.isPresent())
+            return new RTree<R>(root.get().add(entry, emptyStack), context);
+        else
+            return new RTree<R>(new Leaf<R>(Lists.newArrayList(entry), context), context);
+    }
 
-	public RTree<R> delete(Entry<R> entry) {
-		if (root.isPresent()) {
-			final Optional<Node<R>> newRoot = root.get().delete(entry,
-					emptyStack);
-			if (newRoot.equals(root))
-				return this;
-			else
-				return new RTree<R>(newRoot, context);
-		} else
-			return this;
-	}
+    public RTree<R> delete(Entry<R> entry) {
+        if (root.isPresent()) {
+            final Optional<Node<R>> newRoot = root.get().delete(entry, emptyStack);
+            if (newRoot.equals(root))
+                return this;
+            else
+                return new RTree<R>(newRoot, context);
+        } else
+            return this;
+    }
 
-	/**
-	 * Returns an Observable sequence of {@link Entry} where the criterion is
-	 * satisfied both for the returned entries and the minimum bounding
-	 * rectangles in the ancestor nodes.
-	 * 
-	 * @param criterion
-	 * @return
-	 */
-	public Observable<Entry<R>> search(
-			Func1<? super Geometry, Boolean> criterion) {
-		if (root.isPresent())
-			return Observable.create(new OnSubscribeSearch<R>(root.get(),
-					criterion));
-		else
-			return Observable.empty();
-	}
+    /**
+     * Returns an Observable sequence of {@link Entry} where the criterion is
+     * satisfied both for the returned entries and the minimum bounding
+     * rectangles in the ancestor nodes.
+     * 
+     * @param criterion
+     * @return
+     */
+    public Observable<Entry<R>> search(Func1<? super Geometry, Boolean> criterion) {
+        if (root.isPresent())
+            return Observable.create(new OnSubscribeSearch<R>(root.get(), criterion));
+        else
+            return Observable.empty();
+    }
 
-	/**
-	 * <p>
-	 * Returns a comparator that can be used to sort entries returned by search
-	 * methods. For example:
-	 * </p>
-	 * <p>
-	 * <code>search(100).toSortedList(ascendingDistance(r))</code>
-	 * </p>
-	 * 
-	 * @param r
-	 * @return
-	 */
-	public static final <S> Comparator<Entry<S>> ascendingDistance(
-			final Rectangle r) {
-		return new Comparator<Entry<S>>() {
-			@Override
-			public int compare(Entry<S> e1, Entry<S> e2) {
-				return ((Double) e1.geometry().distance(r)).compareTo(e2
-						.geometry().distance(r));
-			}
-		};
-	}
+    /**
+     * <p>
+     * Returns a comparator that can be used to sort entries returned by search
+     * methods. For example:
+     * </p>
+     * <p>
+     * <code>search(100).toSortedList(ascendingDistance(r))</code>
+     * </p>
+     * 
+     * @param r
+     * @return
+     */
+    public static final <S> Comparator<Entry<S>> ascendingDistance(final Rectangle r) {
+        return new Comparator<Entry<S>>() {
+            @Override
+            public int compare(Entry<S> e1, Entry<S> e2) {
+                return ((Double) e1.geometry().distance(r)).compareTo(e2.geometry().distance(r));
+            }
+        };
+    }
 
-	/**
-	 * Returns a predicate function that indicates if {@link Geometry}
-	 * intersects with a given rectangle.
-	 * 
-	 * @param r
-	 *            the rectangle to check intersection with
-	 * @return whether the geometry and the rectangle intersect
-	 */
-	public static Func1<Geometry, Boolean> intersects(final Rectangle r) {
-		return new Func1<Geometry, Boolean>() {
-			@Override
-			public Boolean call(Geometry g) {
-				return g.intersects(r);
-			}
-		};
-	}
+    /**
+     * Returns a predicate function that indicates if {@link Geometry}
+     * intersects with a given rectangle.
+     * 
+     * @param r
+     *            the rectangle to check intersection with
+     * @return whether the geometry and the rectangle intersect
+     */
+    public static Func1<Geometry, Boolean> intersects(final Rectangle r) {
+        return new Func1<Geometry, Boolean>() {
+            @Override
+            public Boolean call(Geometry g) {
+                return g.intersects(r);
+            }
+        };
+    }
 
-	/**
-	 * Returns the always true predicate. See {@link RTree#entries()} for
-	 * example use.
-	 */
-	public static Func1<Geometry, Boolean> ALWAYS_TRUE = new Func1<Geometry, Boolean>() {
-		@Override
-		public Boolean call(Geometry rectangle) {
-			return true;
-		}
-	};
+    /**
+     * Returns the always true predicate. See {@link RTree#entries()} for
+     * example use.
+     */
+    public static final Func1<Geometry, Boolean> ALWAYS_TRUE = new Func1<Geometry, Boolean>() {
+        @Override
+        public Boolean call(Geometry rectangle) {
+            return true;
+        }
+    };
 
-	/**
-	 * Returns an {@link Observable} sequence of all {@link Entry}s in the
-	 * R-tree whose minimum bounding rectangle intersects with the given
-	 * rectangle.
-	 * 
-	 * @param r
-	 *            rectangle to check intersection with the entry mbr
-	 * @return entries that intersect with the rectangle r
-	 */
-	public Observable<Entry<R>> search(final Rectangle r) {
-		return search(intersects(r));
-	}
+    /**
+     * Returns an {@link Observable} sequence of all {@link Entry}s in the
+     * R-tree whose minimum bounding rectangle intersects with the given
+     * rectangle.
+     * 
+     * @param r
+     *            rectangle to check intersection with the entry mbr
+     * @return entries that intersect with the rectangle r
+     */
+    public Observable<Entry<R>> search(final Rectangle r) {
+        return search(intersects(r));
+    }
 
-	/**
-	 * Returns an {@link Observable} sequence of all {@link Entry}s in the
-	 * R-tree whose minimum bounding rectangles are within maxDistance from the
-	 * given rectangle.
-	 * 
-	 * @param r
-	 * @param maxDistance
-	 * @return
-	 */
-	public Observable<Entry<R>> search(final Rectangle r,
-			final double maxDistance) {
-		return search(new Func1<Geometry, Boolean>() {
-			@Override
-			public Boolean call(Geometry g) {
-				return g.distance(r) < maxDistance;
-			}
-		});
-	}
+    /**
+     * Returns an {@link Observable} sequence of all {@link Entry}s in the
+     * R-tree whose minimum bounding rectangles are within maxDistance from the
+     * given rectangle.
+     * 
+     * @param r
+     * @param maxDistance
+     * @return
+     */
+    public Observable<Entry<R>> search(final Rectangle r, final double maxDistance) {
+        return search(new Func1<Geometry, Boolean>() {
+            @Override
+            public Boolean call(Geometry g) {
+                return g.distance(r) < maxDistance;
+            }
+        });
+    }
 
-	public Observable<Entry<R>> nearest(final Rectangle r,
-			final double maxDistance, int maxCount) {
-		return search(r, maxDistance).lift(
-				new OperatorBoundedPriorityQueue<Entry<R>>(maxCount, RTree
-						.<R> ascendingDistance(r)));
-	}
+    public Observable<Entry<R>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
+        return search(r, maxDistance)
+                .lift(new OperatorBoundedPriorityQueue<Entry<R>>(maxCount, RTree
+                        .<R> ascendingDistance(r)));
+    }
 
-	public Observable<Entry<R>> entries() {
-		return search(ALWAYS_TRUE);
-	}
+    public Observable<Entry<R>> entries() {
+        return search(ALWAYS_TRUE);
+    }
 
-	public Visualizer visualize(int width, int height, Rectangle view,
-			int maxDepth) {
-		return new Visualizer(this, width, height, view);
-	}
+    public Visualizer visualize(int width, int height, Rectangle view, int maxDepth) {
+        return new Visualizer(this, width, height, view);
+    }
 
-	Optional<Node<R>> root() {
-		return root;
-	}
+    Optional<Node<R>> root() {
+        return root;
+    }
 
 }
