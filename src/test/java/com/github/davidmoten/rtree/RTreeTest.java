@@ -32,7 +32,7 @@ public class RTreeTest {
     @Test
     public void testSearchOnOneItem() {
         RTree<Object> tree = RTree.create();
-        Entry<Object> entry = new EntryImpl<Object>(new Object(), r(1));
+        Entry<Object> entry = new Entry<Object>(new Object(), r(1));
         tree = tree.add(entry);
         assertEquals(Arrays.asList(entry), tree.search(r(1)).toList().toBlocking().single());
         System.out.println("entries=" + tree.entries().toList().toBlocking().single());
@@ -60,7 +60,7 @@ public class RTreeTest {
     private static RTree<Object> createRandomRTree(int n) {
         RTree<Object> tree = RTree.maxChildren(4).create();
         for (int i = 0; i < n; i++) {
-            Entry<Object> entry = new EntryImpl<Object>(new Object(), random());
+            Entry<Object> entry = new Entry<Object>(new Object(), random());
             tree = tree.add(entry);
         }
         return tree;
@@ -119,7 +119,7 @@ public class RTreeTest {
     }
 
     private static Entry<Object> e(int n) {
-        return new EntryImpl<Object>(new Object(), r(n));
+        return new Entry<Object>(new Object(), r(n));
     }
 
     private static Rectangle r(int n) {
