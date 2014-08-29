@@ -12,7 +12,6 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
 import com.github.davidmoten.util.ListPair;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 final class Leaf<T> implements Node<T> {
@@ -22,8 +21,6 @@ final class Leaf<T> implements Node<T> {
     private final Context context;
 
     Leaf(List<Entry<T>> entries, Context context) {
-        Preconditions.checkNotNull(entries);
-        Preconditions.checkNotNull(context);
         this.entries = entries;
         this.context = context;
         this.mbr = Util.mbr(entries);
@@ -44,7 +41,6 @@ final class Leaf<T> implements Node<T> {
 
     @Override
     public Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack) {
-        Preconditions.checkNotNull(stack);
         final List<Entry<T>> newChildren = Util.add(entries, entry);
         if (entries.size() < context.maxChildren()) {
             final Leaf<T> leaf = new Leaf<T>(newChildren, context);
@@ -66,7 +62,6 @@ final class Leaf<T> implements Node<T> {
 
     private static <R> Optional<Node<R>> replace(Node<R> node,
             List<? extends Node<R>> replacements, ImmutableStack<NonLeaf<R>> stack, Context context) {
-        Preconditions.checkArgument(replacements.size() < context.maxChildren());
 
         if (stack.isEmpty() && replacements.size() == 0)
             return Optional.absent();
@@ -101,7 +96,6 @@ final class Leaf<T> implements Node<T> {
 
     @Override
     public Optional<Node<T>> delete(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack) {
-        Preconditions.checkNotNull(stack);
         if (!entries.contains(entry)) {
             if (stack.isEmpty())
                 // we are at the root node, just return it unchanged
@@ -136,8 +130,7 @@ final class Leaf<T> implements Node<T> {
                     result = Optional.<Node<T>> of(new Leaf<T>(child, context));
                 }
             } else
-                result = Optional.of(result.get().add(child,
-                        ImmutableStack.<NonLeaf<T>> empty()));
+                result = Optional.of(result.get().add(child, ImmutableStack.<NonLeaf<T>> empty()));
         }
         return result;
     }

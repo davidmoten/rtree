@@ -18,8 +18,8 @@ final class NonLeaf<T> implements Node<T> {
     private final Context context;
 
     NonLeaf(List<? extends Node<T>> children, Context context) {
-        this.context = context;
         Preconditions.checkArgument(!children.isEmpty());
+        this.context = context;
         this.children = children;
         this.mbr = Util.mbr(children);
     }
