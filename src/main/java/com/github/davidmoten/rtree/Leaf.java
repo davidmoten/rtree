@@ -29,6 +29,10 @@ final class Leaf<T> implements Node<T> {
 		this.mbr = Util.mbr(entries);
 	}
 
+	private Leaf(Entry<T> entry, Context context) {
+		this(Collections.singletonList(entry), context);
+	}
+
 	@Override
 	public Rectangle mbr() {
 		return mbr;
@@ -90,7 +94,7 @@ final class Leaf<T> implements Node<T> {
 		if (newChildren.size() == 0) {
 			return replace(n, Collections.<Node<R>> emptyList(), stack.pop(),
 					context);
-		} else if (n.children().size() < context.maxChildren()) {
+		} else if (newChildren.size() <= context.maxChildren()) {
 			final NonLeaf<R> newNode = new NonLeaf<R>(newChildren);
 			return replace(n, newNode, stack.pop(), context);
 		} else {
@@ -107,24 +111,35 @@ final class Leaf<T> implements Node<T> {
 	@Override
 	public Optional<Node<T>> delete(Entry<T> entry,
 			ImmutableStack<NonLeaf<T>> stack) {
-		throw new RuntimeException("not implemented yet");
-		// Preconditions.checkNotNull(stack);
-		// if (!entries.contains(entry))
-		// return Optional.absent();
-		// List<Entry<T>> newChildren = Util.remove(entries, entry);
-		// if (entries.size() > context.minChildren()) {
-		// final Leaf<T> leaf = new Leaf<T>(newChildren, context);
-		// return Optional.of(replace(this, leaf, stack, context));
-		// } else {
-		// final ListPair<Entry<T>> pair = context.splitter().split(
-		// newChildren);
-		// final Leaf<T> leaf1 = new Leaf<T>(pair.list1(), context);
-		// final Leaf<T> leaf2 = new Leaf<T>(pair.list2(), context);
-		// @SuppressWarnings("unchecked")
-		// final List<Leaf<T>> list = Arrays.asList(leaf1, leaf2);
-		// return replace(this, list, stack, context);
-		// }
-
+		Preconditions.checkNotNull(stack);
+		if (!entries.contains(entry))
+			return Optional.absent();
+		List<Entry<T>> newChildren = Util.remove(entries, entry);
+		if (newChildren.size() >= context.minChildren()) {
+			final Leaf<T> leaf = new Leaf<T>(newChildren, context);
+			return replace(this, leaf, stack, context);
+		} else {
+			// we have less than the minimum number of children so remove all
+			// children and add them to the RTree again
+			Optional<Node<T>> afterRemoveAllChildren = replace(this,
+					Collections.<Node<T>> emptyList(), stack, context);
+			Optional<Node<T>> result = Optional.absent();
+			for (Entry<T> child : newChildren) {
+				if (!result.isPresent()) {
+					if (afterRemoveAllChildren.isPresent()) {
+						result = afterRemoveAllChildren;
+						result = Optional.of(result.get().add(child,
+								ImmutableStack.<NonLeaf<T>> empty()));
+					} else {
+						result = Optional.<Node<T>> of(new Leaf<T>(child,
+								context));
+					}
+				} else
+					result = Optional.of(result.get().add(child,
+							ImmutableStack.<NonLeaf<T>> empty()));
+			}
+			return result;
+		}
 	}
 
 	@Override
