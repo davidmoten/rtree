@@ -6,7 +6,7 @@ import static com.google.common.base.Optional.of;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.davidmoten.rtree.geometry.HasMbr;
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ListPair;
 import com.github.davidmoten.util.Pair;
@@ -19,7 +19,7 @@ public class QuadraticSplitter implements Splitter {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends HasMbr> ListPair<T> split(List<T> items) {
+	public <T extends HasGeometry> ListPair<T> split(List<T> items) {
 		Preconditions.checkArgument(items.size() >= 2);
 
 		// according to
@@ -49,15 +49,15 @@ public class QuadraticSplitter implements Splitter {
 		return new ListPair<T>(group1, group2);
 	}
 
-	private <T extends HasMbr> void assignRemaining(final List<T> group1,
+	private <T extends HasGeometry> void assignRemaining(final List<T> group1,
 			final List<T> group2, final List<T> remaining,
 			final int minGroupSize) {
 		final Rectangle mbr1 = Util.mbr(group1);
 		final Rectangle mbr2 = Util.mbr(group2);
 		final T item1 = getBestCandidateForGroup(remaining, group1, mbr1);
 		final T item2 = getBestCandidateForGroup(remaining, group2, mbr2);
-		final boolean area1LessThanArea2 = item1.mbr().add(mbr1).area() <= item2
-				.mbr().add(mbr2).area();
+		final boolean area1LessThanArea2 = item1.geometry().mbr().add(mbr1)
+				.area() <= item2.geometry().mbr().add(mbr2).area();
 
 		if (area1LessThanArea2
 				&& (group2.size() + remaining.size() - 1 >= minGroupSize)
@@ -72,13 +72,13 @@ public class QuadraticSplitter implements Splitter {
 	}
 
 	@VisibleForTesting
-	static <T extends HasMbr> T getBestCandidateForGroup(List<T> list,
+	static <T extends HasGeometry> T getBestCandidateForGroup(List<T> list,
 			List<T> group, Rectangle groupMbr) {
 		Preconditions.checkArgument(!list.isEmpty());
 		Optional<T> minEntry = absent();
 		Optional<Double> minArea = absent();
 		for (final T entry : list) {
-			final double area = groupMbr.add(entry.mbr()).area();
+			final double area = groupMbr.add(entry.geometry().mbr()).area();
 			if (!minArea.isPresent() || area < minArea.get()) {
 				minArea = of(area);
 				minEntry = of(entry);
@@ -88,7 +88,7 @@ public class QuadraticSplitter implements Splitter {
 	}
 
 	@VisibleForTesting
-	static <T extends HasMbr> Pair<T> worstCombination(List<T> items) {
+	static <T extends HasGeometry> Pair<T> worstCombination(List<T> items) {
 		Optional<T> e1 = absent();
 		Optional<T> e2 = absent();
 		{
@@ -96,8 +96,8 @@ public class QuadraticSplitter implements Splitter {
 			for (final T entry1 : items) {
 				for (final T entry2 : items) {
 					if (entry1 != entry2) {
-						final double area = entry1.mbr().add(entry2.mbr())
-								.area();
+						final double area = entry1.geometry().mbr()
+								.add(entry2.geometry().mbr()).area();
 						if (!maxArea.isPresent() || area > maxArea.get()) {
 							e1 = of(entry1);
 							e2 = of(entry2);

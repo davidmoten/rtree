@@ -1,12 +1,9 @@
 package com.github.davidmoten.rtree;
 
-import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.HasMbr;
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 
-public interface Entry<T> extends HasMbr {
+public interface Entry<T> extends HasGeometry {
 
 	T object();
-
-	Geometry geometry();
 
 }

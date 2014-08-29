@@ -7,7 +7,7 @@ import com.github.davidmoten.rtree.Entry;
  * that implementations of this interface implement equals() and hashCode()
  * appropriately that {@link Entry} equality checks work as expected.
  */
-public interface Geometry extends HasMbr {
+public interface Geometry {
 
 	/**
 	 * Returns the distance to the given {@link Rectangle}. For a
@@ -25,8 +25,14 @@ public interface Geometry extends HasMbr {
 	 * {@link Rectangle}.
 	 * 
 	 * @param r
-	 * @return
+	 * @return true if and only if intersects with r
 	 */
 	boolean intersects(Rectangle r);
 
+	/**
+	 * Returns the minimum bounding rectangle of this geometry.
+	 * 
+	 * @return minimum bounding rectangle
+	 */
+	Rectangle mbr();
 }

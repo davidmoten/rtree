@@ -4,25 +4,23 @@ import static com.google.common.base.Optional.of;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import com.github.davidmoten.rtree.geometry.HasMbr;
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 final class Util {
 
-	static Rectangle mbr(Collection<? extends HasMbr> items) {
+	static Rectangle mbr(Collection<? extends HasGeometry> items) {
 		Preconditions.checkArgument(!items.isEmpty());
 		Optional<Rectangle> r = Optional.absent();
-		for (final HasMbr mbr : items) {
+		for (final HasGeometry item : items) {
 			if (r.isPresent())
-				r = of(r.get().add(mbr.mbr()));
+				r = of(r.get().add(item.geometry().mbr()));
 			else
-				r = of(mbr.mbr());
+				r = of(item.geometry().mbr());
 		}
 		return r.get();
 	}
@@ -45,26 +43,6 @@ final class Util {
 		result.remove(node);
 		result.addAll(replacements);
 		return result;
-	}
-
-	private static <T extends HasMbr> List<T> sort(List<T> entries,
-			final Comparator<? super Rectangle> comparator) {
-		final List<T> list = new ArrayList<T>(entries);
-		Collections.sort(list, new Comparator<T>() {
-			@Override
-			public int compare(T e1, T e2) {
-				return comparator.compare(e1.mbr(), e2.mbr());
-			}
-		});
-		return list;
-	}
-
-	static <T extends HasMbr> List<T> sort(List<T> list,
-			Optional<Comparator<Rectangle>> comparator) {
-		if (!comparator.isPresent())
-			return list;
-		else
-			return sort(list, comparator.get());
 	}
 
 }

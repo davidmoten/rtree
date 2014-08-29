@@ -2,9 +2,9 @@ package com.github.davidmoten.rtree;
 
 import java.util.List;
 
-import com.github.davidmoten.rtree.geometry.HasMbr;
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.util.ListPair;
 
 public interface Splitter {
-	<T extends HasMbr> ListPair<T> split(List<T> items);
+	<T extends HasGeometry> ListPair<T> split(List<T> items);
 }

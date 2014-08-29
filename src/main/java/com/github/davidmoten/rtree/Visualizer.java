@@ -58,7 +58,7 @@ public class Visualizer {
 				0.75f));
 
 		if (tree.root().isPresent()) {
-			List<RectangleDepth> nodeDepths = getNodeDepthsSortedByDepth(tree
+			final List<RectangleDepth> nodeDepths = getNodeDepthsSortedByDepth(tree
 					.root().get());
 			drawNode(g, nodeDepths);
 		}
@@ -66,7 +66,7 @@ public class Visualizer {
 	}
 
 	private <T> List<RectangleDepth> getNodeDepthsSortedByDepth(Node<T> root) {
-		List<RectangleDepth> list = getRectangleDepths(root, 0);
+		final List<RectangleDepth> list = getRectangleDepths(root, 0);
 		Collections.sort(list, new Comparator<RectangleDepth>() {
 
 			@Override
@@ -78,16 +78,16 @@ public class Visualizer {
 	}
 
 	private <T> List<RectangleDepth> getRectangleDepths(Node<T> node, int depth) {
-		List<RectangleDepth> list = new ArrayList<RectangleDepth>();
-		list.add(new RectangleDepth(node.mbr(), depth));
+		final List<RectangleDepth> list = new ArrayList<RectangleDepth>();
+		list.add(new RectangleDepth(node.geometry().mbr(), depth));
 		if (node instanceof Leaf) {
-			Leaf<T> leaf = (Leaf<T>) node;
-			for (Entry<T> entry : leaf.entries()) {
-				list.add(new RectangleDepth(entry.mbr(), depth + 2));
+			final Leaf<T> leaf = (Leaf<T>) node;
+			for (final Entry<T> entry : leaf.entries()) {
+				list.add(new RectangleDepth(entry.geometry().mbr(), depth + 2));
 			}
 		} else {
-			NonLeaf<T> n = (NonLeaf<T>) node;
-			for (Node<T> child : n.children()) {
+			final NonLeaf<T> n = (NonLeaf<T>) node;
+			for (final Node<T> child : n.children()) {
 				list.addAll(getRectangleDepths(child, depth + 1));
 			}
 		}
@@ -95,22 +95,26 @@ public class Visualizer {
 	}
 
 	private void drawNode(Graphics2D g, List<RectangleDepth> nodes) {
-		for (RectangleDepth node : nodes) {
-			Color color = Color.getHSBColor(node.getDepth() / (maxDepth + 1f),
-					1f, 1f);
+		for (final RectangleDepth node : nodes) {
+			final Color color = Color.getHSBColor(node.getDepth()
+					/ (maxDepth + 1f), 1f, 1f);
 			g.setStroke(new BasicStroke(Math.max(0.5f,
 					(maxDepth - node.getDepth() + 1) - 1)));
 			g.setColor(color);
-			Rectangle r = node.getRectangle();
+			final Rectangle r = node.getRectangle();
 			drawRectangle(g, r);
 		}
 	}
 
 	private void drawRectangle(Graphics2D g, Rectangle r) {
-		double x1 = (r.x1() - view.x1()) / (view.x2() - view.x1()) * width;
-		double y1 = (r.y1() - view.y1()) / (view.y2() - view.y1()) * height;
-		double x2 = (r.x2() - view.x1()) / (view.x2() - view.x1()) * width;
-		double y2 = (r.y2() - view.y1()) / (view.y2() - view.y1()) * height;
+		final double x1 = (r.x1() - view.x1()) / (view.x2() - view.x1())
+				* width;
+		final double y1 = (r.y1() - view.y1()) / (view.y2() - view.y1())
+				* height;
+		final double x2 = (r.x2() - view.x1()) / (view.x2() - view.x1())
+				* width;
+		final double y2 = (r.y2() - view.y1()) / (view.y2() - view.y1())
+				* height;
 		g.drawRect(rnd(x1), rnd(y1), rnd(x2 - x1), rnd(y2 - y1));
 	}
 

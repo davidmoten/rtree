@@ -34,7 +34,7 @@ final class Leaf<T> implements Node<T> {
 	}
 
 	@Override
-	public Rectangle mbr() {
+	public Geometry geometry() {
 		return mbr;
 	}
 

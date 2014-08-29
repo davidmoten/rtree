@@ -4,15 +4,11 @@ import rx.Subscriber;
 import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.HasMbr;
-import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Optional;
 
-interface Node<T> extends HasMbr {
-
-	@Override
-	Rectangle mbr();
+interface Node<T> extends HasGeometry {
 
 	Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
 

@@ -29,13 +29,14 @@ final class NonLeaf<T> implements Node<T> {
 	}
 
 	@Override
-	public Rectangle mbr() {
+	public Geometry geometry() {
 		return mbr;
 	}
 
 	@Override
 	public Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack) {
-		final Node<T> child = context.selector().select(entry.mbr(), children);
+		final Node<T> child = context.selector().select(entry.geometry().mbr(),
+				children);
 		return child.add(entry, stack.push(this));
 	}
 
@@ -43,11 +44,11 @@ final class NonLeaf<T> implements Node<T> {
 	public void search(Func1<? super Geometry, Boolean> criterion,
 			Subscriber<? super Entry<T>> subscriber) {
 
-		for (Node<T> child : children) {
+		for (final Node<T> child : children) {
 			if (subscriber.isUnsubscribed())
 				return;
 			else {
-				if (criterion.call(child.mbr()))
+				if (criterion.call(child.geometry().mbr()))
 					child.search(criterion, subscriber);
 			}
 		}
@@ -61,10 +62,10 @@ final class NonLeaf<T> implements Node<T> {
 	@Override
 	public Optional<Node<T>> delete(Entry<T> entry,
 			ImmutableStack<NonLeaf<T>> stack) {
-		for (Node<T> child : children) {
-			if (entry.geometry().intersects(child.mbr())) {
-				Optional<Node<T>> result = child
-						.delete(entry, stack.push(this));
+		for (final Node<T> child : children) {
+			if (entry.geometry().intersects(child.geometry().mbr())) {
+				final Optional<Node<T>> result = child.delete(entry,
+						stack.push(this));
 				if (result.isPresent())
 					return result;
 			}

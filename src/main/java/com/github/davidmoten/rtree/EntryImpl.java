@@ -1,11 +1,10 @@
 package com.github.davidmoten.rtree;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.HasMbr;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Preconditions;
 
-public class EntryImpl<T> implements HasMbr, Entry<T> {
+public class EntryImpl<T> implements Entry<T> {
 	private final T object;
 	private final Geometry geometry;
 
@@ -23,11 +22,6 @@ public class EntryImpl<T> implements HasMbr, Entry<T> {
 	@Override
 	public T object() {
 		return object;
-	}
-
-	@Override
-	public Rectangle mbr() {
-		return geometry.mbr();
 	}
 
 	@Override
