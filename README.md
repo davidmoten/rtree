@@ -21,6 +21,7 @@ Features
 * Search is cancelled by unsubscription
 * over 80K inserts per second on i7 single thread
 * search is O(log(N)) on average
+* insert is O(N) worst case
 * all search methods return lazy-evaluated streams offering a lot of flexibility and opportunity for functional composition and concurrency
 * balanced delete
 
