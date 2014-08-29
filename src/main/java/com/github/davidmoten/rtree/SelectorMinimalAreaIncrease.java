@@ -7,7 +7,6 @@ import java.util.List;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 
 public class SelectorMinimalAreaIncrease implements Selector {
 
@@ -18,7 +17,6 @@ public class SelectorMinimalAreaIncrease implements Selector {
 
 	private static <T> Node<T> findLeastIncreaseInMbrArea(Rectangle r,
 			List<? extends Node<T>> list) {
-		Preconditions.checkArgument(!list.isEmpty());
 		Optional<Double> minDifference = Optional.absent();
 		Optional<Node<T>> minDiffItem = Optional.absent();
 		for (final Node<T> m : list) {
