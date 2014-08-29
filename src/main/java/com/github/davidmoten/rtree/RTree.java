@@ -233,6 +233,14 @@ public class RTree<R> {
 		};
 	}
 
+	/**
+	 * Returns a predicate function that indicates if {@link Geometry}
+	 * intersects with a given rectangle.
+	 * 
+	 * @param r
+	 *            the rectangle to check intersection with
+	 * @return whether the geometry and the rectangle intersect
+	 */
 	public static Func1<Geometry, Boolean> intersects(final Rectangle r) {
 		return new Func1<Geometry, Boolean>() {
 			@Override
@@ -242,6 +250,10 @@ public class RTree<R> {
 		};
 	}
 
+	/**
+	 * Returns the always true predicate. See {@link RTree#entries()} for
+	 * example use.
+	 */
 	public static Func1<Geometry, Boolean> ALWAYS_TRUE = new Func1<Geometry, Boolean>() {
 		@Override
 		public Boolean call(Geometry rectangle) {
@@ -249,10 +261,28 @@ public class RTree<R> {
 		}
 	};
 
+	/**
+	 * Returns an {@link Observable} sequence of all {@link Entry}s in the
+	 * R-tree whose minimum bounding rectangle intersects with the given
+	 * rectangle.
+	 * 
+	 * @param r
+	 *            rectangle to check intersection with the entry mbr
+	 * @return entries that intersect with the rectangle r
+	 */
 	public Observable<Entry<R>> search(final Rectangle r) {
 		return search(intersects(r));
 	}
 
+	/**
+	 * Returns an {@link Observable} sequence of all {@link Entry}s in the
+	 * R-tree whose minimum bounding rectangles are within maxDistance from the
+	 * given rectangle.
+	 * 
+	 * @param r
+	 * @param maxDistance
+	 * @return
+	 */
 	public Observable<Entry<R>> search(final Rectangle r,
 			final double maxDistance) {
 		return search(new Func1<Geometry, Boolean>() {
