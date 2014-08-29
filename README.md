@@ -59,6 +59,7 @@ Character result =
         .map(entry -> firstCharacter(entry.value()))
         // reduce to the first character alphabetically 
         .reduce((x,y) -> firstAlphabetically(x,y))
+        // subscribe to the stream and block for the result
         .toBlocking().single();
 System.out.println(list);
 ```
