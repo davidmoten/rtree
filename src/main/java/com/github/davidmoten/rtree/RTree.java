@@ -188,16 +188,23 @@ public class RTree<R> {
     }
 
     /**
-     * Returns an Observable sequence of {@link Entry} where the criterion is
-     * satisfied both for the returned entries and the minimum bounding
-     * rectangles in the ancestor nodes.
+     * <p>
+     * Returns an Observable sequence of {@link Entry} that satisfy the given
+     * condition. Note that this method is well-behaved only if:
+     * </p>
+     * 
+     * <code>condition(g) is true for {@link Geometry} g implies condition(r) is true for the minimum bounding rectangles of the ancestor nodes</code>
+     * 
+     * <p>
+     * <code>distance(g) <D</code> is an example of such a condition.
+     * </p>
      * 
      * @param criterion
      * @return
      */
-    public Observable<Entry<R>> search(Func1<? super Geometry, Boolean> criterion) {
+    public Observable<Entry<R>> search(Func1<? super Geometry, Boolean> condition) {
         if (root.isPresent())
-            return Observable.create(new OnSubscribeSearch<R>(root.get(), criterion));
+            return Observable.create(new OnSubscribeSearch<R>(root.get(), condition));
         else
             return Observable.empty();
     }
