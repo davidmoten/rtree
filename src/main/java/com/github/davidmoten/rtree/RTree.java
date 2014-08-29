@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree;
 
+import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
 
 import java.util.Comparator;
@@ -95,7 +96,7 @@ public class RTree<R> {
 	public static class Builder {
 
 		private int maxChildren = MAX_CHILDREN_DEFAULT;
-		private Integer minChildren = null;
+		private Optional<Integer> minChildren = absent();
 		private Splitter splitter = new QuadraticSplitter();
 		private Selector selector = new SelectorMinimalAreaIncrease();
 
@@ -111,7 +112,7 @@ public class RTree<R> {
 		 * @return
 		 */
 		public Builder minChildren(int minChildren) {
-			this.minChildren = minChildren;
+			this.minChildren = of(minChildren);
 			return this;
 		}
 
@@ -146,10 +147,10 @@ public class RTree<R> {
 		 * Builds the {@link RTree}.
 		 */
 		public <S> RTree<S> create() {
-			if (minChildren == null)
-				minChildren = maxChildren / 2;
+			if (!minChildren.isPresent())
+				minChildren = of(maxChildren / 2);
 			return new RTree<S>(Optional.<Node<S>> absent(), new Context(
-					minChildren, maxChildren, selector, splitter));
+					minChildren.get(), maxChildren, selector, splitter));
 		}
 	}
 
