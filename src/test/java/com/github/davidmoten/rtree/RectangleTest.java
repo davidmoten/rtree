@@ -16,6 +16,16 @@ public class RectangleTest {
         assertEquals(0, r.distance(r), PRECISION);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testXParametersWrongOrderThrowsException() {
+        Rectangle.create(2, 0, 1, 1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testYParametersWrongOrderThrowsException() {
+        Rectangle.create(0, 2, 1, 1);
+    }
+
     @Test
     public void testDistanceToOverlapIsZero() {
         Rectangle r = new Rectangle(0, 0, 2, 2);
