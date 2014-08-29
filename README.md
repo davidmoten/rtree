@@ -51,9 +51,13 @@ Func2<Character,Character,Character> firstAlphabetically = (x,y) -> x <=y ? x : 
 
 Character result = 
     tree.search(Rectangle.create(8, 15, 30, 35))
-        .filter(entry -> entry.object() < "M")
+        // filter for names alphabetically less than M
+        .filter(entry -> entry.value() < "M")
+        // use a different scheduler for each entry
         .flatMap(entry -> Observable.just(entry).subscribeOn(Schedulers.computation())
-        .map(entry -> firstCharacter(entry))
+        // get the first character of the name
+        .map(entry -> firstCharacter(entry.value()))
+        // reduce to the first character alphabetically 
         .reduce((x,y) -> firstAlphabetically(x,y))
         .toBlocking().single();
 System.out.println(list);
