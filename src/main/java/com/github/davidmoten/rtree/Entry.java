@@ -2,7 +2,6 @@ package com.github.davidmoten.rtree;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
-import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Preconditions;
 
 public class Entry<T> implements HasGeometry {
@@ -14,10 +13,6 @@ public class Entry<T> implements HasGeometry {
 		Preconditions.checkNotNull(geometry);
 		this.value = value;
 		this.geometry = geometry;
-	}
-
-	public Entry(T value, double x, double y) {
-		this(value, Rectangle.create(x, y, x, y));
 	}
 
 	public T value() {

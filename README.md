@@ -53,10 +53,13 @@ mvn clean install
 Example
 --------------
 ```java
+import com.github.davidmoten.rtree.*;
+import com.github.davidmoten.rtree.geometry.*;
+
 RTree<String> tree = RTree.maxChildren(5).create()
-    .add(new Entry<String>("DAVE", 10, 20)
-    .add(new Entry<String>("FRED", 12, 25)
-    .add(new Entry<String>("MARY", 97, 125);
+    .add(new Entry<String>("DAVE", Point.create(10, 20))
+    .add(new Entry<String>("FRED", Point.create(12, 25))
+    .add(new Entry<String>("MARY", Point.create(97, 125));
  
 Observable<Entry<String>> entries = tree.search(Rectangle.create(8, 15, 30, 35));
 ```
