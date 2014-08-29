@@ -101,5 +101,5 @@ D
 
 Todo
 ---------- 
-* backpressure (?)
+* support backpressure
  
