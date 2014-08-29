@@ -15,7 +15,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 /**
- * Immutable in-memory R-Tree with configurable splitter heuristic.
+ * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
  */
 public class RTree<R> {
 

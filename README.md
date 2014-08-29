@@ -1,7 +1,7 @@
 rtree
 =========
 
-In-memory immutable [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive streaming of search results. 
+In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive streaming of search results. 
 
 Status: *pre-alpha*
 
