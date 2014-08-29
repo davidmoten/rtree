@@ -8,7 +8,7 @@ Status: *pre-alpha*
 This was fun to make, has an elegant concise algorithm, is thread-safe and fast.
 
 The algorithm to achieve immutability is cute. For insertion/deletion it involves recursion down to the 
-required leaf node then recursion back up using a recorded stack to replace the parent nodes up to the root. The guts of 
+required leaf node then recursion back up (using a stack built as we recurse down) to replace the parent nodes up to the root. The guts of 
 it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/Leaf.java).
 
 Continuous integration with Jenkins: <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/rtree/badge/icon"/></a>
