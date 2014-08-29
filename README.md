@@ -14,6 +14,7 @@ Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) incl
 Features
 ------------
 * Immutable R-tree suitable for concurrency
+* Type safe
 * Pluggable splitting heuristic ([```Splitter```](src/main/java/com/github/davidmoten/rtree/Splitter.java)). Default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf)).
 * Pluggable insert heuristic ([```Selector```](src/main/java/com/github/davidmoten/rtree/Selector.java)). Default is least mbr area increase.
 * Search returns Observable 
@@ -30,10 +31,10 @@ Number of points = 100, max children per node 4:
 Example
 --------------
 ```java
-RTree tree = RTree.maxChildren(5).create()
-    .add(new Entry("DAVE", 10, 20)
-    .add(new Entry("FRED", 12, 25)
-    .add(new Entry("MARY", 97, 125);
+RTree<String> tree = RTree.maxChildren(5).create()
+    .add(new Entry<String>("DAVE", 10, 20)
+    .add(new Entry<String>("FRED", 12, 25)
+    .add(new Entry<String>("MARY", 97, 125);
  
 Observable<Entry> entries = tree.search(Rectangle.create(8, 15, 30, 35));
 ```
@@ -42,22 +43,24 @@ What do I do with the Observable thing?
 ----------------------------------------
 Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).
 
-As a simple example:
+As an example, suppose you want filter the search results then apply a function on each in parallel and reduce to some best answer:
 
 ```java
-List<String> list = 
+Func1<Entry<String>, Character> firstCharacter = entry -> entry.object().charAt(0);
+Func2<Character,Character,Character> firstAlphabetically = (x,y) -> x <=y ? x : y;
+
+Character result = 
     tree.search(Rectangle.create(8, 15, 30, 35))
-        .take(2)
-        .map(entry-> entry.object().toString())
-        .filter(name -> name >= "E")
-        .toList()
+        .flatMap(entry -> Observable.just(entry).subscribeOn(Schedulers.computation())
+        .map(entry -> firstCharacter(entry))
+        .reduce((x,y) -> firstAlphabetically(x,y))
         .toBlocking().single();
 System.out.println(list);
 ```
-output is 
+output:
 ```
-[FRED]
- ```
+D
+```
 
 Todo
 ---------- 
