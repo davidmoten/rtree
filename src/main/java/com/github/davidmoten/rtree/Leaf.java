@@ -115,26 +115,31 @@ final class Leaf<T> implements Node<T> {
             final Leaf<T> leaf = new Leaf<T>(newChildren, context);
             return replace(this, leaf, stack, context);
         } else {
-            // we have less than the minimum number of children so remove all
-            // children and add them to the RTree again
-            final Optional<Node<T>> afterRemoveAllChildren = replace(this,
-                    Collections.<Node<T>> emptyList(), stack, context);
-            Optional<Node<T>> result = Optional.absent();
-            for (final Entry<T> child : newChildren) {
-                if (!result.isPresent()) {
-                    if (afterRemoveAllChildren.isPresent()) {
-                        result = afterRemoveAllChildren;
-                        result = Optional.of(result.get().add(child,
-                                ImmutableStack.<NonLeaf<T>> empty()));
-                    } else {
-                        result = Optional.<Node<T>> of(new Leaf<T>(child, context));
-                    }
-                } else
+            return removeChildrenAndReadd(stack, newChildren);
+        }
+    }
+
+    private Optional<Node<T>> removeChildrenAndReadd(ImmutableStack<NonLeaf<T>> stack,
+            final List<Entry<T>> newChildren) {
+        // we have less than the minimum number of children so remove all
+        // children and add them to the RTree again
+        final Optional<Node<T>> afterRemoveAllChildren = replace(this,
+                Collections.<Node<T>> emptyList(), stack, context);
+        Optional<Node<T>> result = Optional.absent();
+        for (final Entry<T> child : newChildren) {
+            if (!result.isPresent()) {
+                if (afterRemoveAllChildren.isPresent()) {
+                    result = afterRemoveAllChildren;
                     result = Optional.of(result.get().add(child,
                             ImmutableStack.<NonLeaf<T>> empty()));
-            }
-            return result;
+                } else {
+                    result = Optional.<Node<T>> of(new Leaf<T>(child, context));
+                }
+            } else
+                result = Optional.of(result.get().add(child,
+                        ImmutableStack.<NonLeaf<T>> empty()));
         }
+        return result;
     }
 
     @Override
