@@ -5,7 +5,7 @@ In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementat
 
 Status: *pre-alpha*
 
-This was fun to make, the implementation has really concise and readable source (even without lambdas), is thread-safe and pretty fast.
+This was fun to make, has an elegant concise algorithm, is thread-safe and is pretty fast.
 
 Continuous integration with Jenkins: <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/rtree/badge/icon"/></a>
 
@@ -63,6 +63,3 @@ Todo
 ---------- 
 * backpressure (?)
  
-
-
-
