@@ -29,6 +29,27 @@ Number of points = 100, max children per node 4:
 
 <img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/rtree.png"/>
 
+Getting started
+----------------
+Add this maven dependency to your pom.xml:
+
+```xml
+<dependency>
+  <groupId>com.github.davidmoten</groupId>
+  <artifactId>rtree</artifactId>
+  <version>0.1-SNAPSHOT</version>
+</dependency>
+```
+
+How to build
+----------------
+```
+git clone https://github.com/davidmoten/rtree.git
+cd rtree
+mvn clean install
+```
+
+
 Example
 --------------
 ```java
