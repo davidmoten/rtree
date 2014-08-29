@@ -1,7 +1,7 @@
 rtree
 =========
 
-In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive streaming of search results. 
+In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive processing of search results. 
 
 Status: *pre-alpha*
 
@@ -57,11 +57,13 @@ Example
 ```java
 import com.github.davidmoten.rtree.*;
 import com.github.davidmoten.rtree.geometry.*;
+import static com.github.davidmoten.rtree.Entry.*;
+import static com.github.davidmoten.rtree.geometry.Geometries.*;
 
-RTree<String> tree = RTree.maxChildren(5).create()
-    .add(new Entry<String>("DAVE", Point.create(10, 20))
-    .add(new Entry<String>("FRED", Point.create(12, 25))
-    .add(new Entry<String>("MARY", Point.create(97, 125));
+RTree<String> tree = RTree.maxChildren(5).create();
+tree = tree.add("DAVE", point(10, 20))
+           .add("FRED", point(12, 25))
+           .add("MARY", point(97, 125));
  
 Observable<Entry<String>> entries = tree.search(Rectangle.create(8, 15, 30, 35));
 ```

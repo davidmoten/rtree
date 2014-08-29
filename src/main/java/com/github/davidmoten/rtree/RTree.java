@@ -168,6 +168,14 @@ public class RTree<R> {
             return new RTree<R>(new Leaf<R>(Lists.newArrayList(entry), context), context);
     }
 
+    public RTree<R> add(R value, Geometry geometry) {
+        return add(Entry.entry(value, geometry));
+    }
+
+    public RTree<R> delete(R value, Geometry geometry) {
+        return delete(value, geometry);
+    }
+
     public RTree<R> delete(Entry<R> entry) {
         if (root.isPresent()) {
             final Optional<Node<R>> newRoot = root.get().delete(entry, emptyStack);

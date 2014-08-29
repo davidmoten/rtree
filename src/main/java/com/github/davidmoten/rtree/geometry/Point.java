@@ -35,4 +35,29 @@ public class Point implements Geometry {
         return mbr.y1();
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((mbr == null) ? 0 : mbr.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Point other = (Point) obj;
+        if (mbr == null) {
+            if (other.mbr != null)
+                return false;
+        } else if (!mbr.equals(other.mbr))
+            return false;
+        return true;
+    }
+
 }
