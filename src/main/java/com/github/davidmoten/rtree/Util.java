@@ -33,6 +33,12 @@ final class Util {
 		return result;
 	}
 
+	static <T> List<T> remove(List<T> list, T element) {
+		final ArrayList<T> result = new ArrayList<T>(list);
+		result.remove(element);
+		return result;
+	}
+
 	static <T> List<? extends T> replace(List<? extends T> list, T node,
 			List<? extends T> replacements) {
 		final ArrayList<T> result = new ArrayList<T>(list);

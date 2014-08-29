@@ -19,6 +19,9 @@ import com.google.common.collect.Lists;
  */
 public class RTree<R> {
 
+	private final ImmutableStack<NonLeaf<R>> emptyStack = ImmutableStack
+			.<NonLeaf<R>> empty();
+
 	private static final int MAX_CHILDREN_DEFAULT = 32;
 
 	private final Optional<Node<R>> root;
@@ -135,8 +138,7 @@ public class RTree<R> {
 	@SuppressWarnings("unchecked")
 	public RTree<R> add(Entry<R> entry) {
 		if (root.isPresent())
-			return new RTree<R>(root.get().add(entry,
-					ImmutableStack.<NonLeaf<R>> empty()), context);
+			return new RTree<R>(root.get().add(entry, emptyStack), context);
 		else
 			return new RTree<R>(
 					new Leaf<R>(Lists.newArrayList(entry), context), context);
@@ -152,6 +154,13 @@ public class RTree<R> {
 	 */
 	public RTree<R> add(R object, Geometry geometry) {
 		return add(new Entry<R>(object, geometry));
+	}
+
+	public RTree<R> delete(Entry<R> entry) {
+		if (root.isPresent()) {
+			return new RTree<R>(root.get().delete(entry, emptyStack), context);
+		} else
+			return this;
 	}
 
 	/**

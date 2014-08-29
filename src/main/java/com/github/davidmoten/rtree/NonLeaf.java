@@ -8,6 +8,7 @@ import rx.functions.Func1;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 final class NonLeaf<T> implements Node<T> {
@@ -54,6 +55,20 @@ final class NonLeaf<T> implements Node<T> {
 	@Override
 	public String toString() {
 		return "NonLeaf [mbr=" + mbr + "]";
+	}
+
+	@Override
+	public Optional<Node<T>> delete(Entry<T> entry,
+			ImmutableStack<NonLeaf<T>> stack) {
+		for (Node<T> child : children) {
+			if (entry.geometry().intersects(child.mbr())) {
+				Optional<Node<T>> result = child
+						.delete(entry, stack.push(this));
+				if (result.isPresent())
+					return result;
+			}
+		}
+		return Optional.absent();
 	}
 
 }
