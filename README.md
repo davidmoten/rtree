@@ -17,15 +17,15 @@ Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) incl
 
 Features
 ------------
-* Immutable R-tree suitable for concurrency
-* Type safe
-* Pluggable splitting heuristic ([```Splitter```](src/main/java/com/github/davidmoten/rtree/Splitter.java)). Default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf).
-* Pluggable insert heuristic ([```Selector```](src/main/java/com/github/davidmoten/rtree/Selector.java)). Default is least minimum bounding rectangle area increase.
-* Search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
-* Search is cancelled by unsubscription
+* immutable R-tree suitable for concurrency
+* type-safe
+* pluggable splitting heuristic ([```Splitter```](src/main/java/com/github/davidmoten/rtree/Splitter.java)). Default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf).
+* pluggable insert heuristic ([```Selector```](src/main/java/com/github/davidmoten/rtree/Selector.java)). Default is least minimum bounding rectangle area increase.
+* search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
+* search is cancelled by unsubscription
 * over 80K inserts per second on i7 single thread
 * search is O(log(N)) on average
-* insert. delete are O(N) worst case
+* insert, delete are O(N) worst case
 * all search methods return lazy-evaluated streams offering a lot of flexibility and opportunity for functional composition and concurrency
 * balanced delete
 
