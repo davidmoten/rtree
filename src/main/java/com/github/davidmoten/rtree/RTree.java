@@ -158,7 +158,11 @@ public class RTree<R> {
 
 	public RTree<R> delete(Entry<R> entry) {
 		if (root.isPresent()) {
-			return new RTree<R>(root.get().delete(entry, emptyStack), context);
+			Optional<Node<R>> newRoot = root.get().delete(entry, emptyStack);
+			if (newRoot.equals(root))
+				return this;
+			else
+				return new RTree<R>(newRoot, context);
 		} else
 			return this;
 	}

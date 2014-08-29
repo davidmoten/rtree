@@ -112,8 +112,14 @@ final class Leaf<T> implements Node<T> {
 	public Optional<Node<T>> delete(Entry<T> entry,
 			ImmutableStack<NonLeaf<T>> stack) {
 		Preconditions.checkNotNull(stack);
-		if (!entries.contains(entry))
-			return Optional.absent();
+		if (!entries.contains(entry)) {
+			if (stack.isEmpty())
+				// we are at the root node, just return it unchanged
+				return Optional.<Node<T>> of(this);
+			else
+				// indicates not found to parent
+				return Optional.absent();
+		}
 		List<Entry<T>> newChildren = Util.remove(entries, entry);
 		if (newChildren.size() >= context.minChildren()) {
 			final Leaf<T> leaf = new Leaf<T>(newChildren, context);

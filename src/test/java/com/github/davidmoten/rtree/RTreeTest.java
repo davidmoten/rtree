@@ -116,6 +116,14 @@ public class RTreeTest {
 		assertTrue(tree.entries().contains(e2).toBlocking().single());
 	}
 
+	@Test
+	public void testDeleteItemThatIsNotPresentDoesNothing() {
+		Entry<Object> e1 = e(1);
+		Entry<Object> e2 = e(2);
+		RTree<Object> tree = RTree.builder().build().add(e1);
+		assertEquals(tree, tree.delete(e2));
+	}
+
 	private static Entry<Object> e(int n) {
 		return new Entry<Object>(new Object(), r(n));
 	}

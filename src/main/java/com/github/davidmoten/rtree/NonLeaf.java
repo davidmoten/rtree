@@ -68,7 +68,10 @@ final class NonLeaf<T> implements Node<T> {
 					return result;
 			}
 		}
-		return Optional.absent();
+		if (stack.isEmpty())
+			return Optional.<Node<T>> of(this);
+		else
+			return Optional.absent();
 	}
 
 }
