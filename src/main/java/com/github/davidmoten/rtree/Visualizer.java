@@ -93,7 +93,7 @@ public class Visualizer {
     private void drawNode(Graphics2D g, List<RectangleDepth> nodes) {
         for (final RectangleDepth node : nodes) {
             final Color color = Color.getHSBColor(node.getDepth() / (maxDepth + 1f), 1f, 1f);
-            g.setStroke(new BasicStroke(Math.max(0.5f, (maxDepth - node.getDepth() + 1) - 1)));
+            g.setStroke(new BasicStroke(Math.max(0.5f, maxDepth - node.getDepth() + 1 - 1)));
             g.setColor(color);
             final Rectangle r = node.getRectangle();
             drawRectangle(g, r);
