@@ -55,9 +55,7 @@ mvn clean install
 Example
 --------------
 ```java
-import com.github.davidmoten.rtree.*;
-import com.github.davidmoten.rtree.geometry.*;
-import static com.github.davidmoten.rtree.Entry.*;
+import com.github.davidmoten.rtree.RTree;
 import static com.github.davidmoten.rtree.geometry.Geometries.*;
 
 RTree<String> tree = RTree.maxChildren(5).create();
