@@ -20,6 +20,7 @@ Features
 * over 80K inserts per second on i7 single thread
 * search is O(log(N)) on average
 * all search methods including ```nearest``` and ```furthest``` are streaming instead of *nearest-k* so much more flexible
+* balanced delete
 
 Number of points = 100, max children per node 4:
 
@@ -59,7 +60,6 @@ output is
 
 Todo
 ---------- 
-* implement ```RTree.delete```
 * backpressure (?)
  
 
