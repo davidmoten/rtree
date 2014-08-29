@@ -4,7 +4,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.google.common.base.Preconditions;
 
-public class Entry<T> implements HasGeometry {
+public final class Entry<T> implements HasGeometry {
     private final T value;
     private final Geometry geometry;
 
