@@ -48,6 +48,7 @@ As an example, suppose you want filter the search results then apply a function 
 ```java
 import rx.Observable;
 import rx.functions.*;
+import rx.schedulers.Schedulers;
 
 Func1<Entry<String>, Character> firstCharacter = entry -> entry.object().charAt(0);
 Func2<Character,Character,Character> firstAlphabetically = (x,y) -> x <=y ? x : y;
