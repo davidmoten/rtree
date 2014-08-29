@@ -51,6 +51,7 @@ Func2<Character,Character,Character> firstAlphabetically = (x,y) -> x <=y ? x : 
 
 Character result = 
     tree.search(Rectangle.create(8, 15, 30, 35))
+        .filter(entry -> entry.object() < "M")
         .flatMap(entry -> Observable.just(entry).subscribeOn(Schedulers.computation())
         .map(entry -> firstCharacter(entry))
         .reduce((x,y) -> firstAlphabetically(x,y))
