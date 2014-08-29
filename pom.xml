@@ -15,7 +15,7 @@
 	<version>0.1-SNAPSHOT</version>
 
 	<name>${project.artifactId}</name>
-	<description>Java implementation of classic R-Tree for spatial indexing</description>
+	<description>Java implementation of an immutable in-memory R-Tree for spatial indexing</description>
 	<packaging>jar</packaging>
 
 	<url>http://github.com/davidmoten/rtree</url>
