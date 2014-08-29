@@ -80,7 +80,7 @@ final class Leaf<T> implements Node<T> {
 			return Optional.<Node<R>> of(replacements.get(0));
 		else if (stack.isEmpty())
 			// make a parent for the replacements and return that
-			return Optional.<Node<R>> of(new NonLeaf<R>(replacements));
+			return Optional.<Node<R>> of(new NonLeaf<R>(replacements, context));
 		else
 			return replaceWhenStackNonEmpty(node, replacements, stack, context);
 	}
@@ -95,13 +95,13 @@ final class Leaf<T> implements Node<T> {
 			return replace(n, Collections.<Node<R>> emptyList(), stack.pop(),
 					context);
 		} else if (newChildren.size() <= context.maxChildren()) {
-			final NonLeaf<R> newNode = new NonLeaf<R>(newChildren);
+			final NonLeaf<R> newNode = new NonLeaf<R>(newChildren, context);
 			return replace(n, newNode, stack.pop(), context);
 		} else {
 			final ListPair<? extends Node<R>> pair = context.splitter().split(
 					newChildren);
-			final NonLeaf<R> node1 = new NonLeaf<R>(pair.list1());
-			final NonLeaf<R> node2 = new NonLeaf<R>(pair.list2());
+			final NonLeaf<R> node1 = new NonLeaf<R>(pair.list1(), context);
+			final NonLeaf<R> node2 = new NonLeaf<R>(pair.list2(), context);
 			@SuppressWarnings("unchecked")
 			List<NonLeaf<R>> nodes = Lists.newArrayList(node1, node2);
 			return replace(n, nodes, stack.pop(), context);

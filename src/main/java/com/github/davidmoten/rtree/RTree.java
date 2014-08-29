@@ -97,6 +97,7 @@ public class RTree<R> {
 		private int maxChildren = MAX_CHILDREN_DEFAULT;
 		private Integer minChildren = null;
 		private Splitter splitter = new QuadraticSplitter();
+		private Selector selector = new SelectorMinimalAreaIncrease();
 
 		private Builder() {
 		}
@@ -136,6 +137,11 @@ public class RTree<R> {
 			return this;
 		}
 
+		public <T> Builder selector(Selector selector) {
+			this.selector = selector;
+			return this;
+		}
+
 		/**
 		 * Builds the {@link RTree}.
 		 */
@@ -143,7 +149,7 @@ public class RTree<R> {
 			if (minChildren == null)
 				minChildren = maxChildren / 2;
 			return new RTree<S>(Optional.<Node<S>> absent(), new Context(
-					minChildren, maxChildren, splitter));
+					minChildren, maxChildren, selector, splitter));
 		}
 	}
 

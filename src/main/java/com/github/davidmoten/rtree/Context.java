@@ -7,8 +7,11 @@ public class Context {
 	private final int maxChildren;
 	private final int minChildren;
 	private final Splitter splitter;
+	private final Selector selector;
 
-	public Context(int minChildren, int maxChildren, Splitter splitter) {
+	public Context(int minChildren, int maxChildren, Selector selector,
+			Splitter splitter) {
+		this.selector = selector;
 		Preconditions.checkNotNull(splitter);
 		Preconditions.checkArgument(maxChildren > 2);
 		Preconditions.checkArgument(minChildren >= 1);
@@ -27,6 +30,10 @@ public class Context {
 
 	public Splitter splitter() {
 		return splitter;
+	}
+
+	public Selector selector() {
+		return selector;
 	}
 
 }

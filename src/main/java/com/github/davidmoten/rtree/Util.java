@@ -47,21 +47,6 @@ final class Util {
 		return result;
 	}
 
-	static <T> Node<T> findLeastIncreaseInMbrArea(Rectangle r,
-			List<? extends Node<T>> list) {
-		Preconditions.checkArgument(!list.isEmpty());
-		Optional<Double> minDifference = Optional.absent();
-		Optional<Node<T>> minDiffItem = Optional.absent();
-		for (final Node<T> m : list) {
-			final double diff = m.mbr().add(r).area() - m.mbr().area();
-			if (!minDifference.isPresent() || diff < minDifference.get()) {
-				minDifference = of(diff);
-				minDiffItem = of(m);
-			}
-		}
-		return minDiffItem.get();
-	}
-
 	private static <T extends HasMbr> List<T> sort(List<T> entries,
 			final Comparator<? super Rectangle> comparator) {
 		List<T> list = new ArrayList<T>(entries);

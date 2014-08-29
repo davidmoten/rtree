@@ -14,12 +14,13 @@ Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) incl
 Features
 ------------
 * Immutable R-tree suitable for concurrency
-* Pluggable splitting heuristic (default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf)).
+* Pluggable splitting heuristic (```Splitter```). Default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf)).
+* Pluggable insert heuristic (```Selector```). Default is least mbr area increase.
 * Search returns Observable 
 * Search is cancelled by unsubscription
 * over 80K inserts per second on i7 single thread
 * search is O(log(N)) on average
-* all search methods including ```nearest``` and ```furthest``` are streaming instead of *nearest-k* so much more flexible
+* all search methods return lazy-evaluated streams offering a lot of flexibility and opportunity for functional composition and concurrency
 * balanced delete
 
 Number of points = 100, max children per node 4:

@@ -15,8 +15,10 @@ final class NonLeaf<T> implements Node<T> {
 
 	private final List<? extends Node<T>> children;
 	private final Rectangle mbr;
+	private final Context context;
 
-	NonLeaf(List<? extends Node<T>> children) {
+	NonLeaf(List<? extends Node<T>> children, Context context) {
+		this.context = context;
 		Preconditions.checkArgument(!children.isEmpty());
 		this.children = children;
 		this.mbr = Util.mbr(children);
@@ -33,8 +35,7 @@ final class NonLeaf<T> implements Node<T> {
 
 	@Override
 	public Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack) {
-		final Node<T> child = Util.findLeastIncreaseInMbrArea(entry.mbr(),
-				children);
+		final Node<T> child = context.selector().select(entry.mbr(), children);
 		return child.add(entry, stack.push(this));
 	}
 
