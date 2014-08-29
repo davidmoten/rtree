@@ -36,7 +36,7 @@ RTree<String> tree = RTree.maxChildren(5).create()
     .add(new Entry<String>("FRED", 12, 25)
     .add(new Entry<String>("MARY", 97, 125);
  
-Observable<Entry> entries = tree.search(Rectangle.create(8, 15, 30, 35));
+Observable<Entry<String>> entries = tree.search(Rectangle.create(8, 15, 30, 35));
 ```
 
 What do I do with the Observable thing?
