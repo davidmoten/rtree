@@ -170,21 +170,10 @@ public class RTree<R> {
 					new Leaf<R>(Lists.newArrayList(entry), context), context);
 	}
 
-	/**
-	 * Adds an {@link Entry} comprised of the object and the given geometry to
-	 * the RTree.
-	 * 
-	 * @param object
-	 * @param geometry
-	 * @return
-	 */
-	public RTree<R> add(R object, Geometry geometry) {
-		return add(new Entry<R>(object, geometry));
-	}
-
 	public RTree<R> delete(Entry<R> entry) {
 		if (root.isPresent()) {
-			Optional<Node<R>> newRoot = root.get().delete(entry, emptyStack);
+			final Optional<Node<R>> newRoot = root.get().delete(entry,
+					emptyStack);
 			if (newRoot.equals(root))
 				return this;
 			else
