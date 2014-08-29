@@ -29,7 +29,7 @@ Number of points = 100, max children per node 4:
 Example
 --------------
 ```java
-RTree tree = RTree.builder().maxChildren(5).build()
+RTree tree = RTree.maxChildren(5).create()
     .add(new Entry("DAVE", 10, 20)
     .add(new Entry("FRED", 12, 25)
     .add(new Entry("MARY", 97, 125);

@@ -61,7 +61,7 @@ public class RTreeTest {
 	}
 
 	private static RTree<Object> createRandomRTree(int n) {
-		RTree<Object> tree = RTree.builder().maxChildren(4).build();
+		RTree<Object> tree = RTree.maxChildren(4).create();
 		for (int i = 0; i < n; i++) {
 			Entry<Object> entry = new Entry<Object>(new Object(), random());
 			tree = tree.add(entry);
@@ -71,8 +71,8 @@ public class RTreeTest {
 
 	@Test
 	public void testNearest() {
-		RTree<Object> tree = RTree.builder().maxChildren(4).build().add(e(1))
-				.add(e(2)).add(e(10)).add(e(11));
+		RTree<Object> tree = RTree.maxChildren(4).create().add(e(1)).add(e(2))
+				.add(e(10)).add(e(11));
 		List<Entry<Object>> list = tree.nearest(r(9), 10, 2).toList()
 				.toBlocking().single();
 		assertEquals(2, list.size());
@@ -90,17 +90,16 @@ public class RTreeTest {
 	@Test
 	public void testDeleteOneFromOne() {
 		Entry<Object> e1 = e(1);
-		RTree<Object> tree = RTree.builder().maxChildren(4).build().add(e1)
-				.delete(e1);
+		RTree<Object> tree = RTree.maxChildren(4).create().add(e1).delete(e1);
 		assertEquals(0, (int) tree.entries().count().toBlocking().single());
 	}
 
 	@Test
 	public void testDeleteOneFromTreeWithDepthGreaterThanOne() {
 		Entry<Object> e1 = e(1);
-		RTree<Object> tree = RTree.builder().maxChildren(4).build().add(e1)
-				.add(e(2)).add(e(3)).add(e(4)).add(e(5)).add(e(6)).add(e(7))
-				.add(e(8)).add(e(9)).add(e(10)).delete(e1);
+		RTree<Object> tree = RTree.maxChildren(4).create().add(e1).add(e(2))
+				.add(e(3)).add(e(4)).add(e(5)).add(e(6)).add(e(7)).add(e(8))
+				.add(e(9)).add(e(10)).delete(e1);
 		assertEquals(9, (int) tree.entries().count().toBlocking().single());
 		assertFalse(tree.entries().contains(e1).toBlocking().single());
 	}
@@ -120,7 +119,7 @@ public class RTreeTest {
 	public void testDeleteItemThatIsNotPresentDoesNothing() {
 		Entry<Object> e1 = e(1);
 		Entry<Object> e2 = e(2);
-		RTree<Object> tree = RTree.builder().build().add(e1);
+		RTree<Object> tree = RTree.create().add(e1);
 		assertTrue(tree == tree.delete(e2));
 	}
 

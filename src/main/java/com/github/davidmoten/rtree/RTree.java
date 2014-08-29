@@ -83,8 +83,16 @@ public class RTree<R> {
 	/**
 	 * Returns a new Builder instance for {@link RTree}.
 	 */
-	public static Builder builder() {
-		return new Builder();
+	public static <T> RTree<T> create() {
+		return new Builder().create();
+	}
+
+	public static Builder maxChildren(int maxChildren) {
+		return new Builder().maxChildren(maxChildren);
+	}
+
+	public static Builder splitter(Splitter splitter) {
+		return new Builder().splitter(splitter);
 	}
 
 	/**
@@ -123,7 +131,7 @@ public class RTree<R> {
 		/**
 		 * Builds the {@link RTree}.
 		 */
-		public <S> RTree<S> build() {
+		public <S> RTree<S> create() {
 			return new RTree<S>(maxChildren, splitter);
 		}
 	}
