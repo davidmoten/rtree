@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -53,6 +54,8 @@ public class Visualizer {
 		final Graphics2D g = (Graphics2D) image.getGraphics();
 		g.setBackground(Color.white);
 		g.clearRect(0, 0, width, height);
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+				0.75f));
 
 		if (tree.root().isPresent()) {
 			List<RectangleDepth> nodeDepths = getNodeDepthsSortedByDepth(tree
