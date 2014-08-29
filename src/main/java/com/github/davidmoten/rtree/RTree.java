@@ -89,6 +89,10 @@ public class RTree<R> {
         return new Builder().splitter(splitter);
     }
 
+    public static Builder selector(Selector selector) {
+        return new Builder().selector(selector);
+    }
+
     /**
      * RTree Builder
      */
