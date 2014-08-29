@@ -57,10 +57,12 @@ public class Rectangle implements Geometry {
 		return r.in(x1, y1) || r.in(x2, y2);
 	}
 
+	@Override
 	public boolean intersects(Rectangle r) {
 		return instersectsOnce(r) || r.instersectsOnce(this);
 	}
 
+	@Override
 	public double distance(Rectangle r) {
 		if (intersects(r))
 			return 0;
@@ -90,6 +92,37 @@ public class Rectangle implements Geometry {
 	public String toString() {
 		return "Rectangle [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2="
 				+ y2 + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(x1);
+		result = prime * result + Float.floatToIntBits(x2);
+		result = prime * result + Float.floatToIntBits(y1);
+		result = prime * result + Float.floatToIntBits(y2);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Rectangle other = (Rectangle) obj;
+		if (Float.floatToIntBits(x1) != Float.floatToIntBits(other.x1))
+			return false;
+		if (Float.floatToIntBits(x2) != Float.floatToIntBits(other.x2))
+			return false;
+		if (Float.floatToIntBits(y1) != Float.floatToIntBits(other.y1))
+			return false;
+		if (Float.floatToIntBits(y2) != Float.floatToIntBits(other.y2))
+			return false;
+		return true;
 	}
 
 }

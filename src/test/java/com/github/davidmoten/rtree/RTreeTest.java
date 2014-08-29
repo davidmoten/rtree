@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -101,6 +102,18 @@ public class RTreeTest {
 				.add(e(2)).add(e(3)).add(e(4)).add(e(5)).add(e(6)).add(e(7))
 				.add(e(8)).add(e(9)).add(e(10)).delete(e1);
 		assertEquals(9, (int) tree.entries().count().toBlocking().single());
+		assertFalse(tree.entries().contains(e1).toBlocking().single());
+	}
+
+	@Test
+	public void testDeleteOneFromLargeTree() {
+		Entry<Object> e1 = e(1);
+		Entry<Object> e2 = e(2);
+		int n = 10000;
+		RTree<Object> tree = createRandomRTree(n).add(e1).add(e2).delete(e1);
+		assertEquals(n + 1, (int) tree.entries().count().toBlocking().single());
+		assertFalse(tree.entries().contains(e1).toBlocking().single());
+		assertTrue(tree.entries().contains(e2).toBlocking().single());
 	}
 
 	private static Entry<Object> e(int n) {
