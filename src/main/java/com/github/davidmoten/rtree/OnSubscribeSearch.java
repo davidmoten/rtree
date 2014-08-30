@@ -71,14 +71,14 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
                     long numToEmit = r;
 
                     stack = stack.peek().node().search(condition, subscriber, stack, numToEmit);
-                    if (stack.isEmpty() && !subscriber.isUnsubscribed()) {
-                        subscriber.onCompleted();
+                    if (stack.isEmpty()) {
+                        if (!subscriber.isUnsubscribed())
+                            subscriber.onCompleted();
                     } else if (requested.addAndGet(-r) == 0)
                         return;
                 }
             }
         }
-
     }
 
 }

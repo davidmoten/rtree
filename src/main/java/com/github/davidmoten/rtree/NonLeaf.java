@@ -94,8 +94,11 @@ final class NonLeaf<T> implements Node<T> {
             }
         } else {
             Node<T> child = children.get(np.position());
-            return child.search(condition, subscriber, stack.push(new NodePosition<T>(child, 0)),
-                    request);
+            if (condition.call(child.geometry()))
+                return child.search(condition, subscriber,
+                        stack.push(new NodePosition<T>(child, 0)), request);
+            else
+                return search(condition, subscriber, stack.pop().push(np.nextPosition()), request);
         }
     }
 }
