@@ -1,3 +1,5 @@
+package com.github.davidmoten.rtree.geometry;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
