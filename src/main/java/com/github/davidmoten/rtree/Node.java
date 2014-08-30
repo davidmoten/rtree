@@ -16,6 +16,15 @@ interface Node<T> extends HasGeometry {
 
     Optional<Node<T>> delete(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
 
+    /**
+     * Backpressure method.
+     * 
+     * @param condition
+     * @param subscriber
+     * @param stack
+     * @param request
+     * @return
+     */
     ImmutableStack<NodePosition<T>> search(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
             long request);
