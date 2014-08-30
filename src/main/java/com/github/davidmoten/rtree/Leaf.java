@@ -158,7 +158,7 @@ final class Leaf<T> implements Node<T> {
     @Override
     public ImmutableStack<NodePosition<T>> search(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
-            int request) {
+            long request) {
         Preconditions.checkArgument(!stack.isEmpty());
         NodePosition<T> np = stack.peek();
         Preconditions.checkArgument(this == np.node());
@@ -179,9 +179,13 @@ final class Leaf<T> implements Node<T> {
             }
         } else {
             Entry<T> entry = entries.get(np.position());
-            if (condition.call(entry.geometry()))
+            final long nextRequest;
+            if (condition.call(entry.geometry())) {
                 subscriber.onNext(entry);
-            return search(condition, subscriber, stack.pop().push(np.nextPosition()), request - 1);
+                nextRequest = request - 1;
+            } else
+                nextRequest = request;
+            return search(condition, subscriber, stack.pop().push(np.nextPosition()), nextRequest);
         }
 
     }

@@ -17,7 +17,7 @@ interface Node<T> extends HasGeometry {
     Optional<Node<T>> delete(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
 
     ImmutableStack<NodePosition<T>> search(Func1<? super Geometry, Boolean> condition,
-            Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> position,
-            int request);
+            Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
+            long request);
 
 }
