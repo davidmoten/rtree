@@ -13,7 +13,7 @@ it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/Leaf.java).
 
 [Backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure) support required some complexity because effectively a
 bookmark needed to be kept for a position in the tree and returned to later to continue traversal. An immutable stack containing
- the node and child number of the antecedents came to the rescue here.
+ the node and child index of the path nodes came to the rescue here.
 
 Continuous integration with Jenkins: <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/rtree/badge/icon"/></a>
 
