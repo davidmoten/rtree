@@ -62,7 +62,8 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
 
         public void requestSome(long n) {
             // back pressure path
-            // this algorithm copied generally from OnSubscribeFromIterable.java
+            // this algorithm copied roughly from
+            // rxjava-core/OnSubscribeFromIterable.java
             long previousCount = requested.getAndAdd(n);
             if (previousCount == 0) {
                 while (true) {
