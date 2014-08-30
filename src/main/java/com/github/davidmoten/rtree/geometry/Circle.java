@@ -16,6 +16,14 @@ public class Circle implements Geometry {
         return new Circle((float) x, (float) y, (float) radius);
     }
 
+    public float x() {
+        return x;
+    }
+
+    public float y() {
+        return y;
+    }
+
     @Override
     public Rectangle mbr() {
         return mbr;
