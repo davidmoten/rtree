@@ -23,4 +23,11 @@ public class PointTest {
 		Rectangle r = Geometries.rectangle(4, 6, 4, 6);
 		assertEquals(5, p1.distance(r), PRECISION);
 	}
+
+	@Test
+	public void testMbr() {
+		Point p = Geometries.point(1, 2);
+		Rectangle r = Geometries.rectangle(1, 2, 1, 2);
+		assertEquals(r, p.mbr());
+	}
 }
