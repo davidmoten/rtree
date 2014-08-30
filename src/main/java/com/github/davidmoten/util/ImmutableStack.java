@@ -19,6 +19,10 @@ public final class ImmutableStack<T> implements Iterable<T> {
         this.tail = tail;
     }
 
+    public static <T> ImmutableStack<T> create(T t) {
+        return new ImmutableStack<T>(of(t), of(ImmutableStack.<T> empty()));
+    }
+
     public ImmutableStack() {
         this(Optional.<T> absent(), Optional.<ImmutableStack<T>> absent());
     }

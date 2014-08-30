@@ -12,6 +12,7 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
 import com.github.davidmoten.util.ListPair;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 final class Leaf<T> implements Node<T> {
@@ -154,4 +155,34 @@ final class Leaf<T> implements Node<T> {
         return "Leaf [entries=" + entries + ", mbr=" + mbr + "]";
     }
 
+    @Override
+    public ImmutableStack<NodePosition<T>> search(Func1<? super Geometry, Boolean> condition,
+            Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
+            int request) {
+        Preconditions.checkArgument(!stack.isEmpty());
+        NodePosition<T> np = stack.peek();
+        Preconditions.checkArgument(this == np.node());
+        Preconditions.checkArgument(np.position() <= entries.size());
+        if (subscriber.isUnsubscribed())
+            return ImmutableStack.empty();
+        if (request == 0)
+            return stack;
+        if (np.position() == entries.size()) {
+            // TODO is copy of NonLeaf so extract to Util method
+            ImmutableStack<NodePosition<T>> stack2 = stack.pop();
+            if (stack2.isEmpty())
+                return stack2;
+            else {
+                NodePosition<T> previous = stack2.peek();
+                return previous.node().search(condition, subscriber,
+                        stack2.pop().push(previous.nextPosition()), request);
+            }
+        } else {
+            Entry<T> entry = entries.get(np.position());
+            if (condition.call(entry.geometry()))
+                subscriber.onNext(entry);
+            return search(condition, subscriber, stack.pop().push(np.nextPosition()), request - 1);
+        }
+
+    }
 }
