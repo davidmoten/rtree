@@ -217,12 +217,12 @@ public class RTree<R> {
 	 * <code>condition(g) is true for {@link Geometry} g implies condition(r) is true for the minimum bounding rectangles of the ancestor nodes</code>
 	 * 
 	 * <p>
-	 * <code>distance(g) <D</code> is an example of such a condition.
+	 * <code>distance(g) &lt; sD</code> is an example of such a condition.
 	 * </p>
 	 * 
 	 * @param condition
 	 *            return Entries whose geometry satisfies the given condition
-	 * @return
+	 * @return sequence of matching entries
 	 */
 	public Observable<Entry<R>> search(
 			Func1<? super Geometry, Boolean> condition) {
