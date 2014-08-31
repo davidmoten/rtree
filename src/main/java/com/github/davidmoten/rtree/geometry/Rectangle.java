@@ -1,5 +1,8 @@
 package com.github.davidmoten.rtree.geometry;
 
+import com.github.davidmoten.util.ObjectsHelper;
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 public class Rectangle implements Geometry {
@@ -94,33 +97,19 @@ public class Rectangle implements Geometry {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Float.floatToIntBits(x1);
-		result = prime * result + Float.floatToIntBits(x2);
-		result = prime * result + Float.floatToIntBits(y1);
-		result = prime * result + Float.floatToIntBits(y2);
-		return result;
+		return Objects.hashCode(x1, y1, x2, y2);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+		Optional<Rectangle> other = ObjectsHelper.asClass(obj, Rectangle.class);
+		if (other.isPresent()) {
+			return Objects.equal(x1, other.get().x1)
+					&& Objects.equal(x2, other.get().x2)
+					&& Objects.equal(y1, other.get().y1)
+					&& Objects.equal(y2, other.get().y2);
+		} else
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Rectangle other = (Rectangle) obj;
-		if (Float.floatToIntBits(x1) != Float.floatToIntBits(other.x1))
-			return false;
-		if (Float.floatToIntBits(x2) != Float.floatToIntBits(other.x2))
-			return false;
-		if (Float.floatToIntBits(y1) != Float.floatToIntBits(other.y1))
-			return false;
-		if (Float.floatToIntBits(y2) != Float.floatToIntBits(other.y2))
-			return false;
-		return true;
 	}
 
 }
