@@ -198,7 +198,7 @@ public class RTree<R> {
 	}
 
 	public RTree<R> delete(R value, Geometry geometry) {
-		return delete(value, geometry);
+		return delete(Entry.entry(value, geometry));
 	}
 
 	public RTree<R> delete(Entry<R> entry) {
