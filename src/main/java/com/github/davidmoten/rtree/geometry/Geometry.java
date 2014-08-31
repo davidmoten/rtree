@@ -9,30 +9,31 @@ import com.github.davidmoten.rtree.Entry;
  */
 public interface Geometry {
 
-    /**
-     * Returns the distance to the given {@link Rectangle}. For a
-     * {@link Rectangle} this might be Euclidean distance but for an EPSG4326
-     * lat-long Rectangle might be great-circle distance.
-     * 
-     * @param r
-     *            rectangle to measure distance to
-     * @return distance to the rectangle r from the geometry
-     */
-    double distance(Rectangle r);
+	/**
+	 * Returns the distance to the given {@link Rectangle}. For a
+	 * {@link Rectangle} this might be Euclidean distance but for an EPSG4326
+	 * lat-long Rectangle might be great-circle distance.
+	 * 
+	 * @param r
+	 *            rectangle to measure distance to
+	 * @return distance to the rectangle r from the geometry
+	 */
+	double distance(Rectangle r);
 
-    /**
-     * Returns true if and only if the geometry intersect the given
-     * {@link Rectangle}.
-     * 
-     * @param r
-     * @return true if and only if intersects with r
-     */
-    boolean intersects(Rectangle r);
+	/**
+	 * Returns true if and only if the geometry intersect the given
+	 * {@link Rectangle}.
+	 * 
+	 * @param r
+	 *            rectangle to test intersection with
+	 * @return true if and only if intersects with r
+	 */
+	boolean intersects(Rectangle r);
 
-    /**
-     * Returns the minimum bounding rectangle of this geometry.
-     * 
-     * @return minimum bounding rectangle
-     */
-    Rectangle mbr();
+	/**
+	 * Returns the minimum bounding rectangle of this geometry.
+	 * 
+	 * @return minimum bounding rectangle
+	 */
+	Rectangle mbr();
 }
