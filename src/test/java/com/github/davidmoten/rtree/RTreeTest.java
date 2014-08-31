@@ -69,20 +69,65 @@ public class RTreeTest {
     }
 
     @Test
-    public void testDeletionThatRemovesAllNodesChildren() {
-        Entry<Object> e1 = e(1);
-        Entry<Object> e2 = e(2);
-        Entry<Object> e3 = e(3);
-        Entry<Object> e4 = e(4);
-        RTree<Object> tree = RTree.maxChildren(3).create().add(e1).add(e2).add(e3);
+    public void testDepthWith0() {
+        RTree<Object> tree = RTree.create();
+        assertEquals(0, tree.calculateDepth());
+    }
+
+    @Test
+    public void testDepthWithMaxChildren3Entries1() {
+        RTree<Object> tree = create(3, 1);
         assertEquals(1, tree.calculateDepth());
-        tree = tree.add(e4);
+    }
+
+    @Test
+    public void testDepthWithMaxChildren3Entries2() {
+        RTree<Object> tree = create(3, 2);
+        assertEquals(1, tree.calculateDepth());
+    }
+
+    @Test
+    public void testDepthWithMaxChildren3Entries3() {
+        RTree<Object> tree = create(3, 3);
+        assertEquals(1, tree.calculateDepth());
+    }
+
+    @Test
+    public void testDepthWithMaxChildren3Entries4() {
+        RTree<Object> tree = create(3, 4);
+        assertEquals(2, tree.calculateDepth());
+    }
+
+    @Test
+    public void testDepthWithMaxChildren3Entries9() {
+        RTree<Object> tree = create(3, 9);
+        assertEquals(2, tree.calculateDepth());
+    }
+
+    @Test
+    public void testDepthWithMaxChildren3Entries10() {
+        RTree<Object> tree = create(3, 10);
+        assertEquals(3, tree.calculateDepth());
+    }
+
+    @Test
+    public void testDeletionThatRemovesAllNodesChildren() {
+        RTree<Object> tree = create(3, 8);
+        assertEquals(1, tree.calculateDepth());
+        tree = tree.add(e(10));
         // node children are now 1,2 and 3,4
         assertEquals(2, tree.calculateDepth());
-        tree = tree.delete(e4);
+        tree = tree.delete(e(10));
         // node children are now 1,2 and 3
         assertEquals(2, tree.calculateDepth());
-        assertEquals(Arrays.asList(e1, e2, e3), tree.entries().toList().toBlocking().single());
+        assertEquals(Arrays.asList(e(1), e(2), e(3)), tree.entries().toList().toBlocking().single());
+    }
+
+    private static RTree<Object> create(int maxChildren, int n) {
+        RTree<Object> tree = RTree.maxChildren(maxChildren).create();
+        for (int i = 1; i <= n; i++)
+            tree = tree.add(e(i));
+        return tree;
     }
 
     @Test
@@ -145,7 +190,7 @@ public class RTreeTest {
     }
 
     private static Entry<Object> e(int n) {
-        return entry(new Object(), r(n));
+        return Entry.<Object> entry(n, r(n));
     }
 
     private static Rectangle r(int n) {
