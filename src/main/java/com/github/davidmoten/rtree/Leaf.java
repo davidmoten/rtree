@@ -185,6 +185,8 @@ final class Leaf<T> implements Node<T> {
                 nextRequest = request - 1;
             } else
                 nextRequest = request;
+            // TODO if too many requested may get stack overflow? Tail recursion
+            // would be nice!
             return search(condition, subscriber, stack.pop().push(np.nextPosition()), nextRequest);
         }
 
