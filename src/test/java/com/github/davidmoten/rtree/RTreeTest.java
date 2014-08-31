@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class RTreeTest {
@@ -127,6 +128,13 @@ public class RTreeTest {
                 Sets.newHashSet(tree.entries().toList().toBlocking().single()));
     }
 
+    @Test
+    public void testDeleteOfEntryThatDoesNotExistFromTreeOfOneEntry() {
+        RTree<Object> tree = RTree.create().add(e(1));
+        tree = tree.delete(e(2));
+        assertEquals(Lists.newArrayList(e(1)), tree.entries().toList().toBlocking().single());
+    }
+
     private static RTree<Object> create(int maxChildren, int n) {
         RTree<Object> tree = RTree.maxChildren(maxChildren).create();
         for (int i = 1; i <= n; i++)
@@ -169,13 +177,16 @@ public class RTreeTest {
 
     @Test
     public void testDeleteOneFromLargeTree() {
-        Entry<Object> e1 = e(1);
-        Entry<Object> e2 = e(2);
         int n = 10000;
-        RTree<Object> tree = createRandomRTree(n).add(e1).add(e2).delete(e1);
+        RTree<Object> tree = createRandomRTree(n).add(e(1)).add(e(2)).delete(e(1));
         assertEquals(n + 1, (int) tree.entries().count().toBlocking().single());
-        assertFalse(tree.entries().contains(e1).toBlocking().single());
-        assertTrue(tree.entries().contains(e2).toBlocking().single());
+        assertFalse(tree.entries().contains(e(1)).toBlocking().single());
+        assertTrue(tree.entries().contains(e(2)).toBlocking().single());
+        for (Entry<Object> entry : tree.entries().toBlocking().toIterable()) {
+            tree = tree.delete(entry);
+        }
+        assertEquals(0, (int) tree.entries().count().toBlocking().single());
+        assertTrue(tree.isEmpty());
     }
 
     @Test

@@ -354,4 +354,8 @@ public class RTree<R> {
         return root;
     }
 
+    public boolean isEmpty() {
+        return !root.isPresent();
+    }
+
 }
