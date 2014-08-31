@@ -69,6 +69,23 @@ public class RTreeTest {
     }
 
     @Test
+    public void testDeletionThatRemovesAllNodesChildren() {
+        Entry<Object> e1 = e(1);
+        Entry<Object> e2 = e(2);
+        Entry<Object> e3 = e(3);
+        Entry<Object> e4 = e(4);
+        RTree<Object> tree = RTree.maxChildren(3).create().add(e1).add(e2).add(e3);
+        assertEquals(1, tree.calculateDepth());
+        tree = tree.add(e4);
+        // node children are now 1,2 and 3,4
+        assertEquals(2, tree.calculateDepth());
+        tree = tree.delete(e4);
+        // node children are now 1,2 and 3
+        assertEquals(2, tree.calculateDepth());
+        assertEquals(Arrays.asList(e1, e2, e3), tree.entries().toList().toBlocking().single());
+    }
+
+    @Test
     public void testNearest() {
         RTree<Object> tree = RTree.maxChildren(4).create().add(e(1)).add(e(2)).add(e(10))
                 .add(e(11));
