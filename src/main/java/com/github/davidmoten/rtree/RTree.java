@@ -17,6 +17,9 @@ import com.google.common.collect.Lists;
 
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
+ * 
+ * @param <R>
+ *            the entry type
  */
 public class RTree<R> {
 
@@ -35,8 +38,6 @@ public class RTree<R> {
 	 *            the root node of the tree if present
 	 * @param context
 	 *            options for the R-tree
-	 * @param <R>
-	 *            the entry type
 	 */
 	private RTree(Optional<Node<R>> root, Context context) {
 		this.root = root;
