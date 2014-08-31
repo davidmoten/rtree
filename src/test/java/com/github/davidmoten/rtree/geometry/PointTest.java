@@ -1,12 +1,10 @@
 package com.github.davidmoten.rtree.geometry;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import com.github.davidmoten.rtree.geometry.Geometries;
-import com.github.davidmoten.rtree.geometry.Point;
-import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public class PointTest {
 
@@ -31,5 +29,18 @@ public class PointTest {
 		Point p = Geometries.point(1, 2);
 		Rectangle r = Geometries.rectangle(1, 2, 1, 2);
 		assertEquals(r, p.mbr());
+	}
+
+	@Test
+	public void testPointIntersectsItself() {
+		Point p = Geometries.point(1, 2);
+		assertTrue(p.intersects(p.mbr()));
+	}
+
+	@Test
+	public void testIntersectIsFalseWhenPointsDiffer() {
+		Point p1 = Geometries.point(1, 2);
+		Point p2 = Geometries.point(1, 2.000001);
+		assertFalse(p1.intersects(p2.mbr()));
 	}
 }
