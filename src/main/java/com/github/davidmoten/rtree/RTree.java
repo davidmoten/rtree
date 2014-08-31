@@ -346,7 +346,7 @@ public class RTree<R> {
         return search(ALWAYS_TRUE);
     }
 
-    public Visualizer visualize(int width, int height, Rectangle view, int maxDepth) {
+    public Visualizer visualize(int width, int height, Rectangle view) {
         return new Visualizer(this, width, height, view);
     }
 

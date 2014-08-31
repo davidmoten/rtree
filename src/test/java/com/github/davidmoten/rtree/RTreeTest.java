@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public class RTreeTest {
@@ -99,9 +100,11 @@ public class RTreeTest {
     }
 
     @Test
-    public void testDepthWithMaxChildren3Entries9() {
-        RTree<Object> tree = create(3, 9);
-        assertEquals(2, tree.calculateDepth());
+    public void testDepthWithMaxChildren3Entries6() {
+        RTree<Object> tree = create(3, 2);
+        tree.visualize(800, 800, Geometries.rectangle(0, 0, 11, 11)).save(
+                new File("target/tree2.png"), "PNG");
+        assertEquals(3, tree.calculateDepth());
     }
 
     @Test
@@ -143,7 +146,7 @@ public class RTreeTest {
     @Test
     public void testVisualizer() {
         RTree<Object> tree = createRandomRTree(100);
-        tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100), 5).save(
+        tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100)).save(
                 new File("target/tree.png"), "PNG");
     }
 
