@@ -35,6 +35,8 @@ public class RTree<R> {
 	 *            the root node of the tree if present
 	 * @param context
 	 *            options for the R-tree
+	 * @param <R>
+	 *            the entry type
 	 */
 	private RTree(Optional<Node<R>> root, Context context) {
 		this.root = root;
@@ -162,6 +164,8 @@ public class RTree<R> {
 		/**
 		 * Builds the {@link RTree}.
 		 * 
+		 * @param <S>
+		 *            the entry type
 		 * @return RTree
 		 */
 		public <S> RTree<S> create() {
@@ -244,6 +248,8 @@ public class RTree<R> {
 	 * 
 	 * @param r
 	 *            rectangle to measure distance to
+	 * @param <S>
+	 *            the entry type
 	 * @return a comparator to sort by ascending distance from the rectangle
 	 */
 	public static final <S> Comparator<Entry<S>> ascendingDistance(
@@ -307,7 +313,7 @@ public class RTree<R> {
 	 *            rectangle to measure distance from
 	 * @param maxDistance
 	 *            entries returned must be within this distance from rectangel r
-	 * @return
+	 * @return the sequence of matching entries
 	 */
 	public Observable<Entry<R>> search(final Rectangle r,
 			final double maxDistance) {
