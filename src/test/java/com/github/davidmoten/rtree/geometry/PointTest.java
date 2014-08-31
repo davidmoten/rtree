@@ -43,4 +43,24 @@ public class PointTest {
 		Point p2 = Geometries.point(1, 2.000001);
 		assertFalse(p1.intersects(p2.mbr()));
 	}
+
+	@Test
+	public void testEquality() {
+		Point p1 = Geometries.point(1, 2);
+		Point p2 = Geometries.point(1, 2);
+		assertTrue(p1.equals(p2));
+	}
+
+	@Test
+	public void testInequality() {
+		Point p1 = Geometries.point(1, 2);
+		Point p2 = Geometries.point(1, 3);
+		assertFalse(p1.equals(p2));
+	}
+
+	@Test
+	public void testInequalityToNull() {
+		Point p1 = Geometries.point(1, 2);
+		assertFalse(p1.equals(null));
+	}
 }
