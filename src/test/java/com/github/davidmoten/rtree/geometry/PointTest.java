@@ -63,4 +63,10 @@ public class PointTest {
 		Point p1 = Geometries.point(1, 2);
 		assertFalse(p1.equals(null));
 	}
+
+	@Test
+	public void testHashCode() {
+		Point p = Geometries.point(1, 2);
+		assertEquals(-1056041056, p.hashCode());
+	}
 }
