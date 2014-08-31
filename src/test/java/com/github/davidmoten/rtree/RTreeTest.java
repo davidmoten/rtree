@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.google.common.collect.Sets;
 
 public class RTreeTest {
 
@@ -100,8 +101,8 @@ public class RTreeTest {
     }
 
     @Test
-    public void testDepthWithMaxChildren3Entries6() {
-        RTree<Object> tree = create(3, 2);
+    public void testDepthWithMaxChildren3Entries8() {
+        RTree<Object> tree = create(3, 8);
         tree.visualize(800, 800, Geometries.rectangle(0, 0, 11, 11)).save(
                 new File("target/tree2.png"), "PNG");
         assertEquals(3, tree.calculateDepth());
@@ -116,14 +117,14 @@ public class RTreeTest {
     @Test
     public void testDeletionThatRemovesAllNodesChildren() {
         RTree<Object> tree = create(3, 8);
-        assertEquals(1, tree.calculateDepth());
         tree = tree.add(e(10));
         // node children are now 1,2 and 3,4
-        assertEquals(2, tree.calculateDepth());
+        assertEquals(3, tree.calculateDepth());
         tree = tree.delete(e(10));
         // node children are now 1,2 and 3
-        assertEquals(2, tree.calculateDepth());
-        assertEquals(Arrays.asList(e(1), e(2), e(3)), tree.entries().toList().toBlocking().single());
+        assertEquals(3, tree.calculateDepth());
+        assertEquals(Sets.newHashSet(e(1), e(2), e(3), e(4), e(5), e(6), e(7), e(8)),
+                Sets.newHashSet(tree.entries().toList().toBlocking().single()));
     }
 
     private static RTree<Object> create(int maxChildren, int n) {
