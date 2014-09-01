@@ -13,6 +13,14 @@ import com.google.common.base.Preconditions;
 
 final class Util {
 
+    private Util() {
+        // prevent instantiation
+    }
+
+    static void instantiateForTestCoveragePurposesOnly() {
+        new Util();
+    }
+
     static Rectangle mbr(Collection<? extends HasGeometry> items) {
         Preconditions.checkArgument(!items.isEmpty());
         Optional<Rectangle> r = Optional.absent();

@@ -1,11 +1,9 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.util;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import com.github.davidmoten.util.ObjectsHelper;
 
 public class ObjectsHelperTest {
 
@@ -22,5 +20,10 @@ public class ObjectsHelperTest {
     @Test
     public void testAsClassIsPresentIfSameTypeAndNotNull() {
         assertTrue(ObjectsHelper.asClass(1, Integer.class).isPresent());
+    }
+
+    @Test
+    public void coverPrivateConstructor() {
+        ObjectsHelper.instantiateForTestCoveragePurposesOnly();
     }
 }

@@ -4,7 +4,15 @@ import static com.google.common.base.Optional.absent;
 
 import com.google.common.base.Optional;
 
-public class ObjectsHelper {
+public final class ObjectsHelper {
+
+    private ObjectsHelper() {
+        // prevent instantiation
+    }
+
+    static void instantiateForTestCoveragePurposesOnly() {
+        new ObjectsHelper();
+    }
 
     public static <T> Optional<T> asClass(Object object, Class<T> cls) {
         if (object == null)
