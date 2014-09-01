@@ -10,8 +10,9 @@ import com.google.common.base.Preconditions;
 class Backpressure {
 
     static <T> ImmutableStack<NodePosition<T>> search(Node<T> node,
-            Func1<? super Geometry, Boolean> condition, Subscriber<? super Entry<T>> subscriber,
-            ImmutableStack<NodePosition<T>> stack, long request) {
+            final Func1<? super Geometry, Boolean> condition,
+            final Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
+            long request) {
         while (true) {
             Preconditions.checkArgument(!stack.isEmpty());
             NodePosition<T> np = stack.peek();
