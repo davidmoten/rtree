@@ -153,6 +153,12 @@ public class RTreeTest {
     }
 
     @Test
+    public void testDeletionOfEntryThatDoesNotExistFromNonLeaf() {
+        RTree<Object> tree = create(3, 100).delete(e(1000));
+        assertEquals(100, (int) tree.entries().count().toBlocking().single());
+    }
+
+    @Test
     public void testBuilder2() {
         RTree<Object> tree = RTree.selector(new SelectorMinimalAreaIncrease()).minChildren(1)
                 .maxChildren(4).splitter(new QuadraticSplitter()).create();
