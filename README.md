@@ -101,6 +101,10 @@ or
 tree = tree.delete(Entry.entry(item, Geometries.point(10,20));
 ```
 
+###Searching
+The advantage of an R-tree is the ability to search for items in a region reasonably quickly. 
+On average search is ```O(log N)``` but may be  ```O(N)```.
+
 How to build
 ----------------
 ```
