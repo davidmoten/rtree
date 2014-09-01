@@ -6,6 +6,10 @@ public final class Geometries {
         // prevent instantiation
     }
 
+    static void instantiateForTestCoveragePurposesOnly() {
+        new Geometries();
+    }
+
     public static Point point(double x, double y) {
         return Point.create(x, y);
     }
