@@ -147,7 +147,7 @@ import rx.Observable;
 import rx.functions.*;
 import rx.schedulers.Schedulers;
 
-Func1<Entry<String>, Character> firstCharacter = entry -> entry.object().charAt(0);
+Func1<Entry<String>, Character> firstCharacter = entry -> entry.value().charAt(0);
 Func2<Character,Character,Character> firstAlphabetically = (x,y) -> x <=y ? x : y;
 
 Character result = 
