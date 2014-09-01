@@ -22,7 +22,7 @@ Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) incl
 Features
 ------------
 * immutable R-tree suitable for concurrency
-* type-safe
+* typed
 * pluggable splitting heuristic ([```Splitter```](src/main/java/com/github/davidmoten/rtree/Splitter.java)). Default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf).
 * pluggable insert heuristic ([```Selector```](src/main/java/com/github/davidmoten/rtree/Selector.java)). Default is least minimum bounding rectangle area increase.
 * search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
