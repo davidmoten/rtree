@@ -98,8 +98,7 @@ tree = tree.delete(Entry.entry(item, Geometries.point(10,20));
 ###Custom geometries
 You can also write your own implementation of [```Geometry```](src/main/java/com/github/davidmoten/rtree/geometry/Geometry.java). An implementation of ```Geometry``` needs to specify methods to:
 
-* measure distance to a rectangle
-* decide if the geometry intersects with a rectangle
+* measure distance to a rectangle (0 means they intersect)
 * provide a minimum bounding rectangle
 * implement ```equals``` and ```hashCode``` for consistent equality checking
 
