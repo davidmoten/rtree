@@ -81,9 +81,7 @@ To add an item to an R-tree:
 RTree<T> tree = RTree.create();
 tree = tree.add(item, Geometries.point(10,20));
 ```
-
 or 
-
 ```java
 tree = tree.add(Enry.entry(item, Geometries.point(10,20));
 ```
@@ -94,9 +92,7 @@ To remove an item from an R-tree, you need to match the item and it's geometry:
 ```java
 tree = tree.delete(item, Geometries.point(10,20));
 ```
-
 or 
-
 ```java
 tree = tree.delete(Entry.entry(item, Geometries.point(10,20));
 ```
