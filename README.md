@@ -71,6 +71,23 @@ tree = tree.add("DAVE", point(10, 20))
 Observable<Entry<String>> entries = tree.search(Rectangle.create(8, 15, 30, 35));
 ```
 
+The API
+---------------------
+
+###Instantiate an R-Tree
+Use the static builder methods on the ```RTree`` class:
+
+```java
+//create an R-tree with max children per node 128, min children 64 (the threshold at which members are redistributed)
+RTree<String> tree = RTree.create();
+```
+You can specify a few parameters to the builder, including minChildren and maxChildren:
+
+```java
+RTree<String> tree = RTree.minChildren(3).maxChildren(6).create();
+```
+
+
 What do I do with the Observable thing?
 ----------------------------------------
 Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).
