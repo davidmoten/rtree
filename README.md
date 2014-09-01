@@ -140,7 +140,7 @@ Observable<Entry<String>> entries = tree.search(Rectangle.create(8, 15, 30, 35))
 ###What do I do with the Observable thing?
 Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).
 
-As an example, suppose you want filter the search results then apply a function on each in parallel and reduce to some best answer:
+As an example, suppose you want to filter the search results then apply a function on each in parallel and reduce to some best answer:
 
 ```java
 import rx.Observable;
@@ -170,7 +170,7 @@ D
 ```
 
 ### How do I just get an Iterable back from a search?
-If you are not familiar with the Observable API and want to skip the reactive stuff then here's how to get an Iterable from a search:
+If you are not familiar with the Observable API and want to skip the reactive stuff then here's how to get an ```Iterable``` from a search:
 
 ```java
 Iterable<T> it = tree.search(Geometries.point(4,5)).toBlocking().toIterable();
