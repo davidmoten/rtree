@@ -10,9 +10,21 @@ import com.github.davidmoten.rtree.Entry;
 public interface Geometry {
 
 	/**
+	 * <p>
 	 * Returns the distance to the given {@link Rectangle}. For a
 	 * {@link Rectangle} this might be Euclidean distance but for an EPSG4326
-	 * lat-long Rectangle might be great-circle distance.
+	 * lat-long Rectangle might be great-circle distance. The distance function
+	 * should satisfy the following properties:
+	 * </p>
+	 * 
+	 * <p>
+	 * <code>distance(r) &gt;= 0</code>
+	 * </p>
+	 * 
+	 * <p>
+	 * <code>if r1 contains r2 then distance(r1)&lt;=distance(r2)</code>
+	 * </p>
+	 * 
 	 * 
 	 * @param r
 	 *            rectangle to measure distance to
