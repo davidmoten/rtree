@@ -28,7 +28,7 @@ public class RTree<R> {
     private final Optional<Node<R>> root;
     private final Context context;
 
-    public static final int MAX_CHILDREN_DEFAULT = 128;
+    public static final int MAX_CHILDREN_DEFAULT = 32;
 
     /**
      * Constructor.

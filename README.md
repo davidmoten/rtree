@@ -54,8 +54,8 @@ Add this maven dependency to your pom.xml:
 Use the static builder methods on the ```RTree``` class:
 
 ```java
-//create an R-tree with max children per node 128,
-// min children 64 (the threshold at which members
+//create an R-tree with max children per node 32,
+// min children 16 (the threshold at which members
 // are redistributed)
 RTree<String> tree = RTree.create();
 ```
