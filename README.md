@@ -73,7 +73,11 @@ extension of the item. The ``Geometries`` builder provides these factory methods
 * ```Geometries.circle```
 * ```Geometries.point```
 
-You can also write your own implementation of ``Geometry``.
+You can also write your own implementation of ``Geometry``. An implementation of ```Geometry``` needs to specify these methods:
+
+* distance to a rectangle
+* intersects with a rectangle
+* equals and hashCode for consistent equality checking
 
 To add an item to an R-tree:
 
