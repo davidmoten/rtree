@@ -18,8 +18,8 @@ public class SelectorMinimalAreaIncrease implements Selector {
     private static <T> Node<T> findLeastIncreaseInMbrArea(Rectangle r, List<? extends Node<T>> list) {
         Optional<Double> minDifference = Optional.absent();
         Optional<Node<T>> minDiffItem = Optional.absent();
-        for (final Node<T> m : list) {
-            final double diff = m.geometry().mbr().add(r).area() - m.geometry().mbr().area();
+        for (Node<T> m : list) {
+            double diff = m.geometry().mbr().add(r).area() - m.geometry().mbr().area();
             if (!minDifference.isPresent() || diff < minDifference.get()) {
                 minDifference = of(diff);
                 minDiffItem = of(m);

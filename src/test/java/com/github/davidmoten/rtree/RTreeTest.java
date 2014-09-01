@@ -50,7 +50,7 @@ public class RTreeTest {
     public void testPerformanceAndEntriesCount() {
 
         long repeats = Long.parseLong(System.getProperty("r", "1"));
-        long n = 10000;
+        long n = Long.parseLong(System.getProperty("n", "10000"));
         RTree<Object> tree = null;
         while (--repeats >= 0) {
             long t = System.currentTimeMillis();
