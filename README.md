@@ -67,13 +67,13 @@ RTree<String> tree = RTree.minChildren(3).maxChildren(6).create();
 
 ###Add items to the R-tree
 When you add an item to the R-tree you need to provide a geometry that represents the 2D physical location or 
-extension of the item. The ```Geometries`` builder provides these factory methods:
+extension of the item. The ``Geometries`` builder provides these factory methods:
 
 * ```Geometries.rectangle```
 * ```Geometries.circle```
 * ```Geometries.point```
 
-You can also write your own implementation of ```Geometry`` as well.
+You can also write your own implementation of ``Geometry`` as well.
 
 To add an item to an R-tree:
 
