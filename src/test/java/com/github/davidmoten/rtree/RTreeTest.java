@@ -209,13 +209,27 @@ public class RTreeTest {
     @Test
     public void testUnsubscribe() {
         RTree<Object> tree = createRandomRTree(1000);
-        assertEquals(10, (int) tree.entries().take(10).count().toBlocking().single());
+        assertEquals(0, (int) tree.entries().take(0).count().toBlocking().single());
     }
 
     @Test
     public void testSearchConditionAlwaysFalse() {
         RTree<Object> tree = create(3, 3);
         assertEquals(0, (int) tree.search(Functions.alwaysFalse()).count().toBlocking().single());
+    }
+
+    @Test
+    public void testAddOverload() {
+        RTree<Object> tree = create(3, 0);
+        tree = tree.add(123, Geometries.point(1, 2));
+        assertEquals(1, (int) tree.entries().count().toBlocking().single());
+    }
+
+    @Test
+    public void testDeleteOverload() {
+        RTree<Object> tree = create(3, 0);
+        tree = tree.add(123, Geometries.point(1, 2)).delete(123, Geometries.point(1, 2));
+        assertEquals(0, (int) tree.entries().count().toBlocking().single());
     }
 
     private static Entry<Object> e(int n) {
