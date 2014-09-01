@@ -155,14 +155,6 @@ final class Leaf<T> implements Node<T> {
     }
 
     @Override
-    public ImmutableStack<NodePosition<T>> search(Func1<? super Geometry, Boolean> condition,
-            Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
-            long request) {
-        Node<T> node = this;
-        return Backpressure.search(node, condition, subscriber, stack, request);
-    }
-
-    @Override
     public int count() {
         return entries.size();
     }

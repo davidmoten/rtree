@@ -70,7 +70,8 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
                     long r = requested.get();
                     long numToEmit = r;
 
-                    stack = stack.peek().node().search(condition, subscriber, stack, numToEmit);
+                    stack = Backpressure.search(stack.peek().node(), condition, subscriber, stack,
+                            numToEmit);
                     if (stack.isEmpty()) {
                         if (!subscriber.isUnsubscribed())
                             subscriber.onCompleted();
