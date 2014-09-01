@@ -73,7 +73,7 @@ extension of the item. The ``Geometries`` builder provides these factory methods
 * ```Geometries.circle```
 * ```Geometries.point```
 
-You can also write your own implementation of ``Geometry``. An implementation of [```Geometry```](src/main/java/com/github/davidmoten/rtree/geometry/Geometry.java) needs to specify methods to:
+You can also write your own implementation of [```Geometry```](src/main/java/com/github/davidmoten/rtree/geometry/Geometry.java). An implementation of ```Geometry``` needs to specify methods to:
 
 * measure distance to a rectangle
 * decide if the geometry intersects with a rectangle
