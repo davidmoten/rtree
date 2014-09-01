@@ -137,6 +137,24 @@ public class RTreeTest {
         assertEquals(Lists.newArrayList(e(1)), tree.entries().toList().toBlocking().single());
     }
 
+    @Test
+    public void testDeleteFromEmptyTree() {
+        RTree<Object> tree = RTree.create();
+        tree = tree.delete(e(2));
+        assertEquals(0, (int) tree.entries().count().toBlocking().single());
+    }
+
+    @Test
+    public void testBuilder() {
+        RTree<Object> tree = RTree.minChildren(1).maxChildren(4)
+                .selector(new SelectorMinimalAreaIncrease()).splitter(new QuadraticSplitter())
+                .create();
+        for (int i = 1; i <= 1000; i++) {
+            tree = tree.add(i, Geometries.point(i, i));
+        }
+        assertEquals(1000, (int) tree.entries().count().toBlocking().single());
+    }
+
     private static RTree<Object> create(int maxChildren, int n) {
         RTree<Object> tree = RTree.maxChildren(maxChildren).create();
         for (int i = 1; i <= n; i++)
