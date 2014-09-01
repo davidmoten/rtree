@@ -39,7 +39,7 @@
 		<m3.site.version>3.3</m3.site.version>
 		<changelog.version>2.2</changelog.version>
 		<coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
-		<rxjava.version>0.20.2</rxjava.version>
+		<rxjava.version>0.20.3</rxjava.version>
 
 	</properties>
 
