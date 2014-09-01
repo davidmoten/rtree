@@ -2,6 +2,7 @@ package com.github.davidmoten.rtree;
 
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -61,5 +62,10 @@ public class RectangleTest {
 
         assertEquals(Math.sqrt(26), r.distance(r2), PRECISION);
         assertEquals(Math.sqrt(26), r2.distance(r), PRECISION);
+    }
+
+    @Test
+    public void testInequalityWithNull() {
+        assertFalse(rectangle(0, 0, 1, 1).equals(null));
     }
 }
