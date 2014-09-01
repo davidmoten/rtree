@@ -29,4 +29,6 @@ interface Node<T> extends HasGeometry {
             Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
             long request);
 
+    int count();
+
 }

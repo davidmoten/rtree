@@ -77,28 +77,11 @@ final class NonLeaf<T> implements Node<T> {
     public ImmutableStack<NodePosition<T>> search(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
             long request) {
-        Preconditions.checkArgument(!stack.isEmpty());
-        NodePosition<T> np = stack.peek();
-        Preconditions.checkArgument(this == np.node());
-        Preconditions.checkArgument(np.position() <= children.size());
-        if (request == 0)
-            return stack;
-        if (np.position() == children.size()) {
-            ImmutableStack<NodePosition<T>> stack2 = stack.pop();
-            if (stack2.isEmpty())
-                return stack2;
-            else {
-                NodePosition<T> previous = stack2.peek();
-                return previous.node().search(condition, subscriber,
-                        stack2.pop().push(previous.nextPosition()), request);
-            }
-        } else {
-            Node<T> child = children.get(np.position());
-            if (condition.call(child.geometry()))
-                return child.search(condition, subscriber,
-                        stack.push(new NodePosition<T>(child, 0)), request);
-            else
-                return search(condition, subscriber, stack.pop().push(np.nextPosition()), request);
-        }
+        return Backpressure.search(this, condition, subscriber, stack, request);
+    }
+
+    @Override
+    public int count() {
+        return children.size();
     }
 }
