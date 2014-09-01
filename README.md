@@ -112,18 +112,17 @@ Observable<Entry<T>> results = tree.search(Geometries.rectangle(0,0,2,2),5.0);
 or specify a predicate:
 ```java
 Func1<Geometry,Boolean> function = ...
-Observable<Entry<T>> results = tree.search(function, Geometries.circle(0,0,2));
+Observable<Entry<T>> results = tree.search(function);
+```
+To return all entries from an R-tree:
+```java
+Observable<Entry<T>> results = tree.entries();
+```
+or, using a predicate: 
+```java
+Observable<Entry<T>> results = tree.search(Functions.alwaysTrue());
 ```
 
-
-
-How to build
-----------------
-```
-git clone https://github.com/davidmoten/rtree.git
-cd rtree
-mvn clean install
-```
 Example
 --------------
 ```java
@@ -138,8 +137,7 @@ tree = tree.add("DAVE", point(10, 20))
 Observable<Entry<String>> entries = tree.search(Rectangle.create(8, 15, 30, 35));
 ```
 
-What do I do with the Observable thing?
-----------------------------------------
+###What do I do with the Observable thing?
 Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).
 
 As an example, suppose you want filter the search results then apply a function on each in parallel and reduce to some best answer:
@@ -171,10 +169,17 @@ output:
 D
 ```
 
-How do I just get an Iterable back from a search?
--------------------------------------------------------
+### How do I just get an Iterable back from a search?
 If you are not familiar with the Observable API and want to skip the reactive stuff then here's how to get an Iterable from a search:
 
 ```java
 Iterable<T> it = tree.search(Geometries.point(4,5)).toBlocking().toIterable();
+```
+
+How to build
+----------------
+```
+git clone https://github.com/davidmoten/rtree.git
+cd rtree
+mvn clean install
 ```
