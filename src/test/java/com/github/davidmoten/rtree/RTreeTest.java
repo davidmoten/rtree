@@ -49,16 +49,20 @@ public class RTreeTest {
     @Test
     public void testPerformanceAndEntriesCount() {
 
-        long n = Long.parseLong(System.getProperty("n", "10000"));
-        long t = System.currentTimeMillis();
-        RTree<Object> tree = createRandomRTree(n);
-        long diff = System.currentTimeMillis() - t;
-        System.out.println("inserts/second = " + ((double) n / diff * 1000));
+        long repeats = Long.parseLong(System.getProperty("r", "1"));
+        long n = 10000;
+        RTree<Object> tree = null;
+        while (--repeats >= 0) {
+            long t = System.currentTimeMillis();
+            tree = createRandomRTree(n);
+            long diff = System.currentTimeMillis() - t;
+            System.out.println("inserts/second = " + ((double) n / diff * 1000));
+        }
         assertEquals(n, (int) tree.entries().count().toBlocking().single());
 
-        t = System.currentTimeMillis();
+        long t = System.currentTimeMillis();
         Entry<Object> entry = tree.search(rectangle(0, 0, 500, 500)).first().toBlocking().single();
-        diff = System.currentTimeMillis() - t;
+        long diff = System.currentTimeMillis() - t;
         System.out.println("found " + entry);
         System.out.println("time to get nearest with " + n + " entries=" + diff);
 
