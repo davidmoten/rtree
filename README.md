@@ -99,7 +99,23 @@ tree = tree.delete(Entry.entry(item, Geometries.point(10,20));
 
 ###Searching
 The advantage of an R-tree is the ability to search for items in a region reasonably quickly. 
-On average search is ```O(log N)``` but may be  ```O(N)```.
+On average search is ```O(log N)``` but worst case is ```O(N)```.
+
+Search methods return Observable sequences:
+```java
+Observable<Entry<T>> results = tree.search(Geometries.rectangle(0,0,2,2));
+```
+or search for items within a distance from the given geometry:
+```java
+Observable<Entry<T>> results = tree.search(Geometries.rectangle(0,0,2,2),5.0);
+```
+or specify a predicate:
+```java
+Func1<Geometry,Boolean> function = ...
+Observable<Entry<T>> results = tree.search(function, Geometries.rectangle(0,0,2,2));
+```
+
+
 
 How to build
 ----------------
