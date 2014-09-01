@@ -51,7 +51,7 @@ Add this maven dependency to your pom.xml:
 ```
 
 ###Instantiate an R-Tree
-Use the static builder methods on the ```RTree`` class:
+Use the static builder methods on the ``RTree``` class:
 
 ```java
 //create an R-tree with max children per node 128,
