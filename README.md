@@ -101,7 +101,7 @@ You can also write your own implementation of [```Geometry```](src/main/java/com
 * measure distance to a rectangle
 * decide if the geometry intersects with a rectangle
 * provide a minimum bounding rectangle
-* implement equals and hashCode for consistent equality checking
+* implement ```equals``` and ```hashCode``` for consistent equality checking
 
 ###Searching
 The advantage of an R-tree is the ability to search for items in a region reasonably quickly. 
