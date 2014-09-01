@@ -86,7 +86,7 @@ Func1<Entry<String>, Character> firstCharacter = entry -> entry.object().charAt(
 Func2<Character,Character,Character> firstAlphabetically = (x,y) -> x <=y ? x : y;
 
 Character result = 
-    tree.search(Rectangle.create(8, 15, 30, 35))
+    tree.search(Geometries.rectangle(8, 15, 30, 35))
         // filter for names alphabetically less than M
         .filter(entry -> entry.value() < "M")
         // use a different scheduler for each entry
@@ -104,3 +104,10 @@ output:
 D
 ```
 
+How do I just get an Iterable back from a search?
+-------------------------------------------------------
+If you are not familiar with the Observable API and want to skip the reactive stuff then here's how to get an Iterable from a search:
+
+```java
+Iterable<T> it = tree.search(Geometries.point(4,5)).toBlocking().toIterable();
+```
