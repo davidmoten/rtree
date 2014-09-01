@@ -106,7 +106,7 @@ For the R-tree to be well-behaved, the distance function needs to satisfy these 
 
 * ```distance(r) >= 0 for all rectangles r```
 * ```if rectangle r1 contains r2 then distance(r1)<=distance(r2)```
-* ```distance(r) = 0 means that the geometry intersects the rectangle r``` 
+* ```distance(r) = 0 if and only if that the geometry intersects the rectangle r``` 
 
 ###Searching
 The advantage of an R-tree is the ability to search for items in a region reasonably quickly. 
