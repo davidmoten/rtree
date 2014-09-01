@@ -73,7 +73,7 @@ extension of the item. The ``Geometries`` builder provides these factory methods
 * ```Geometries.circle```
 * ```Geometries.point```
 
-You can also write your own implementation of ``Geometry`` as well.
+You can also write your own implementation of ``Geometry``.
 
 To add an item to an R-tree:
 
