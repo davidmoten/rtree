@@ -69,4 +69,5 @@ public class CircleTest {
         Circle circle = Geometries.circle(1, 2, 3);
         assertEquals(1606448223, circle.hashCode());
     }
+
 }

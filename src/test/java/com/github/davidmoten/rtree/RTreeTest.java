@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import rx.functions.Functions;
+
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.collect.Lists;
@@ -202,6 +204,18 @@ public class RTreeTest {
         RTree<String> tree = RTree.maxChildren(5).create();
         tree = tree.add(entry("DAVE", point(10, 20))).add(entry("FRED", point(12, 25)))
                 .add(entry("MARY", point(97, 125)));
+    }
+
+    @Test
+    public void testUnsubscribe() {
+        RTree<Object> tree = createRandomRTree(1000);
+        assertEquals(10, (int) tree.entries().take(10).count().toBlocking().single());
+    }
+
+    @Test
+    public void testSearchConditionAlwaysFalse() {
+        RTree<Object> tree = create(3, 3);
+        assertEquals(0, (int) tree.search(Functions.alwaysFalse()).count().toBlocking().single());
     }
 
     private static Entry<Object> e(int n) {
