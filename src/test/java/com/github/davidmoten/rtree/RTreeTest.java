@@ -49,8 +49,8 @@ public class RTreeTest {
     @Test
     public void testPerformanceAndEntriesCount() {
 
+        long n = Long.parseLong(System.getProperty("n", "10000"));
         long t = System.currentTimeMillis();
-        int n = 10000;
         RTree<Object> tree = createRandomRTree(n);
         long diff = System.currentTimeMillis() - t;
         System.out.println("inserts/second = " + ((double) n / diff * 1000));
@@ -64,9 +64,9 @@ public class RTreeTest {
 
     }
 
-    private static RTree<Object> createRandomRTree(int n) {
+    private static RTree<Object> createRandomRTree(long n) {
         RTree<Object> tree = RTree.maxChildren(4).create();
-        for (int i = 0; i < n; i++) {
+        for (long i = 0; i < n; i++) {
             Entry<Object> entry = entry(new Object(), random());
             tree = tree.add(entry);
         }
