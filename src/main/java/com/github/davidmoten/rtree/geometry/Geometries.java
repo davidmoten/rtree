@@ -2,6 +2,10 @@ package com.github.davidmoten.rtree.geometry;
 
 public final class Geometries {
 
+    private Geometries() {
+        // prevent instantiation
+    }
+
     public static Point point(double x, double y) {
         return Point.create(x, y);
     }
