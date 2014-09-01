@@ -104,8 +104,8 @@ You can also write your own implementation of [```Geometry```](src/main/java/com
 
 For the R-tree to be well-behaved, the distance function needs to satisfy these properties:
 
-* ```distance(r) &gt;= 0 for all rectangles r```
-* ```if rectangle r1 contains r2 then distance(r1)&lt;=distance(r2)``` 
+* ```distance(r) >= 0 for all rectangles r```
+* ```if rectangle r1 contains r2 then distance(r1)<=distance(r2)``` 
 
 ###Searching
 The advantage of an R-tree is the ability to search for items in a region reasonably quickly. 
