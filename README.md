@@ -3,7 +3,7 @@ rtree
 
 In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive processing of search results. 
 
-Status: *pre-alpha*
+Status: *alpha*, release candidate in Maven Central
 
 This was fun to make, has an elegant concise algorithm, is thread-safe and fast.
 
@@ -46,7 +46,7 @@ Add this maven dependency to your pom.xml:
 <dependency>
   <groupId>com.github.davidmoten</groupId>
   <artifactId>rtree</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1-RC1</version>
 </dependency>
 ```
 
