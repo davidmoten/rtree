@@ -85,7 +85,7 @@ tree = tree.add(Enry.entry(item, Geometries.point(10,20));
 ```
 
 ###Remove an item in the R-tree
-To remove an item from an R-tree, you need to match the item and it's geometry:
+To remove an item from an R-tree, you need to match the item and its geometry:
 
 ```java
 tree = tree.delete(item, Geometries.point(10,20));
