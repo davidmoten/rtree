@@ -76,10 +76,14 @@ public class RTreeTest {
 	static RTree<Object> createRandomRTree(long n) {
 		RTree<Object> tree = RTree.maxChildren(4).create();
 		for (long i = 0; i < n; i++) {
-			Entry<Object> entry = entry(new Object(), random());
+			Entry<Object> entry = randomEntry();
 			tree = tree.add(entry);
 		}
 		return tree;
+	}
+
+	static Entry<Object> randomEntry() {
+		return entry(new Object(), random());
 	}
 
 	@Test
@@ -314,7 +318,7 @@ public class RTreeTest {
 		return rectangle(n, m, n + 1, m + 1);
 	}
 
-	private static Rectangle random() {
+	static Rectangle random() {
 		return r((int) Math.round(Math.sqrt(Math.random()) * 1000),
 				(int) Math.round(Math.sqrt(Math.random()) * 1000));
 	}

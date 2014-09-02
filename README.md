@@ -194,3 +194,9 @@ git clone https://github.com/davidmoten/rtree.git
 cd rtree
 mvn clean install
 ```
+
+How to run benchmarks
+--------------------------
+```
+mvn clean install exec:exec
+```
