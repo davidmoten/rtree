@@ -1,14 +1,17 @@
 package com.github.davidmoten.rtree;
 
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
 
+@State(Scope.Benchmark)
 public class BenchmarksRTree {
 
 	private final RTree<Object> tree = RTreeTest.createRandomRTree(10000);
 
 	@Benchmark
-	public void createRTreeAndInsert10000Entries() {
-		RTreeTest.createRandomRTree(10000);
+	public void createRTreeAndInsertOneEntryInto10000Entries() {
+		tree.add(new Object(), RTreeTest.random());
 	}
 
 	@Benchmark

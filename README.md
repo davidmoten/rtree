@@ -27,7 +27,7 @@ Features
 * pluggable insert heuristic ([```Selector```](src/main/java/com/github/davidmoten/rtree/Selector.java)). Default is least minimum bounding rectangle area increase.
 * search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
 * search is cancelled by unsubscription
-* over 80K inserts per second on i7 single thread
+* over 250K inserts per second on i7 single thread into a tree with 10,000 entries
 * search is ```O(log(N))``` on average
 * insert, delete are ```O(N)``` worst case
 * all search methods return lazy-evaluated streams offering a lot of flexibility and opportunity for functional composition and concurrency
@@ -198,5 +198,5 @@ mvn clean install
 How to run benchmarks
 --------------------------
 ```
-mvn clean install exec:exec
+mvn integration-test
 ```
