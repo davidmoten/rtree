@@ -11,7 +11,17 @@ public class BenchmarksMain {
 
 	public static void main(String[] args) throws RunnerException, IOException {
 		Options opt = new OptionsBuilder()
-				.include(BenchmarksRTree.class.getSimpleName()).forks(1)
+		//
+				.include(BenchmarksRTree.class.getSimpleName())
+				//
+				.forks(1)
+				//
+				.warmupIterations(10)
+				//
+				.measurementIterations(10)
+				//
+				.jvmArgs("-Xmx512m")
+				//
 				.build();
 		new Runner(opt).run();
 	}
