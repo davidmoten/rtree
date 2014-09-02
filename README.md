@@ -198,6 +198,7 @@ mvn clean install
 
 How to run benchmarks
 --------------------------
+Benchmarks are provided by 
 ```
-mvn integration-test
+mvn clean integration-test
 ```
