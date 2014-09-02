@@ -33,6 +33,7 @@ Features
 * all search methods return lazy-evaluated streams offering a lot of flexibility and opportunity for functional composition and concurrency
 * balanced delete
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
+* JMH benchmarks
 
 Number of points = 100, max children per node 4:
 
