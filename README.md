@@ -5,6 +5,8 @@ In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementat
 
 Status: *alpha*, release candidate in Maven Central
 
+An [R-tree](http://en.wikipedia.org/wiki/R-tree) is a commonly used spatial index.
+
 This was fun to make, has an elegant concise algorithm, is thread-safe and fast.
 
 The algorithm to achieve immutability is cute. For insertion/deletion it involves recursion down to the 
