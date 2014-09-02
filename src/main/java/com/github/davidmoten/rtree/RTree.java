@@ -222,10 +222,32 @@ public class RTree<R> {
         return add(Entry.entry(value, geometry));
     }
 
+    /**
+     * Delete one entry comprised of the given value and Geometry. This method
+     * has no effect if the entry is not present. The entry must match on both
+     * value and geometry to be deleted.
+     * 
+     * @param value
+     *            the value of the {@link Entry} to be deleted
+     * @param geometry
+     *            the geometry of the {@link Entry} to be deleted
+     * @return a new immutable R-tree without one instance of the specified
+     *         entry
+     */
     public RTree<R> delete(R value, Geometry geometry) {
         return delete(Entry.entry(value, geometry));
     }
 
+    /**
+     * Delete one entry if it exists. If multiple copies of the entry are in the
+     * R-tree only one will be deleted. The entry must match on both value and
+     * geometry to be deleted.
+     * 
+     * @param entry
+     *            the {@link Entry} to be deleted
+     * @return a new immutable R-tree without one instance of the specified
+     *         entry
+     */
     public RTree<R> delete(Entry<R> entry) {
         if (root.isPresent()) {
             final Optional<Node<R>> newRoot = root.get().delete(entry, emptyStack);
