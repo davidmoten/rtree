@@ -203,6 +203,7 @@ How to run benchmarks
 Benchmarks are provided by 
 ```
 mvn clean install -Pbenchmark
+```
 
 ### Results
 ```
