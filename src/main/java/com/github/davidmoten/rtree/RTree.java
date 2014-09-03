@@ -367,12 +367,29 @@ public class RTree<R> {
         });
     }
 
+    /**
+     * Returns the nearest k entries (k=maxCount) to the given rectangle where
+     * the entries are within a given maximum distance from the rectangel.
+     * 
+     * @param r
+     *            rectangle
+     * @param maxDistance
+     *            max distance of returned entries from the rectangle
+     * @param maxCount
+     *            max number of entries to return
+     * @return nearest entries to maxCount
+     */
     public Observable<Entry<R>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
         return search(r, maxDistance)
                 .lift(new OperatorBoundedPriorityQueue<Entry<R>>(maxCount, RTree
                         .<R> ascendingDistance(r)));
     }
 
+    /**
+     * Returns all entries in the tree as an {@link Observable} sequence.
+     * 
+     * @return all entries in the R-tree
+     */
     public Observable<Entry<R>> entries() {
         return search(ALWAYS_TRUE);
     }
@@ -385,6 +402,11 @@ public class RTree<R> {
         return root;
     }
 
+    /**
+     * Returns true if and only if the R-tree is empty of entries.
+     * 
+     * @return is R-tree empty
+     */
     public boolean isEmpty() {
         return !root.isPresent();
     }

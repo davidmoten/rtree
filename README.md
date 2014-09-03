@@ -202,5 +202,5 @@ How to run benchmarks
 --------------------------
 Benchmarks are provided by 
 ```
-mvn clean integration-test
+mvn clean install -Pbenchmark
 ```
