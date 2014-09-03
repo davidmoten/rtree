@@ -30,8 +30,8 @@ Features
 * search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
 * search is cancelled by unsubscription
 * over 250K inserts per second on i7 single thread into a tree with 10,000 entries
-* search is ```O(log(N))``` on average
-* insert, delete are ```O(N)``` worst case
+* search is ```O(log(n))``` on average
+* insert, delete are ```O(n)``` worst case
 * all search methods return lazy-evaluated streams offering a lot of flexibility and opportunity for functional composition and concurrency
 * balanced delete
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
@@ -113,7 +113,7 @@ For the R-tree to be well-behaved, the distance function needs to satisfy these 
 
 ###Searching
 The advantage of an R-tree is the ability to search for items in a region reasonably quickly. 
-On average search is ```O(log(N))``` but worst case is ```O(N)```.
+On average search is ```O(log(n))``` but worst case is ```O(n)```.
 
 Search methods return Observable sequences:
 ```java
