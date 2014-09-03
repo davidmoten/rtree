@@ -62,7 +62,7 @@ Use the static builder methods on the ```RTree``` class:
 // are redistributed)
 RTree<String> tree = RTree.create();
 ```
-You can specify a few parameters to the builder, including minChildren and maxChildren:
+You can specify a few parameters to the builder, including *minChildren*, *maxChildren*, *splitter*, *selector*:
 
 ```java
 RTree<String> tree = RTree.minChildren(3).maxChildren(6).create();
