@@ -203,4 +203,12 @@ How to run benchmarks
 Benchmarks are provided by 
 ```
 mvn clean install -Pbenchmark
+
+### Results
+```
+Benchmark                                                                  Mode  Samples       Score  Score error  Units
+c.g.d.r.BenchmarksRTree.createRTreeAndInsertOneEntryInto10000Entries      thrpt      200  213585.446     5513.523  ops/s
+c.g.d.r.BenchmarksRTree.searchRTreeOf10000PointsUsingSmallishRectangle    thrpt      200   35146.230     2451.841  ops/s
+
+```
 ```
