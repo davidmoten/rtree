@@ -115,7 +115,7 @@ For the R-tree to be well-behaved, the distance function needs to satisfy these 
 The advantage of an R-tree is the ability to search for items in a region reasonably quickly. 
 On average search is ```O(log(n))``` but worst case is ```O(n)```.
 
-Search methods return Observable sequences:
+Search methods return ```Observable``` sequences:
 ```java
 Observable<Entry<T>> results = tree.search(Geometries.rectangle(0,0,2,2));
 ```
