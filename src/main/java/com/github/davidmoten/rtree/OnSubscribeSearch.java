@@ -57,6 +57,7 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
 		}
 
 		private void requestAll() {
+			requested.set(Long.MAX_VALUE);
 			node.search(condition, subscriber);
 			if (!subscriber.isUnsubscribed())
 				subscriber.onCompleted();
