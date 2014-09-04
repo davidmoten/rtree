@@ -59,6 +59,10 @@ public class RTree<R> {
 		this(of(root), size, context);
 	}
 
+	private RTree(Context context) {
+		this(Optional.<Node<R>> absent(), 0, context);
+	}
+
 	/**
 	 * Returns a new Builder instance for {@link RTree}. Defaults to
 	 * maxChildren=128, minChildren=64, splitter=QuadraticSplitter.
@@ -194,8 +198,8 @@ public class RTree<R> {
 		public <S> RTree<S> create() {
 			if (!minChildren.isPresent())
 				minChildren = of(maxChildren / 2);
-			return new RTree<S>(Optional.<Node<S>> absent(), 0, new Context(
-					minChildren.get(), maxChildren, selector, splitter));
+			return new RTree<S>(new Context(minChildren.get(), maxChildren,
+					selector, splitter));
 		}
 	}
 
