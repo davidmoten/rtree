@@ -95,7 +95,7 @@ tree = tree.delete(item, Geometries.point(10,20));
 ```
 or 
 ```java
-tree = tree.delete(Entry.entry(item, Geometries.point(10,20));
+tree = tree.delete(entry);
 ```
 
 ###Custom geometries
