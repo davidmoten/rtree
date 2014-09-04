@@ -2,7 +2,7 @@ package com.github.davidmoten.rtree;
 
 import com.google.common.base.Preconditions;
 
-public class Context {
+public final class Context {
 
     private final int maxChildren;
     private final int minChildren;

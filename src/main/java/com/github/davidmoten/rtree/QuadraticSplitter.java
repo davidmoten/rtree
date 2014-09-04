@@ -15,7 +15,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-public class QuadraticSplitter implements Splitter {
+public final class QuadraticSplitter implements Splitter {
 
     @SuppressWarnings("unchecked")
     @Override

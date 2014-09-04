@@ -8,7 +8,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
 
-public class SelectorMinimalAreaIncrease implements Selector {
+public final class SelectorMinimalAreaIncrease implements Selector {
 
     @Override
     public <T> Node<T> select(Geometry g, List<? extends Node<T>> nodes) {

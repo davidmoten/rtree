@@ -7,7 +7,7 @@ import rx.Subscriber;
 
 import com.google.common.collect.MinMaxPriorityQueue;
 
-public class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
+public final class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
 
     private final int maximumSize;
     private final Comparator<T> comparator;
