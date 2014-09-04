@@ -154,6 +154,7 @@ public class RTreeTest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testDeletionThatRemovesAllNodesChildren() {
 		RTree<Object> tree = create(3, 8);
@@ -168,6 +169,7 @@ public class RTreeTest {
 				Sets.newHashSet(tree.entries().toList().toBlocking().single()));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testDeleteOfEntryThatDoesNotExistFromTreeOfOneEntry() {
 		RTree<Object> tree = RTree.create().add(e(1));
