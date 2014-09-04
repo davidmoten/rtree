@@ -140,7 +140,13 @@
 										<argument>-classpath</argument>
 										<classpath />
 										<argument>org.openjdk.jmh.Main</argument>
-										<argument>.*</argument>
+										<argument>-f</argument>
+										<argument>-i</argument>
+										<argument>10</argument>
+										<argument>-wi</argument>
+										<argument>5</argument>
+										<argument>-jvmArgs</argument>
+										<argument>-Xmx512m</argument>
 									</arguments>
 								</configuration>
 							</execution>
