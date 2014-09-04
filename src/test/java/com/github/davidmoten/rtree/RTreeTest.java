@@ -131,6 +131,30 @@ public class RTreeTest {
 	}
 
 	@Test
+	public void testSizeIsZeroIfTreeEmpty() {
+		assertEquals(0, create(3, 0).size());
+	}
+
+	@Test
+	public void testSizeIsOneIfTreeHasOneEntry() {
+		assertEquals(1, create(3, 1).size());
+	}
+
+	@Test
+	public void testSizeIsFiveIfTreeHasFiveEntries() {
+		assertEquals(5, create(3, 5).size());
+	}
+
+	@Test
+	public void testSizeAfterDelete() {
+		Entry<Object> entry = e(1);
+		RTree<Object> tree = create(3, 0).add(entry).add(entry).add(entry)
+				.delete(entry);
+		assertEquals(2, tree.size());
+
+	}
+
+	@Test
 	public void testDeletionThatRemovesAllNodesChildren() {
 		RTree<Object> tree = create(3, 8);
 		tree = tree.add(e(10));
