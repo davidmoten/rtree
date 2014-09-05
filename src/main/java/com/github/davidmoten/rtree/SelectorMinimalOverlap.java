@@ -1,8 +1,10 @@
 package com.github.davidmoten.rtree;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
 
@@ -15,17 +17,21 @@ public class SelectorMinimalOverlap implements Selector {
 
 	private static <T> Node<T> findLeastMbrOverlap(Rectangle r,
 			List<? extends Node<T>> list) {
+		List<Node<T>> best = new ArrayList<Node<T>>();
 		Optional<Double> bestMetric = Optional.absent();
-		Optional<Node<T>> best = Optional.absent();
-		for (Node<T> m : list) {
-			double diff = m.geometry().mbr().add(r)
-					.intersectionArea(m.geometry().mbr());
-			if (!bestMetric.isPresent() || diff < bestMetric.get()) {
-				bestMetric = Optional.of(diff);
-				best = Optional.of(m);
+		for (Node<T> node : list) {
+			double m = 0;
+			for (HasGeometry child : node.childrenGeometries()) {
+				m += r.intersectionArea(child.geometry().mbr());
+			}
+			if (!bestMetric.isPresent() || m < bestMetric.get()) {
+				best = new ArrayList<Node<T>>();
+				best.add(node);
+				bestMetric = Optional.of(m);
+			} else if (bestMetric.isPresent() && m == bestMetric.get()) {
+				best.add(node);
 			}
 		}
-		return best.get();
+		return SelectorMinimalAreaIncrease.findLeastIncreaseInMbrArea(r, best);
 	}
-
 }

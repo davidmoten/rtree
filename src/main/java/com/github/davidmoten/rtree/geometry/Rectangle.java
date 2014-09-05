@@ -112,8 +112,11 @@ public final class Rectangle implements Geometry {
 	}
 
 	public float intersectionArea(Rectangle r) {
-		return create(Math.max(x1, r.x1), Math.max(y1, r.y1),
-				Math.min(x2, r.x2), Math.min(y2, r.y2)).area();
+		if (!intersects(r))
+			return 0;
+		else
+			return create(Math.max(x1, r.x1), Math.max(y1, r.y1),
+					Math.min(x2, r.x2), Math.min(y2, r.y2)).area();
 	}
 
 }

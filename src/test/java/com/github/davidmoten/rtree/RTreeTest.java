@@ -8,6 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,6 +74,13 @@ public class RTreeTest {
 
 	}
 
+	static List<Entry<Object>> createRandomEntries(long n) {
+		List<Entry<Object>> list = new ArrayList<Entry<Object>>();
+		for (long i = 0; i < n; i++)
+			list.add(randomEntry());
+		return list;
+	}
+
 	static RTree<Object> createRandomRTree(long n) {
 		RTree<Object> tree = RTree.maxChildren(4).create();
 		for (long i = 0; i < n; i++) {
@@ -120,7 +128,7 @@ public class RTreeTest {
 	public void testDepthWithMaxChildren3Entries8() {
 		RTree<Object> tree = create(3, 8);
 		tree.visualize(800, 800, Geometries.rectangle(0, 0, 11, 11)).save(
-				new File("target/tree2.png"), "PNG");
+				new File("target/treeLittle.png"), "PNG");
 		assertEquals(3, tree.calculateDepth());
 	}
 
@@ -250,9 +258,16 @@ public class RTreeTest {
 
 	@Test
 	public void testVisualizer() {
-		RTree<Object> tree = createRandomRTree(100);
+		List<Entry<Object>> entries = createRandomEntries(100);
+		RTree<Object> tree = RTree.maxChildren(4).create().add(entries);
 		tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100)).save(
 				new File("target/tree.png"), "PNG");
+
+		RTree<Object> tree2 = RTree.maxChildren(4)
+				.splitter(new SplitterRStar()).selector(new SelectorRStar())
+				.create().add(entries);
+		tree2.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100)).save(
+				new File("target/tree2.png"), "PNG");
 	}
 
 	@Test

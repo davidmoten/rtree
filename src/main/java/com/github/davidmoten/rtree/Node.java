@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree;
 
+import java.util.List;
+
 import rx.Subscriber;
 import rx.functions.Func1;
 
@@ -10,12 +12,15 @@ import com.google.common.base.Optional;
 
 interface Node<T> extends HasGeometry {
 
-    Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
+	Node<T> add(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
 
-    void search(Func1<? super Geometry, Boolean> condition, Subscriber<? super Entry<T>> subscriber);
+	void search(Func1<? super Geometry, Boolean> condition,
+			Subscriber<? super Entry<T>> subscriber);
 
-    Optional<Node<T>> delete(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
+	Optional<Node<T>> delete(Entry<T> entry, ImmutableStack<NonLeaf<T>> stack);
 
-    int count();
+	int count();
+
+	List<? extends HasGeometry> childrenGeometries();
 
 }

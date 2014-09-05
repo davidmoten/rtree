@@ -8,6 +8,7 @@ import rx.Subscriber;
 import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
 import com.github.davidmoten.util.ListPair;
@@ -167,6 +168,11 @@ final class Leaf<T> implements Node<T> {
 	@Override
 	public int count() {
 		return entries.size();
+	}
+
+	@Override
+	public List<? extends HasGeometry> childrenGeometries() {
+		return entries;
 	}
 
 }

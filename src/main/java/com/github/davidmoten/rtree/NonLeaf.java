@@ -6,6 +6,7 @@ import rx.Subscriber;
 import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.base.Optional;
@@ -24,7 +25,8 @@ final class NonLeaf<T> implements Node<T> {
 		this.mbr = Util.mbr(children);
 	}
 
-	List<? extends Node<T>> children() {
+	@Override
+	public List<? extends HasGeometry> childrenGeometries() {
 		return children;
 	}
 
@@ -80,4 +82,9 @@ final class NonLeaf<T> implements Node<T> {
 	public int count() {
 		return children.size();
 	}
+
+	public List<? extends Node<T>> children() {
+		return children;
+	}
+
 }
