@@ -258,8 +258,8 @@ public class RTreeTest {
 
 	@Test
 	public void testVisualizer() {
-		List<Entry<Object>> entries = createRandomEntries(10000);
-		int maxChildren = 128;
+		List<Entry<Object>> entries = createRandomEntries(1000);
+		int maxChildren = 8;
 		RTree<Object> tree = RTree.maxChildren(maxChildren).create()
 				.add(entries);
 		tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100)).save(
