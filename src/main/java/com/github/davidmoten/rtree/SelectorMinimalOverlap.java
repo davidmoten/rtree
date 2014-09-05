@@ -19,11 +19,13 @@ public class SelectorMinimalOverlap implements Selector {
 		List<Node<T>> best = new ArrayList<Node<T>>();
 		Optional<Double> bestMetric = Optional.absent();
 		for (Node<T> node : list) {
-			// double m = 0;
-			// for (HasGeometry child : node.childrenGeometries()) {
-			// m += r.intersectionArea(child.geometry().mbr());
-			// }
-			double m = r.intersectionArea(node.geometry().mbr());
+			double m = 0;
+			for (Node<T> node2 : list) {
+				if (node2 != node) {
+					m += node.geometry().mbr().add(r)
+							.intersectionArea(node2.geometry().mbr());
+				}
+			}
 			if (!bestMetric.isPresent() || m < bestMetric.get()) {
 				best = new ArrayList<Node<T>>();
 				best.add(node);

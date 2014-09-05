@@ -33,19 +33,20 @@ public final class SelectorMinimalAreaIncrease implements Selector {
 				best.add(node);
 			}
 		}
-
-		TreeSet<Node<T>> ordered = new TreeSet<Node<T>>(area);
+		// TODO optimise, only need first
+		TreeSet<Node<T>> ordered = new TreeSet<Node<T>>(increaseInArea(r));
 		ordered.addAll(best);
 		return ordered.first();
 	}
 
-	private static Comparator<Node<?>> area = new Comparator<Node<?>>() {
-
-		@Override
-		public int compare(Node<?> n1, Node<?> n2) {
-			return ((Float) n1.geometry().mbr().area()).compareTo(n2.geometry()
-					.mbr().area());
-		}
-	};
+	private static Comparator<Node<?>> increaseInArea(final Rectangle r) {
+		return new Comparator<Node<?>>() {
+			@Override
+			public int compare(Node<?> n1, Node<?> n2) {
+				return ((Float) n1.geometry().mbr().add(r).area()).compareTo(n2
+						.geometry().mbr().add(r).area());
+			}
+		};
+	}
 
 }
