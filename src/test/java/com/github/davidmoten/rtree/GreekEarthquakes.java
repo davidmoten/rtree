@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import rx.Observable;
@@ -41,15 +42,24 @@ public class GreekEarthquakes {
                 }
             }
         });
-        return StringObservable.split(source, "\n").map(new Func1<String, Entry<Object>>() {
+        return StringObservable.split(source, "\n").flatMap(
+                new Func1<String, Observable<Entry<Object>>>() {
 
-            @Override
-            public Entry<Object> call(String line) {
-                String[] items = line.split(" ");
-                double lat = Double.parseDouble(items[0]);
-                double lon = Double.parseDouble(items[1]);
-                return Entry.entry(new Object(), Geometries.point(lat, lon));
-            }
-        });
+                    @Override
+                    public Observable<Entry<Object>> call(String line) {
+                        if (line.trim().length() > 0) {
+                            String[] items = line.split(" ");
+                            double lat = Double.parseDouble(items[0]);
+                            double lon = Double.parseDouble(items[1]);
+                            return Observable.just(Entry.entry(new Object(),
+                                    Geometries.point(lat, lon)));
+                        } else
+                            return Observable.empty();
+                    }
+                });
+    }
+
+    static List<Entry<Object>> entriesList() {
+        return entries().toList().toBlocking().single();
     }
 }
