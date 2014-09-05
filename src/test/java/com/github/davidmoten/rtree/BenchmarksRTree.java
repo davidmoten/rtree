@@ -7,7 +7,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
-import com.github.davidmoten.rtree.geometry.Point;
 
 @State(Scope.Benchmark)
 public class BenchmarksRTree {
@@ -27,6 +26,12 @@ public class BenchmarksRTree {
 	private final RTree<Object> starTreeM32 = RTree.maxChildren(32).star()
 			.create().add(entries);
 
+	private final RTree<Object> defaultTreeM128 = RTree.maxChildren(128)
+			.create().add(entries);
+
+	private final RTree<Object> starTreeM128 = RTree.maxChildren(128).star()
+			.create().add(entries);
+
 	@Benchmark
 	public void defaultRTreeInsertOneEntryInto100KEntriesMaxChildren10() {
 		insert(defaultTreeM10);
@@ -44,8 +49,7 @@ public class BenchmarksRTree {
 
 	@Benchmark
 	public void rStarTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren10() {
-		starTreeM10.search(Geometries.rectangle(500, 500, 510, 510)).count()
-				.toBlocking().single();
+		search(starTreeM10);
 	}
 
 	@Benchmark
@@ -65,7 +69,27 @@ public class BenchmarksRTree {
 
 	@Benchmark
 	public void rStarTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren32() {
-		starTreeM32.search(Geometries.rectangle(500, 500, 510, 510)).count()
+		search(starTreeM32);
+	}
+
+	@Benchmark
+	public void defaultRTreeInsertOneEntryInto100KEntriesMaxChildren128() {
+		insert(defaultTreeM128);
+	}
+
+	@Benchmark
+	public void defaultRTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren128() {
+		search(defaultTreeM128);
+	}
+
+	@Benchmark
+	public void rStarTreeInsertOneEntryInto100KEntriesMaxChildren128() {
+		insert(starTreeM128);
+	}
+
+	@Benchmark
+	public void rStarTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren128() {
+		starTreeM128.search(Geometries.rectangle(500, 500, 510, 510)).count()
 				.toBlocking().single();
 	}
 
@@ -75,21 +99,7 @@ public class BenchmarksRTree {
 	}
 
 	private void insert(RTree<Object> tree) {
-		starTreeM10.add(new Object(), RTreeTest.random());
-	}
-
-	private static final RTree<Object> createTree(long n) {
-		RTree<Object> tree = RTree.maxChildren(10).create();
-		for (int i = 0; i < n; i++) {
-			tree = tree.add(new Object(), createPoint());
-		}
-		return tree;
-	}
-
-	private static final Point createPoint() {
-		double x = Math.random() * 1000;
-		double y = Math.random() * 1000;
-		return Geometries.point(x, y);
+		tree.add(new Object(), RTreeTest.random());
 	}
 
 }
