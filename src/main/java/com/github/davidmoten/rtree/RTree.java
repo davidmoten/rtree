@@ -135,6 +135,13 @@ public final class RTree<R> {
      */
     public static class Builder {
 
+        /**
+         * According to
+         * http://dbs.mathematik.uni-marburg.de/publications/myPapers
+         * /1990/BKSS90.pdf (R*-tree paper), best filling ratio is 0.4 for both
+         * quadratic split and R*-tree split.
+         */
+        private static final double DEFAULT_FILLING_FACTOR = 0.4;
         private int maxChildren = MAX_CHILDREN_DEFAULT;
         private Optional<Integer> minChildren = absent();
         private Splitter splitter = new SplitterQuadratic();
@@ -202,7 +209,7 @@ public final class RTree<R> {
          */
         public <S> RTree<S> create() {
             if (!minChildren.isPresent())
-                minChildren = of(maxChildren / 2);
+                minChildren = of((int) Math.round(maxChildren * DEFAULT_FILLING_FACTOR));
             return new RTree<S>(new Context(minChildren.get(), maxChildren, selector, splitter));
         }
 
