@@ -150,7 +150,7 @@
 										<!--  -h for help -->
 										<argument>-f</argument>
 										<argument>-i</argument>
-										<argument>3</argument>
+										<argument>10</argument>
 										<argument>-wi</argument>
 										<argument>3</argument>
 										<argument>-jvmArgs</argument>
