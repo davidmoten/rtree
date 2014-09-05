@@ -259,7 +259,7 @@ public class RTreeTest {
     @Test
     public void testVisualizerWithGreekData() {
         List<Entry<Object>> entries = GreekEarthquakes.entriesList();
-        int maxChildren = 32;
+        int maxChildren = 8;
         RTree<Object> tree = RTree.maxChildren(maxChildren).create().add(entries);
         Rectangle view = new Rectangle(35, 20, 45, 30);
         tree.visualize(2000, 2000, view).save(new File("target/greek.png"), "PNG");
