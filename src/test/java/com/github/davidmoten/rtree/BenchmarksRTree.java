@@ -31,7 +31,7 @@ public class BenchmarksRTree {
 	}
 
 	@Benchmark
-	public void rStarTreeOf10000PointsUsingSmallishRectangle() {
+	public void rStarTreeSearchOf10000PointsUsingSmallishRectangle() {
 		starTree.search(Geometries.rectangle(500, 500, 510, 510)).count()
 				.toBlocking().single();
 	}
