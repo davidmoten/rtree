@@ -12,10 +12,10 @@ public final class SelectorMinimalAreaIncrease implements Selector {
 
     @Override
     public <T> Node<T> select(Geometry g, List<? extends Node<T>> nodes) {
-        return findLeastIncreaseInMbrArea(g.mbr(), nodes);
+        return findMinimalAreaIncrease(g.mbr(), nodes);
     }
 
-    static <T> Node<T> findLeastIncreaseInMbrArea(Rectangle r, List<? extends Node<T>> nodes) {
+    static <T> Node<T> findMinimalAreaIncrease(Rectangle r, List<? extends Node<T>> nodes) {
 
         Optional<Node<T>> least = Optional.absent();
         Optional<Double> leastIncrease = Optional.absent();

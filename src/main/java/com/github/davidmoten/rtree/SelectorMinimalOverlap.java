@@ -11,10 +11,10 @@ public class SelectorMinimalOverlap implements Selector {
 
 	@Override
 	public <T> Node<T> select(Geometry g, List<? extends Node<T>> nodes) {
-		return findLeastMbrOverlap(g.mbr(), nodes);
+		return findMinimalOverlap(g.mbr(), nodes);
 	}
 
-	private static <T> Node<T> findLeastMbrOverlap(Rectangle r,
+	private static <T> Node<T> findMinimalOverlap(Rectangle r,
 			List<? extends Node<T>> list) {
 		List<Node<T>> best = new ArrayList<Node<T>>();
 		Optional<Double> bestMetric = Optional.absent();
@@ -34,6 +34,6 @@ public class SelectorMinimalOverlap implements Selector {
 				best.add(node);
 			}
 		}
-		return SelectorMinimalAreaIncrease.findLeastIncreaseInMbrArea(r, best);
+		return SelectorMinimalAreaIncrease.findMinimalAreaIncrease(r, best);
 	}
 }
