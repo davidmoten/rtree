@@ -21,9 +21,9 @@ public class SelectorMinimalOverlap implements Selector {
 		for (Node<T> node : list) {
 			double m = 0;
 			for (Node<T> node2 : list) {
+				Rectangle nodePlusR = node.geometry().mbr().add(r);
 				if (node2 != node) {
-					m += node.geometry().mbr().add(r)
-							.intersectionArea(node2.geometry().mbr());
+					m += nodePlusR.intersectionArea(node2.geometry().mbr());
 				}
 			}
 			if (!bestMetric.isPresent() || m < bestMetric.get()) {
