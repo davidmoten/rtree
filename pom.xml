@@ -147,6 +147,7 @@
 										<argument>-classpath</argument>
 										<classpath />
 										<argument>org.openjdk.jmh.Main</argument>
+										<!--  -h for help -->
 										<argument>-f</argument>
 										<argument>-i</argument>
 										<argument>10</argument>
