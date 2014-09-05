@@ -1,10 +1,11 @@
 package com.github.davidmoten.rtree;
 
-import java.util.List;
+import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.util.ListPair;
 
-public interface Splitter {
-	<T extends HasGeometry> ListPair<T> split(List<T> items, int minSize);
+public interface ListPairMetric extends
+		Func1<ListPair<? extends HasGeometry>, Double> {
+
 }

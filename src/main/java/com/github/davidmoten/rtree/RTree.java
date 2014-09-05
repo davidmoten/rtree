@@ -136,7 +136,7 @@ public final class RTree<R> {
 
         private int maxChildren = MAX_CHILDREN_DEFAULT;
         private Optional<Integer> minChildren = absent();
-        private Splitter splitter = new QuadraticSplitter();
+        private Splitter splitter = new SplitterQuadratic();
         private Selector selector = new SelectorMinimalAreaIncrease();
 
         private Builder() {

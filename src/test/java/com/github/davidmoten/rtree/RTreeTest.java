@@ -189,7 +189,7 @@ public class RTreeTest {
 	public void testBuilder1() {
 		RTree<Object> tree = RTree.minChildren(1).maxChildren(4)
 				.selector(new SelectorMinimalAreaIncrease())
-				.splitter(new QuadraticSplitter()).create();
+				.splitter(new SplitterQuadratic()).create();
 		testBuiltTree(tree);
 	}
 
@@ -203,7 +203,7 @@ public class RTreeTest {
 	public void testBuilder2() {
 		RTree<Object> tree = RTree.selector(new SelectorMinimalAreaIncrease())
 				.minChildren(1).maxChildren(4)
-				.splitter(new QuadraticSplitter()).create();
+				.splitter(new SplitterQuadratic()).create();
 		testBuiltTree(tree);
 	}
 
@@ -211,13 +211,13 @@ public class RTreeTest {
 	public void testBuilder3() {
 		RTree<Object> tree = RTree.maxChildren(4)
 				.selector(new SelectorMinimalAreaIncrease()).minChildren(1)
-				.splitter(new QuadraticSplitter()).create();
+				.splitter(new SplitterQuadratic()).create();
 		testBuiltTree(tree);
 	}
 
 	@Test
 	public void testBuilder4() {
-		RTree<Object> tree = RTree.splitter(new QuadraticSplitter())
+		RTree<Object> tree = RTree.splitter(new SplitterQuadratic())
 				.maxChildren(4).selector(new SelectorMinimalAreaIncrease())
 				.minChildren(1).create();
 		testBuiltTree(tree);
