@@ -452,12 +452,26 @@ public final class RTree<R> {
 	 * 
 	 * @param entries
 	 *            entries to add
-	 * @return R-tree with multiple entries added
+	 * @return R-tree with entries added
 	 */
 	public RTree<R> add(Iterable<Entry<R>> entries) {
 		RTree<R> tree = this;
 		for (Entry<R> entry : entries)
 			tree = tree.add(entry);
+		return tree;
+	}
+
+	/**
+	 * Returns a new R-tree with the given entries deleted.
+	 * 
+	 * @param entries
+	 *            entries to delete
+	 * @return R-tree with entries deleted
+	 */
+	public RTree<R> delete(Iterable<Entry<R>> entries) {
+		RTree<R> tree = this;
+		for (Entry<R> entry : entries)
+			tree = tree.delete(entry);
 		return tree;
 	}
 
