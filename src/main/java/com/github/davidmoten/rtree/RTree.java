@@ -188,6 +188,12 @@ public final class RTree<R> {
 			return this;
 		}
 
+		public Builder star() {
+			selector = new SelectorRStar();
+			splitter = new SplitterRStar();
+			return this;
+		}
+
 		/**
 		 * Builds the {@link RTree}.
 		 * 
@@ -201,6 +207,7 @@ public final class RTree<R> {
 			return new RTree<S>(new Context(minChildren.get(), maxChildren,
 					selector, splitter));
 		}
+
 	}
 
 	/**

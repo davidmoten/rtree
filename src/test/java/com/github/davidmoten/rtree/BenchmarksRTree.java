@@ -10,18 +10,29 @@ import com.github.davidmoten.rtree.geometry.Point;
 @State(Scope.Benchmark)
 public class BenchmarksRTree {
 
-	private final RTree<Object> tree = RTreeTest.createRandomRTree(10000);
+	private final RTree<Object> tree = createTree();
 
-	private final RTree<Object> tree2 = createTree();
+	private final RTree<Object> starTree = RTree.maxChildren(4).star().create();
 
 	@Benchmark
-	public void createRTreeAndInsertOneEntryInto10000Entries() {
+	public void defaultRTreeInsertOneEntryInto10000Entries() {
 		tree.add(new Object(), RTreeTest.random());
 	}
 
 	@Benchmark
-	public void searchRTreeOf10000PointsUsingSmallishRectangle() {
-		tree2.search(Geometries.rectangle(500, 500, 510, 510)).count()
+	public void defaultRTreeSearchOf10000PointsUsingSmallishRectangle() {
+		tree.search(Geometries.rectangle(500, 500, 510, 510)).count()
+				.toBlocking().single();
+	}
+
+	@Benchmark
+	public void rStarTreeInsertOneEntryInto10000Entries() {
+		starTree.add(new Object(), RTreeTest.random());
+	}
+
+	@Benchmark
+	public void rStarTreeOf10000PointsUsingSmallishRectangle() {
+		starTree.search(Geometries.rectangle(500, 500, 510, 510)).count()
 				.toBlocking().single();
 	}
 

@@ -263,9 +263,7 @@ public class RTreeTest {
 		tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100)).save(
 				new File("target/tree.png"), "PNG");
 
-		RTree<Object> tree2 = RTree.maxChildren(4)
-				.splitter(new SplitterRStar()).selector(new SelectorRStar())
-				.create().add(entries);
+		RTree<Object> tree2 = RTree.maxChildren(4).star().create().add(entries);
 		tree2.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100)).save(
 				new File("target/tree2.png"), "PNG");
 	}
