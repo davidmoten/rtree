@@ -102,6 +102,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.netflix.rxjava</groupId>
+			<artifactId>rxjava-string</artifactId>
+			<version>${rxjava.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-core</artifactId>
 			<version>1.0</version>
