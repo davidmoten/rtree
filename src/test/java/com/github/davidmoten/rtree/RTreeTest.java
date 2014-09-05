@@ -258,13 +258,12 @@ public class RTreeTest {
 
 	@Test
 	public void testVisualizer() {
-		List<Entry<Object>> entries = createRandomEntries(10000);
-		RTree<Object> tree = RTree.maxChildren(32).create().add(entries);
+		List<Entry<Object>> entries = createRandomEntries(1000);
+		RTree<Object> tree = RTree.maxChildren(4).create().add(entries);
 		tree.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100)).save(
 				new File("target/tree.png"), "PNG");
 
-		RTree<Object> tree2 = RTree.maxChildren(32).star().create()
-				.add(entries);
+		RTree<Object> tree2 = RTree.maxChildren(4).star().create().add(entries);
 		tree2.visualize(600, 600, new Rectangle(-20, -20, 1100, 1100)).save(
 				new File("target/tree2.png"), "PNG");
 	}

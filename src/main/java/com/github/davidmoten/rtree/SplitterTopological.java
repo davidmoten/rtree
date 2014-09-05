@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.util.ListPair;
@@ -37,7 +38,7 @@ public class SplitterTopological implements Splitter {
 
 	private static <T extends HasGeometry> ListPair<T> best(int minSize,
 			ListPairMetric metric, List<List<T>> lists) {
-		Optional<ListPair<T>> best = Optional.absent();
+		List<ListPair<T>> best = new ArrayList<ListPair<T>>();
 		Optional<Double> bestMetric = Optional.absent();
 		for (List<T> list : lists) {
 			// try all splits of list where the groups have at least minChildren
@@ -45,13 +46,18 @@ public class SplitterTopological implements Splitter {
 				List<T> list1 = list.subList(0, i);
 				List<T> list2 = list.subList(i, list.size());
 				double m = metric.call(new ListPair<T>(list1, list2));
-				if (!best.isPresent() || m < bestMetric.get()) {
-					best = of(new ListPair<T>(list1, list2));
+				if (!bestMetric.isPresent() || m < bestMetric.get()) {
+					best = new ArrayList<ListPair<T>>();
+					best.add(new ListPair<T>(list1, list2));
 					bestMetric = of(m);
+				} else if (bestMetric.isPresent() && m == bestMetric.get()) {
+					best.add(new ListPair<T>(list1, list2));
 				}
 			}
 		}
-		return best.get();
+		TreeSet<ListPair<T>> ordered = new TreeSet<ListPair<T>>(area);
+		ordered.addAll(best);
+		return ordered.first();
 	}
 
 	private static <T extends HasGeometry> List<T> sort(List<T> items,
@@ -94,6 +100,19 @@ public class SplitterTopological implements Splitter {
 		public int compare(HasGeometry n1, HasGeometry n2) {
 			return ((Float) n1.geometry().mbr().y2()).compareTo(n2.geometry()
 					.mbr().y2());
+		}
+	};
+
+	private static final Comparator<ListPair<? extends HasGeometry>> area = new Comparator<ListPair<? extends HasGeometry>>() {
+
+		@Override
+		public int compare(ListPair<? extends HasGeometry> p1,
+				ListPair<? extends HasGeometry> p2) {
+			Float area1 = Util.mbr(p1.list1()).area()
+					+ Util.mbr(p1.list2()).area();
+			Float area2 = Util.mbr(p2.list1()).area()
+					+ Util.mbr(p2.list2()).area();
+			return area1.compareTo(area2);
 		}
 	};
 
