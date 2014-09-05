@@ -27,6 +27,7 @@ Features
 * typed
 * pluggable splitting heuristic ([```Splitter```](src/main/java/com/github/davidmoten/rtree/Splitter.java)). Default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf).
 * pluggable insert heuristic ([```Selector```](src/main/java/com/github/davidmoten/rtree/Selector.java)). Default is least minimum bounding rectangle area increase.
+* R*-tree heuristics available
 * search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
 * search is cancelled by unsubscription
 * over 250K inserts per second on i7 single thread into a tree with 10,000 entries
@@ -67,6 +68,15 @@ You can specify a few parameters to the builder, including *minChildren*, *maxCh
 ```java
 RTree<String> tree = RTree.minChildren(3).maxChildren(6).create();
 ```
+
+###R*-tree
+If you'd like an R*-tree (which uses a topological splitter on minimal overlap and a selector combination of minimal area increase and minimal overlap):
+
+```
+RTree<String> tree = RTree.star().maxChildren(6).create();
+```
+
+See benchmarks below for some of the performance differences.
 
 ###Add items to the R-tree
 When you add an item to the R-tree you need to provide a geometry that represents the 2D physical location or 
@@ -207,9 +217,17 @@ mvn clean install -Pbenchmark
 
 ### Results
 ```
-Benchmark                                                                  Mode  Samples       Score  Score error  Units
-c.g.d.r.BenchmarksRTree.createRTreeAndInsertOneEntryInto10000Entries      thrpt      200  213585.446     5513.523  ops/s
-c.g.d.r.BenchmarksRTree.searchRTreeOf10000PointsUsingSmallishRectangle    thrpt      200   35146.230     2451.841  ops/s
-
-```
+Benchmark                                                                                      Mode  Samples       Score  Score error  Units
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren10                thrpt       10  141390.437     2229.787  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren128               thrpt       10   32188.232     1394.730  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren32                thrpt       10   95012.263     1698.434  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren10     thrpt       10   39589.974      380.340  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren128    thrpt       10   12807.034      152.402  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren32     thrpt       10   44671.270      623.509  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto100KEntriesMaxChildren10                   thrpt       10   95635.212     2008.772  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto100KEntriesMaxChildren128                  thrpt       10    4304.273       91.933  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto100KEntriesMaxChildren32                   thrpt       10   34637.823      830.451  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren10        thrpt       10   33759.379      407.510  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren128       thrpt       10   23633.385      326.666  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren32        thrpt       10   66738.263     1307.356  ops/s
 ```
