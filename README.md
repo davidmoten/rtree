@@ -217,17 +217,33 @@ mvn clean install -Pbenchmark
 
 ### Results
 ```
-Benchmark                                                                                      Mode  Samples       Score  Score error  Units
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren10                thrpt       10  141390.437     2229.787  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren128               thrpt       10   32188.232     1394.730  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren32                thrpt       10   95012.263     1698.434  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren10     thrpt       10   39589.974      380.340  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren128    thrpt       10   12807.034      152.402  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren32     thrpt       10   44671.270      623.509  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto100KEntriesMaxChildren10                   thrpt       10   95635.212     2008.772  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto100KEntriesMaxChildren128                  thrpt       10    4304.273       91.933  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto100KEntriesMaxChildren32                   thrpt       10   34637.823      830.451  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren10        thrpt       10   33759.379      407.510  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren128       thrpt       10   23633.385      326.666  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf100KPointsUsingSmallishRectangleMaxChildren32        thrpt       10   66738.263     1307.356  ops/s
+Benchmark                                                                           Mode  Samples       Score  Score error  Units
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren10     thrpt       10  221561.130     3455.383  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128    thrpt       10  227154.100     7324.831  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren32     thrpt       10  212424.183     5034.130  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren4      thrpt       10  235827.218     5462.191  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren10     thrpt       10  126654.360     2539.540  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren128    thrpt       10   29450.005     2140.231  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren32     thrpt       10   79635.679     1983.847  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto100KEntriesMaxChildren4      thrpt       10  136847.557    13304.329  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren10                thrpt       10  174418.188     5369.369  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren128               thrpt       10   34729.139     1067.657  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren32                thrpt       10   92404.380     3238.424  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren4                 thrpt       10  184993.708     2522.622  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsMaxChildren10                thrpt       10   47050.095      949.020  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsMaxChildren128               thrpt       10   16370.144      350.578  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsMaxChildren32                thrpt       10   23291.387      594.944  ops/s
+c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf100KPointsMaxChildren4                 thrpt       10   33070.362      619.808  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren10        thrpt       10  133586.963     2877.742  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren128       thrpt       10  129488.215     2063.169  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren32        thrpt       10   39991.772      676.549  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto100KEntriesMaxChildren10        thrpt       10   97298.148     1848.352  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto100KEntriesMaxChildren128       thrpt       10    2425.683       31.433  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto100KEntriesMaxChildren32        thrpt       10   30064.932      855.556  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren10                   thrpt       10  139389.771     1922.696  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren128                  thrpt       10   24055.586      519.637  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren32                   thrpt       10  127461.028     3941.384  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeSearchOf100KPointsMaxChildren10                   thrpt       10   29657.687      484.993  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeSearchOf100KPointsMaxChildren128                  thrpt       10    1217.364       22.605  ops/s
+c.g.d.r.BenchmarksRTree.rStarTreeSearchOf100KPointsMaxChildren32                   thrpt       10    6761.933      111.667  ops/s
 ```
