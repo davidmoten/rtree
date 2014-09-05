@@ -3,9 +3,7 @@ package com.github.davidmoten.rtree;
 import static com.google.common.base.Optional.of;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
@@ -33,20 +31,25 @@ public final class SelectorMinimalAreaIncrease implements Selector {
 				best.add(node);
 			}
 		}
-		// TODO optimise, only need first
-		TreeSet<Node<T>> ordered = new TreeSet<Node<T>>(increaseInArea(r));
-		ordered.addAll(best);
-		return ordered.first();
-	}
 
-	private static Comparator<Node<?>> increaseInArea(final Rectangle r) {
-		return new Comparator<Node<?>>() {
-			@Override
-			public int compare(Node<?> n1, Node<?> n2) {
-				return ((Float) n1.geometry().mbr().add(r).area()).compareTo(n2
-						.geometry().mbr().add(r).area());
+		Optional<Node<T>> least = Optional.absent();
+		Optional<Double> leastIncrease = Optional.absent();
+		Optional<Double> leastArea = Optional.absent();
+		for (Node<T> node : best) {
+			double area = node.geometry().mbr().area();
+			double areaIncrease = node.geometry().mbr().add(r).area() - area;
+			if (!least.isPresent() || areaIncrease < leastIncrease.get()) {
+				least = of(node);
+				leastIncrease = of(areaIncrease);
+				leastArea = of(area);
+			} else if (least.isPresent() && areaIncrease == leastIncrease.get()
+					&& area < leastArea.get()) {
+				least = of(node);
+				leastIncrease = of(areaIncrease);
+				leastArea = of(area);
 			}
-		};
+		}
+		return least.get();
 	}
 
 }
