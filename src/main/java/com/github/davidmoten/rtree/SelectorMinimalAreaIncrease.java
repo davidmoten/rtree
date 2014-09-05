@@ -2,6 +2,7 @@ package com.github.davidmoten.rtree;
 
 import static com.google.common.base.Optional.of;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
@@ -19,20 +20,23 @@ public final class SelectorMinimalAreaIncrease implements Selector {
 
 	static <T> Node<T> findLeastIncreaseInMbrArea(Rectangle r,
 			List<? extends Node<T>> list) {
-		TreeSet<Node<T>> best = new TreeSet<Node<T>>(area);
+		List<Node<T>> best = new ArrayList<Node<T>>();
 		Optional<Double> bestMetric = Optional.absent();
 		for (Node<T> node : list) {
 			double m = node.geometry().mbr().add(r).area()
 					- node.geometry().mbr().area();
 			if (!bestMetric.isPresent() || m < bestMetric.get()) {
 				bestMetric = of(m);
-				best = new TreeSet<Node<T>>(area);
+				best = new ArrayList<Node<T>>();
 				best.add(node);
 			} else if (bestMetric.isPresent() && m == bestMetric.get()) {
 				best.add(node);
 			}
 		}
-		return best.first();
+
+		TreeSet<Node<T>> ordered = new TreeSet<Node<T>>(area);
+		ordered.addAll(best);
+		return ordered.first();
 	}
 
 	private static Comparator<Node<?>> area = new Comparator<Node<?>>() {
