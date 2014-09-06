@@ -28,8 +28,7 @@ public class Comparators {
 		};
 	}
 
-	public static Func1<HasGeometry, Double> areaIncrease(final Rectangle r,
-			HasGeometry g) {
+	public static Func1<HasGeometry, Double> areaIncrease(final Rectangle r) {
 		return new Func1<HasGeometry, Double>() {
 			@Override
 			public Double call(HasGeometry g) {
@@ -45,9 +44,18 @@ public class Comparators {
 	}
 
 	public static <T extends HasGeometry> Comparator<HasGeometry> areaIncreaseComparator(
-			final Rectangle r, T g) {
-		return toComparator(areaIncrease(r, g));
+			final Rectangle r) {
+		return toComparator(areaIncrease(r));
 	}
+
+	public static Comparator<HasGeometry> areaComparator = new Comparator<HasGeometry>() {
+
+		@Override
+		public int compare(HasGeometry g1, HasGeometry g2) {
+			return ((Float) g1.geometry().mbr().area()).compareTo(g2.geometry()
+					.mbr().area());
+		}
+	};
 
 	private static <R, T extends Comparable<T>> Comparator<R> toComparator(
 			final Func1<R, T> function) {
@@ -60,17 +68,16 @@ public class Comparators {
 		};
 	}
 
-	public static <T> Comparator<T> compose(final Comparator<T> a,
-			final Comparator<T> b) {
+	public static <T> Comparator<T> compose(final Comparator<T>... comparators) {
 		return new Comparator<T>() {
-
 			@Override
 			public int compare(T t1, T t2) {
-				int value = a.compare(t1, t2);
-				if (value == 0)
-					return b.compare(t1, t2);
-				else
-					return value;
+				for (Comparator<T> comparator : comparators) {
+					int value = comparator.compare(t1, t2);
+					if (value != 0)
+						return value;
+				}
+				return 0;
 			}
 		};
 	}
