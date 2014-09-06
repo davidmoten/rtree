@@ -48,14 +48,16 @@ public class Comparators {
 		return toComparator(areaIncrease(r));
 	}
 
-	public static Comparator<HasGeometry> areaComparator = new Comparator<HasGeometry>() {
+	public static Comparator<HasGeometry> areaComparator(final Rectangle r) {
+		return new Comparator<HasGeometry>() {
 
-		@Override
-		public int compare(HasGeometry g1, HasGeometry g2) {
-			return ((Float) g1.geometry().mbr().area()).compareTo(g2.geometry()
-					.mbr().area());
-		}
-	};
+			@Override
+			public int compare(HasGeometry g1, HasGeometry g2) {
+				return ((Float) g1.geometry().mbr().add(r).area()).compareTo(g2
+						.geometry().mbr().add(r).area());
+			}
+		};
+	}
 
 	private static <R, T extends Comparable<T>> Comparator<R> toComparator(
 			final Func1<R, T> function) {

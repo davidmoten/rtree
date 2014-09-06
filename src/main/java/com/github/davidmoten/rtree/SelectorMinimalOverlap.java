@@ -18,7 +18,8 @@ public class SelectorMinimalOverlap implements Selector {
 		return min(
 				nodes,
 				compose(overlapComparator(g.mbr(), nodes),
-						areaIncreaseComparator(g.mbr()), areaComparator));
+						areaIncreaseComparator(g.mbr()),
+						areaComparator(g.mbr())));
 	}
 
 }
