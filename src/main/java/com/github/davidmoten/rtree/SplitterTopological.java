@@ -1,6 +1,6 @@
 package com.github.davidmoten.rtree;
 
-import static com.github.davidmoten.rtree.Comparators.overlapPair;
+import static com.github.davidmoten.rtree.Comparators.overlapListPair;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public class SplitterTopological implements Splitter {
 			}
 		}
 		return Collections.min(pairs,
-				Comparators.compose(overlapPair(metric), Comparators.areaPair));
+				Comparators.compose(overlapListPair(metric), Comparators.areaPair));
 	}
 
 	private static <T extends HasGeometry> List<T> sort(List<T> items,
