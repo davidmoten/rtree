@@ -38,9 +38,12 @@ Features
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 
-Number of points = 100, max children per node 4:
+Number of points = 1000, max children per node 8, Quadratic split:
 
-<img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/quad-1000-8.png"/><img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/star-1000-8.png"/>
+<img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/quad-1000-8.png"/>
+
+Number of points = 1000, max children per node 8, R*-tree split:
+<img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/star-1000-8.png"/>
 
 Getting started
 ----------------
