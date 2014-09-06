@@ -7,80 +7,83 @@ import java.util.Iterator;
 import com.google.common.base.Optional;
 
 public final class ImmutableStack<T> implements Iterable<T> {
-    private final Optional<T> head;
-    private final Optional<ImmutableStack<T>> tail;
+	private final Optional<T> head;
+	private final Optional<ImmutableStack<T>> tail;
 
-    public ImmutableStack(final T head, final ImmutableStack<T> tail) {
-        this(of(head), of(tail));
-    }
+	private static ImmutableStack<?> EMPTY = new ImmutableStack<Object>();
 
-    private ImmutableStack(Optional<T> head, Optional<ImmutableStack<T>> tail) {
-        this.head = head;
-        this.tail = tail;
-    }
+	public ImmutableStack(final T head, final ImmutableStack<T> tail) {
+		this(of(head), of(tail));
+	}
 
-    public static <T> ImmutableStack<T> create(T t) {
-        return new ImmutableStack<T>(of(t), of(ImmutableStack.<T> empty()));
-    }
+	private ImmutableStack(Optional<T> head, Optional<ImmutableStack<T>> tail) {
+		this.head = head;
+		this.tail = tail;
+	}
 
-    public ImmutableStack() {
-        this(Optional.<T> absent(), Optional.<ImmutableStack<T>> absent());
-    }
+	public static <T> ImmutableStack<T> create(T t) {
+		return new ImmutableStack<T>(of(t), of(ImmutableStack.<T> empty()));
+	}
 
-    public static <S> ImmutableStack<S> empty() {
-        return new ImmutableStack<S>();
-    }
+	public ImmutableStack() {
+		this(Optional.<T> absent(), Optional.<ImmutableStack<T>> absent());
+	}
 
-    public boolean isEmpty() {
-        return !head.isPresent();
-    }
+	@SuppressWarnings("unchecked")
+	public static <S> ImmutableStack<S> empty() {
+		return (ImmutableStack<S>) EMPTY;
+	}
 
-    public T peek() {
-        if (isEmpty())
-            throw new RuntimeException("cannot peek on emtpy stack");
-        else
-            return this.head.get();
-    }
+	public boolean isEmpty() {
+		return !head.isPresent();
+	}
 
-    public ImmutableStack<T> pop() {
-        if (isEmpty())
-            throw new RuntimeException("cannot pop on emtpy stack");
-        else
-            return this.tail.get();
-    }
+	public T peek() {
+		if (isEmpty())
+			throw new RuntimeException("cannot peek on emtpy stack");
+		else
+			return this.head.get();
+	}
 
-    public ImmutableStack<T> push(T value) {
-        return new ImmutableStack<T>(value, this);
-    }
+	public ImmutableStack<T> pop() {
+		if (isEmpty())
+			throw new RuntimeException("cannot pop on emtpy stack");
+		else
+			return this.tail.get();
+	}
 
-    @Override
-    public Iterator<T> iterator() {
-        return new StackIterator<T>(this);
-    }
+	public ImmutableStack<T> push(T value) {
+		return new ImmutableStack<T>(value, this);
+	}
 
-    private static class StackIterator<U> implements Iterator<U> {
-        private ImmutableStack<U> stack;
+	@Override
+	public Iterator<T> iterator() {
+		return new StackIterator<T>(this);
+	}
 
-        public StackIterator(final ImmutableStack<U> stack) {
-            this.stack = stack;
-        }
+	private static class StackIterator<U> implements Iterator<U> {
+		private ImmutableStack<U> stack;
 
-        @Override
-        public boolean hasNext() {
-            return !this.stack.isEmpty();
-        }
+		public StackIterator(final ImmutableStack<U> stack) {
+			this.stack = stack;
+		}
 
-        @Override
-        public U next() {
-            final U result = this.stack.peek();
-            this.stack = this.stack.pop();
-            return result;
-        }
+		@Override
+		public boolean hasNext() {
+			return !this.stack.isEmpty();
+		}
 
-        @Override
-        public void remove() {
-            throw new RuntimeException("not supported");
-        }
-    }
+		@Override
+		public U next() {
+			final U result = this.stack.peek();
+			this.stack = this.stack.pop();
+			return result;
+		}
+
+		@Override
+		public void remove() {
+			throw new RuntimeException("not supported");
+		}
+	}
 
 }
