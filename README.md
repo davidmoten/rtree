@@ -40,7 +40,7 @@ Features
 
 Number of points = 100, max children per node 4:
 
-<img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/rtree.png"/>
+<img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/quad-1000-8.png"/><img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/star-1000-8.png"/>
 
 Getting started
 ----------------
