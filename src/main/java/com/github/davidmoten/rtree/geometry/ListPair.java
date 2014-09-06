@@ -19,8 +19,13 @@ public final class ListPair<T extends HasGeometry> {
 		return group2;
 	}
 
-	public float area() {
+	public float areaSum() {
 		return group1.geometry().mbr().area() + group2.geometry().mbr().area();
+	}
+
+	public float marginSum() {
+		return group1.geometry().mbr().perimeter()
+				+ group2.geometry().mbr().perimeter();
 	}
 
 }
