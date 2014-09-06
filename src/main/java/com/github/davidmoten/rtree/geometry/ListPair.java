@@ -19,4 +19,8 @@ public final class ListPair<T extends HasGeometry> {
 		return group2;
 	}
 
+	public float area() {
+		return group1.geometry().mbr().area() + group2.geometry().mbr().area();
+	}
+
 }

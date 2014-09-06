@@ -6,9 +6,29 @@ import java.util.List;
 import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.HasGeometry;
+import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
-public class Comparators {
+public final class Comparators {
+
+	public static Comparator<ListPair<?>> overlapPair(
+			final ListPairMetric metric) {
+		return new Comparator<ListPair<?>>() {
+
+			@Override
+			public int compare(ListPair<?> o1, ListPair<?> o2) {
+				return metric.call(o1).compareTo(metric.call(o2));
+			}
+		};
+	}
+
+	public static Comparator<ListPair<?>> areaPair = new Comparator<ListPair<?>>() {
+
+		@Override
+		public int compare(ListPair<?> p1, ListPair<?> p2) {
+			return ((Float) p1.area()).compareTo(p2.area());
+		}
+	};
 
 	public static Func1<HasGeometry, Double> overlap(final Rectangle r,
 			final List<? extends HasGeometry> list) {
@@ -27,11 +47,6 @@ public class Comparators {
 			}
 		};
 	}
-
-	// public static Func1<HasGeometry, Double> overlap(final Rectangle r,
-	// final List<List<? extends HasGeometry>> list) {
-	//
-	// }
 
 	public static Func1<HasGeometry, Double> areaIncrease(final Rectangle r) {
 		return new Func1<HasGeometry, Double>() {

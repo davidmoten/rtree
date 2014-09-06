@@ -1,16 +1,14 @@
 package com.github.davidmoten.rtree;
 
-import static com.google.common.base.Optional.of;
+import static com.github.davidmoten.rtree.Comparators.overlapPair;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
 
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 public class SplitterTopological implements Splitter {
@@ -36,29 +34,22 @@ public class SplitterTopological implements Splitter {
 		return best(minSize, metric, lists);
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T extends HasGeometry> ListPair<T> best(int minSize,
 			ListPairMetric metric, List<List<T>> lists) {
-		List<ListPair<T>> best = new ArrayList<ListPair<T>>();
-		Optional<Double> bestMetric = Optional.absent();
+		List<ListPair<T>> pairs = new ArrayList<ListPair<T>>();
+
 		for (List<T> list : lists) {
 			// try all splits of list where the groups have at least minChildren
 			for (int i = minSize; i < list.size() - minSize; i++) {
 				List<T> list1 = list.subList(0, i);
 				List<T> list2 = list.subList(i, list.size());
 				ListPair<T> pair = new ListPair<T>(list1, list2);
-				double m = metric.call(pair);
-				if (!bestMetric.isPresent() || m < bestMetric.get()) {
-					best = new ArrayList<ListPair<T>>();
-					best.add(pair);
-					bestMetric = of(m);
-				} else if (bestMetric.isPresent() && m == bestMetric.get()) {
-					best.add(pair);
-				}
+				pairs.add(pair);
 			}
 		}
-		TreeSet<ListPair<T>> ordered = new TreeSet<ListPair<T>>(area);
-		ordered.addAll(best);
-		return ordered.first();
+		return Collections.min(pairs,
+				Comparators.compose(overlapPair(metric), Comparators.areaPair));
 	}
 
 	private static <T extends HasGeometry> List<T> sort(List<T> items,
