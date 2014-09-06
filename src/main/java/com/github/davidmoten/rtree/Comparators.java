@@ -41,12 +41,36 @@ public class Comparators {
 
 	public static <T extends HasGeometry> Comparator<HasGeometry> overlapComparator(
 			final Rectangle r, final List<T> list) {
-		final Func1<HasGeometry, Double> overlap = overlap(r, list);
-		return new Comparator<HasGeometry>() {
+		return toComparator(overlap(r, list));
+	}
+
+	public static <T extends HasGeometry> Comparator<HasGeometry> areaIncreaseComparator(
+			final Rectangle r, T g) {
+		return toComparator(areaIncrease(r, g));
+	}
+
+	private static <R, T extends Comparable<T>> Comparator<R> toComparator(
+			final Func1<R, T> function) {
+		return new Comparator<R>() {
 
 			@Override
-			public int compare(HasGeometry g1, HasGeometry g2) {
-				return overlap.call(g1).compareTo(overlap.call(g2));
+			public int compare(R g1, R g2) {
+				return function.call(g1).compareTo(function.call(g2));
+			}
+		};
+	}
+
+	public static <T> Comparator<T> compose(final Comparator<T> a,
+			final Comparator<T> b) {
+		return new Comparator<T>() {
+
+			@Override
+			public int compare(T t1, T t2) {
+				int value = a.compare(t1, t2);
+				if (value == 0)
+					return b.compare(t1, t2);
+				else
+					return value;
 			}
 		};
 	}
