@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import com.github.davidmoten.rtree.geometry.HasGeometry;
-import com.github.davidmoten.util.ListPair;
+import com.github.davidmoten.rtree.geometry.ListPair;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
@@ -45,13 +45,14 @@ public class SplitterTopological implements Splitter {
 			for (int i = minSize; i < list.size() - minSize; i++) {
 				List<T> list1 = list.subList(0, i);
 				List<T> list2 = list.subList(i, list.size());
-				double m = metric.call(new ListPair<T>(list1, list2));
+				ListPair<T> pair = new ListPair<T>(list1, list2);
+				double m = metric.call(pair);
 				if (!bestMetric.isPresent() || m < bestMetric.get()) {
 					best = new ArrayList<ListPair<T>>();
-					best.add(new ListPair<T>(list1, list2));
+					best.add(pair);
 					bestMetric = of(m);
 				} else if (bestMetric.isPresent() && m == bestMetric.get()) {
-					best.add(new ListPair<T>(list1, list2));
+					best.add(pair);
 				}
 			}
 		}
@@ -108,10 +109,10 @@ public class SplitterTopological implements Splitter {
 		@Override
 		public int compare(ListPair<? extends HasGeometry> p1,
 				ListPair<? extends HasGeometry> p2) {
-			Float area1 = Util.mbr(p1.list1()).area()
-					+ Util.mbr(p1.list2()).area();
-			Float area2 = Util.mbr(p2.list1()).area()
-					+ Util.mbr(p2.list2()).area();
+			Float area1 = p1.group1().geometry().mbr().area()
+					+ p1.group2().geometry().mbr().area();
+			Float area2 = p2.group1().geometry().mbr().area()
+					+ p2.group2().geometry().mbr().area();
 			return area1.compareTo(area2);
 		}
 	};

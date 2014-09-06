@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.util.ListPair;
 import com.github.davidmoten.util.Pair;
 import com.google.common.collect.Sets;
 
@@ -90,8 +90,10 @@ public class QuadraticSplitterTest {
 		final Mbr r3 = r(100);
 		final Mbr r4 = r(101);
 		final ListPair<Mbr> pair = q.split(Arrays.asList(r1, r2, r3, r4), 2);
-		assertEquals(Sets.newHashSet(r1, r2), Sets.newHashSet(pair.list1()));
-		assertEquals(Sets.newHashSet(r3, r4), Sets.newHashSet(pair.list2()));
+		assertEquals(Sets.newHashSet(r1, r2),
+				Sets.newHashSet(pair.group1().list()));
+		assertEquals(Sets.newHashSet(r3, r4),
+				Sets.newHashSet(pair.group2().list()));
 	}
 
 	@Test
@@ -104,8 +106,10 @@ public class QuadraticSplitterTest {
 		final Mbr r5 = r(103);
 		final ListPair<Mbr> pair = q
 				.split(Arrays.asList(r1, r2, r3, r4, r5), 2);
-		assertEquals(Sets.newHashSet(r1, r2), Sets.newHashSet(pair.list1()));
-		assertEquals(Sets.newHashSet(r3, r4, r5), Sets.newHashSet(pair.list2()));
+		assertEquals(Sets.newHashSet(r1, r2),
+				Sets.newHashSet(pair.group1().list()));
+		assertEquals(Sets.newHashSet(r3, r4, r5),
+				Sets.newHashSet(pair.group2().list()));
 	}
 
 	@Test
@@ -119,8 +123,10 @@ public class QuadraticSplitterTest {
 		final Mbr r6 = r(104);
 		final ListPair<Mbr> pair = q.split(
 				Arrays.asList(r1, r2, r3, r4, r5, r6), 3);
-		assertEquals(Sets.newHashSet(r1, r2, r3), Sets.newHashSet(pair.list1()));
-		assertEquals(Sets.newHashSet(r4, r5, r6), Sets.newHashSet(pair.list2()));
+		assertEquals(Sets.newHashSet(r1, r2, r3),
+				Sets.newHashSet(pair.group1().list()));
+		assertEquals(Sets.newHashSet(r4, r5, r6),
+				Sets.newHashSet(pair.group2().list()));
 	}
 
 	private static Mbr r(int n) {

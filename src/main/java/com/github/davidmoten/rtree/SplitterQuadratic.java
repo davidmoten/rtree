@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.HasGeometry;
+import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.util.ListPair;
 import com.github.davidmoten.util.Pair;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;

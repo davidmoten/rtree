@@ -28,6 +28,11 @@ public class Comparators {
 		};
 	}
 
+	// public static Func1<HasGeometry, Double> overlap(final Rectangle r,
+	// final List<List<? extends HasGeometry>> list) {
+	//
+	// }
+
 	public static Func1<HasGeometry, Double> areaIncrease(final Rectangle r) {
 		return new Func1<HasGeometry, Double>() {
 			@Override

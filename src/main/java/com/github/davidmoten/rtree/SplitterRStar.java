@@ -3,7 +3,7 @@ package com.github.davidmoten.rtree;
 import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.HasGeometry;
-import com.github.davidmoten.util.ListPair;
+import com.github.davidmoten.rtree.geometry.ListPair;
 
 public class SplitterRStar implements Splitter {
 

@@ -9,9 +9,9 @@ import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
+import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
-import com.github.davidmoten.util.ListPair;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
@@ -49,8 +49,8 @@ final class Leaf<T> implements Node<T> {
 		} else {
 			final ListPair<Entry<T>> pair = context.splitter().split(
 					newChildren, context.minChildren());
-			final Leaf<T> leaf1 = new Leaf<T>(pair.list1(), context);
-			final Leaf<T> leaf2 = new Leaf<T>(pair.list2(), context);
+			final Leaf<T> leaf1 = new Leaf<T>(pair.group1().list(), context);
+			final Leaf<T> leaf2 = new Leaf<T>(pair.group2().list(), context);
 			@SuppressWarnings("unchecked")
 			final List<Leaf<T>> list = Arrays.asList(leaf1, leaf2);
 			return replace(this, list, stack, context).get();
@@ -95,8 +95,10 @@ final class Leaf<T> implements Node<T> {
 		} else {
 			final ListPair<? extends Node<R>> pair = context.splitter().split(
 					newChildren, context.minChildren());
-			final NonLeaf<R> node1 = new NonLeaf<R>(pair.list1(), context);
-			final NonLeaf<R> node2 = new NonLeaf<R>(pair.list2(), context);
+			final NonLeaf<R> node1 = new NonLeaf<R>(pair.group1().list(),
+					context);
+			final NonLeaf<R> node2 = new NonLeaf<R>(pair.group2().list(),
+					context);
 			@SuppressWarnings("unchecked")
 			final List<NonLeaf<R>> nodes = Lists.newArrayList(node1, node2);
 			return replace(n, nodes, stack.pop(), context);
