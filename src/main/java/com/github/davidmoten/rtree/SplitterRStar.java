@@ -1,7 +1,5 @@
 package com.github.davidmoten.rtree;
 
-import static com.github.davidmoten.rtree.Comparators.overlapListPair;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,8 +21,8 @@ public class SplitterRStar implements Splitter {
 	@SuppressWarnings("unchecked")
 	public SplitterRStar() {
 		this.comparator = Comparators.compose(
-				overlapListPair(new ListPairMetricOverlapArea()),
-				Comparators.areaPair);
+				Comparators.overlapListPairComparator,
+				Comparators.areaPairComparator);
 	}
 
 	@Override

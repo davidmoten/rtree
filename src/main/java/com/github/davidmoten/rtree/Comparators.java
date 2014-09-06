@@ -11,12 +11,9 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public final class Comparators {
 
-	public static Comparator<ListPair<?>> overlapListPair(
-			final ListPairMetric metric) {
-		return toComparator(metric);
-	}
+	public static final Comparator<ListPair<?>> overlapListPairComparator = toComparator(Functions.overlapListPair);
 
-	public static Comparator<ListPair<?>> areaPair = new Comparator<ListPair<?>>() {
+	public static Comparator<ListPair<?>> areaPairComparator = new Comparator<ListPair<?>>() {
 
 		@Override
 		public int compare(ListPair<?> p1, ListPair<?> p2) {
@@ -24,42 +21,14 @@ public final class Comparators {
 		}
 	};
 
-	public static Func1<HasGeometry, Double> overlap(final Rectangle r,
-			final List<? extends HasGeometry> list) {
-		return new Func1<HasGeometry, Double>() {
-
-			@Override
-			public Double call(HasGeometry g) {
-				Rectangle gPlusR = g.geometry().mbr().add(r);
-				double m = 0;
-				for (HasGeometry other : list) {
-					if (other != g) {
-						m += gPlusR.intersectionArea(other.geometry().mbr());
-					}
-				}
-				return m;
-			}
-		};
-	}
-
-	public static Func1<HasGeometry, Double> areaIncrease(final Rectangle r) {
-		return new Func1<HasGeometry, Double>() {
-			@Override
-			public Double call(HasGeometry g) {
-				Rectangle gPlusR = g.geometry().mbr().add(r);
-				return (double) (gPlusR.area() - g.geometry().mbr().area());
-			}
-		};
-	}
-
 	public static <T extends HasGeometry> Comparator<HasGeometry> overlapComparator(
 			final Rectangle r, final List<T> list) {
-		return toComparator(overlap(r, list));
+		return toComparator(Functions.overlap(r, list));
 	}
 
 	public static <T extends HasGeometry> Comparator<HasGeometry> areaIncreaseComparator(
 			final Rectangle r) {
-		return toComparator(areaIncrease(r));
+		return toComparator(Functions.areaIncrease(r));
 	}
 
 	public static Comparator<HasGeometry> areaComparator(final Rectangle r) {
@@ -97,4 +66,5 @@ public final class Comparators {
 			}
 		};
 	}
+
 }
