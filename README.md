@@ -220,6 +220,9 @@ Benchmarks are provided by
 mvn clean install -Pbenchmark
 ```
 
+### Notes
+The *Greek* data referred to in the benchmarks is a collection of some 38K entries corresponding to the epicentres of earthquakes in Greece between 1964 and 2000. This data set is used by multiple studies on R-trees as a test case.
+
 ### Results
 ```
 Benchmark                                                                                Mode  Samples       Score  Score error  Units
