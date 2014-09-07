@@ -8,9 +8,13 @@ import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
+/**
+ * Utility functions for making {@link Selector}s and {@link Splitter}s.
+ *
+ */
 public class Functions {
 
-    static Func1<ListPair<? extends HasGeometry>, Double> overlapListPair = new Func1<ListPair<? extends HasGeometry>, Double>() {
+    public static Func1<ListPair<? extends HasGeometry>, Double> overlapListPair = new Func1<ListPair<? extends HasGeometry>, Double>() {
 
         @Override
         public Double call(ListPair<? extends HasGeometry> pair) {

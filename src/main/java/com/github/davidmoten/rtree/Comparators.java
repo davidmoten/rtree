@@ -9,6 +9,11 @@ import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
+/**
+ * Utility functions asociated with {@link Comparator}s, especially for use with
+ * {@link Selector}s and {@link Splitter}s.
+ *
+ */
 public final class Comparators {
 
     public static final Comparator<ListPair<?>> overlapListPairComparator = toComparator(Functions.overlapListPair);
