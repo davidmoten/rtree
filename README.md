@@ -70,13 +70,15 @@ RTree<String> tree = RTree.minChildren(3).maxChildren(6).create();
 ```
 
 ###R*-tree
-If you'd like an R*-tree (which uses a topological splitter on minimal overlap and a selector combination of minimal area increase and minimal overlap):
+If you'd like an R*-tree (which uses a topological splitter on minimal margin, overlap area and area and a selector combination of minimal area increase, minimal overlap, and area):
 
 ```
 RTree<String> tree = RTree.star().maxChildren(6).create();
 ```
 
 See benchmarks below for some of the performance differences.
+
+In theory the R*-tree is faster to use than the default R-tree but this is not borne out by benchmarks. It is interesting to see this as the structure created by the R*-tree algorithms is obiviously much cleaner (see images above). Perhaps some performance optimization could be done on this R*-tree implementation so that this clean structure bears fruit performance wise. Contributions welcome, just raise an issue or send a PR!
 
 ###Add items to the R-tree
 When you add an item to the R-tree you need to provide a geometry that represents the 2D physical location or 

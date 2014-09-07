@@ -130,6 +130,10 @@ public final class RTree<R> {
         return new Builder().selector(selector);
     }
 
+    public static Builder star() {
+        return new Builder().star();
+    }
+
     /**
      * RTree Builder
      */
