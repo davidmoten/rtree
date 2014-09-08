@@ -44,7 +44,7 @@ Number of points = 1000, max children per node 8, Quadratic split:
 Number of points = 1000, max children per node 8, R*-tree split. Notice that there is little overlap compared to the 
 Quadratic split. This should provide better search performance (and in general benchmarks show this).
 
-<img src="https://raw.githubusercontent.com/davidmoten/rtree/master/src/docs/star-1000-8.png"/>
+<img src="src/docs/star-1000-8.png?raw=true"/>
 
 Getting started
 ----------------
