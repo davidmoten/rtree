@@ -6,14 +6,11 @@ import java.util.List;
 
 import rx.Observable;
 
-import com.github.davidmoten.rtree.geometry.Rectangle;
-
 public class GalleryMain {
 
     public static void main(String[] args) {
         Observable<Entry<Object>> entries = GreekEarthquakes.entries().cache();
 
-        Rectangle view = new Rectangle(34, 19, 43, 28);
         List<Integer> sizes = Arrays.asList(100, 1000, 10000, 1000000);
         List<Integer> maxChildrenValues = Arrays.asList(4, 8, 16, 32, 64, 128);
         for (int size : sizes)
