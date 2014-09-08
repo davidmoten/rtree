@@ -253,11 +253,10 @@ public class RTreeTest {
         List<Entry<Object>> entries = createRandomEntries(1000);
         int maxChildren = 8;
         RTree<Object> tree = RTree.maxChildren(maxChildren).create().add(entries);
-        Rectangle view = new Rectangle(-20, -20, 1100, 1100);
-        tree.visualize(600, 600, view).save(new File("target/tree.png"), "PNG");
+        tree.visualize(600, 600).save("target/tree.png");
 
         RTree<Object> tree2 = RTree.maxChildren(maxChildren).star().create().add(entries);
-        tree2.visualize(600, 600, view).save(new File("target/tree2.png"), "PNG");
+        tree2.visualize(600, 600).save("target/tree2.png");
     }
 
     @Test
@@ -265,8 +264,7 @@ public class RTreeTest {
         List<Entry<Object>> entries = GreekEarthquakes.entriesList();
         int maxChildren = 8;
         RTree<Object> tree = RTree.maxChildren(maxChildren).create().add(entries);
-        Rectangle view = new Rectangle(35, 20, 45, 30);
-        tree.visualize(2000, 2000, view).save(new File("target/greek.png"), "PNG");
+        tree.visualize(2000, 2000).save("target/greek.png");
 
         // do search
         System.out.println("found="
@@ -274,7 +272,7 @@ public class RTreeTest {
                         .single());
 
         RTree<Object> tree2 = RTree.maxChildren(maxChildren).star().create().add(entries);
-        tree2.visualize(2000, 2000, view).save(new File("target/greek2.png"), "PNG");
+        tree2.visualize(2000, 2000).save("target/greek2.png");
     }
 
     @Test
