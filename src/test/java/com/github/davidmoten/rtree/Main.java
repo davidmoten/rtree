@@ -11,9 +11,10 @@ public class Main {
 		int maxChildren = 128;
 		RTree<Object> tree = RTree.maxChildren(maxChildren).create()
 				.add(entries);
+		long count = 0;
+		long t = System.currentTimeMillis();
 		while (true) {
-			tree.search(Geometries.rectangle(500, 500, 510, 510)).subscribe();
+			tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
 		}
 	}
-
 }

@@ -68,7 +68,7 @@ public class BenchmarksRTree {
 
 	@Benchmark
 	public void defaultRTreeSearchOfGreekDataPointsMaxChildren4() {
-		search(defaultTreeM4);
+		searchGreek(defaultTreeM4);
 	}
 
 	@Benchmark
@@ -78,7 +78,7 @@ public class BenchmarksRTree {
 
 	@Benchmark
 	public void defaultRTreeSearchOfGreekDataPointsMaxChildren10() {
-		search(defaultTreeM10);
+		searchGreek(defaultTreeM10);
 	}
 
 	@Benchmark
@@ -93,12 +93,12 @@ public class BenchmarksRTree {
 
 	@Benchmark
 	public void rStarTreeSearchOfGreekDataPointsMaxChildren4() {
-		search(starTreeM4);
+		searchGreek(starTreeM4);
 	}
 
 	@Benchmark
 	public void rStarTreeSearchOfGreekDataPointsMaxChildren10() {
-		search(starTreeM10);
+		searchGreek(starTreeM10);
 	}
 
 	@Benchmark
@@ -108,7 +108,7 @@ public class BenchmarksRTree {
 
 	@Benchmark
 	public void defaultRTreeSearchOfGreekDataPointsMaxChildren32() {
-		search(defaultTreeM32);
+		searchGreek(defaultTreeM32);
 	}
 
 	@Benchmark
@@ -118,7 +118,7 @@ public class BenchmarksRTree {
 
 	@Benchmark
 	public void rStarTreeSearchOfGreekDataPointsMaxChildren32() {
-		search(starTreeM32);
+		searchGreek(starTreeM32);
 	}
 
 	@Benchmark
@@ -128,7 +128,7 @@ public class BenchmarksRTree {
 
 	@Benchmark
 	public void defaultRTreeSearchOfGreekDataPointsMaxChildren128() {
-		search(defaultTreeM128);
+		searchGreek(defaultTreeM128);
 	}
 
 	@Benchmark
@@ -138,8 +138,7 @@ public class BenchmarksRTree {
 
 	@Benchmark
 	public void rStarTreeSearchOfGreekDataPointsMaxChildren128() {
-		starTreeM128.search(Geometries.rectangle(500, 500, 510, 510)).count()
-				.toBlocking().single();
+		searchGreek(starTreeM128);
 	}
 
 	@Benchmark
@@ -214,6 +213,11 @@ public class BenchmarksRTree {
 
 	private void search(RTree<Object> tree) {
 		tree.search(Geometries.rectangle(500, 500, 510, 510)).subscribe();
+	}
+
+	private void searchGreek(RTree<Object> tree) {
+		// should return 22 results
+		tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
 	}
 
 	private void insert(RTree<Object> tree) {
