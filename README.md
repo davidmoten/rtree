@@ -209,7 +209,7 @@ Iterable<T> it = tree.search(Geometries.point(4,5)).toBlocking().toIterable();
 Backpressure
 -----------------
 The backpressure slow path may be enabled by some RxJava operators. This may slow search performance by a factor of 3 but avoids 
-possible out of memory errors and thread starvation due to asynchronous buffering.
+possible out of memory errors and thread starvation due to asynchronous buffering. Backpressure is benchmarked for a backpressure case below.
 
 How to build
 ----------------
