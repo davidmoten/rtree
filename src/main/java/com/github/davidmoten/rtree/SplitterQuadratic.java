@@ -74,7 +74,6 @@ public final class SplitterQuadratic implements Splitter {
 	@VisibleForTesting
 	static <T extends HasGeometry> T getBestCandidateForGroup(List<T> list,
 			List<T> group, Rectangle groupMbr) {
-		Preconditions.checkArgument(!list.isEmpty());
 		Optional<T> minEntry = absent();
 		Optional<Double> minArea = absent();
 		for (final T entry : list) {

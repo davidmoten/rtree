@@ -54,12 +54,12 @@ public final class Rectangle implements Geometry {
 		return x >= x1 && x <= x2 && y >= y1 && y <= y2;
 	}
 
-	private boolean instersectsOnce(Rectangle r) {
+	private boolean containsCornerOf(Rectangle r) {
 		return r.in(x1, y1) || r.in(x2, y2);
 	}
 
 	private boolean intersects(Rectangle r) {
-		return instersectsOnce(r) || r.instersectsOnce(this);
+		return containsCornerOf(r) || r.containsCornerOf(this);
 	}
 
 	@Override

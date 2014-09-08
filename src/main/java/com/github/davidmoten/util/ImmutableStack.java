@@ -39,17 +39,17 @@ public final class ImmutableStack<T> implements Iterable<T> {
 	}
 
 	public T peek() {
-		if (isEmpty())
-			throw new RuntimeException("cannot peek on emtpy stack");
-		else
-			return this.head.get();
+		// if (isEmpty())
+		// throw new RuntimeException("cannot peek on empty stack");
+		// else
+		return this.head.get();
 	}
 
 	public ImmutableStack<T> pop() {
-		if (isEmpty())
-			throw new RuntimeException("cannot pop on emtpy stack");
-		else
-			return this.tail.get();
+		// if (isEmpty())
+		// throw new RuntimeException("cannot pop on empty stack");
+		// else
+		return this.tail.get();
 	}
 
 	public ImmutableStack<T> push(T value) {

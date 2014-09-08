@@ -12,8 +12,7 @@ public class Main {
 		RTree<Object> tree = RTree.maxChildren(maxChildren).create()
 				.add(entries);
 		while (true) {
-			tree.search(Geometries.rectangle(500, 500, 510, 510)).count()
-					.toBlocking().single();
+			tree.search(Geometries.rectangle(500, 500, 510, 510)).subscribe();
 		}
 	}
 
