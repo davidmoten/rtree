@@ -83,8 +83,6 @@ RTree<String> tree = RTree.star().maxChildren(6).create();
 
 See benchmarks below for some of the performance differences.
 
-In theory the R*-tree is faster to use than the default R-tree but this is not borne out by benchmarks (see below). It is interesting to see this as the structure created by the R*-tree algorithms obviously has much less overlap so would need less traversal for searching (see images above). Perhaps some performance optimization could be done on this R*-tree implementation so that this clean structure bears fruit performance wise. Contributions welcome, just raise an issue or send a PR!
-
 ###Add items to the R-tree
 When you add an item to the R-tree you need to provide a geometry that represents the 2D physical location or 
 extension of the item. The ``Geometries`` builder provides these factory methods:
@@ -258,5 +256,5 @@ c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren004          
 c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010                  thrpt       10   349717.560    18758.673  ops/s
 c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032                  thrpt       10   197557.464      978.454  ops/s
 c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128                  thrpt       10     8474.251      341.667  ops/s
-
+   
 ```
