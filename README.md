@@ -199,6 +199,13 @@ output:
 D
 ```
 
+How to configure the R-tree for best performance
+--------------------------------------------------
+Check out the benchmarks below, but even better do your own benchmarks. Here are some quick points
+* Quadratic split (the default) is faster for insert
+* Quadratic split is faster for search with low maxChildren and smaller numbers of points (~1000).
+* R*-tree is 50% faster for search  for larger numbers of points (>10K) but has slower insert
+
 ### How do I just get an Iterable back from a search?
 If you are not familiar with the Observable API and want to skip the reactive stuff then here's how to get an ```Iterable``` from a search:
 
