@@ -62,62 +62,62 @@ public class BenchmarksRTree {
 			.star().create().add(some);
 
 	@Benchmark
-	public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren4() {
+	public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
 		insert(defaultTreeM4);
 	}
 
 	@Benchmark
-	public void defaultRTreeSearchOfGreekDataPointsMaxChildren4() {
+	public void defaultRTreeSearchOfGreekDataPointsMaxChildren004() {
 		searchGreek(defaultTreeM4);
 	}
 
 	@Benchmark
-	public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren10() {
+	public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
 		insert(defaultTreeM10);
 	}
 
 	@Benchmark
-	public void defaultRTreeSearchOfGreekDataPointsMaxChildren10() {
+	public void defaultRTreeSearchOfGreekDataPointsMaxChildren010() {
 		searchGreek(defaultTreeM10);
 	}
 
 	@Benchmark
-	public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren4() {
+	public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
 		insert(starTreeM4);
 	}
 
 	@Benchmark
-	public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren10() {
+	public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
 		insert(starTreeM10);
 	}
 
 	@Benchmark
-	public void rStarTreeSearchOfGreekDataPointsMaxChildren4() {
+	public void rStarTreeSearchOfGreekDataPointsMaxChildren004() {
 		searchGreek(starTreeM4);
 	}
 
 	@Benchmark
-	public void rStarTreeSearchOfGreekDataPointsMaxChildren10() {
+	public void rStarTreeSearchOfGreekDataPointsMaxChildren010() {
 		searchGreek(starTreeM10);
 	}
 
 	@Benchmark
-	public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren32() {
+	public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
 		insert(defaultTreeM32);
 	}
 
 	@Benchmark
-	public void defaultRTreeSearchOfGreekDataPointsMaxChildren32() {
+	public void defaultRTreeSearchOfGreekDataPointsMaxChildren032() {
 		searchGreek(defaultTreeM32);
 	}
 
 	@Benchmark
-	public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren32() {
+	public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
 		insert(starTreeM32);
 	}
 
 	@Benchmark
-	public void rStarTreeSearchOfGreekDataPointsMaxChildren32() {
+	public void rStarTreeSearchOfGreekDataPointsMaxChildren032() {
 		searchGreek(starTreeM32);
 	}
 
@@ -142,52 +142,52 @@ public class BenchmarksRTree {
 	}
 
 	@Benchmark
-	public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren4() {
+	public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004() {
 		insert(smallDefaultTreeM4);
 	}
 
 	@Benchmark
-	public void defaultRTreeSearchOf1000PointsMaxChildren4() {
+	public void defaultRTreeSearchOf1000PointsMaxChildren004() {
 		search(smallDefaultTreeM4);
 	}
 
 	@Benchmark
-	public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren10() {
+	public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010() {
 		insert(smallDefaultTreeM10);
 	}
 
 	@Benchmark
-	public void defaultRTreeSearchOf1000PointsMaxChildren10() {
+	public void defaultRTreeSearchOf1000PointsMaxChildren010() {
 		search(smallDefaultTreeM10);
 	}
 
 	@Benchmark
-	public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren10() {
+	public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren010() {
 		insert(smallStarTreeM10);
 	}
 
 	@Benchmark
-	public void rStarTreeSearchOf1000PointsMaxChildren10() {
+	public void rStarTreeSearchOf1000PointsMaxChildren010() {
 		search(smallStarTreeM10);
 	}
 
 	@Benchmark
-	public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren32() {
+	public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032() {
 		insert(smallDefaultTreeM32);
 	}
 
 	@Benchmark
-	public void defaultRTreeSearchOf1000PointsMaxChildren32() {
+	public void defaultRTreeSearchOf1000PointsMaxChildren032() {
 		search(smallDefaultTreeM32);
 	}
 
 	@Benchmark
-	public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren32() {
+	public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren032() {
 		insert(smallStarTreeM32);
 	}
 
 	@Benchmark
-	public void rStarTreeSearchOf1000PointsMaxChildren32() {
+	public void rStarTreeSearchOf1000PointsMaxChildren032() {
 		search(smallStarTreeM32);
 	}
 
