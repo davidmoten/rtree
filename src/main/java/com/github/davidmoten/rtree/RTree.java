@@ -472,6 +472,26 @@ public final class RTree<R> {
         return new Visualizer(this, width, height, view);
     }
 
+    Visualizer visualize(int width, int height) {
+        return new Visualizer(this, width, height, calculateMaxView(this));
+    }
+
+    private Rectangle calculateMaxView(RTree<R> tree) {
+        return tree
+                .entries()
+                .reduce(Optional.<Rectangle> absent(),
+                        new Func2<Optional<Rectangle>, Entry<R>, Optional<Rectangle>>() {
+
+                            @Override
+                            public Optional<Rectangle> call(Optional<Rectangle> r, Entry<R> entry) {
+                                if (r.isPresent())
+                                    return Optional.of(r.get().add(entry.geometry().mbr()));
+                                else
+                                    return Optional.of(entry.geometry().mbr());
+                            }
+                        }).toBlocking().single().or(new Rectangle(0, 0, 0, 0));
+    }
+
     Optional<Node<R>> root() {
         return root;
     }
