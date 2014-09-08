@@ -1,6 +1,5 @@
 package com.github.davidmoten.rtree;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,13 +19,11 @@ public class GalleryMain {
                     RTree<Object> tree = RTree.maxChildren(maxChildren).create()
                             .add(entries.take(size)).last().toBlocking().single();
                     tree.visualize(600, 600).save(
-                            new File("target/greek-" + size + "-" + maxChildren + "-quad.png"),
-                            "PNG");
+                            "target/greek-" + size + "-" + maxChildren + "-quad.png");
                     RTree<Object> tree2 = RTree.star().maxChildren(maxChildren).create()
                             .add(entries.take(size)).last().toBlocking().single();
                     tree2.visualize(600, 600).save(
-                            new File("target/greek-" + size + "-" + maxChildren + "-star.png"),
-                            "PNG");
+                            "target/greek-" + size + "-" + maxChildren + "-star.png");
                 }
             }
     }

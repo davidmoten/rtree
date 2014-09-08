@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
 
-final class Visualizer {
+public final class Visualizer {
 
     private final RTree<?> tree;
     private final int width;
@@ -47,7 +47,7 @@ final class Visualizer {
             return calculateDepth(((NonLeaf<R>) node).children().get(0), depth + 1);
     }
 
-    BufferedImage create() {
+    public BufferedImage create() {
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g = (Graphics2D) image.getGraphics();
         g.setBackground(Color.white);
@@ -112,7 +112,7 @@ final class Visualizer {
         return (int) Math.round(d);
     }
 
-    void save(File file, String imageFormat) {
+    public void save(File file, String imageFormat) {
         try {
             ImageIO.write(create(), imageFormat, file);
         } catch (final IOException e) {
@@ -120,4 +120,11 @@ final class Visualizer {
         }
     }
 
+    public void save(String filename, String imageFormat) {
+        save(new File(filename), imageFormat);
+    }
+
+    public void save(String filename) {
+        save(new File(filename), "PNG");
+    }
 }

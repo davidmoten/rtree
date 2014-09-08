@@ -468,11 +468,11 @@ public final class RTree<R> {
         return search(ALWAYS_TRUE);
     }
 
-    Visualizer visualize(int width, int height, Rectangle view) {
+    public Visualizer visualize(int width, int height, Rectangle view) {
         return new Visualizer(this, width, height, view);
     }
 
-    Visualizer visualize(int width, int height) {
+    public Visualizer visualize(int width, int height) {
         return new Visualizer(this, width, height, calculateMaxView(this));
     }
 
