@@ -30,7 +30,6 @@ Features
 * R*-tree heuristics (algorithms from original [paper](http://dbs.mathematik.uni-marburg.de/publications/myPapers/1990/BKSS90.pdf))
 * search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
 * search is cancelled by unsubscription
-* over 250K inserts per second on i7 single thread into a tree with 10,000 entries
 * search is ```O(log(n))``` on average
 * insert, delete are ```O(n)``` worst case
 * all search methods return lazy-evaluated streams offering a lot of flexibility and opportunity for functional composition and concurrency
