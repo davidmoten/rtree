@@ -22,6 +22,9 @@ public class BenchmarksRTree {
 	private final RTree<Object> defaultTreeM10 = RTree.maxChildren(10).create()
 			.add(entries);
 
+	private final RTree<Object> starTreeM4 = RTree.maxChildren(4).star()
+			.create().add(entries);
+
 	private final RTree<Object> starTreeM10 = RTree.maxChildren(10).star()
 			.create().add(entries);
 
@@ -79,8 +82,18 @@ public class BenchmarksRTree {
 	}
 
 	@Benchmark
+	public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren4() {
+		insert(starTreeM4);
+	}
+
+	@Benchmark
 	public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren10() {
 		insert(starTreeM10);
+	}
+
+	@Benchmark
+	public void rStarTreeSearchOfGreekDataPointsMaxChildren4() {
+		search(starTreeM4);
 	}
 
 	@Benchmark
