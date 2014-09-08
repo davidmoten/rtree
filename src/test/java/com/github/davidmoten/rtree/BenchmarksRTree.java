@@ -6,6 +6,8 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 
+import rx.Subscriber;
+
 import com.github.davidmoten.rtree.geometry.Geometries;
 
 @State(Scope.Benchmark)
@@ -99,6 +101,11 @@ public class BenchmarksRTree {
 	@Benchmark
 	public void rStarTreeSearchOfGreekDataPointsMaxChildren010() {
 		searchGreek(starTreeM10);
+	}
+
+	@Benchmark
+	public void rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpressure() {
+		searchGreekWithBackpressure(starTreeM10);
 	}
 
 	@Benchmark
@@ -218,6 +225,33 @@ public class BenchmarksRTree {
 	private void searchGreek(RTree<Object> tree) {
 		// should return 22 results
 		tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+	}
+
+	private void searchGreekWithBackpressure(RTree<Object> tree) {
+		// should return 22 results
+		tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe(
+				new Subscriber<Object>() {
+
+					@Override
+					public void onStart() {
+						request(1);
+					}
+
+					@Override
+					public void onCompleted() {
+
+					}
+
+					@Override
+					public void onError(Throwable arg0) {
+
+					}
+
+					@Override
+					public void onNext(Object arg0) {
+						request(1);
+					}
+				});
 	}
 
 	private void insert(RTree<Object> tree) {
