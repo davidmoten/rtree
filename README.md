@@ -171,7 +171,7 @@ What do I do with the Observable thing?
 -------------------------------------------
 Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).
 
-As an example, suppose you want to filter the search results then apply a function on each in parallel and reduce to some best answer:
+As an example, suppose you want to filter the search results then apply a function on each and reduce to some best answer:
 
 ```java
 import rx.Observable;
