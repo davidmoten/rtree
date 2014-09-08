@@ -185,8 +185,6 @@ Character result =
     tree.search(Geometries.rectangle(8, 15, 30, 35))
         // filter for names alphabetically less than M
         .filter(entry -> entry.value() < "M")
-        // use a different scheduler for each entry
-        .flatMap(entry -> Observable.just(entry).subscribeOn(Schedulers.computation())
         // get the first character of the name
         .map(entry -> firstCharacter(entry.value()))
         // reduce to the first character alphabetically 
