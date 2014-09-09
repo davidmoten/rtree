@@ -1,7 +1,5 @@
 package com.github.davidmoten.rtree;
 
-import java.util.List;
-
 import rx.Subscriber;
 import rx.functions.Func1;
 
