@@ -21,6 +21,4 @@ interface Node<T> extends HasGeometry {
 
 	int count();
 
-	List<? extends HasGeometry> childrenGeometries();
-
 }

@@ -26,11 +26,6 @@ final class NonLeaf<T> implements Node<T> {
 	}
 
 	@Override
-	public List<? extends HasGeometry> childrenGeometries() {
-		return children;
-	}
-
-	@Override
 	public Geometry geometry() {
 		return mbr;
 	}

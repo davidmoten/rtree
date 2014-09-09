@@ -172,9 +172,5 @@ final class Leaf<T> implements Node<T> {
 		return entries.size();
 	}
 
-	@Override
-	public List<? extends HasGeometry> childrenGeometries() {
-		return entries;
-	}
 
 }
