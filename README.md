@@ -36,6 +36,7 @@ Features
 * balanced delete
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
+* visualizer included
 
 Number of points = 1000, max children per node 8, Quadratic split: 
 
@@ -217,6 +218,14 @@ Backpressure
 -----------------
 The backpressure slow path may be enabled by some RxJava operators. This may slow search performance by a factor of 3 but avoids 
 possible out of memory errors and thread starvation due to asynchronous buffering. Backpressure is benchmarked for a backpressure case below.
+
+Visualizer
+--------------
+To visualize the R-tree in a PNG file of size 600 by 600 pixels just call:
+```java
+tree.visualize(600,600).save("target/mytree.png");
+```
+The result is like the images in the Features section above.
 
 How to build
 ----------------
