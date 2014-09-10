@@ -392,7 +392,7 @@ public final class RTree<R> {
         return new Func1<Geometry, Boolean>() {
             @Override
             public Boolean call(Geometry g) {
-                return g.distance(r) == 0;
+                return g.intersects(r);
             }
         };
     }

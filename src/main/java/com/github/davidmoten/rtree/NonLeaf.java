@@ -59,7 +59,7 @@ final class NonLeaf<T> implements Node<T> {
 	public Optional<Node<T>> delete(Entry<T> entry,
 			ImmutableStack<NonLeaf<T>> stack) {
 		for (final Node<T> child : children) {
-			if (entry.geometry().distance(child.geometry().mbr()) == 0) {
+			if (entry.geometry().intersects(child.geometry().mbr())) {
 				final Optional<Node<T>> result = child.delete(entry,
 						stack.push(this));
 				if (result.isPresent())

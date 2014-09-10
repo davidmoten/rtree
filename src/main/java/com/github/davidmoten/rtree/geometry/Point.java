@@ -25,6 +25,11 @@ public final class Point implements Geometry {
     public double distance(Rectangle r) {
         return mbr.distance(r);
     }
+    
+    @Override
+	public boolean intersects(Rectangle r) {
+		return mbr.intersects(r);
+	}
 
     public float x() {
         return mbr.x1();

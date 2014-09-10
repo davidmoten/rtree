@@ -58,7 +58,8 @@ public final class Rectangle implements Geometry {
 		return r.in(x1, y1) || r.in(x2, y2);
 	}
 
-	private boolean intersects(Rectangle r) {
+	@Override
+	public boolean intersects(Rectangle r) {
 		return containsCornerOf(r) || r.containsCornerOf(this);
 	}
 
