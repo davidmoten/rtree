@@ -12,7 +12,7 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
  * Utility functions for making {@link Selector}s and {@link Splitter}s.
  *
  */
-public class Functions {
+public final class Functions {
 
     public static Func1<ListPair<? extends HasGeometry>, Double> overlapListPair = new Func1<ListPair<? extends HasGeometry>, Double>() {
 
