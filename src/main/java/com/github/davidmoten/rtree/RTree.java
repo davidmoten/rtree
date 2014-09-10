@@ -35,7 +35,7 @@ public final class RTree<R> {
 	 * when using Quadratic splitter (Guttman).
 	 */
 	public static final int MAX_CHILDREN_DEFAULT_GUTTMAN = 4;
-	
+
 	/**
 	 * Benchmarks show that this is the sweet spot for up to O(10,000) entries
 	 * when using R*-tree heuristics.
@@ -343,6 +343,14 @@ public final class RTree<R> {
 		});
 	}
 
+	/**
+	 * Returns the Observable sequence of trees created by progressively
+	 * deleting entries.
+	 * 
+	 * @param entries
+	 *            the entries to add
+	 * @return a sequence of trees
+	 */
 	public Observable<RTree<R>> delete(Observable<Entry<R>> entries) {
 		return entries.scan(this, new Func2<RTree<R>, Entry<R>, RTree<R>>() {
 
@@ -546,6 +554,19 @@ public final class RTree<R> {
 		return search(ALWAYS_TRUE);
 	}
 
+	/**
+	 * Returns a {@link Visualizer} for an image of given width and height and
+	 * restricted to the given view of the coordinates. The points in the view
+	 * are scaled to match the aspect ratio defined by the width and height.
+	 * 
+	 * @param width
+	 *            of the image in pixels
+	 * @param height
+	 *            of the image in pixels
+	 * @param view
+	 *            using the coordinate system of the entries
+	 * @return visualizer
+	 */
 	public Visualizer visualize(int width, int height, Rectangle view) {
 		return new Visualizer(this, width, height, view);
 	}
