@@ -65,9 +65,9 @@ This library has a dependency on *guava* 18.0 which is about 2.2M. If you are co
 Use the static builder methods on the ```RTree``` class:
 
 ```java
-//create an R-tree with max children per node 32,
-// min children 16 (the threshold at which members
-// are redistributed)
+// create an R-tree using Quadratic split with max
+// children per node 4, min children 2 (the threshold
+// at which members are redistributed)
 RTree<String> tree = RTree.create();
 ```
 You can specify a few parameters to the builder, including *minChildren*, *maxChildren*, *splitter*, *selector*:

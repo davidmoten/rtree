@@ -30,7 +30,17 @@ public final class RTree<R> {
 	private final Optional<Node<R>> root;
 	private final Context context;
 
-	public static final int MAX_CHILDREN_DEFAULT = 32;
+	/**
+	 * Benchmarks show that this is a good choice for up to O(10,000) entries
+	 * when using Quadratic splitter (Guttman).
+	 */
+	public static final int MAX_CHILDREN_DEFAULT_GUTTMAN = 4;
+	
+	/**
+	 * Benchmarks show that this is the sweet spot for up to O(10,000) entries
+	 * when using R*-tree heuristics.
+	 */
+	public static final int MAX_CHILDREN_DEFAULT_STAR = 10;
 
 	private int size;
 
@@ -141,16 +151,29 @@ public final class RTree<R> {
 		return new Builder().splitter(splitter);
 	}
 
+	/**
+	 * Sets the node {@link Selector} which decides which branches to follow
+	 * when inserting or searching.
+	 * 
+	 * @param selector
+	 * @return builder
+	 */
 	public static Builder selector(Selector selector) {
 		return new Builder().selector(selector);
 	}
 
+	/**
+	 * Sets the splitter to {@link SplitterRStar} and selector to
+	 * {@link SelectorRStar} and defaults to minChildren=10.
+	 * 
+	 * @return builder
+	 */
 	public static Builder star() {
 		return new Builder().star();
 	}
 
 	/**
-	 * RTree Builder
+	 * RTree Builder.
 	 */
 	public static class Builder {
 
@@ -161,10 +184,11 @@ public final class RTree<R> {
 		 * quadratic split and R*-tree split.
 		 */
 		private static final double DEFAULT_FILLING_FACTOR = 0.4;
-		private int maxChildren = MAX_CHILDREN_DEFAULT;
+		private Optional<Integer> maxChildren = absent();
 		private Optional<Integer> minChildren = absent();
 		private Splitter splitter = new SplitterQuadratic();
 		private Selector selector = new SelectorMinimalAreaIncrease();
+		private boolean star = false;
 
 		private Builder() {
 		}
@@ -192,7 +216,7 @@ public final class RTree<R> {
 		 * @return builder
 		 */
 		public Builder maxChildren(int maxChildren) {
-			this.maxChildren = maxChildren;
+			this.maxChildren = of(maxChildren);
 			return this;
 		}
 
@@ -208,14 +232,28 @@ public final class RTree<R> {
 			return this;
 		}
 
+		/**
+		 * Sets the node {@link Selector} which decides which branches to follow
+		 * when inserting or searching.
+		 * 
+		 * @param selector
+		 * @return builder
+		 */
 		public <T> Builder selector(Selector selector) {
 			this.selector = selector;
 			return this;
 		}
 
+		/**
+		 * Sets the splitter to {@link SplitterRStar} and selector to
+		 * {@link SelectorRStar} and defaults to minChildren=10.
+		 * 
+		 * @return builder
+		 */
 		public Builder star() {
 			selector = new SelectorRStar();
 			splitter = new SplitterRStar();
+			star = true;
 			return this;
 		}
 
@@ -227,11 +265,16 @@ public final class RTree<R> {
 		 * @return RTree
 		 */
 		public <S> RTree<S> create() {
+			if (!maxChildren.isPresent())
+				if (star)
+					maxChildren = of(MAX_CHILDREN_DEFAULT_STAR);
+				else
+					maxChildren = of(MAX_CHILDREN_DEFAULT_GUTTMAN);
 			if (!minChildren.isPresent())
-				minChildren = of((int) Math.round(maxChildren
+				minChildren = of((int) Math.round(maxChildren.get()
 						* DEFAULT_FILLING_FACTOR));
-			return new RTree<S>(new Context(minChildren.get(), maxChildren,
-					selector, splitter));
+			return new RTree<S>(new Context(minChildren.get(),
+					maxChildren.get(), selector, splitter));
 		}
 
 	}
