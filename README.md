@@ -58,9 +58,6 @@ Add this maven dependency to your pom.xml:
   <version>0.2.2</version>
 </dependency>
 ```
-### Dependencies
-This library has a dependency on *guava* 18.0 which is about 2.2M. If you are coding for Android you may want to use *ProGuard* to trim the final application size. The dependency is driven by extensive use of ```com.google.common.base.Optional``` and the use of ```com.google.common.collect.MinMaxPriorityQueue``` for the *nearest-k* search. I'm open to the possibility of internalizing these dependencies if people care about the dependency size a lot. Let me know.
-
 ###Instantiate an R-Tree
 Use the static builder methods on the ```RTree``` class:
 
@@ -226,6 +223,11 @@ To visualize the R-tree in a PNG file of size 600 by 600 pixels just call:
 tree.visualize(600,600).save("target/mytree.png");
 ```
 The result is like the images in the Features section above.
+
+Dependencies
+---------------------
+This library has a dependency on *guava* 18.0 which is about 2.2M. If you are coding for Android you may want to use *ProGuard* to trim the final application size. The dependency is driven by extensive use of ```com.google.common.base.Optional``` and the use of ```com.google.common.collect.MinMaxPriorityQueue``` for the *nearest-k* search. I'm open to the possibility of internalizing these dependencies if people care about the dependency size a lot. Let me know.
+
 
 How to build
 ----------------
