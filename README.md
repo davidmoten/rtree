@@ -24,7 +24,7 @@ Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) incl
 Features
 ------------
 * immutable R-tree suitable for concurrency
-* Guttman's heuristics (Quadratic splitter)
+* Guttman's heuristics (Quadratic splitter) ([Guttman84](https://www.google.com.au/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CB8QFjAA&url=http%3A%2F%2Fpostgis.org%2Fsupport%2Frtree.pdf&ei=ieEQVJuKGdK8uATpgoKQCg&usg=AFQjCNED9w2KjgiAa9UI-UO_0eWjcADTng&sig2=rZ_dzKHBHY62BlkBuw3oCw&bvm=bv.74894050,d.c2E))
 * R*-tree heuristics (algorithms from original [paper](http://dbs.mathematik.uni-marburg.de/publications/myPapers/1990/BKSS90.pdf))
 * Customizable [splitter](src/main/java/com/github/davidmoten/rtree/Splitter.java) and [selector](src/main/java/com/github/davidmoten/rtree/Selector.java)
 * search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
