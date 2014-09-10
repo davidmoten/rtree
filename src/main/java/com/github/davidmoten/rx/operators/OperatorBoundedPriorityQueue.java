@@ -19,16 +19,16 @@ public final class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
 
     @Override
     public Subscriber<? super T> call(final Subscriber<? super T> child) {
-        final MinMaxPriorityQueue<Wrapper<T>> q = MinMaxPriorityQueue.maximumSize(maximumSize)
-                .create();
+        final MinMaxPriorityQueue<T> q = MinMaxPriorityQueue.orderedBy(comparator)
+                .maximumSize(maximumSize).create();
         return new Subscriber<T>(child) {
 
             @Override
             public void onCompleted() {
-                for (Wrapper<T> w : q) {
+                for (T t : q) {
                     if (isUnsubscribed())
                         return;
-                    child.onNext(w.value);
+                    child.onNext(t);
                 }
                 if (isUnsubscribed())
                     return;
@@ -44,25 +44,9 @@ public final class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
             @Override
             public void onNext(T t) {
                 if (!isUnsubscribed())
-                    q.add(new Wrapper<T>(t, comparator));
+                    q.add(t);
             }
         };
     }
 
-    private static class Wrapper<S> implements Comparable<Wrapper<S>> {
-
-        private final Comparator<S> comparator;
-        private final S value;
-
-        Wrapper(S value, Comparator<S> comparator) {
-            this.comparator = comparator;
-            this.value = value;
-        }
-
-        @Override
-        public int compareTo(Wrapper<S> w) {
-            return comparator.compare(value, w.value);
-        }
-
-    }
 }
