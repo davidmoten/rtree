@@ -34,7 +34,7 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
 		private volatile ImmutableStack<NodePosition<T>> stack;
 		private final AtomicLong requested = new AtomicLong(0);
 
-		public SearchProducer(Node<T> node,
+		 SearchProducer(Node<T> node,
 				Func1<? super Geometry, Boolean> condition,
 				Subscriber<? super Entry<T>> subscriber) {
 			this.node = node;
@@ -63,7 +63,7 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
 				subscriber.onCompleted();
 		}
 
-		public void requestSome(long n) {
+		private void requestSome(long n) {
 			// back pressure path
 			// this algorithm copied roughly from
 			// rxjava-core/OnSubscribeFromIterable.java

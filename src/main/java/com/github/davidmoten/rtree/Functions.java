@@ -23,7 +23,7 @@ public class Functions {
         }
     };
 
-    public static Func1<HasGeometry, Double> overlap(final Rectangle r,
+    public static Func1<HasGeometry, Double> overlapArea(final Rectangle r,
             final List<? extends HasGeometry> list) {
         return new Func1<HasGeometry, Double>() {
 
