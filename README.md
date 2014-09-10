@@ -116,7 +116,7 @@ tree = tree.delete(entry);
 You can also write your own implementation of [```Geometry```](src/main/java/com/github/davidmoten/rtree/geometry/Geometry.java). An implementation of ```Geometry``` needs to specify methods to:
 
 * measure distance to a rectangle (0 means they intersect)
-* check intersection with a rectangle (you can resuse the distance method here if you want but it might affect performance)
+* check intersection with a rectangle (you can reuse the distance method here if you want but it might affect performance)
 * provide a minimum bounding rectangle
 * implement ```equals``` and ```hashCode``` for consistent equality checking
 
