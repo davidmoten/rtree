@@ -24,19 +24,19 @@ Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) incl
 Features
 ------------
 * immutable R-tree suitable for concurrency
-* typed
-* pluggable splitting heuristic ([```Splitter```](src/main/java/com/github/davidmoten/rtree/Splitter.java)). Default is [Guttman's quadratic split](http://www-db.deis.unibo.it/courses/SI-LS/papers/Gut84.pdf).
-* pluggable insert heuristic ([```Selector```](src/main/java/com/github/davidmoten/rtree/Selector.java)). Default is least minimum bounding rectangle area increase.
-* R*-tree heuristics available (algorithms from original [paper](http://dbs.mathematik.uni-marburg.de/publications/myPapers/1990/BKSS90.pdf))
+* Guttman's heuristics (Quadratic splitter)
+* R*-tree heuristics (algorithms from original [paper](http://dbs.mathematik.uni-marburg.de/publications/myPapers/1990/BKSS90.pdf))
+* Customizable [splitter](src/main/java/com/github/davidmoten/rtree/Splitter.java) and [selector](src/main/java/com/github/davidmoten/rtree/Selector.java)
 * search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
 * search is cancelled by unsubscription
 * search is ```O(log(n))``` on average
 * insert, delete are ```O(n)``` worst case
-* all search methods return lazy-evaluated streams offering a lot of flexibility and opportunity for functional composition and concurrency
+* all search methods return lazy-evaluated streams offering efficiency and flexibility of functional style including functional composition and concurrency
 * balanced delete
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 * visualizer included
+
 
 Number of points = 1000, max children per node 8, Quadratic split: 
 
