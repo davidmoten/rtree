@@ -13,6 +13,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
 import com.github.davidmoten.util.ImmutableStack;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
@@ -422,7 +423,8 @@ public final class RTree<R> {
      *            return Entries whose geometry satisfies the given condition
      * @return sequence of matching entries
      */
-    public Observable<Entry<R>> search(Func1<? super Geometry, Boolean> condition) {
+    @VisibleForTesting
+     Observable<Entry<R>> search(Func1<? super Geometry, Boolean> condition) {
         if (root.isPresent())
             return Observable.create(new OnSubscribeSearch<R>(root.get(), condition));
         else
