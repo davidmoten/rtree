@@ -30,7 +30,7 @@ public class SplitterRStar implements Splitter {
         // sort nodes into increasing x, calculate min overlap where both groups
         // have more than minChildren
 
-        Map<SortType, List<ListPair<T>>> map = new HashMap<SortType, List<ListPair<T>>>();
+        Map<SortType, List<ListPair<T>>> map = new HashMap<SortType, List<ListPair<T>>>(4, 1.0f);
         map.put(SortType.X_LOWER, getPairs(minSize, sort(items, INCREASING_X_LOWER)));
         map.put(SortType.X_UPPER, getPairs(minSize, sort(items, INCREASING_X_UPPER)));
         map.put(SortType.Y_LOWER, getPairs(minSize, sort(items, INCREASING_Y_LOWER)));

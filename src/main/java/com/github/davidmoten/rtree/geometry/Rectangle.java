@@ -50,12 +50,12 @@ public final class Rectangle implements Geometry {
         return new Rectangle(x1, y1, x2, y2);
     }
 
-    public boolean in(double x, double y) {
+    public boolean contains(double x, double y) {
         return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     }
 
     private boolean containsCornerOf(Rectangle r) {
-        return r.in(x1, y1) || r.in(x2, y2);
+        return r.contains(x1, y1) || r.contains(x2, y2);
     }
 
     @Override
