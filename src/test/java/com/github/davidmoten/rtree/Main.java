@@ -11,7 +11,8 @@ public class Main {
         int maxChildren = 128;
         RTree<Object> tree = RTree.maxChildren(maxChildren).create().add(entries);
         while (true) {
-            tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+//            tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+            tree.add(new Object(), Geometries.point(40, 27));
         }
     }
 }

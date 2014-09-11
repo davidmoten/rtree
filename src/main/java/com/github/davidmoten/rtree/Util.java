@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
@@ -21,7 +22,7 @@ public final class Util {
         new Util();
     }
 
-    public static Rectangle mbr(Collection<? extends HasGeometry> items) {
+    public static Rectangle mbrOld(Collection<? extends HasGeometry> items) {
         Preconditions.checkArgument(!items.isEmpty());
         Optional<Rectangle> r = Optional.absent();
         for (final HasGeometry item : items) {
@@ -31,6 +32,26 @@ public final class Util {
                 r = of(item.geometry().mbr());
         }
         return r.get();
+    }
+
+    public static Rectangle mbr(Collection<? extends HasGeometry> items) {
+        Preconditions.checkArgument(!items.isEmpty());
+        float minX1 = Float.MAX_VALUE;
+        float minY1 = Float.MAX_VALUE;
+        float maxX2 = Float.MIN_VALUE;
+        float maxY2 = Float.MIN_VALUE;
+        for (final HasGeometry item : items) {
+            Rectangle r = item.geometry().mbr();
+            if (r.x1() < minX1)
+                minX1 = r.x1();
+            if (r.y1() < minY1)
+                minY1 = r.y1();
+            if (r.x2() > maxX2)
+                maxX2 = r.x2();
+            if (r.y2() > maxY2)
+                maxY2 = r.y2();
+        }
+        return Rectangle.create(minX1, minY1, maxX2, maxY2);
     }
 
     static <T> List<T> add(List<T> list, T element) {
