@@ -139,18 +139,9 @@ or search for items within a distance from the given geometry:
 ```java
 Observable<Entry<T>> results = tree.search(Geometries.rectangle(0,0,2,2),5.0);
 ```
-or specify a predicate:
-```java
-Func1<Geometry,Boolean> function = ...
-Observable<Entry<T>> results = tree.search(function);
-```
 To return all entries from an R-tree:
 ```java
 Observable<Entry<T>> results = tree.entries();
-```
-or, using a predicate: 
-```java
-Observable<Entry<T>> results = tree.search(Functions.alwaysTrue());
 ```
 
 Example
