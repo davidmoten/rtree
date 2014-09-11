@@ -1,7 +1,10 @@
 package com.github.davidmoten.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Iterator;
 
 import org.junit.Test;
 
@@ -39,6 +42,34 @@ public class ImmutableStackTest {
     @Test
     public void testPopPeekGivesSecondLastPushed() {
         assertEquals(a,ImmutableStack.empty().push(a).push(b).pop().peek());
+    }
+    
+    @Test
+    public void testIteratorWhenEmpty() {
+        assertFalse(ImmutableStack.empty().iterator().hasNext());
+    }
+    
+    @Test
+    public void testIteratorWhenHasOneItem() {
+        assertTrue(ImmutableStack.empty().push(a).iterator().hasNext());
+    }
+    
+    @Test
+    public void testIteratorReturnsOneItem() {
+        assertEquals(a, ImmutableStack.empty().push(a).iterator().next());
+    }
+    
+    @Test
+    public void testIteratorReturnsLastPushedFirst() {
+        assertEquals(b, ImmutableStack.empty().push(a).push(b).iterator().next());
+    }
+    
+    @Test
+    public void testIteratorReturnsTwoItemsInOrderOfPop() {
+        Iterator<Object> it = ImmutableStack.empty().push(a).push(b).iterator();
+        assertEquals(b, it.next());
+        assertEquals(a, it.next());
+        assertFalse(it.hasNext());
     }
     
 }
