@@ -43,14 +43,18 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
 
         @Override
         public void request(long n) {
-            if (requested.get() == Long.MAX_VALUE)
-                // already started with fast path
-                return;
-            else if (n == Long.MAX_VALUE) {
-                // fast path
-                requestAll();
-            } else {
-                requestSome(n);
+            try {
+                if (requested.get() == Long.MAX_VALUE)
+                    // already started with fast path
+                    return;
+                else if (n == Long.MAX_VALUE) {
+                    // fast path
+                    requestAll();
+                } else {
+                    requestSome(n);
+                }
+            } catch (RuntimeException e) {
+                subscriber.onError(e);
             }
         }
 
@@ -75,6 +79,8 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
                     if (stack.isEmpty()) {
                         if (!subscriber.isUnsubscribed())
                             subscriber.onCompleted();
+                        else
+                            return;
                     } else if (requested.addAndGet(-r) == 0)
                         return;
                 }

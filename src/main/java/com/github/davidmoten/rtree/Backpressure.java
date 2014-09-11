@@ -12,6 +12,8 @@ final class Backpressure {
             final Func1<? super Geometry, Boolean> condition,
             final Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
             long request) {
+        if (stack.isEmpty())
+            return stack;
         while (true) {
             NodePosition<T> np = stack.peek();
             if (subscriber.isUnsubscribed())

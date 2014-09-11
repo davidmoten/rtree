@@ -320,7 +320,7 @@ public class RTreeTest {
                 .add(entry("MARY", point(97, 125)));
     }
 
-    @Test
+    @Test(timeout=2000)
     public void testUnsubscribe() {
         RTree<Object> tree = createRandomRTree(1000);
         assertEquals(0, (int) tree.entries().take(0).count().toBlocking().single());
