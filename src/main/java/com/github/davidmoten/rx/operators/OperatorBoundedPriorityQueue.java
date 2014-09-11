@@ -10,9 +10,9 @@ import com.google.common.collect.MinMaxPriorityQueue;
 public final class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
 
     private final int maximumSize;
-    private final Comparator<T> comparator;
+    private final Comparator<? super T> comparator;
 
-    public OperatorBoundedPriorityQueue(int maximumSize, Comparator<T> comparator) {
+    public OperatorBoundedPriorityQueue(int maximumSize, Comparator<? super T> comparator) {
         this.maximumSize = maximumSize;
         this.comparator = comparator;
     }

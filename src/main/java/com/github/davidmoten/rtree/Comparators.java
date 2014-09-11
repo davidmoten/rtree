@@ -86,4 +86,28 @@ public final class Comparators {
         };
     }
 
+    /**
+     * <p>
+     * Returns a comparator that can be used to sort entries returned by search
+     * methods. For example:
+     * </p>
+     * <p>
+     * <code>search(100).toSortedList(ascendingDistance(r))</code>
+     * </p>
+     * 
+     * @param r
+     *            rectangle to measure distance to
+     * @param <S>
+     *            the entry type
+     * @return a comparator to sort by ascending distance from the rectangle
+     */
+    public static final <S> Comparator<Entry<S>> ascendingDistance(final Rectangle r) {
+        return new Comparator<Entry<S>>() {
+            @Override
+            public int compare(Entry<S> e1, Entry<S> e2) {
+                return ((Double) e1.geometry().distance(r)).compareTo(e2.geometry().distance(r));
+            }
+        };
+    }
+    
 }

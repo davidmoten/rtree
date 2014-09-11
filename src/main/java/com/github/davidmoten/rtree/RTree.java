@@ -2,9 +2,6 @@ package com.github.davidmoten.rtree;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
-
-import java.util.Comparator;
-
 import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
@@ -424,35 +421,11 @@ public final class RTree<R> {
      * @return sequence of matching entries
      */
     @VisibleForTesting
-     Observable<Entry<R>> search(Func1<? super Geometry, Boolean> condition) {
+    Observable<Entry<R>> search(Func1<? super Geometry, Boolean> condition) {
         if (root.isPresent())
             return Observable.create(new OnSubscribeSearch<R>(root.get(), condition));
         else
             return Observable.empty();
-    }
-
-    /**
-     * <p>
-     * Returns a comparator that can be used to sort entries returned by search
-     * methods. For example:
-     * </p>
-     * <p>
-     * <code>search(100).toSortedList(ascendingDistance(r))</code>
-     * </p>
-     * 
-     * @param r
-     *            rectangle to measure distance to
-     * @param <S>
-     *            the entry type
-     * @return a comparator to sort by ascending distance from the rectangle
-     */
-    public static final <S> Comparator<Entry<S>> ascendingDistance(final Rectangle r) {
-        return new Comparator<Entry<S>>() {
-            @Override
-            public int compare(Entry<S> e1, Entry<S> e2) {
-                return ((Double) e1.geometry().distance(r)).compareTo(e2.geometry().distance(r));
-            }
-        };
     }
 
     /**
@@ -476,7 +449,7 @@ public final class RTree<R> {
      * Returns the always true predicate. See {@link RTree#entries()} for
      * example use.
      */
-    public static final Func1<Geometry, Boolean> ALWAYS_TRUE = new Func1<Geometry, Boolean>() {
+    private static final Func1<Geometry, Boolean> ALWAYS_TRUE = new Func1<Geometry, Boolean>() {
         @Override
         public Boolean call(Geometry rectangle) {
             return true;
@@ -518,7 +491,7 @@ public final class RTree<R> {
 
     /**
      * Returns the nearest k entries (k=maxCount) to the given rectangle where
-     * the entries are within a given maximum distance from the rectangel.
+     * the entries are within a given maximum distance from the rectangle.
      * 
      * @param r
      *            rectangle
@@ -529,8 +502,8 @@ public final class RTree<R> {
      * @return nearest entries to maxCount
      */
     public Observable<Entry<R>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
-        return search(r, maxDistance)
-                .lift(new OperatorBoundedPriorityQueue<Entry<R>>(maxCount, RTree
+        return search(r, maxDistance).lift(
+                new OperatorBoundedPriorityQueue<Entry<R>>(maxCount, Comparators
                         .<R> ascendingDistance(r)));
     }
 
@@ -560,6 +533,18 @@ public final class RTree<R> {
         return new Visualizer(this, width, height, view);
     }
 
+    /**
+     * Returns a {@link Visualizer} for an image of given width and height and
+     * restricted to the the smallest view that fully contains the coordinates.
+     * The points in the view are scaled to match the aspect ratio defined by
+     * the width and height.
+     * 
+     * @param width
+     *            of the image in pixels
+     * @param height
+     *            of the image in pixels
+     * @return visualizer
+     */
     public Visualizer visualize(int width, int height) {
         return new Visualizer(this, width, height, calculateMaxView(this));
     }
