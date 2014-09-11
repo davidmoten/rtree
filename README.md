@@ -36,6 +36,7 @@ Features
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 * visualizer included
+* R*-tree performs 736,000 searches/second returning 22 entries from a tree of 38,000 entries on i7-920@2.67Ghz
 
 
 Number of points = 1000, max children per node 8, Quadratic split: 
@@ -251,6 +252,9 @@ mvn clean install -Pbenchmark
 The *Greek* data referred to in the benchmarks is a collection of some 38K entries corresponding to the epicentres of earthquakes in Greece between 1964 and 2000. This data set is used by multiple studies on R-trees as a test case.
 
 ### Results
+
+These were run on i7-920@2.67GHz.
+
 ```
 Benchmark                                                                                  Mode  Samples        Score  Score error  Units
 c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004           thrpt       10   198633.081     2856.856  ops/s
