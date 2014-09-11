@@ -255,7 +255,7 @@ public class RTreeTest {
         RTree<Object> tree = RTree.maxChildren(maxChildren).create().add(entries);
         tree.visualize(600, 600).save("target/tree.png");
 
-        RTree<Object> tree2 = RTree.maxChildren(maxChildren).star().create().add(entries);
+        RTree<Object> tree2 = RTree.star().maxChildren(maxChildren).create().add(entries);
         tree2.visualize(600, 600).save("target/tree2.png");
     }
 
