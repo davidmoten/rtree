@@ -12,14 +12,13 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 
 public class SelectorMinimalOverlap implements Selector {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> Node<T> select(Geometry g, List<? extends Node<T>> nodes) {
-		return min(
-				nodes,
-				compose(overlapAreaComparator(g.mbr(), nodes),
-						areaIncreaseComparator(g.mbr()),
-						areaComparator(g.mbr())));
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> Node<T> select(Geometry g, List<? extends Node<T>> nodes) {
+        return min(
+                nodes,
+                compose(overlapAreaComparator(g.mbr(), nodes), areaIncreaseComparator(g.mbr()),
+                        areaComparator(g.mbr())));
+    }
 
 }

@@ -6,22 +6,22 @@ import com.google.common.base.Optional;
 
 public final class ObjectsHelper {
 
-	private ObjectsHelper() {
-		// prevent instantiation
-	}
+    private ObjectsHelper() {
+        // prevent instantiation
+    }
 
-	static void instantiateForTestCoveragePurposesOnly() {
-		new ObjectsHelper();
-	}
+    static void instantiateForTestCoveragePurposesOnly() {
+        new ObjectsHelper();
+    }
 
-	@SuppressWarnings("unchecked")
-	public static <T> Optional<T> asClass(Object object, Class<T> cls) {
-		if (object == null)
-			return absent();
-		else if (object.getClass() != cls)
-			return absent();
-		else
-			return Optional.of((T) object);
-	}
+    @SuppressWarnings("unchecked")
+    public static <T> Optional<T> asClass(Object object, Class<T> cls) {
+        if (object == null)
+            return absent();
+        else if (object.getClass() != cls)
+            return absent();
+        else
+            return Optional.of((T) object);
+    }
 
 }

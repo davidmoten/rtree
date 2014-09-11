@@ -37,12 +37,11 @@ public final class Circle implements Geometry {
     public double distance(Rectangle r) {
         return Math.max(0, new Point(x, y).distance(r) - radius);
     }
-    
-    @Override
-	public boolean intersects(Rectangle r) {
-		return distance(r)==0;
-	}
 
+    @Override
+    public boolean intersects(Rectangle r) {
+        return distance(r) == 0;
+    }
 
     @Override
     public int hashCode() {
@@ -59,5 +58,4 @@ public final class Circle implements Geometry {
             return false;
     }
 
-	
 }
