@@ -34,7 +34,7 @@ public final class Rectangle implements Geometry {
     }
 
     public float area() {
-        return Math.abs((x1 - x2) * (y1 - y2));
+        return (x2 - x1) * (y2 - y1);
     }
 
     public Rectangle add(Rectangle r) {
