@@ -50,11 +50,6 @@ final class Leaf<T> implements Node<T> {
     }
 
     @Override
-    public String toString() {
-        return "Leaf [entries=" + entries + ", mbr=" + mbr + "]";
-    }
-
-    @Override
     public int count() {
         return entries.size();
     }
