@@ -48,11 +48,6 @@ final class NonLeaf<T> implements Node<T> {
     }
 
     @Override
-    public String toString() {
-        return "NonLeaf [mbr=" + mbr + "]";
-    }
-
-    @Override
     public int count() {
         return children.size();
     }

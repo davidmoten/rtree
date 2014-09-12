@@ -563,7 +563,7 @@ public final class RTree<R> {
      * @return visualizer
      */
     public Visualizer visualize(int width, int height) {
-        return new Visualizer(this, width, height, calculateMaxView(this));
+        return visualize(width, height, calculateMaxView(this));
     }
 
     private Rectangle calculateMaxView(RTree<R> tree) {

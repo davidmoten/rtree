@@ -10,8 +10,8 @@ An [R-tree](http://en.wikipedia.org/wiki/R-tree) is a commonly used spatial inde
 This was fun to make, has an elegant concise algorithm, is thread-safe and fast.
 
 The algorithm to achieve immutability is cute. For insertion/deletion it involves recursion down to the 
-required leaf node then recursion back up (using a stack built as we recurse down) to replace the parent nodes up to the root. The guts of 
-it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/Leaf.java).
+required leaf node then recursion back up to replace the parent nodes up to the root. The guts of 
+it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/Leaf.java) and [NonLeaf.java](src/main/java/com/github/davidmoten/rtree/NonLeaf.java).
 
 [Backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure) support required some complexity because effectively a
 bookmark needed to be kept for a position in the tree and returned to later to continue traversal. An immutable stack containing
