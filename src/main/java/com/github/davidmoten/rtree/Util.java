@@ -12,6 +12,10 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
+/**
+ * @author dxm
+ *
+ */
 public final class Util {
 
     private Util() {
@@ -22,18 +26,26 @@ public final class Util {
         new Util();
     }
 
-    public static Rectangle mbrOld(Collection<? extends HasGeometry> items) {
-        Preconditions.checkArgument(!items.isEmpty());
-        Optional<Rectangle> r = Optional.absent();
-        for (final HasGeometry item : items) {
-            if (r.isPresent())
-                r = of(r.get().add(item.geometry().mbr()));
-            else
-                r = of(item.geometry().mbr());
-        }
-        return r.get();
-    }
-
+    /**
+     * Returns the minimum bounding rectangle of a number of items. Benchmarks
+     * below indicate that when the number of items is >1 this method is more
+     * performant than one using {@link Rectangle#add(Rectangle)}.
+     * 
+     * <pre>
+     * Benchmark                             Mode  Samples         Score  Score error  Units
+     * c.g.d.r.BenchmarksMbr.mbrList1       thrpt       10  48450492.301   436127.960  ops/s
+     * c.g.d.r.BenchmarksMbr.mbrList2       thrpt       10  46658242.728   987901.581  ops/s
+     * c.g.d.r.BenchmarksMbr.mbrList3       thrpt       10  40357809.306   937827.660  ops/s
+     * c.g.d.r.BenchmarksMbr.mbrList4       thrpt       10  35930532.557   605535.237  ops/s
+     * c.g.d.r.BenchmarksMbr.mbrOldList1    thrpt       10  55848118.198  1342997.309  ops/s
+     * c.g.d.r.BenchmarksMbr.mbrOldList2    thrpt       10  25171873.903   395127.918  ops/s
+     * c.g.d.r.BenchmarksMbr.mbrOldList3    thrpt       10  19222116.139   246965.178  ops/s
+     * c.g.d.r.BenchmarksMbr.mbrOldList4    thrpt       10  14891862.638   198765.157  ops/s
+     * </pre>
+     * 
+     * @param items
+     * @return
+     */
     public static Rectangle mbr(Collection<? extends HasGeometry> items) {
         Preconditions.checkArgument(!items.isEmpty());
         float minX1 = Float.MAX_VALUE;

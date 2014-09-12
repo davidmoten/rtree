@@ -5,7 +5,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
-public final class Rectangle implements Geometry {
+public final class Rectangle implements Geometry, HasGeometry {
     private final float x1, y1, x2, y2;
 
     public Rectangle(float x1, float y1, float x2, float y2) {
@@ -117,6 +117,11 @@ public final class Rectangle implements Geometry {
 
     public float perimeter() {
         return 2 * (x2 - x1) + 2 * (y2 - y1);
+    }
+
+    @Override
+    public Geometry geometry() {
+        return this;
     }
 
 }
