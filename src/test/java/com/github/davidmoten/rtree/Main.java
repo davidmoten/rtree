@@ -11,7 +11,7 @@ public class Main {
         for (int m = 4; m <= 256; m++) {
             int n = 38000;
             double q = Math.ceil(Math.log(n) / Math.log(m));
-            double order = n / Math.pow(m, q)*m * q;
+            double order = n / Math.pow(m, q) * m * q;
             System.out.println("m=" + m + ", order=" + order);
         }
 
@@ -19,9 +19,8 @@ public class Main {
         int maxChildren = 128;
         RTree<Object> tree = RTree.maxChildren(maxChildren).create().add(entries);
         while (true) {
-            // tree.search(Geometries.rectangle(40, 27.0, 40.5,
-            // 27.5)).subscribe();
-            tree.add(new Object(), Geometries.point(40, 27));
+            tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+            // tree.add(new Object(), Geometries.point(40, 27));
         }
     }
 }

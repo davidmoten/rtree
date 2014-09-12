@@ -477,7 +477,7 @@ public final class RTree<R> {
      * @param r
      *            rectangle to measure distance from
      * @param maxDistance
-     *            entries returned must be within this distance from rectangel r
+     *            entries returned must be within this distance from rectangle r
      * @return the sequence of matching entries
      */
     public Observable<Entry<R>> search(final Rectangle r, final double maxDistance) {
@@ -586,5 +586,5 @@ public final class RTree<R> {
     public int size() {
         return size;
     }
-    
+
 }
