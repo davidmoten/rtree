@@ -587,6 +587,4 @@ public final class RTree<R> {
         return size;
     }
     
-    
-
 }
