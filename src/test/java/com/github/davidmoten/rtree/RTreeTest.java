@@ -314,6 +314,14 @@ public class RTreeTest {
     }
 
     @Test
+    public void testDeleteAllIfThereAreMoreThanMaxChildren() {
+        Entry<Object> e1 = e(1);
+        int count = RTree.maxChildren(4).create().add(e1).add(e1).add(e1).add(e1).add(e1)
+                .delete(e1, true).search(e1.geometry().mbr()).count().toBlocking().single();
+        assertEquals(0, count);
+    }
+
+    @Test
     public void testDeleteItemThatIsNotPresentDoesNothing() {
         Entry<Object> e1 = e(1);
         Entry<Object> e2 = e(2);
