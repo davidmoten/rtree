@@ -2,6 +2,9 @@ package com.github.davidmoten.rtree;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
+
+import java.util.List;
+
 import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
@@ -9,7 +12,6 @@ import rx.functions.Func2;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
-import com.github.davidmoten.util.ImmutableStack;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -22,9 +24,7 @@ import com.google.common.collect.Lists;
  */
 public final class RTree<R> {
 
-    private final ImmutableStack<NonLeaf<R>> emptyStack = ImmutableStack.<NonLeaf<R>> empty();
-
-    private final Optional<Node<R>> root;
+    private final Optional<? extends Node<R>> root;
     private final Context context;
 
     /**
@@ -49,7 +49,7 @@ public final class RTree<R> {
      * @param context
      *            options for the R-tree
      */
-    private RTree(Optional<Node<R>> root, int size, Context context) {
+    private RTree(Optional<? extends Node<R>> root, int size, Context context) {
         this.root = root;
         this.size = size;
         this.context = context;
@@ -98,7 +98,7 @@ public final class RTree<R> {
         return calculateDepth(root);
     }
 
-    private static <R> int calculateDepth(Optional<Node<R>> root) {
+    private static <R> int calculateDepth(Optional<? extends Node<R>> root) {
         if (!root.isPresent())
             return 0;
         else
@@ -283,9 +283,16 @@ public final class RTree<R> {
      */
     @SuppressWarnings("unchecked")
     public RTree<R> add(Entry<R> entry) {
-        if (root.isPresent())
-            return new RTree<R>(root.get().add(entry, emptyStack), size + 1, context);
-        else
+        if (root.isPresent()) {
+            List<Node<R>> nodes = root.get().add(entry);
+            Node<R> node;
+            if (nodes.size() == 1)
+                node = nodes.get(0);
+            else {
+                node = new NonLeaf<R>(nodes, context);
+            }
+            return new RTree<R>(node, size + 1, context);
+        } else
             return new RTree<R>(new Leaf<R>(Lists.newArrayList(entry), context), size + 1, context);
     }
 
@@ -395,11 +402,12 @@ public final class RTree<R> {
      */
     public RTree<R> delete(Entry<R> entry) {
         if (root.isPresent()) {
-            final Optional<Node<R>> newRoot = root.get().delete(entry, emptyStack);
-            if (newRoot.equals(root))
+            NodeAndEntries<R> nodeAndEntries = root.get().delete(entry);
+            if (nodeAndEntries.node().isPresent() && nodeAndEntries.node().get() == root.get())
                 return this;
             else
-                return new RTree<R>(newRoot, size - 1, context);
+                return new RTree<R>(nodeAndEntries.node(), size - 1
+                        - nodeAndEntries.entries().size(), context).add(nodeAndEntries.entries());
         } else
             return this;
     }
@@ -565,7 +573,7 @@ public final class RTree<R> {
                         }).toBlocking().single().or(new Rectangle(0, 0, 0, 0));
     }
 
-    Optional<Node<R>> root() {
+    Optional<? extends Node<R>> root() {
         return root;
     }
 

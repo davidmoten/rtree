@@ -33,7 +33,7 @@ public final class Visualizer {
         this.maxDepth = calculateMaxDepth(tree.root());
     }
 
-    private static <R> int calculateMaxDepth(Optional<Node<R>> root) {
+    private static <R> int calculateMaxDepth(Optional<? extends Node<R>> root) {
         if (!root.isPresent())
             return 0;
         else

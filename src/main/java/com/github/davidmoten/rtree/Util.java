@@ -1,15 +1,11 @@
 package com.github.davidmoten.rtree;
 
-import static com.google.common.base.Optional.of;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 /**
@@ -78,7 +74,13 @@ public final class Util {
         return result;
     }
 
-    static <T> List<? extends T> replace(List<? extends T> list, T node,
+    static <T> List<T> remove(List<? extends T> list, List<? extends T> elements) {
+        final ArrayList<T> result = new ArrayList<T>(list);
+        result.removeAll(elements);
+        return result;
+    }
+
+    static <T> List<? extends T> replaceOld(List<? extends T> list, T node,
             List<? extends T> replacements) {
         final ArrayList<T> result = new ArrayList<T>(list);
         result.remove(node);
@@ -86,4 +88,12 @@ public final class Util {
         return result;
     }
 
+    static <T> List<? extends T> replace(List<? extends T> list, T element, List<T> replacements) {
+        List<T> list2 = new ArrayList<T>();
+        for (T node : list)
+            if (node != element)
+                list2.add(node);
+        list2.addAll(replacements);
+        return list2;
+    }
 }
