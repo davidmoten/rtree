@@ -79,29 +79,42 @@ final class NonLeaf<T> implements Node<T> {
     }
 
     @Override
-    public NodeAndEntries<T> delete(Entry<T> entry) {
+    public NodeAndEntries<T> delete(Entry<T> entry, boolean all) {
         List<Entry<T>> addTheseEntries = new ArrayList<Entry<T>>();
         List<Node<T>> removeTheseNodes = new ArrayList<Node<T>>();
         List<Node<T>> addTheseNodes = new ArrayList<Node<T>>();
+        int countDeleted = 0;
+
         for (final Node<T> child : children) {
             if (entry.geometry().intersects(child.geometry().mbr())) {
-                final NodeAndEntries<T> result = child.delete(entry);
-                if (result.node().isPresent())
-                    addTheseNodes.add(result.node().get());
-                removeTheseNodes.add(child);
-                addTheseEntries.addAll(result.entries());
+                final NodeAndEntries<T> result = child.delete(entry, all);
+                if (result.node().isPresent()) {
+                    if (result.node().get() != child) {
+                        addTheseNodes.add(result.node().get());
+                        removeTheseNodes.add(child);
+                        addTheseEntries.addAll(result.entriesToAdd());
+                        countDeleted += result.countDeleted();
+                        if (!all)
+                            break;
+                    }
+                } else {
+                    removeTheseNodes.add(child);
+                    addTheseEntries.addAll(result.entriesToAdd());
+                    countDeleted += result.countDeleted();
+                }
             }
         }
         if (removeTheseNodes.isEmpty())
-            return new NodeAndEntries<T>(of(this), Collections.<Entry<T>> emptyList());
+            return new NodeAndEntries<T>(of(this), Collections.<Entry<T>> emptyList(), 0);
         else {
             List<Node<T>> nodes = Util.remove(children, removeTheseNodes);
             nodes.addAll(addTheseNodes);
             if (nodes.size() == 0)
-                return new NodeAndEntries<T>(Optional.<Node<T>> absent(), addTheseEntries);
+                return new NodeAndEntries<T>(Optional.<Node<T>> absent(), addTheseEntries,
+                        countDeleted);
             else {
                 NonLeaf<T> node = new NonLeaf<T>(nodes, context);
-                return new NodeAndEntries<T>(of(node), addTheseEntries);
+                return new NodeAndEntries<T>(of(node), addTheseEntries, countDeleted);
             }
         }
     }

@@ -350,12 +350,12 @@ public final class RTree<R> {
      *            the entries to add
      * @return a sequence of trees
      */
-    public Observable<RTree<R>> delete(Observable<Entry<R>> entries) {
+    public Observable<RTree<R>> delete(Observable<Entry<R>> entries, final boolean all) {
         return entries.scan(this, new Func2<RTree<R>, Entry<R>, RTree<R>>() {
 
             @Override
             public RTree<R> call(RTree<R> tree, Entry<R> entry) {
-                return tree.delete(entry);
+                return tree.delete(entry, all);
             }
         });
     }
@@ -367,10 +367,10 @@ public final class RTree<R> {
      *            entries to delete
      * @return R-tree with entries deleted
      */
-    public RTree<R> delete(Iterable<Entry<R>> entries) {
+    public RTree<R> delete(Iterable<Entry<R>> entries, boolean all) {
         RTree<R> tree = this;
         for (Entry<R> entry : entries)
-            tree = tree.delete(entry);
+            tree = tree.delete(entry, all);
         return tree;
     }
 
@@ -386,8 +386,12 @@ public final class RTree<R> {
      * @return a new immutable R-tree without one instance of the specified
      *         entry
      */
+    public RTree<R> delete(R value, Geometry geometry, boolean all) {
+        return delete(Entry.entry(value, geometry), all);
+    }
+
     public RTree<R> delete(R value, Geometry geometry) {
-        return delete(Entry.entry(value, geometry));
+        return delete(Entry.entry(value, geometry), false);
     }
 
     /**
@@ -400,16 +404,21 @@ public final class RTree<R> {
      * @return a new immutable R-tree without one instance of the specified
      *         entry
      */
-    public RTree<R> delete(Entry<R> entry) {
+    public RTree<R> delete(Entry<R> entry, boolean all) {
         if (root.isPresent()) {
-            NodeAndEntries<R> nodeAndEntries = root.get().delete(entry);
+            NodeAndEntries<R> nodeAndEntries = root.get().delete(entry, all);
             if (nodeAndEntries.node().isPresent() && nodeAndEntries.node().get() == root.get())
                 return this;
             else
-                return new RTree<R>(nodeAndEntries.node(), size - 1
-                        - nodeAndEntries.entries().size(), context).add(nodeAndEntries.entries());
+                return new RTree<R>(nodeAndEntries.node(), size - nodeAndEntries.countDeleted()
+                        - nodeAndEntries.entriesToAdd().size(), context).add(nodeAndEntries
+                        .entriesToAdd());
         } else
             return this;
+    }
+
+    public RTree<R> delete(Entry<R> entry) {
+        return delete(entry, false);
     }
 
     /**

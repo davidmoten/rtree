@@ -74,16 +74,23 @@ final class Leaf<T> implements Node<T> {
     }
 
     @Override
-    public NodeAndEntries<T> delete(Entry<T> entry) {
+    public NodeAndEntries<T> delete(Entry<T> entry, boolean all) {
         if (!entries.contains(entry)) {
-            return new NodeAndEntries<T>(Optional.of(this), Collections.<Entry<T>> emptyList());
+            return new NodeAndEntries<T>(Optional.of(this), Collections.<Entry<T>> emptyList(), 0);
         } else {
-            final List<Entry<T>> entries2 = Util.remove(entries, entry);
+            final List<Entry<T>> entries2 = new ArrayList<Entry<T>>(entries);
+            entries2.remove(entry);
+            int numDeleted = 1;
+            // keep deleting if all specified
+            while (all && entries2.remove(entry))
+                numDeleted += 1;
+
             if (entries2.size() >= context.minChildren()) {
                 Leaf<T> node = new Leaf<T>(entries2, context);
-                return new NodeAndEntries<T>(of(node), Collections.<Entry<T>> emptyList());
+                return new NodeAndEntries<T>(of(node), Collections.<Entry<T>> emptyList(),
+                        numDeleted);
             } else {
-                return new NodeAndEntries<T>(Optional.<Node<T>> absent(), entries2);
+                return new NodeAndEntries<T>(Optional.<Node<T>> absent(), entries2, numDeleted);
             }
         }
     }

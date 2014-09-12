@@ -68,9 +68,11 @@ public final class Util {
         return result;
     }
 
-    static <T> List<T> remove(List<T> list, T element) {
+    static <T> List<T> remove(List<T> list, T element, boolean all) {
         final ArrayList<T> result = new ArrayList<T>(list);
         result.remove(element);
+        while (all && result.remove(element))
+            ;
         return result;
     }
 

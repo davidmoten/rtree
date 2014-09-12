@@ -292,7 +292,7 @@ public class RTreeTest {
     }
 
     @Test
-    public void testDeleteOneFromLargeTree() {
+    public void testDeleteOneFromLargeTreeThenDeleteAllAndEnsureEmpty() {
         int n = 10000;
         RTree<Object> tree = createRandomRTree(n).add(e(1)).add(e(2)).delete(e(1));
         assertEquals(n + 1, (int) tree.entries().count().toBlocking().single());
@@ -303,6 +303,14 @@ public class RTreeTest {
         }
         assertEquals(0, (int) tree.entries().count().toBlocking().single());
         assertTrue(tree.isEmpty());
+    }
+
+    @Test
+    public void testDeleteOnlyDeleteOneIfThereAreMoreThanMaxChildren() {
+        Entry<Object> e1 = e(1);
+        int count = RTree.maxChildren(4).create().add(e1).add(e1).add(e1).add(e1).add(e1)
+                .delete(e1).search(e1.geometry().mbr()).count().toBlocking().single();
+        assertEquals(4, count);
     }
 
     @Test
@@ -320,7 +328,7 @@ public class RTreeTest {
                 .add(entry("MARY", point(97, 125)));
     }
 
-    @Test(timeout=2000)
+    @Test(timeout = 2000)
     public void testUnsubscribe() {
         RTree<Object> tree = createRandomRTree(1000);
         assertEquals(0, (int) tree.entries().take(0).count().toBlocking().single());
