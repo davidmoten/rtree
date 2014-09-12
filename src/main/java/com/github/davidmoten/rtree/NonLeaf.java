@@ -101,6 +101,8 @@ final class NonLeaf<T> implements Node<T> {
                     removeTheseNodes.add(child);
                     addTheseEntries.addAll(result.entriesToAdd());
                     countDeleted += result.countDeleted();
+                    if (!all)
+                        break;
                 }
             }
         }
