@@ -298,8 +298,13 @@ public class RTreeTest {
         assertEquals(n + 1, (int) tree.entries().count().toBlocking().single());
         assertFalse(tree.entries().contains(e(1)).toBlocking().single());
         assertTrue(tree.entries().contains(e(2)).toBlocking().single());
+        n++;
+        assertEquals(n, tree.size());
+
         for (Entry<Object> entry : tree.entries().toBlocking().toIterable()) {
             tree = tree.delete(entry);
+            n--;
+            assertEquals(n, tree.size());
         }
         assertEquals(0, (int) tree.entries().count().toBlocking().single());
         assertTrue(tree.isEmpty());

@@ -421,6 +421,13 @@ public final class RTree<R> {
         return delete(entry, false);
     }
 
+    public RTree<R> delete(Iterable<Entry<R>> entries) {
+        RTree<R> tree = this;
+        for (Entry<R> entry : entries)
+            tree = tree.delete(entry);
+        return tree;
+    }
+
     /**
      * <p>
      * Returns an Observable sequence of {@link Entry} that satisfy the given
