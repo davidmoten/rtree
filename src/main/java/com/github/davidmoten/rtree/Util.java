@@ -63,16 +63,9 @@ public final class Util {
     }
 
     static <T> List<T> add(List<T> list, T element) {
-        final ArrayList<T> result = new ArrayList<T>(list);
+        final ArrayList<T> result = new ArrayList<T>(list.size() + 2);
+        result.addAll(list);
         result.add(element);
-        return result;
-    }
-
-    static <T> List<T> remove(List<T> list, T element, boolean all) {
-        final ArrayList<T> result = new ArrayList<T>(list);
-        result.remove(element);
-        while (all && result.remove(element))
-            ;
         return result;
     }
 
@@ -82,16 +75,8 @@ public final class Util {
         return result;
     }
 
-    static <T> List<? extends T> replaceOld(List<? extends T> list, T node,
-            List<? extends T> replacements) {
-        final ArrayList<T> result = new ArrayList<T>(list);
-        result.remove(node);
-        result.addAll(replacements);
-        return result;
-    }
-
     static <T> List<? extends T> replace(List<? extends T> list, T element, List<T> replacements) {
-        List<T> list2 = new ArrayList<T>();
+        List<T> list2 = new ArrayList<T>(list.size() + replacements.size());
         for (T node : list)
             if (node != element)
                 list2.add(node);
