@@ -92,6 +92,7 @@ final class NonLeaf<T> implements Node<T> {
                         if (!all)
                             break;
                     }
+                    // else nothing was deleted from that child
                 } else {
                     removeTheseNodes.add(child);
                     addTheseEntries.addAll(result.entriesToAdd());
