@@ -1,5 +1,9 @@
 package com.github.davidmoten.rtree;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -15,7 +19,7 @@ public class BenchmarksRTree {
 
     private final List<Entry<Object>> entries = GreekEarthquakes.entriesList();
 
-    private final List<Entry<Object>> some = RTreeTest.createRandomEntries(1000);
+    private final List<Entry<Object>> some = entries1000();
 
     private final RTree<Object> defaultTreeM4 = RTree.maxChildren(4).create().add(entries);
 
@@ -242,4 +246,22 @@ public class BenchmarksRTree {
         tree.add(new Object(), RTreeTest.random());
     }
 
+    private static List<Entry<Object>> entries1000() {
+        List<Entry<Object>> list = new ArrayList<Entry<Object>>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                BenchmarksRTree.class.getResourceAsStream("/1000.txt")));
+        String line;
+        try {
+            while ((line = br.readLine()) != null) {
+                String[] items = line.split(" ");
+                double x = Double.parseDouble(items[0]);
+                double y = Double.parseDouble(items[1]);
+                list.add(Entry.entry(new Object(), Geometries.rectangle(x, y, x + 1, y + 1)));
+            }
+            br.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
 }

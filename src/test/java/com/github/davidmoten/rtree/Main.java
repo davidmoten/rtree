@@ -26,7 +26,9 @@ public class Main {
 
             // tree.add(new Object(), Geometries.point(40, 27));
 
-            tree.delete(list);
+            // tree.delete(list);
+
+            tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).toList().toBlocking().single();
         }
     }
 }
