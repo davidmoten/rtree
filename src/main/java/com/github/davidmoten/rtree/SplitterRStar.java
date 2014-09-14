@@ -30,7 +30,7 @@ public class SplitterRStar implements Splitter {
         // sort nodes into increasing x, calculate min overlap where both groups
         // have more than minChildren
 
-        Map<SortType, List<ListPair<T>>> map = new HashMap<SortType, List<ListPair<T>>>(4, 1.0f);
+        Map<SortType, List<ListPair<T>>> map = new HashMap<SortType, List<ListPair<T>>>(5, 1.0f);
         map.put(SortType.X_LOWER, getPairs(minSize, sort(items, INCREASING_X_LOWER)));
         map.put(SortType.X_UPPER, getPairs(minSize, sort(items, INCREASING_X_UPPER)));
         map.put(SortType.Y_LOWER, getPairs(minSize, sort(items, INCREASING_Y_LOWER)));
@@ -39,7 +39,6 @@ public class SplitterRStar implements Splitter {
         // compute S the sum of all margin-values of the lists above
         // the list with the least S is then used to find minimum overlap
 
-        List<SortType> sortTypes = Arrays.asList(SortType.values());
         SortType leastMarginSumSortType = Collections.min(sortTypes, marginSumComparator(map));
         List<ListPair<T>> pairs = map.get(leastMarginSumSortType);
 
@@ -49,6 +48,9 @@ public class SplitterRStar implements Splitter {
     private static enum SortType {
         X_LOWER, X_UPPER, Y_LOWER, Y_UPPER;
     }
+
+    private static final List<SortType> sortTypes = Collections.unmodifiableList(Arrays
+            .asList(SortType.values()));
 
     private static <T extends HasGeometry> Comparator<SortType> marginSumComparator(
             final Map<SortType, List<ListPair<T>>> map) {
