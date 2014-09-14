@@ -2,9 +2,20 @@ package com.github.davidmoten.rtree.geometry;
 
 import java.util.List;
 
+/**
+ *
+ * Not thread safe.
+ *
+ * @param <T>
+ *            list type
+ */
 public final class ListPair<T extends HasGeometry> {
     private final Group<T> group1;
     private final Group<T> group2;
+    // these two non-final variables mean that this class is not thread-safe
+    // because access to them is not synchronized
+    private Float areaSum = null;
+    private Float marginSum = null;
 
     public ListPair(List<T> list1, List<T> list2) {
         this.group1 = new Group<T>(list1);
@@ -20,11 +31,15 @@ public final class ListPair<T extends HasGeometry> {
     }
 
     public float areaSum() {
-        return group1.geometry().mbr().area() + group2.geometry().mbr().area();
+        if (areaSum == null)
+            areaSum = group1.geometry().mbr().area() + group2.geometry().mbr().area();
+        return areaSum;
     }
 
     public float marginSum() {
-        return group1.geometry().mbr().perimeter() + group2.geometry().mbr().perimeter();
+        if (marginSum == null)
+            marginSum = group1.geometry().mbr().perimeter() + group2.geometry().mbr().perimeter();
+        return marginSum;
     }
 
 }
