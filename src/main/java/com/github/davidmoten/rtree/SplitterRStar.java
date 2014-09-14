@@ -70,7 +70,7 @@ public class SplitterRStar implements Splitter {
     }
 
     private static <T extends HasGeometry> List<ListPair<T>> getPairs(int minSize, List<T> list) {
-        List<ListPair<T>> pairs = new ArrayList<ListPair<T>>();
+        List<ListPair<T>> pairs = new ArrayList<ListPair<T>>(list.size() - 2 * minSize + 1);
         for (int i = minSize; i < list.size() - minSize; i++) {
             List<T> list1 = list.subList(0, i);
             List<T> list2 = list.subList(i, list.size());
