@@ -12,14 +12,15 @@ import java.util.List;
 public final class ListPair<T extends HasGeometry> {
     private final Group<T> group1;
     private final Group<T> group2;
-    // these two non-final variables mean that this class is not thread-safe
+    // these non-final variable mean that this class is not thread-safe
     // because access to them is not synchronized
     private Float areaSum = null;
-    private Float marginSum = null;
+    private final Float marginSum;
 
     public ListPair(List<T> list1, List<T> list2) {
         this.group1 = new Group<T>(list1);
         this.group2 = new Group<T>(list2);
+        this.marginSum = group1.geometry().mbr().perimeter() + group2.geometry().mbr().perimeter();
     }
 
     public Group<T> group1() {
@@ -37,8 +38,6 @@ public final class ListPair<T extends HasGeometry> {
     }
 
     public float marginSum() {
-        if (marginSum == null)
-            marginSum = group1.geometry().mbr().perimeter() + group2.geometry().mbr().perimeter();
         return marginSum;
     }
 
