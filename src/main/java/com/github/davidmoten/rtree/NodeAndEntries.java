@@ -10,7 +10,7 @@ import com.google.common.base.Optional;
  * @param <T>
  *            entry type
  */
-public class NodeAndEntries<T> {
+class NodeAndEntries<T> {
 
     private final Optional<? extends Node<T>> node;
     private final List<Entry<T>> entries;
