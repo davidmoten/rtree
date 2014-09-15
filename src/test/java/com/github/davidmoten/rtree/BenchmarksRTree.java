@@ -170,6 +170,11 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
+    public void rStarTreeSearchOf1000PointsMaxChildren004() {
+        search(smallStarTreeM4);
+    }
+
+    @Benchmark
     public void rStarTreeSearchOf1000PointsMaxChildren010() {
         search(smallStarTreeM10);
     }
