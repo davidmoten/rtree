@@ -75,7 +75,7 @@ final class Leaf<T> implements Node<T> {
     @Override
     public NodeAndEntries<T> delete(Entry<T> entry, boolean all) {
         if (!entries.contains(entry)) {
-            return new NodeAndEntries<T>(Optional.of(this), Collections.<Entry<T>> emptyList(), 0);
+            return new NodeAndEntries<T>(of(this), Collections.<Entry<T>> emptyList(), 0);
         } else {
             final List<Entry<T>> entries2 = new ArrayList<Entry<T>>(entries);
             entries2.remove(entry);
