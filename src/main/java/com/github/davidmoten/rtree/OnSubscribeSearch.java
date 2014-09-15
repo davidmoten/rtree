@@ -1,6 +1,6 @@
 package com.github.davidmoten.rtree;
 
-import java.util.concurrent.atomic.AtomicLongFieldUpdater;
+import java.util.concurrent.atomic.AtomicLong;
 
 import rx.Observable.OnSubscribe;
 import rx.Producer;
@@ -31,11 +31,7 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
         private final Node<T> node;
         private final Func1<? super Geometry, Boolean> condition;
         private volatile ImmutableStack<NodePosition<T>> stack;
-
-        private volatile long requested = 0;
-        @SuppressWarnings("rawtypes")
-        private static final AtomicLongFieldUpdater<SearchProducer> REQUESTED_UPDATER = AtomicLongFieldUpdater
-                .newUpdater(SearchProducer.class, "requested");
+        private final AtomicLong requested = new AtomicLong(0);
 
         SearchProducer(Node<T> node, Func1<? super Geometry, Boolean> condition,
                 Subscriber<? super Entry<T>> subscriber) {
@@ -48,7 +44,7 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
         @Override
         public void request(long n) {
             try {
-                if (REQUESTED_UPDATER.get(this) == Long.MAX_VALUE)
+                if (requested.get() == Long.MAX_VALUE)
                     // already started with fast path
                     return;
                 else if (n == Long.MAX_VALUE) {
@@ -63,7 +59,7 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
         }
 
         private void requestAll() {
-            REQUESTED_UPDATER.set(this, Long.MAX_VALUE);
+            requested.set(Long.MAX_VALUE);
             node.search(condition, subscriber);
             if (!subscriber.isUnsubscribed())
                 subscriber.onCompleted();
@@ -73,10 +69,10 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
             // back pressure path
             // this algorithm copied roughly from
             // rxjava-core/OnSubscribeFromIterable.java
-            long previousCount = REQUESTED_UPDATER.getAndAdd(this, n);
+            long previousCount = requested.getAndAdd(n);
             if (previousCount == 0) {
                 while (true) {
-                    long r = requested;
+                    long r = requested.get();
                     long numToEmit = r;
 
                     stack = Backpressure.search(condition, subscriber, stack, numToEmit);
@@ -85,7 +81,7 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
                             subscriber.onCompleted();
                         else
                             return;
-                    } else if (REQUESTED_UPDATER.addAndGet(this, -r) == 0)
+                    } else if (requested.addAndGet(-r) == 0)
                         return;
                 }
             }
