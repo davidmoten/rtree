@@ -56,16 +56,20 @@ final class Leaf<T> implements Node<T> {
 
     @Override
     public List<Node<T>> add(Entry<T> entry) {
-        final List<Entry<T>> children2 = Util.add(entries, entry);
-        if (children2.size() <= context.maxChildren())
-            return Collections.singletonList((Node<T>) new Leaf<T>(children2, context));
+        final List<Entry<T>> entries2 = Util.add(entries, entry);
+        if (entries2.size() <= context.maxChildren())
+            return Collections.singletonList((Node<T>) new Leaf<T>(entries2, context));
         else {
-            ListPair<Entry<T>> pair = context.splitter().split(children2, context.minChildren());
-            List<Node<T>> list2 = new ArrayList<Node<T>>();
-            list2.add(new Leaf<T>(pair.group1().list(), context));
-            list2.add(new Leaf<T>(pair.group2().list(), context));
-            return list2;
+            ListPair<Entry<T>> pair = context.splitter().split(entries2, context.minChildren());
+            return makeLeaves(pair);
         }
+    }
+
+    private List<Node<T>> makeLeaves(ListPair<Entry<T>> pair) {
+        List<Node<T>> list = new ArrayList<Node<T>>();
+        list.add(new Leaf<T>(pair.group1().list(), context));
+        list.add(new Leaf<T>(pair.group2().list(), context));
+        return list;
     }
 
     @Override

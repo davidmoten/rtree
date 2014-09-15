@@ -66,11 +66,15 @@ final class NonLeaf<T> implements Node<T> {
         else {
             ListPair<? extends Node<T>> pair = context.splitter().split(children2,
                     context.minChildren());
-            List<Node<T>> list2 = new ArrayList<Node<T>>();
-            list2.add(new NonLeaf<T>(pair.group1().list(), context));
-            list2.add(new NonLeaf<T>(pair.group2().list(), context));
-            return list2;
+            return makeNonLeaves(pair);
         }
+    }
+
+    private List<Node<T>> makeNonLeaves(ListPair<? extends Node<T>> pair) {
+        List<Node<T>> list = new ArrayList<Node<T>>();
+        list.add(new NonLeaf<T>(pair.group1().list(), context));
+        list.add(new NonLeaf<T>(pair.group2().list(), context));
+        return list;
     }
 
     @Override
@@ -85,6 +89,8 @@ final class NonLeaf<T> implements Node<T> {
                 final NodeAndEntries<T> result = child.delete(entry, all);
                 if (result.node().isPresent()) {
                     if (result.node().get() != child) {
+                        // deletion occurred and child is above minChildren so
+                        // we update it
                         addTheseNodes.add(result.node().get());
                         removeTheseNodes.add(child);
                         addTheseEntries.addAll(result.entriesToAdd());
@@ -94,6 +100,8 @@ final class NonLeaf<T> implements Node<T> {
                     }
                     // else nothing was deleted from that child
                 } else {
+                    // deletion occurred and brought child below minChildren
+                    // so we redistribute its entries
                     removeTheseNodes.add(child);
                     addTheseEntries.addAll(result.entriesToAdd());
                     countDeleted += result.countDeleted();

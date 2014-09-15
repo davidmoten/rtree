@@ -26,6 +26,6 @@ public class LeafTest {
         Rectangle r2 = Geometries.rectangle(1, 2, 4, 6);
         Rectangle r = new Leaf<Object>(Arrays.asList(Entry.entry(new Object(), r1),
                 Entry.entry(new Object(), r2)), context).geometry().mbr();
-        assertEquals(Geometries.rectangle(0, 1, 4, 6), r);
+        assertEquals(r1.add(r2), r);
     }
 }
