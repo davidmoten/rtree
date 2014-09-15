@@ -69,6 +69,9 @@ final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
             // back pressure path
             // this algorithm copied roughly from
             // rxjava-core/OnSubscribeFromIterable.java
+
+            // rxjava used AtomicLongFieldUpdater instead of AtomicLong
+            // but benchmarks showed no benefit here so reverted to AtomicLong
             long previousCount = requested.getAndAdd(n);
             if (previousCount == 0) {
                 while (true) {
