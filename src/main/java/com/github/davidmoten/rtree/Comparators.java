@@ -101,7 +101,7 @@ public final class Comparators {
      *            the entry type
      * @return a comparator to sort by ascending distance from the rectangle
      */
-    public static final <S> Comparator<Entry<S>> ascendingDistance(final Rectangle r) {
+    public static <S> Comparator<Entry<S>> ascendingDistance(final Rectangle r) {
         return new Comparator<Entry<S>>() {
             @Override
             public int compare(Entry<S> e1, Entry<S> e2) {
@@ -109,5 +109,5 @@ public final class Comparators {
             }
         };
     }
-    
+
 }
