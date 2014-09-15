@@ -79,6 +79,14 @@ final class NonLeaf<T> implements Node<T> {
 
     @Override
     public NodeAndEntries<T> delete(Entry<T> entry, boolean all) {
+        // the result of performing a delete of the given entry from this node
+        // will be that zero or more entries will be needed to be added back to
+        // the root of the tree (because num entries of their node fell below
+        // minChildren),
+        // zero or more children will need to be removed from this node,
+        // zero or more nodes to be added as children to this node(because
+        // entries have been deleted from them and they still have enough
+        // members to be active)
         List<Entry<T>> addTheseEntries = new ArrayList<Entry<T>>();
         List<Node<T>> removeTheseNodes = new ArrayList<Node<T>>();
         List<Node<T>> addTheseNodes = new ArrayList<Node<T>>();
