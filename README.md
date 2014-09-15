@@ -193,10 +193,10 @@ How to configure the R-tree for best performance
 --------------------------------------------------
 Check out the benchmarks below, but I recommend you do your own benchmarks because every data set will behave differently. If you don't want to benchmark then use the defaults. General rules based on the benchmarks:
 
-* for data sets of O(10^3) entries use the default R-tree (quadratic splitter with maxChildren=4)
-* for data sets of O(10^4) entries or more use the star R-tree (R*-tree heuristics with maxChildren=10 by default)
+* for data sets of <5,000 entries use the default R-tree (quadratic splitter with maxChildren=4)
+* for data sets of 5,000 entries or more use the star R-tree (R*-tree heuristics with maxChildren=10 by default)
 
-Watch out though, the benchmark data sets had quite specific characteristics. The 1000 entry dataset was randomly generated and the *Greek* dataset was earthquake data with its own clustering characteristics. 
+Watch out though, the benchmark data sets had quite specific characteristics. The 1000 entry dataset was randomly generated (so is more or less uniformly distributed) and the *Greek* dataset was earthquake data with its own clustering characteristics. 
 
 
 How do I just get an Iterable back from a search?
