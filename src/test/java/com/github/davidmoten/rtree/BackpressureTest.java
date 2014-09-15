@@ -1,6 +1,13 @@
 package com.github.davidmoten.rtree;
 
+import static com.github.davidmoten.rtree.RTreeTest.e;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -104,6 +111,110 @@ public class BackpressureTest {
         Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);
         ImmutableStack<NodePosition<Object>> stack2 = Backpressure.search(condition, sub, stack,1);
         assertTrue(stack2.isEmpty());
+    }
+    
+    @Test
+    public void testBackpressureIterateWhenNodeHasMaxChildrenAndIsRoot() {
+        Entry<Object> e1 = RTreeTest.e(1);
+        List<Entry<Object>> list = Arrays.asList(e1, e1, e1, e1);
+        RTree<Object> tree = RTree.star().maxChildren(4).create().add(list);
+        HashSet<Entry<Object>> expected = new HashSet<Entry<Object>>(list);
+        final HashSet<Entry<Object>> found = new HashSet<Entry<Object>>();
+        tree.entries().subscribe(new Subscriber<Entry<Object>>() {
+
+            @Override
+            public void onStart() {
+                request(1);
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Entry<Object> t) {
+                found.add(t);
+                request(1);
+            }
+        });
+        assertEquals(expected, found);
+    }
+    
+    @Test
+    public void testBackpressureIterateWhenNodeHasMaxChildrenAndIsNotRoot() {
+        Entry<Object> e1 = RTreeTest.e(1);
+        List<Entry<Object>> list = new ArrayList<Entry<Object>>();
+        for (int i=1;i<=17;i++)
+            list.add(e1);
+        RTree<Object> tree = RTree.star().maxChildren(4).create().add(list);
+        HashSet<Entry<Object>> expected = new HashSet<Entry<Object>>(list);
+        final HashSet<Entry<Object>> found = new HashSet<Entry<Object>>();
+        tree.entries().subscribe(new Subscriber<Entry<Object>>() {
+
+            @Override
+            public void onStart() {
+                request(1);
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Entry<Object> t) {
+                found.add(t);
+                request(1);
+            }
+        });
+        assertEquals(expected, found);
+    }
+    
+    @Test
+    public void testBackpressureIterateWhenConditionFailsAgainstNonLeafNode() {
+        Entry<Object> e1 = e(1);
+        List<Entry<Object>> list = new ArrayList<Entry<Object>>();
+        for (int i=1;i<=17;i++)
+            list.add(e1);
+        list.add(e(2));
+        RTree<Object> tree = RTree.star().maxChildren(4).create().add(list);
+        HashSet<Entry<Object>> expected = new HashSet<Entry<Object>>(list);
+        final HashSet<Entry<Object>> found = new HashSet<Entry<Object>>();
+        tree.entries().subscribe(new Subscriber<Entry<Object>>() {
+
+            @Override
+            public void onStart() {
+                request(1);
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Entry<Object> t) {
+                found.add(t);
+                request(1);
+            }
+        });
+        assertEquals(expected, found);
     }
 
     
