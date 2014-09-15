@@ -29,7 +29,7 @@ final class Backpressure {
                     NodePosition<T> previous = stack2.peek();
                     stack = stack2.pop().push(previous.nextPosition());
                 }
-            } else if ((np.node() instanceof NonLeaf)) {
+            } else if (np.node() instanceof NonLeaf) {
                 // handle non-leaf
                 Node<T> child = ((NonLeaf<T>) np.node()).children().get(np.position());
                 if (condition.call(child.geometry())) {
