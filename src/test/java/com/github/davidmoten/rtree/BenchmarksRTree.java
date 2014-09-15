@@ -208,7 +208,8 @@ public class BenchmarksRTree {
     }
 
     private void search(RTree<Object> tree) {
-        tree.search(Geometries.rectangle(500, 500, 510, 510)).subscribe();
+        // returns 10 results
+        tree.search(Geometries.rectangle(500, 500, 630, 630)).subscribe();
     }
 
     private void searchGreek(RTree<Object> tree) {
@@ -262,6 +263,15 @@ public class BenchmarksRTree {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println("list.size=" + list.size());
         return list;
+    }
+
+    public static void main(String[] args) {
+        RTree<Object> tree = RTree.create().add(entries1000());
+        System.out.println();
+        System.out.println(tree.search(Geometries.rectangle(500, 500, 630, 630)).count()
+                .toBlocking().single());
+
     }
 }
