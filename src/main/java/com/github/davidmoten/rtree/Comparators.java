@@ -21,7 +21,7 @@ public final class Comparators {
     /**
      * Compares the sum of the areas of two ListPairs.
      */
-    public static Comparator<ListPair<?>> areaPairComparator = new Comparator<ListPair<?>>() {
+    public static final Comparator<ListPair<?>> areaPairComparator = new Comparator<ListPair<?>>() {
 
         @Override
         public int compare(ListPair<?> p1, ListPair<?> p2) {
