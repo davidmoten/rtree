@@ -41,6 +41,8 @@ public class BenchmarksRTree {
 
     private final RTree<Object> smallDefaultTreeM10 = RTree.maxChildren(10).create().add(some);
 
+    private final RTree<Object> smallStarTreeM4 = RTree.maxChildren(4).star().create().add(some);
+
     private final RTree<Object> smallStarTreeM10 = RTree.maxChildren(10).star().create().add(some);
 
     private final RTree<Object> smallDefaultTreeM32 = RTree.maxChildren(32).create().add(some);
@@ -155,6 +157,11 @@ public class BenchmarksRTree {
     @Benchmark
     public void defaultRTreeSearchOf1000PointsMaxChildren010() {
         search(smallDefaultTreeM10);
+    }
+
+    @Benchmark
+    public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren004() {
+        insert(smallStarTreeM4);
     }
 
     @Benchmark
