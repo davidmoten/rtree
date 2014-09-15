@@ -3,7 +3,7 @@ rtree
 
 In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive processing of search results. 
 
-Status: *beta*, deployed to Maven Central
+Status: *released to Maven Central*
 
 An [R-tree](http://en.wikipedia.org/wiki/R-tree) is a commonly used spatial index.
 
