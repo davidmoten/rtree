@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.junit.Test;
@@ -365,6 +366,16 @@ public class RTreeTest {
         RTree<Object> tree = create(3, 0);
         tree = tree.add(123, Geometries.point(1, 2)).delete(123, Geometries.point(1, 2));
         assertEquals(0, (int) tree.entries().count().toBlocking().single());
+    }
+
+    @Test
+    public void testBackpressure() {
+        List<Entry<Object>> list = Utilities.entries1000();
+        RTree<Object> tree = RTree.star().create().add(list);
+        HashSet<Entry<Object>> expected = new HashSet<Entry<Object>>(list);
+        HashSet<Entry<Object>> found = new HashSet<Entry<Object>>(tree.entries().toList()
+                .toBlocking().single());
+        assertEquals(expected, found);
     }
 
     private static Entry<Object> e(int n) {
