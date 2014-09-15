@@ -116,6 +116,7 @@ public class BackpressureTest {
     @Test
     public void testBackpressureIterateWhenNodeHasMaxChildrenAndIsRoot() {
         Entry<Object> e1 = RTreeTest.e(1);
+        @SuppressWarnings("unchecked")
         List<Entry<Object>> list = Arrays.asList(e1, e1, e1, e1);
         RTree<Object> tree = RTree.star().maxChildren(4).create().add(list);
         HashSet<Entry<Object>> expected = new HashSet<Entry<Object>>(list);

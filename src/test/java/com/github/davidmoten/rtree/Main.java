@@ -20,6 +20,7 @@ public class Main {
         RTree<Object> tree = RTree.maxChildren(maxChildren).create().add(entries);
         List<Entry<Object>> list = tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).toList()
                 .toBlocking().single();
+        System.out.println(list.size());
         while (true) {
             // tree.search(Geometries.rectangle(40, 27.0, 40.5,
             // 27.5)).subscribe();
