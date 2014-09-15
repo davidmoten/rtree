@@ -191,10 +191,13 @@ D
 
 How to configure the R-tree for best performance
 --------------------------------------------------
-Check out the benchmarks below, but even better do your own benchmarks. Here are some quick points
-* Quadratic split (the default) is faster for insert
-* Quadratic split is faster for search with low maxChildren and smaller numbers of points (~1000).
-* R*-tree is 50% faster for search  for larger numbers of points (>10K) but has slower insert
+Check out the benchmarks below, but I recommend you do your own benchmarks because every data set will behave differently. If you don't want to benchmark then use the defaults. General rules based on the benchmarks:
+
+* for data sets of O(10^3) entries use the default R-tree (quadratic splitter with maxChildren=4)
+* for data sets of O(10^4) entries or more use the star R-tree (R*-tree heuristics with maxChildren=10 by default)
+
+Watch out though, the benchmark data sets had quite specific characteristics. The 1000 entry dataset was randomly generated and the *Greek* dataset was earthquake data with its own clustering characteristics. 
+
 
 How do I just get an Iterable back from a search?
 ---------------------------------------------------------
