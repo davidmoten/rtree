@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import rx.Subscriber;
 import rx.functions.Functions;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
@@ -370,11 +371,34 @@ public class RTreeTest {
 
     @Test
     public void testBackpressure() {
-        List<Entry<Object>> list = Utilities.entries1000();
-        RTree<Object> tree = RTree.star().create().add(list);
+        Entry<Object> e1 = e(1);
+        List<Entry<Object>> list = Arrays.asList(e1, e1, e1, e1);
+        RTree<Object> tree = RTree.star().maxChildren(4).create().add(list);
         HashSet<Entry<Object>> expected = new HashSet<Entry<Object>>(list);
-        HashSet<Entry<Object>> found = new HashSet<Entry<Object>>(tree.entries().toList()
-                .toBlocking().single());
+        final HashSet<Entry<Object>> found = new HashSet<Entry<Object>>();
+        tree.entries().subscribe(new Subscriber<Entry<Object>>() {
+
+            @Override
+            public void onStart() {
+                request(1);
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Entry<Object> t) {
+                found.add(t);
+                request(1);
+            }
+        });
         assertEquals(expected, found);
     }
 
