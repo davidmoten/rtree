@@ -10,10 +10,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.junit.Test;
 
+import rx.Subscriber;
 import rx.functions.Functions;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
@@ -222,6 +224,38 @@ public class RTreeTest {
         RTree<Object> tree = RTree.splitter(new SplitterQuadratic()).maxChildren(4)
                 .selector(new SelectorMinimalAreaIncrease()).minChildren(1).create();
         testBuiltTree(tree);
+    }
+
+    @Test
+    public void testBaskpressureIterationForUpTo1000Entries() {
+        List<Entry<Object>> entries = Utilities.entries1000();
+        RTree<Object> tree = RTree.star().create();
+        for (int i = 1; i <= 1000; i++) {
+            tree = tree.add(entries.get(i - 1));
+            final HashSet<Entry<Object>> set = new HashSet<Entry<Object>>();
+            tree.entries().subscribe(new Subscriber<Entry<Object>>() {
+
+                @Override
+                public void onStart() {
+                    request(1);
+                }
+
+                @Override
+                public void onCompleted() {
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                }
+
+                @Override
+                public void onNext(Entry<Object> t) {
+                    set.add(t);
+                    request(1);
+                }
+            });
+            assertEquals(new HashSet<Entry<Object>>(entries.subList(0, i)), set);
+        }
     }
 
     private void testBuiltTree(RTree<Object> tree) {

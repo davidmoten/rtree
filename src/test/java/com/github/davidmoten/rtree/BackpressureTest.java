@@ -109,10 +109,10 @@ public class BackpressureTest {
         ImmutableStack<NodePosition<Object>> stack = ImmutableStack.<NodePosition<Object>> empty()
                 .push(np);
         Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);
-        ImmutableStack<NodePosition<Object>> stack2 = Backpressure.search(condition, sub, stack,1);
+        ImmutableStack<NodePosition<Object>> stack2 = Backpressure.search(condition, sub, stack, 1);
         assertTrue(stack2.isEmpty());
     }
-    
+
     @Test
     public void testBackpressureIterateWhenNodeHasMaxChildrenAndIsRoot() {
         Entry<Object> e1 = RTreeTest.e(1);
@@ -146,12 +146,12 @@ public class BackpressureTest {
         });
         assertEquals(expected, found);
     }
-    
+
     @Test
     public void testBackpressureIterateWhenNodeHasMaxChildrenAndIsNotRoot() {
         Entry<Object> e1 = RTreeTest.e(1);
         List<Entry<Object>> list = new ArrayList<Entry<Object>>();
-        for (int i=1;i<=17;i++)
+        for (int i = 1; i <= 17; i++)
             list.add(e1);
         RTree<Object> tree = RTree.star().maxChildren(4).create().add(list);
         HashSet<Entry<Object>> expected = new HashSet<Entry<Object>>(list);
@@ -181,12 +181,12 @@ public class BackpressureTest {
         });
         assertEquals(expected, found);
     }
-    
+
     @Test
     public void testBackpressureIterateWhenConditionFailsAgainstNonLeafNode() {
         Entry<Object> e1 = e(1);
         List<Entry<Object>> list = new ArrayList<Entry<Object>>();
-        for (int i=1;i<=17;i++)
+        for (int i = 1; i <= 17; i++)
             list.add(e1);
         list.add(e(2));
         RTree<Object> tree = RTree.star().maxChildren(4).create().add(list);
@@ -218,5 +218,4 @@ public class BackpressureTest {
         assertEquals(expected, found);
     }
 
-    
 }
