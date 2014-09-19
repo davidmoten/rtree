@@ -361,10 +361,14 @@ public final class RTree<R> {
     }
 
     /**
-     * Returns a new R-tree with the given entries deleted.
+     * Returns a new R-tree with the given entries deleted. If <code>>all</code>
+     * is false deletes only one if exists. If <code>>all</code> is true deletes
+     * all matching entries.
      * 
      * @param entries
      *            entries to delete
+     * @param all
+     *            if false deletes one if exists else deletes all
      * @return R-tree with entries deleted
      */
     public RTree<R> delete(Iterable<Entry<R>> entries, boolean all) {
@@ -375,14 +379,18 @@ public final class RTree<R> {
     }
 
     /**
-     * Delete one entry comprised of the given value and Geometry. This method
-     * has no effect if the entry is not present. The entry must match on both
-     * value and geometry to be deleted.
+     * If <code>>all</code> is false deletes one entry matching the given value
+     * and Geometry. If <code>>all</code> is true deletes all entries matching
+     * the given value and geometry. This method has no effect if the entry is
+     * not present. The entry must match on both value and geometry to be
+     * deleted.
      * 
      * @param value
      *            the value of the {@link Entry} to be deleted
      * @param geometry
      *            the geometry of the {@link Entry} to be deleted
+     * @param all
+     *            if false deletes one if exists else deletes all
      * @return a new immutable R-tree without one instance of the specified
      *         entry
      */
