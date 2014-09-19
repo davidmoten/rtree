@@ -21,7 +21,9 @@ public final class Entry<T> implements HasGeometry {
      * Constructor.
      * 
      * @param value
+     *            the value of the entry
      * @param geometry
+     *            the geometry of the value
      */
     public Entry(T value, Geometry geometry) {
         Preconditions.checkNotNull(geometry);
@@ -43,7 +45,7 @@ public final class Entry<T> implements HasGeometry {
     /**
      * Returns the value wrapped by this {@link Entry}.
      * 
-     * @return
+     * @return the entry value
      */
     public T value() {
         return value;

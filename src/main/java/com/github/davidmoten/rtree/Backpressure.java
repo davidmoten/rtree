@@ -6,6 +6,9 @@ import rx.functions.Func1;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.util.ImmutableStack;
 
+/**
+ * Utility methods for controlling backpressure of the tree search.
+ */
 final class Backpressure {
 
     static <T> ImmutableStack<NodePosition<T>> search(

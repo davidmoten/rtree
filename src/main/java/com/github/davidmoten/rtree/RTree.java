@@ -611,4 +611,14 @@ public final class RTree<R> {
         return size;
     }
 
+    /**
+     * Returns a {@link Context} containing the configuration of the RTree at
+     * the time of instantiation.
+     * 
+     * @return the configuration of the RTree prior to instantiation
+     */
+    public Context context() {
+        return context;
+    }
+
 }
