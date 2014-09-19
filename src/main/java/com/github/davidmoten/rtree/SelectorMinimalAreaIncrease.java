@@ -9,6 +9,10 @@ import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 
+/**
+ * Uses minimal area increase to select a node from a list.
+ *
+ */
 public final class SelectorMinimalAreaIncrease implements Selector {
 
     @SuppressWarnings("unchecked")
