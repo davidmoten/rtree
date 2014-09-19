@@ -33,6 +33,7 @@ Features
 * insert, delete are ```O(n)``` worst case
 * all search methods return lazy-evaluated streams offering efficiency and flexibility of functional style including functional composition and concurrency
 * balanced delete
+* structural sharing
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 * visualizer included
