@@ -28,6 +28,7 @@ public final class Context {
         Preconditions.checkNotNull(splitter);
         Preconditions.checkArgument(maxChildren > 2);
         Preconditions.checkArgument(minChildren >= 1);
+        Preconditions.checkArgument(minChildren < maxChildren);
         this.selector = selector;
         this.maxChildren = maxChildren;
         this.minChildren = minChildren;
