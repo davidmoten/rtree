@@ -523,7 +523,7 @@ public final class RTree<R> {
      *            max distance of returned entries from the rectangle
      * @param maxCount
      *            max number of entries to return
-     * @return nearest entries to maxCount
+     * @return nearest entries to maxCount, not in any particular order
      */
     public Observable<Entry<R>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
         return search(r, maxDistance).lift(
