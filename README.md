@@ -33,11 +33,11 @@ Features
 * insert, delete are ```O(n)``` worst case
 * all search methods return lazy-evaluated streams offering efficiency and flexibility of functional style including functional composition and concurrency
 * balanced delete
-* structural sharing
+* uses structural sharing
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 * visualizer included
-* R*-tree performs 730,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=10, minChildren=4)
+* R*-tree performs 700,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=10, minChildren=4). Insert at 140,000 entries per second.
 
 
 Number of points = 1000, max children per node 8, Quadratic split: 
@@ -57,7 +57,7 @@ Add this maven dependency to your pom.xml:
 <dependency>
   <groupId>com.github.davidmoten</groupId>
   <artifactId>rtree</artifactId>
-  <version>0.2.3</version>
+  <version>0.3.1</version>
 </dependency>
 ```
 ###Instantiate an R-Tree
