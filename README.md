@@ -38,7 +38,7 @@ Features
 * JMH benchmarks
 * visualizer included
 * R*-tree performs 700,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=10, minChildren=4). Insert at 140,000 entries per second.
-
+* requires java 1.6 or later
 
 Number of points = 1000, max children per node 8, Quadratic split: 
 
