@@ -18,10 +18,6 @@ public final class Util {
         // prevent instantiation
     }
 
-    static void instantiateForTestCoveragePurposesOnly() {
-        new Util();
-    }
-
     /**
      * Returns the minimum bounding rectangle of a number of items. Benchmarks
      * below indicate that when the number of items is >1 this method is more
