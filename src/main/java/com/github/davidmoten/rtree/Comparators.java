@@ -15,6 +15,10 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
  *
  */
 public final class Comparators {
+    
+    private Comparators() {
+        //prevent instantiation
+    }
 
     public static final Comparator<ListPair<?>> overlapListPairComparator = toComparator(Functions.overlapListPair);
 
