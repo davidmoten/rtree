@@ -19,10 +19,11 @@ public class EntryTest {
     public void testEquality() {
         assertEquals(Entry.entry(1, Geometries.point(0, 0)), Entry.entry(1, Geometries.point(0, 0)));
     }
-    
+
     @Test
     public void testEqualityWithGeometry() {
-        assertNotEquals(Entry.entry(1, Geometries.point(0, 0)), Entry.entry(1, Geometries.point(0, 1)));
+        assertNotEquals(Entry.entry(1, Geometries.point(0, 0)),
+                Entry.entry(1, Geometries.point(0, 1)));
     }
 
     @Test

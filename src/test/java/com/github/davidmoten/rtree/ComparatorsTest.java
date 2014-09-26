@@ -7,8 +7,8 @@ import com.github.davidmoten.util.TestingUtil;
 public class ComparatorsTest {
 
     @Test
-    public void  testConstructorIsPrivate() {
+    public void testConstructorIsPrivate() {
         TestingUtil.callConstructorAndCheckIsPrivate(Comparators.class);
     }
-    
+
 }
