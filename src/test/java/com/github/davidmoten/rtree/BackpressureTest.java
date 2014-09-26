@@ -18,8 +18,14 @@ import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.util.ImmutableStack;
+import com.github.davidmoten.util.TestingUtil;
 
 public class BackpressureTest {
+
+    @Test
+    public void testConstructorIsPrivate() {
+        TestingUtil.callConstructorAndCheckIsPrivate(Backpressure.class);
+    }
 
     @SuppressWarnings("unchecked")
     @Test

@@ -11,6 +11,10 @@ import com.github.davidmoten.util.ImmutableStack;
  */
 final class Backpressure {
 
+    private Backpressure() {
+        // prevent instantiation
+    }
+
     static <T> ImmutableStack<NodePosition<T>> search(
             final Func1<? super Geometry, Boolean> condition,
             final Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,

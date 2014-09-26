@@ -14,6 +14,10 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
  */
 public final class Functions {
 
+    private Functions() {
+        // prevent instantiation
+    }
+
     public static final Func1<ListPair<? extends HasGeometry>, Double> overlapListPair = new Func1<ListPair<? extends HasGeometry>, Double>() {
 
         @Override
