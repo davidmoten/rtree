@@ -28,6 +28,11 @@ public class ImmutableStackTest {
     public void testPeekOnEmptyStackThrowsException() {
         ImmutableStack.empty().peek();
     }
+    
+    @Test(expected = RuntimeException.class)
+    public void testRemoveThrowsException() {
+        ImmutableStack.empty().push(a).iterator().remove();
+    }
 
     @Test
     public void testStackIsEmptyAfterPushThenPop() {
@@ -71,5 +76,6 @@ public class ImmutableStackTest {
         assertEquals(a, it.next());
         assertFalse(it.hasNext());
     }
+    
     
 }

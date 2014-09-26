@@ -1,8 +1,7 @@
 package com.github.davidmoten.rtree;
 
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -68,4 +67,51 @@ public class RectangleTest {
     public void testInequalityWithNull() {
         assertFalse(rectangle(0, 0, 1, 1).equals(null));
     }
+    
+    @Test
+    public void testSimpleEquality() {
+    	Rectangle r = rectangle(0, 0, 2, 1);
+        Rectangle r2 = rectangle(0, 0, 2, 1);
+        
+        assertTrue(r.equals(r2));
+    }
+    
+    @Test
+    public void testSimpleInEquality1() {
+    	Rectangle r = rectangle(0, 0, 2, 1);
+        Rectangle r2 = rectangle(0, 0, 2, 2);
+        
+        assertFalse(r.equals(r2));
+    }
+    
+    @Test
+    public void testSimpleInEquality2() {
+    	Rectangle r = rectangle(0, 0, 2, 1);
+        Rectangle r2 = rectangle(1, 0, 2, 1);
+        
+        assertFalse(r.equals(r2));
+    }
+    
+    @Test
+    public void testSimpleInEquality3() {
+    	Rectangle r = rectangle(0, 0, 2, 1);
+        Rectangle r2 = rectangle(0, 1, 2, 1);
+        
+        assertFalse(r.equals(r2));
+    }
+    
+    @Test
+    public void testSimpleInEquality4() {
+    	Rectangle r = rectangle(0, 0, 2, 2);
+        Rectangle r2 = rectangle(0, 0, 1, 2);
+        
+        assertFalse(r.equals(r2));
+    }
+    
+    @Test
+    public void testGeometry() {
+    	Rectangle r = rectangle(0, 0, 2, 1);
+    	assertTrue(r.equals(r.geometry()));
+    }
+    
 }
