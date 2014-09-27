@@ -228,7 +228,7 @@ public class RTreeTest {
     }
 
     @Test
-    public void testBaskpressureIterationForUpTo1000Entries() {
+    public void testBackpressureIterationForUpTo1000Entries() {
         List<Entry<Object>> entries = Utilities.entries1000();
         RTree<Object> tree = RTree.star().create();
         for (int i = 1; i <= 1000; i++) {

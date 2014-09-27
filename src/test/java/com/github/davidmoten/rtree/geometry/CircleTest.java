@@ -89,14 +89,14 @@ public class CircleTest {
         Circle circle = circle(0, 0, 1);
         assertTrue(circle.distance(Geometries.rectangle(1, 1, 1, 1)) != 0);
     }
-    
+
     @Test
     public void testIntersectsReturnsTrue() {
-        assertTrue(circle(0, 0, 1).intersects(Geometries.rectangle(0,0,1,1)));
+        assertTrue(circle(0, 0, 1).intersects(Geometries.rectangle(0, 0, 1, 1)));
     }
-    
+
     @Test
     public void testIntersectsReturnsFalse() {
-        assertFalse(circle(0, 0, 1).intersects(Geometries.rectangle(10,10,11,11)));
+        assertFalse(circle(0, 0, 1).intersects(Geometries.rectangle(10, 10, 11, 11)));
     }
 }
