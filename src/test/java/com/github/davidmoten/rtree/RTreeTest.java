@@ -418,7 +418,8 @@ public class RTreeTest {
                 point(57.0, 36.0), point(14.0, 37.0) };
 
         RTree<Integer> tree = RTree.create();
-        for (int i = 0; i < points.length; i++) {
+        for (int i 
+        = 0; i < points.length; i++) {
             Point point = points[i];
             System.out.println("point(" + point.x() + "," + point.y() + "), value=" + (i + 1));
             tree = tree.add(i + 1, point);
