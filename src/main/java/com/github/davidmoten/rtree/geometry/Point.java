@@ -53,4 +53,9 @@ public final class Point implements Geometry {
             return false;
     }
 
+    @Override
+    public String toString() {
+        return "Point [x=" + x() + ", y=" + y() + "]";
+    }
+
 }

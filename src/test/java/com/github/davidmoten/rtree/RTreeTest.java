@@ -13,13 +13,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import org.junit.Test;
 
+import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 import rx.functions.Functions;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -405,6 +410,66 @@ public class RTreeTest {
         RTree<Object> tree = create(3, 0);
         tree = tree.add(123, Geometries.point(1, 2)).delete(123, Geometries.point(1, 2));
         assertEquals(0, (int) tree.entries().count().toBlocking().single());
+    }
+
+//    @Test
+    public void testStarTreeReturnsSameAsStandardRTree() {
+
+        RTree<UUID> tree1 = RTree.create();
+        RTree<UUID> tree2 = RTree.star().create();
+
+        Rectangle[] testRects = 
+            { rectangle(13.12, 23.123, 50.45, 80.9)
+            };
+//            { rectangle(0, 0, 0, 0), rectangle(0, 0, 100, 100),
+//                rectangle(0, 0, 10, 10), rectangle(0.12, 0.25, 50.356, 50.756),
+//                rectangle(1, 0.252, 50, 69.23), rectangle(13.12, 23.123, 50.45, 80.9),
+//                rectangle(10, 10, 50, 50) };
+//        
+
+        Point[] points = { point(59.0, 91.0), point(88.0, 99.0), point(65.0, 69.0),
+                point(27.0, 97.0), point(58.0, 74.0), point(2.0, 78.0), point(86.0, 14.0),
+                point(36.0, 60.0), point(57.0, 36.0), point(14.0, 37.0) };
+
+        for (Point point:points) {
+            System.out.println("point(" + point.x() + "," + point.y() + "),");
+            UUID randomUUID = UUID.randomUUID();
+            tree1 = tree1.add(randomUUID, point);
+            tree2 = tree2.add(randomUUID, point);
+        }
+
+        for (Rectangle r : testRects) {
+            Observable<Entry<UUID>> search1 = tree1.search(r);
+            Observable<Entry<UUID>> search2 = tree2.search(r);
+            Set<UUID> res1 = new HashSet<UUID>(search1.map(RTreeTest.<UUID> toValue()).toList()
+                    .toBlocking().single());
+            Set<UUID> res2 = new HashSet<UUID>(search2.map(RTreeTest.<UUID> toValue()).toList()
+                    .toBlocking().single());
+            System.out.println("searchRect=" + r);
+            System.out.println("res1.size=" + res1.size() + ",res2.size=" + res2.size());
+            System.out.println("res1=" + res1 + ",res2=" + res2);
+            assertEquals(res1, res2);
+        }
+    }
+
+    private static <T> Func1<Entry<T>, T> toValue() {
+        return new Func1<Entry<T>, T>() {
+
+            @Override
+            public T call(Entry<T> entry) {
+                return entry.value();
+            }
+        };
+    }
+
+    private static Point nextPoint() {
+
+        double randomX = Math.round(Math.random() * 100);
+
+        double randomY = Math.round(Math.random() * 100);
+
+        return Point.create(randomX, randomY);
+
     }
 
     static Entry<Object> e(int n) {
