@@ -412,26 +412,42 @@ public class RTreeTest {
         assertEquals(0, (int) tree.entries().count().toBlocking().single());
     }
 
-//    @Test
+    @Test
+    public void testStandardRTreeSearch() {
+        Rectangle r = rectangle(13.12, 23.123, 50.45, 80.9);
+        Point[] points = { point(59.0, 91.0), point(86.0, 14.0), point(36.0, 60.0),
+                point(57.0, 36.0), point(14.0, 37.0) };
+
+        RTree<UUID> tree = RTree.create();
+        for (Point point : points) {
+            UUID randomUUID = UUID.randomUUID();
+            System.out.println("point(" + point.x() + "," + point.y() + "), value=" + randomUUID);
+            tree = tree.add(randomUUID, point);
+        }
+        List<UUID> list = tree.search(r).map(RTreeTest.<UUID> toValue()).toList().toBlocking()
+                .single();
+        assertEquals(2, list.size());
+    }
+
+    @Test
     public void testStarTreeReturnsSameAsStandardRTree() {
 
         RTree<UUID> tree1 = RTree.create();
         RTree<UUID> tree2 = RTree.star().create();
 
-        Rectangle[] testRects = 
-            { rectangle(13.12, 23.123, 50.45, 80.9)
-            };
-//            { rectangle(0, 0, 0, 0), rectangle(0, 0, 100, 100),
-//                rectangle(0, 0, 10, 10), rectangle(0.12, 0.25, 50.356, 50.756),
-//                rectangle(1, 0.252, 50, 69.23), rectangle(13.12, 23.123, 50.45, 80.9),
-//                rectangle(10, 10, 50, 50) };
-//        
+        Rectangle[] testRects = { rectangle(13.12, 23.123, 50.45, 80.9) };
+        // { rectangle(0, 0, 0, 0), rectangle(0, 0, 100, 100),
+        // rectangle(0, 0, 10, 10), rectangle(0.12, 0.25, 50.356, 50.756),
+        // rectangle(1, 0.252, 50, 69.23), rectangle(13.12, 23.123, 50.45,
+        // 80.9),
+        // rectangle(10, 10, 50, 50) };
+        //
 
         Point[] points = { point(59.0, 91.0), point(88.0, 99.0), point(65.0, 69.0),
                 point(27.0, 97.0), point(58.0, 74.0), point(2.0, 78.0), point(86.0, 14.0),
                 point(36.0, 60.0), point(57.0, 36.0), point(14.0, 37.0) };
 
-        for (Point point:points) {
+        for (Point point : points) {
             UUID randomUUID = UUID.randomUUID();
             System.out.println("point(" + point.x() + "," + point.y() + "), value=" + randomUUID);
             tree1 = tree1.add(randomUUID, point);
