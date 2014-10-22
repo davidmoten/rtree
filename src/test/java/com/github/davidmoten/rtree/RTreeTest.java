@@ -432,8 +432,8 @@ public class RTreeTest {
                 point(36.0, 60.0), point(57.0, 36.0), point(14.0, 37.0) };
 
         for (Point point:points) {
-            System.out.println("point(" + point.x() + "," + point.y() + "),");
             UUID randomUUID = UUID.randomUUID();
+            System.out.println("point(" + point.x() + "," + point.y() + "), value=" + randomUUID);
             tree1 = tree1.add(randomUUID, point);
             tree2 = tree2.add(randomUUID, point);
         }
