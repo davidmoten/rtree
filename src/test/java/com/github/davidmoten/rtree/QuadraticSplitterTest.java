@@ -118,11 +118,9 @@ public class QuadraticSplitterTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testSplit4() {
-        final SplitterQuadratic q = new SplitterQuadratic();
-        
-        q.split(Collections.<HasGeometry> emptyList(), 3);
-        
+    public void testExceptionForSplitEmptyList() {
+        final SplitterQuadratic q = new SplitterQuadratic();    
+        q.split(Collections.<HasGeometry> emptyList(), 3);      
     }
     
     private static Mbr r(int n) {

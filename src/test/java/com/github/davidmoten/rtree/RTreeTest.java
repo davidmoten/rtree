@@ -4,9 +4,7 @@ import static com.github.davidmoten.rtree.Entry.entry;
 import static com.github.davidmoten.rtree.geometry.Geometries.point;
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import rx.Observable.Operator;
@@ -100,7 +99,7 @@ public class RTreeTest {
         		e.printStackTrace();
         	}
         }
-        assertTrue(false);
+        Assert.fail();
     }
   
     @Test
@@ -173,16 +172,16 @@ public class RTreeTest {
         tree = tree.add(entry).add(entry2);
 
         tree = tree.delete(entry.value(), entry.geometry(), true);
-        assertTrue(tree.entries().toList().toBlocking().single().contains(entry2) &&
-        		!tree.entries().toList().toBlocking().single().contains(entry) );
+        List<Entry<Object>> entries = tree.entries().toList().toBlocking().single();
+        assertTrue(entries.contains(entry2) && !entries.contains(entry) );
     }
     
     @Test
     public void testDepthWith0() {
         RTree<Object> tree = RTree.create();
         tree = tree.add(createRandomEntries(5));
-
-        RTree<Object> deletedTree = tree.delete(tree.entries().toList().toBlocking().single(), true);
+        List<Entry<Object>> entries = tree.entries().toList().toBlocking().single();
+        RTree<Object> deletedTree = tree.delete(entries, true);
         assertTrue(deletedTree.isEmpty());
     }
     
@@ -190,7 +189,7 @@ public class RTreeTest {
     public void testContext()
     {
     	RTree<Object> tree = RTree.create();
-        assertTrue(tree.context() != null);
+        assertNotNull(tree.context());
     }
  
     @Test
@@ -205,9 +204,8 @@ public class RTreeTest {
         list.add(entry1);
         list.add(entry3);
         RTree<Object> deletedTree = tree.delete(list);
-        assertTrue(deletedTree.entries().toList().toBlocking().single().contains(entry2) &&
-        		!deletedTree.entries().toList().toBlocking().single().contains(entry1) &&
-        		!deletedTree.entries().toList().toBlocking().single().contains(entry3));
+        List<Entry<Object>> entries = deletedTree.entries().toList().toBlocking().single();
+        assertTrue(entries.contains(entry2) && !entries.contains(entry1) && !entries.contains(entry3));
     }
     
     @Test
@@ -237,9 +235,10 @@ public class RTreeTest {
         Entry<Object> entry = e(1);
         tree = tree.add(entry).add(entry);
         tree = tree.delete(entry, false);
-
-        assertTrue((int) tree.entries().count().toBlocking().single() == 1);
-        assertTrue(tree.entries().toList().toBlocking().single().get(0).equals(entry));
+        List<Entry<Object>> entries = tree.entries().toList().toBlocking().single();
+        int countEntries =  tree.entries().count().toBlocking().single();
+        assertTrue(countEntries == 1);
+        assertTrue(entries.get(0).equals(entry));
     }
    
     @Test
