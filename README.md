@@ -307,7 +307,7 @@ Notes
 ----------
 
 For 0.4 release notes
-* fixed ```Rectangle.intersects``` issue #7
-* improved search efficiency by always checking node.mbr for intersection (particularly noticeable with larger maxChildren)
-* default maxChildren for R*-tree set to 4 (previousl 10) after running benchmarks
+* fixed #7 ```Rectangle.intersects``` bug 
+* improved search efficiency by always checking node.mbr for intersection (particularly noticeable with larger ```maxChildren```)
+* default ```maxChildren``` for R*-tree set to 4 (previously 10) after running benchmarks
 * added ```RTree.asString()``` to view tree as text
