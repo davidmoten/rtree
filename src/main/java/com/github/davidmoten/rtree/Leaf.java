@@ -38,6 +38,9 @@ final class Leaf<T> implements Node<T> {
     @Override
     public void search(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T>> subscriber) {
+        
+        if (!criterion.call(this.geometry().mbr()))
+            return;
 
         for (final Entry<T> entry : entries) {
             if (subscriber.isUnsubscribed())

@@ -37,15 +37,14 @@ final class NonLeaf<T> implements Node<T> {
     public void search(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T>> subscriber) {
 
-        // TODO missing a bit of efficiency here because could check the node
-        // mbr first and return if no intersect
+        if (!criterion.call(this.geometry().mbr()))
+            return;
+
         for (final Node<T> child : children) {
             if (subscriber.isUnsubscribed())
                 return;
-            else {
-                if (criterion.call(child.geometry().mbr()))
-                    child.search(criterion, subscriber);
-            }
+            else 
+                child.search(criterion, subscriber);
         }
     }
 
