@@ -302,3 +302,11 @@ c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpr
 c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032                    thrpt       10  279709.070     4622.236  ops/s
 c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128                    thrpt       10  208791.404     2751.306  ops/s
 ```
+
+Notes
+----------
+
+For 0.4 release notes
+* fixed ```Rectangle.intersects``` bug #7
+* improved search efficiency by always checking node.mbr for intersection (particularly noticeable with larger maxChildren)
+* default maxChildren for R*-tree set to 4 (previousl 10) after running benchmarks
