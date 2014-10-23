@@ -114,4 +114,28 @@ public class RectangleTest {
         assertTrue(r.equals(r.geometry()));
     }
 
+    @Test
+    public void testIntersects() {
+        Rectangle a = rectangle(14, 14, 86, 37);
+        Rectangle b = rectangle(13, 23, 50, 80);
+        assertTrue(a.intersects(b));
+        assertTrue(b.intersects(a));
+    }
+
+    @Test
+    public void testIntersectsNoRectangleContainsCornerOfAnother() {
+        Rectangle a = rectangle(10, 10, 50, 50);
+        Rectangle b = rectangle(28.0, 4.0, 34.0, 85.0);
+        assertTrue(a.intersects(b));
+        assertTrue(b.intersects(a));
+    }
+
+    @Test
+    public void testIntersectsOneRectangleContainsTheOther() {
+        Rectangle a = rectangle(10, 10, 50, 50);
+        Rectangle b = rectangle(20, 20, 40, 40);
+        assertTrue(a.intersects(b));
+        assertTrue(b.intersects(a));
+    }
+
 }

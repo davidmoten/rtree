@@ -629,4 +629,39 @@ public final class RTree<R> {
         return context;
     }
 
+    public String asString() {
+        if (!root.isPresent())
+            return "";
+        else
+            return asString(root.get(),"");
+    }
+
+    private String asString(Node<R> node, String margin) {
+        final String marginIncrement = "  ";
+        StringBuilder s = new StringBuilder();
+        if (node instanceof NonLeaf) {
+            s.append(margin);
+            s.append("mbr="+node.geometry());
+            s.append('\n');
+            NonLeaf<R> n = (NonLeaf<R>) node;
+            for (Node<R> child: n.children()) {
+                s.append(asString(child, margin + marginIncrement));
+            }
+        } else {
+            Leaf<R> leaf = (Leaf<R>) node;
+            s.append(margin);
+            s.append("mbr=");
+            s.append(leaf.geometry());
+            s.append('\n');
+            for (Entry<R> entry:leaf.entries()) {
+                s.append(margin);
+                s.append(marginIncrement);
+                s.append("entry=");
+                s.append(entry);
+                s.append('\n');
+            }
+        }
+        return s.toString();
+    }
+
 }

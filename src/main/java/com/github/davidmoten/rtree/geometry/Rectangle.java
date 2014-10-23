@@ -54,13 +54,17 @@ public final class Rectangle implements Geometry, HasGeometry {
         return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     }
 
-    private boolean containsCornerOf(Rectangle r) {
-        return r.contains(x1, y1) || r.contains(x2, y2);
-    }
-
     @Override
     public boolean intersects(Rectangle r) {
-        return containsCornerOf(r) || r.containsCornerOf(this);
+        float xMaxLeft = Math.max(x1(), r.x1());
+        float xMinRight = Math.min(x2(), r.x2());
+        if (xMinRight<xMaxLeft) 
+            return false;
+        else {
+            float yMaxBottom = Math.max(y1(), r.y1());
+            float yMinTop = Math.min(y2(), r.y2());
+            return yMinTop>=yMaxBottom;
+        }
     }
 
     @Override

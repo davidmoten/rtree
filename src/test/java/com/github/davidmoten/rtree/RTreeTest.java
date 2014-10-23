@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree;
 import static com.github.davidmoten.rtree.Entry.entry;
 import static com.github.davidmoten.rtree.geometry.Geometries.point;
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -414,57 +415,72 @@ public class RTreeTest {
 
     @Test
     public void testStandardRTreeSearch() {
-        Rectangle r = rectangle(13.12, 23.123, 50.45, 80.9);
+        Rectangle r = rectangle(13.0, 23.0, 50.0, 80.0);
         Point[] points = { point(59.0, 91.0), point(86.0, 14.0), point(36.0, 60.0),
                 point(57.0, 36.0), point(14.0, 37.0) };
 
-        RTree<UUID> tree = RTree.create();
-        for (Point point : points) {
-            UUID randomUUID = UUID.randomUUID();
-            System.out.println("point(" + point.x() + "," + point.y() + "), value=" + randomUUID);
-            tree = tree.add(randomUUID, point);
+        RTree<Integer> tree = RTree.create();
+        for (int i = 0; i < points.length; i++) {
+            Point point = points[i];
+            System.out.println("point(" + point.x() + "," + point.y() + "), value=" + (i + 1));
+            tree = tree.add(i + 1, point);
         }
-        List<UUID> list = tree.search(r).map(RTreeTest.<UUID> toValue()).toList().toBlocking()
-                .single();
-        assertEquals(2, list.size());
+        System.out.println(tree.asString());
+        System.out.println("searching " + r);
+        Set<Integer> set = new HashSet<Integer>(tree.search(r).map(RTreeTest.<Integer> toValue())
+                .toList().toBlocking().single());
+        assertEquals(new HashSet<Integer>(asList(3, 5)), set);
+    }
+    
+    @Test
+    public void testStandardRTreeSearch2() {
+        Rectangle r = rectangle(10.0,10.0,50.0,50.0);
+        Point[] points = { point(28.0,19.0),
+                point(29.0,4.0),
+                point(10.0,63.0),
+                point(34.0,85.0),
+                point(62.0,45.0) };
+
+        RTree<Integer> tree = RTree.create();
+        for (int i = 0; i < points.length; i++) {
+            Point point = points[i];
+            System.out.println("point(" + point.x() + "," + point.y() + "), value=" + (i + 1));
+            tree = tree.add(i + 1, point);
+        }
+        System.out.println(tree.asString());
+        System.out.println("searching " + r);
+        Set<Integer> set = new HashSet<Integer>(tree.search(r).map(RTreeTest.<Integer> toValue())
+                .toList().toBlocking().single());
+        assertEquals(new HashSet<Integer>(asList(1)), set);
     }
 
     @Test
     public void testStarTreeReturnsSameAsStandardRTree() {
 
-        RTree<UUID> tree1 = RTree.create();
-        RTree<UUID> tree2 = RTree.star().create();
+        RTree<Integer> tree1 = RTree.create();
+        RTree<Integer> tree2 = RTree.star().create();
 
-        Rectangle[] testRects = { rectangle(13.12, 23.123, 50.45, 80.9) };
-        // { rectangle(0, 0, 0, 0), rectangle(0, 0, 100, 100),
-        // rectangle(0, 0, 10, 10), rectangle(0.12, 0.25, 50.356, 50.756),
-        // rectangle(1, 0.252, 50, 69.23), rectangle(13.12, 23.123, 50.45,
-        // 80.9),
-        // rectangle(10, 10, 50, 50) };
-        //
+        Rectangle[] testRects = { rectangle(0, 0, 0, 0), rectangle(0, 0, 100, 100),
+                rectangle(0, 0, 10, 10), rectangle(0.12, 0.25, 50.356, 50.756),
+                rectangle(1, 0.252, 50, 69.23), rectangle(13.12, 23.123, 50.45, 80.9),
+                rectangle(10, 10, 50, 50) };
 
-        Point[] points = { point(59.0, 91.0), point(88.0, 99.0), point(65.0, 69.0),
-                point(27.0, 97.0), point(58.0, 74.0), point(2.0, 78.0), point(86.0, 14.0),
-                point(36.0, 60.0), point(57.0, 36.0), point(14.0, 37.0) };
-
-        for (Point point : points) {
-            UUID randomUUID = UUID.randomUUID();
-            System.out.println("point(" + point.x() + "," + point.y() + "), value=" + randomUUID);
-            tree1 = tree1.add(randomUUID, point);
-            tree2 = tree2.add(randomUUID, point);
+        for (int i = 1; i <= 10000; i++) {
+            Point point = nextPoint();
+//            System.out.println("point(" + point.x() + "," + point.y() + "),");
+            tree1 = tree1.add(i, point);
+            tree2 = tree2.add(i, point);
         }
 
         for (Rectangle r : testRects) {
-            Observable<Entry<UUID>> search1 = tree1.search(r);
-            Observable<Entry<UUID>> search2 = tree2.search(r);
-            Set<UUID> res1 = new HashSet<UUID>(search1.map(RTreeTest.<UUID> toValue()).toList()
+            Set<Integer> res1 = new HashSet<Integer>(tree1.search(r).map(RTreeTest.<Integer> toValue()).toList()
                     .toBlocking().single());
-            Set<UUID> res2 = new HashSet<UUID>(search2.map(RTreeTest.<UUID> toValue()).toList()
+            Set<Integer> res2 = new HashSet<Integer>(tree2.search(r).map(RTreeTest.<Integer> toValue()).toList()
                     .toBlocking().single());
-            System.out.println("searchRect=" + r);
-            System.out.println("res1.size=" + res1.size() + ",res2.size=" + res2.size());
-            System.out.println("res1=" + res1 + ",res2=" + res2);
-            assertEquals(res1, res2);
+//            System.out.println("searchRect= rectangle(" + r.x1() + "," + r.y1() + "," + r.x2() + "," + r.y2()+ ")");
+//            System.out.println("res1.size=" + res1.size() + ",res2.size=" + res2.size());
+//            System.out.println("res1=" + res1 + ",res2=" + res2);
+            assertEquals(res1.size(), res2.size());
         }
     }
 
