@@ -37,7 +37,7 @@ Features
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 * visualizer included
-* R*-tree performs 700,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=10, minChildren=4). Insert at 140,000 entries per second.
+* R*-tree performs 425,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=4, minChildren=4). Insert at 135,000 entries per second.
 * requires java 1.6 or later
 
 Number of points = 1000, max children per node 8, Quadratic split: 
@@ -195,7 +195,7 @@ How to configure the R-tree for best performance
 Check out the benchmarks below, but I recommend you do your own benchmarks because every data set will behave differently. If you don't want to benchmark then use the defaults. General rules based on the benchmarks:
 
 * for data sets of <10,000 entries use the default R-tree (quadratic splitter with maxChildren=4)
-* for data sets of >=10,000 entries use the star R-tree (R*-tree heuristics with maxChildren=10 by default)
+* for data sets of >=10,000 entries use the star R-tree (R*-tree heuristics with maxChildren=4 by default)
 
 Watch out though, the benchmark data sets had quite specific characteristics. The 1000 entry dataset was randomly generated (so is more or less uniformly distributed) and the *Greek* dataset was earthquake data with its own clustering characteristics. 
 

@@ -37,7 +37,7 @@ public final class RTree<R> {
      * Benchmarks show that this is the sweet spot for up to O(10,000) entries
      * when using R*-tree heuristics.
      */
-    public static final int MAX_CHILDREN_DEFAULT_STAR = 10;
+    public static final int MAX_CHILDREN_DEFAULT_STAR = 4;
 
     private int size;
 
