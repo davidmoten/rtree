@@ -137,5 +137,35 @@ public class RectangleTest {
         assertTrue(a.intersects(b));
         assertTrue(b.intersects(a));
     }
+    
+    @Test
+    public void testContains() {
+        Rectangle r = rectangle(10,20,30,40);
+        assertTrue(r.contains(20,30));
+    }
+    
+    @Test
+    public void testContainsReturnsFalseWhenLessThanMinY() {
+        Rectangle r = rectangle(10,20,30,40);
+        assertFalse(r.contains(20,19));
+    }
+    
+    @Test
+    public void testContainsReturnsFalseWhenGreaterThanMaxY() {
+        Rectangle r = rectangle(10,20,30,40);
+        assertFalse(r.contains(20,41));
+    }
+    
+    @Test
+    public void testContainsReturnsFalseWhenGreaterThanMaxX() {
+        Rectangle r = rectangle(10,20,30,40);
+        assertFalse(r.contains(31,30));
+    }
+    
+    @Test
+    public void testContainsReturnsFalseWhenLessThanMinX() {
+        Rectangle r = rectangle(10,20,30,40);
+        assertFalse(r.contains(9,30));
+    }
 
 }
