@@ -87,12 +87,9 @@ public class RTreeTest {
     }
 
     @Test
-    public void testVisualizerAbsent() {
-        List<Entry<Object>> entries = createRandomEntries(1000);
-        int maxChildren = 8;
-        RTree<Object> tree = new RTree<Object>(null);
+    public void testVisualizerWithEmptyTree() {
+        RTree<Object> tree = RTree.create();
         tree.visualize(600, 600).save("target/tree.png", "PNG");
-
     }
 
     @Test
