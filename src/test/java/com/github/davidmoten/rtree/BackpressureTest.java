@@ -152,6 +152,40 @@ public class BackpressureTest {
         });
         assertEquals(expected, found);
     }
+    
+    @Test
+    public void testBackpressureRequestZero() {
+        Entry<Object> e1 = RTreeTest.e(1);
+        @SuppressWarnings("unchecked")
+        List<Entry<Object>> list = Arrays.asList(e1, e1, e1, e1);
+        RTree<Object> tree = RTree.star().maxChildren(4).create().add(list);
+        HashSet<Entry<Object>> expected = new HashSet<Entry<Object>>(list);
+        final HashSet<Entry<Object>> found = new HashSet<Entry<Object>>();
+        tree.entries().subscribe(new Subscriber<Entry<Object>>() {
+
+            @Override
+            public void onStart() {
+                request(1);
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Entry<Object> t) {
+                found.add(t);
+                request(0);
+            }
+        });
+        assertEquals(expected, found);
+    }
 
     @Test
     public void testBackpressureIterateWhenNodeHasMaxChildrenAndIsNotRoot() {

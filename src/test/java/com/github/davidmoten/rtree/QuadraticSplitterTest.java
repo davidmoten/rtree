@@ -3,10 +3,12 @@ package com.github.davidmoten.rtree;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.Pair;
@@ -115,6 +117,12 @@ public class QuadraticSplitterTest {
         assertEquals(Sets.newHashSet(r4, r5, r6), Sets.newHashSet(pair.group2().list()));
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testExceptionForSplitEmptyList() {
+        final SplitterQuadratic q = new SplitterQuadratic();    
+        q.split(Collections.<HasGeometry> emptyList(), 3);      
+    }
+    
     private static Mbr r(int n) {
         return new Mbr(Rectangle.create(n, n, n + 1, n + 1));
     }
