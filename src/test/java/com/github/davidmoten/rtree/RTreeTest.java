@@ -417,7 +417,7 @@ public class RTreeTest {
     }
 
     @Test
-    public void testNearest() {
+    public void testNearestSameDirection() {
         RTree<Object> tree = RTree.maxChildren(4).create().add(e(1)).add(e(2)).add(e(3)).add(e(10))
                 .add(e(11));
         List<Entry<Object>> list = tree.nearest(r(9), 10, 2).toList().toBlocking().single();
@@ -426,9 +426,20 @@ public class RTreeTest {
         assertEquals(11, list.get(1).geometry().mbr().x1(), PRECISION);
         
         List<Entry<Object>> list2 = tree.nearest(r(10), 8, 3).toList().toBlocking().single();
+        assertEquals(2, list2.size());
+        assertEquals(11, list2.get(0).geometry().mbr().x1(), PRECISION);
+        assertEquals(10, list2.get(1).geometry().mbr().x1(), PRECISION);
+    }
+    
+    @Test
+    public void testNearestDifferentDirections() {
+        RTree<Object> tree = RTree.maxChildren(4).create().add(e(1)).add(e(2)).add(e(3)).add(e(9))
+                .add(e(10));
+        List<Entry<Object>> list = tree.nearest(r(6), 10, 2).toList().toBlocking().single();
         assertEquals(2, list.size());
-        assertEquals(10, list.get(0).geometry().mbr().x1(), PRECISION);
-        assertEquals(11, list.get(1).geometry().mbr().x1(), PRECISION);
+        assertEquals(3, list.get(0).geometry().mbr().x1(), PRECISION);
+        assertEquals(9, list.get(1).geometry().mbr().x1(), PRECISION);
+        
     }
 
     @Test
