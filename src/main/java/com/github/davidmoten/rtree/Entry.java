@@ -34,9 +34,10 @@ public final class Entry<T> implements HasGeometry {
     /**
      * Factory method.
      * 
-     * @param value
-     * @param geometry
-     * @return
+     * @param <T> type of value
+     * @param value object being given a spatial context
+     * @param geometry geometry associated with the value
+     * @return entry wrapping value and associated geometry
      */
     public static <T> Entry<T> entry(T value, Geometry geometry) {
         return new Entry<T>(value, geometry);

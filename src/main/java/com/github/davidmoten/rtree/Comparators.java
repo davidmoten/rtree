@@ -38,6 +38,8 @@ public final class Comparators {
      * total of the areas of overlap of the members of the list with the
      * rectangle r.
      * 
+     * @param <T> 
+     *            type of geometry being compared
      * @param r
      *            rectangle
      * @param list
