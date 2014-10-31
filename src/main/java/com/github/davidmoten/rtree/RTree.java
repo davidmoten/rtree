@@ -80,7 +80,8 @@ public final class RTree<R> {
     /**
      * Returns a new Builder instance for {@link RTree}. Defaults to
      * maxChildren=128, minChildren=64, splitter=QuadraticSplitter.
-     * 
+     *
+     * @param <T> the value type of the entries in the tree
      * @return a new RTree instance
      */
     public static <T> RTree<T> create() {
@@ -92,7 +93,7 @@ public final class RTree<R> {
      * recursing down to the leaf level of the tree to get the current depth.
      * Should be <code>log(n)</code> in complexity.
      * 
-     * @return
+     * @return depth of the R-tree
      */
     public int calculateDepth() {
         return calculateDepth(root);
@@ -151,7 +152,7 @@ public final class RTree<R> {
      * Sets the node {@link Selector} which decides which branches to follow
      * when inserting or searching.
      * 
-     * @param selector
+     * @param selector determines which branches to follow when inserting or searching
      * @return builder
      */
     public static Builder selector(Selector selector) {
@@ -232,10 +233,10 @@ public final class RTree<R> {
          * Sets the node {@link Selector} which decides which branches to follow
          * when inserting or searching.
          * 
-         * @param selector
+         * @param selector selects the branch to follow when inserting or searching
          * @return builder
          */
-        public <T> Builder selector(Selector selector) {
+        public Builder selector(Selector selector) {
             this.selector = selector;
             return this;
         }
@@ -348,6 +349,8 @@ public final class RTree<R> {
      * 
      * @param entries
      *            the entries to add
+     * @param all 
+     *            if true delete all matching otherwise just first matching
      * @return a sequence of trees
      */
     public Observable<RTree<R>> delete(Observable<Entry<R>> entries, final boolean all) {
@@ -361,8 +364,8 @@ public final class RTree<R> {
     }
 
     /**
-     * Returns a new R-tree with the given entries deleted. If <code>>all</code>
-     * is false deletes only one if exists. If <code>>all</code> is true deletes
+     * Returns a new R-tree with the given entries deleted. If <code>all</code>
+     * is false deletes only one if exists. If <code>all</code> is true deletes
      * all matching entries.
      * 
      * @param entries
@@ -379,8 +382,8 @@ public final class RTree<R> {
     }
 
     /**
-     * If <code>>all</code> is false deletes one entry matching the given value
-     * and Geometry. If <code>>all</code> is true deletes all entries matching
+     * If <code>all</code> is false deletes one entry matching the given value
+     * and Geometry. If <code>all</code> is true deletes all entries matching
      * the given value and geometry. This method has no effect if the entry is
      * not present. The entry must match on both value and geometry to be
      * deleted.
@@ -409,6 +412,8 @@ public final class RTree<R> {
      * 
      * @param entry
      *            the {@link Entry} to be deleted
+     * @param all
+     *            if true deletes all matches otherwise deletes first found
      * @return a new immutable R-tree without one instance of the specified
      *         entry
      */

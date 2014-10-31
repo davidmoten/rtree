@@ -18,7 +18,8 @@ public class TestingUtil {
      * Checks that a class has a no-argument private constructor and calls that
      * constructor to instantiate the class.
      * 
-     * @param cls
+     * @param <T> type of class being checked
+     * @param cls class being checked
      */
     public static <T> void callConstructorAndCheckIsPrivate(Class<T> cls) {
         Constructor<T> constructor;

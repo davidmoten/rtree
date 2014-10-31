@@ -20,7 +20,7 @@ public final class Util {
 
     /**
      * Returns the minimum bounding rectangle of a number of items. Benchmarks
-     * below indicate that when the number of items is >1 this method is more
+     * below indicate that when the number of items is &gt;1 this method is more
      * performant than one using {@link Rectangle#add(Rectangle)}.
      * 
      * <pre>
@@ -35,8 +35,8 @@ public final class Util {
      * c.g.d.r.BenchmarksMbr.mbrOldList4    thrpt       10  14891862.638   198765.157  ops/s
      * </pre>
      * 
-     * @param items
-     * @return
+     * @param items items to bound
+     * @return the minimum bounding rectangle containings items
      */
     public static Rectangle mbr(Collection<? extends HasGeometry> items) {
         Preconditions.checkArgument(!items.isEmpty());

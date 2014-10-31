@@ -15,6 +15,7 @@ public interface Selector {
      * Returns the node from a list of nodes that an object with the given
      * geometry would be added to.
      * 
+     * @param <T> type of value of entry in tree
      * @param g
      *            geometry
      * @param nodes
