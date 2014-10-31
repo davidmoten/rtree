@@ -8,7 +8,7 @@ import com.google.common.base.Preconditions;
 public final class Rectangle implements Geometry, HasGeometry {
     private final float x1, y1, x2, y2;
 
-    public Rectangle(float x1, float y1, float x2, float y2) {
+    protected Rectangle(float x1, float y1, float x2, float y2) {
         Preconditions.checkArgument(x2 >= x1);
         Preconditions.checkArgument(y2 >= y1);
         this.x1 = x1;

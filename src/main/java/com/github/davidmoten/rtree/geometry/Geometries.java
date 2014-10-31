@@ -21,5 +21,5 @@ public final class Geometries {
     public static Circle circle(double x, double y, double radius) {
         return Circle.create(x, y, radius);
     }
-
+    
 }

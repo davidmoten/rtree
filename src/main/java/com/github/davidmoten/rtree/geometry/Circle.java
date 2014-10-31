@@ -9,7 +9,7 @@ public final class Circle implements Geometry {
     private final float x, y, radius;
     private final Rectangle mbr;
 
-    public Circle(float x, float y, float radius) {
+    protected Circle(float x, float y, float radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
