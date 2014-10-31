@@ -263,11 +263,11 @@ public final class RTree<T> {
         /**
          * Builds the {@link RTree}.
          * 
-         * @param <S>
+         * @param <R>
          *            the entry type
          * @return RTree
          */
-        public <S> RTree<S> create() {
+        public <R> RTree<R> create() {
             if (!maxChildren.isPresent())
                 if (star)
                     maxChildren = of(MAX_CHILDREN_DEFAULT_STAR);
@@ -275,7 +275,7 @@ public final class RTree<T> {
                     maxChildren = of(MAX_CHILDREN_DEFAULT_GUTTMAN);
             if (!minChildren.isPresent())
                 minChildren = of((int) Math.round(maxChildren.get() * DEFAULT_FILLING_FACTOR));
-            return new RTree<S>(new Context(minChildren.get(), maxChildren.get(), selector,
+            return new RTree<R>(new Context(minChildren.get(), maxChildren.get(), selector,
                     splitter));
         }
 
