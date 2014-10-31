@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree;
 
+import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
 
@@ -9,6 +10,7 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
 
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
@@ -599,7 +601,7 @@ public final class RTree<R> {
                                 else
                                     return of(entry.geometry().mbr());
                             }
-                        }).toBlocking().single().or(new Rectangle(0, 0, 0, 0));
+                        }).toBlocking().single().or(rectangle(0, 0, 0, 0));
     }
 
     Optional<? extends Node<R>> root() {
