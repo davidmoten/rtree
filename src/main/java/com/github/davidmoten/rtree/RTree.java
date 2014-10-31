@@ -10,7 +10,6 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
 
-import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
