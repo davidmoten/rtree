@@ -124,6 +124,25 @@ public class RTreeTest {
         System.out.println("time to get nearest with " + n + " entries=" + diff);
 
     }
+    
+    @Test
+    public void testSearchOfPoint() {
+        Object value = new Object();
+        RTree<Object> tree = RTree.create().add(value, point(1,1));
+        List<Entry<Object>> list = tree.search(point(1,1)).toList().toBlocking().single();
+        assertEquals(1, list.size());
+        assertEquals(value, list.get(0).value());
+    }
+    
+    
+    @Test
+    public void testSearchOfPointWithinDistance() {
+        Object value = new Object();
+        RTree<Object> tree = RTree.create().add(value, point(1,1));
+        List<Entry<Object>> list = tree.search(point(1,1),2).toList().toBlocking().single();
+        assertEquals(1, list.size());
+        assertEquals(value, list.get(0).value());
+    }
 
     static List<Entry<Object>> createRandomEntries(long n) {
         List<Entry<Object>> list = new ArrayList<Entry<Object>>();
@@ -421,7 +440,15 @@ public class RTreeTest {
         assertEquals(2, list.size());
         assertEquals(3, list.get(0).geometry().mbr().x1(), PRECISION);
         assertEquals(9, list.get(1).geometry().mbr().x1(), PRECISION);
-        
+    }
+    
+    @Test
+    public void testNearestToAPoint() {
+        Object value = new Object();
+        RTree<Object> tree = RTree.create().add(value,point(1,1));
+        List<Entry<Object>> list = tree.nearest(point(2,2),3, 2).toList().toBlocking().single();
+        assertEquals(1, list.size());
+        assertEquals(value, list.get(0).value());
     }
 
     @Test

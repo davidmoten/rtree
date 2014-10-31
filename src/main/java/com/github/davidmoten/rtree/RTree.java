@@ -10,8 +10,8 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
 
-import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
 import com.google.common.annotations.VisibleForTesting;
@@ -507,10 +507,23 @@ public final class RTree<R> {
     public Observable<Entry<R>> search(final Rectangle r) {
         return search(intersects(r));
     }
+    
+    /**
+     * Returns an {@link Observable} sequence of all {@link Entry}s in the
+     * R-tree whose minimum bounding rectangle intersects with the given
+     * point.
+     * 
+     * @param p
+     *            point to check intersection with the entry mbr
+     * @return entries that intersect with the point p
+     */
+    public Observable<Entry<R>> search(final Point p) {
+        return search(p.mbr());
+    }
 
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the
-     * R-tree whose minimum bounding rectangles are within maxDistance from the
+     * R-tree whose minimum bounding rectangles are less than maxDistance from the
      * given rectangle.
      * 
      * @param r
@@ -526,6 +539,21 @@ public final class RTree<R> {
                 return g.distance(r) < maxDistance;
             }
         });
+    }
+    
+    /**
+     * Returns an {@link Observable} sequence of all {@link Entry}s in the
+     * R-tree whose minimum bounding rectangles are within maxDistance from the
+     * given point.
+     * 
+     * @param p
+     *            point to measure distance from
+     * @param maxDistance
+     *            entries returned must be within this distance from point p
+     * @return the sequence of matching entries
+     */
+    public Observable<Entry<R>> search(final Point p, final double maxDistance) {
+        return search(p.mbr(), maxDistance);
     }
 
     /**
@@ -544,6 +572,22 @@ public final class RTree<R> {
         return search(r, maxDistance).lift(
                 new OperatorBoundedPriorityQueue<Entry<R>>(maxCount, Comparators
                         .<R> ascendingDistance(r)));
+    }
+    
+    /**
+     * Returns the nearest k entries (k=maxCount) to the given point where
+     * the entries are within a given maximum distance from the point.
+     * 
+     * @param p
+     *            point
+     * @param maxDistance
+     *            max distance of returned entries from the point
+     * @param maxCount
+     *            max number of entries to return
+     * @return nearest entries to maxCount, not in any particular order
+     */
+    public Observable<Entry<R>> nearest(final Point p, final double maxDistance, int maxCount) {
+        return nearest(p.mbr(), maxDistance, maxCount);
     }
 
     /**
