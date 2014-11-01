@@ -14,7 +14,7 @@ public class SelectorRStar implements Selector {
     private static Selector areaIncreaseSelector = new SelectorMinimalAreaIncrease();
 
     @Override
-    public <T> Node<T> select(Geometry g, List<? extends Node<T>> nodes) {
+    public <T, S extends Geometry> Node<T, S> select(Geometry g, List<? extends Node<T, S>> nodes) {
         boolean leafNodes = nodes.get(0) instanceof Leaf;
         if (leafNodes)
             return overlapAreaSelector.select(g, nodes);

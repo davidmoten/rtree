@@ -5,6 +5,7 @@ import java.util.List;
 
 import rx.functions.Func1;
 
+import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
@@ -38,7 +39,7 @@ public final class Comparators {
      * total of the areas of overlap of the members of the list with the
      * rectangle r.
      * 
-     * @param <T> 
+     * @param <T>
      *            type of geometry being compared
      * @param r
      *            rectangle
@@ -107,10 +108,11 @@ public final class Comparators {
      *            the entry type
      * @return a comparator to sort by ascending distance from the rectangle
      */
-    public static <S> Comparator<Entry<S>> ascendingDistance(final Rectangle r) {
-        return new Comparator<Entry<S>>() {
+    public static <T, S extends Geometry> Comparator<Entry<T, S>> ascendingDistance(
+            final Rectangle r) {
+        return new Comparator<Entry<T, S>>() {
             @Override
-            public int compare(Entry<S> e1, Entry<S> e2) {
+            public int compare(Entry<T, S> e1, Entry<T, S> e2) {
                 return ((Double) e1.geometry().distance(r)).compareTo(e2.geometry().distance(r));
             }
         };

@@ -8,13 +8,14 @@ import rx.functions.Func1;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 
-interface Node<T> extends HasGeometry {
+interface Node<T, S extends Geometry> extends HasGeometry {
 
-    List<Node<T>> add(Entry<T> entry);
+    List<Node<T, S>> add(Entry<? extends T, ? extends S> entry);
 
-    NodeAndEntries<T> delete(Entry<T> entry, boolean all);
+    NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all);
 
-    void search(Func1<? super Geometry, Boolean> condition, Subscriber<? super Entry<T>> subscriber);
+    void search(Func1<? super Geometry, Boolean> condition,
+            Subscriber<? super Entry<T, S>> subscriber);
 
     int count();
 

@@ -13,9 +13,9 @@ import com.google.common.base.Preconditions;
  * @param <T>
  *            the type of Entry
  */
-public final class Entry<T> implements HasGeometry {
+public final class Entry<T, S extends Geometry> implements HasGeometry {
     private final T value;
-    private final Geometry geometry;
+    private final S geometry;
 
     /**
      * Constructor.
@@ -25,7 +25,7 @@ public final class Entry<T> implements HasGeometry {
      * @param geometry
      *            the geometry of the value
      */
-    public Entry(T value, Geometry geometry) {
+    public Entry(T value, S geometry) {
         Preconditions.checkNotNull(geometry);
         this.value = value;
         this.geometry = geometry;
@@ -34,13 +34,16 @@ public final class Entry<T> implements HasGeometry {
     /**
      * Factory method.
      * 
-     * @param <T> type of value
-     * @param value object being given a spatial context
-     * @param geometry geometry associated with the value
+     * @param <T>
+     *            type of value
+     * @param value
+     *            object being given a spatial context
+     * @param geometry
+     *            geometry associated with the value
      * @return entry wrapping value and associated geometry
      */
-    public static <T> Entry<T> entry(T value, Geometry geometry) {
-        return new Entry<T>(value, geometry);
+    public static <T, S extends Geometry> Entry<T, S> entry(T value, S geometry) {
+        return new Entry<T, S>(value, geometry);
     }
 
     /**
@@ -53,7 +56,7 @@ public final class Entry<T> implements HasGeometry {
     }
 
     @Override
-    public Geometry geometry() {
+    public S geometry() {
         return geometry;
     }
 

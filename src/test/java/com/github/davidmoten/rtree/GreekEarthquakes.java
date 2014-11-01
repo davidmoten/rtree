@@ -13,10 +13,11 @@ import rx.functions.Func1;
 import rx.observables.StringObservable;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Point;
 
 public class GreekEarthquakes {
 
-    static Observable<Entry<Object>> entries() {
+    static Observable<Entry<Object, Point>> entries() {
         Observable<String> source = Observable.using(new Func0<InputStream>() {
             @Override
             public InputStream call() {
@@ -43,10 +44,10 @@ public class GreekEarthquakes {
             }
         });
         return StringObservable.split(source, "\n").flatMap(
-                new Func1<String, Observable<Entry<Object>>>() {
+                new Func1<String, Observable<Entry<Object, Point>>>() {
 
                     @Override
-                    public Observable<Entry<Object>> call(String line) {
+                    public Observable<Entry<Object, Point>> call(String line) {
                         if (line.trim().length() > 0) {
                             String[] items = line.split(" ");
                             double lat = Double.parseDouble(items[0]);
@@ -59,7 +60,7 @@ public class GreekEarthquakes {
                 });
     }
 
-    static List<Entry<Object>> entriesList() {
+    static List<Entry<Object, Point>> entriesList() {
         return entries().toList().toBlocking().single();
     }
 }

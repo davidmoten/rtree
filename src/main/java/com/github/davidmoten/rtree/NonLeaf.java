@@ -15,13 +15,13 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
-final class NonLeaf<T> implements Node<T> {
+final class NonLeaf<T, S extends Geometry> implements Node<T, S> {
 
-    private final List<? extends Node<T>> children;
+    private final List<? extends Node<T, S>> children;
     private final Rectangle mbr;
     private final Context context;
 
-    NonLeaf(List<? extends Node<T>> children, Context context) {
+    NonLeaf(List<? extends Node<T, S>> children, Context context) {
         Preconditions.checkArgument(!children.isEmpty());
         this.context = context;
         this.children = children;
@@ -35,15 +35,15 @@ final class NonLeaf<T> implements Node<T> {
 
     @Override
     public void search(Func1<? super Geometry, Boolean> criterion,
-            Subscriber<? super Entry<T>> subscriber) {
+            Subscriber<? super Entry<T, S>> subscriber) {
 
         if (!criterion.call(this.geometry().mbr()))
             return;
 
-        for (final Node<T> child : children) {
+        for (final Node<T, S> child : children) {
             if (subscriber.isUnsubscribed())
                 return;
-            else 
+            else
                 child.search(criterion, subscriber);
         }
     }
@@ -53,33 +53,33 @@ final class NonLeaf<T> implements Node<T> {
         return children.size();
     }
 
-    public List<? extends Node<T>> children() {
+    public List<? extends Node<T, S>> children() {
         return children;
     }
 
     @Override
-    public List<Node<T>> add(Entry<T> entry) {
-        final Node<T> child = context.selector().select(entry.geometry().mbr(), children);
-        List<Node<T>> list = child.add(entry);
-        List<? extends Node<T>> children2 = Util.replace(children, child, list);
+    public List<Node<T, S>> add(Entry<? extends T, ? extends S> entry) {
+        final Node<T, S> child = context.selector().select(entry.geometry().mbr(), children);
+        List<Node<T, S>> list = child.add(entry);
+        List<? extends Node<T, S>> children2 = Util.replace(children, child, list);
         if (children2.size() <= context.maxChildren())
-            return Collections.singletonList((Node<T>) new NonLeaf<T>(children2, context));
+            return Collections.singletonList((Node<T, S>) new NonLeaf<T, S>(children2, context));
         else {
-            ListPair<? extends Node<T>> pair = context.splitter().split(children2,
+            ListPair<? extends Node<T, S>> pair = context.splitter().split(children2,
                     context.minChildren());
             return makeNonLeaves(pair);
         }
     }
 
-    private List<Node<T>> makeNonLeaves(ListPair<? extends Node<T>> pair) {
-        List<Node<T>> list = new ArrayList<Node<T>>();
-        list.add(new NonLeaf<T>(pair.group1().list(), context));
-        list.add(new NonLeaf<T>(pair.group2().list(), context));
+    private List<Node<T, S>> makeNonLeaves(ListPair<? extends Node<T, S>> pair) {
+        List<Node<T, S>> list = new ArrayList<Node<T, S>>();
+        list.add(new NonLeaf<T, S>(pair.group1().list(), context));
+        list.add(new NonLeaf<T, S>(pair.group2().list(), context));
         return list;
     }
 
     @Override
-    public NodeAndEntries<T> delete(Entry<T> entry, boolean all) {
+    public NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all) {
         // the result of performing a delete of the given entry from this node
         // will be that zero or more entries will be needed to be added back to
         // the root of the tree (because num entries of their node fell below
@@ -88,14 +88,14 @@ final class NonLeaf<T> implements Node<T> {
         // zero or more nodes to be added as children to this node(because
         // entries have been deleted from them and they still have enough
         // members to be active)
-        List<Entry<T>> addTheseEntries = new ArrayList<Entry<T>>();
-        List<Node<T>> removeTheseNodes = new ArrayList<Node<T>>();
-        List<Node<T>> addTheseNodes = new ArrayList<Node<T>>();
+        List<Entry<T, S>> addTheseEntries = new ArrayList<Entry<T, S>>();
+        List<Node<T, S>> removeTheseNodes = new ArrayList<Node<T, S>>();
+        List<Node<T, S>> addTheseNodes = new ArrayList<Node<T, S>>();
         int countDeleted = 0;
 
-        for (final Node<T> child : children) {
+        for (final Node<T, S> child : children) {
             if (entry.geometry().intersects(child.geometry().mbr())) {
-                final NodeAndEntries<T> result = child.delete(entry, all);
+                final NodeAndEntries<T, S> result = child.delete(entry, all);
                 if (result.node().isPresent()) {
                     if (result.node().get() != child) {
                         // deletion occurred and child is above minChildren so
@@ -120,16 +120,16 @@ final class NonLeaf<T> implements Node<T> {
             }
         }
         if (removeTheseNodes.isEmpty())
-            return new NodeAndEntries<T>(of(this), Collections.<Entry<T>> emptyList(), 0);
+            return new NodeAndEntries<T, S>(of(this), Collections.<Entry<T, S>> emptyList(), 0);
         else {
-            List<Node<T>> nodes = Util.remove(children, removeTheseNodes);
+            List<Node<T, S>> nodes = Util.remove(children, removeTheseNodes);
             nodes.addAll(addTheseNodes);
             if (nodes.size() == 0)
-                return new NodeAndEntries<T>(Optional.<Node<T>> absent(), addTheseEntries,
+                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> absent(), addTheseEntries,
                         countDeleted);
             else {
-                NonLeaf<T> node = new NonLeaf<T>(nodes, context);
-                return new NodeAndEntries<T>(of(node), addTheseEntries, countDeleted);
+                NonLeaf<T, S> node = new NonLeaf<T, S>(nodes, context);
+                return new NodeAndEntries<T, S>(of(node), addTheseEntries, countDeleted);
             }
         }
     }

@@ -15,38 +15,38 @@ final class Backpressure {
         // prevent instantiation
     }
 
-    static <T> ImmutableStack<NodePosition<T>> search(
+    static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> search(
             final Func1<? super Geometry, Boolean> condition,
-            final Subscriber<? super Entry<T>> subscriber, ImmutableStack<NodePosition<T>> stack,
-            long request) {
+            final Subscriber<? super Entry<T, S>> subscriber,
+            ImmutableStack<NodePosition<T, S>> stack, long request) {
         if (stack.isEmpty())
             return stack;
         while (true) {
-            NodePosition<T> np = stack.peek();
+            NodePosition<T, S> np = stack.peek();
             if (subscriber.isUnsubscribed())
                 return ImmutableStack.empty();
             else if (request == 0)
                 return stack;
             else if (np.position() == np.node().count()) {
                 // handle after last position in node
-                ImmutableStack<NodePosition<T>> stack2 = stack.pop();
+                ImmutableStack<NodePosition<T, S>> stack2 = stack.pop();
                 if (stack2.isEmpty())
                     return stack2;
                 else {
-                    NodePosition<T> previous = stack2.peek();
+                    NodePosition<T, S> previous = stack2.peek();
                     stack = stack2.pop().push(previous.nextPosition());
                 }
             } else if (np.node() instanceof NonLeaf) {
                 // handle non-leaf
-                Node<T> child = ((NonLeaf<T>) np.node()).children().get(np.position());
+                Node<T, S> child = ((NonLeaf<T, S>) np.node()).children().get(np.position());
                 if (condition.call(child.geometry())) {
-                    stack = stack.push(new NodePosition<T>(child, 0));
+                    stack = stack.push(new NodePosition<T, S>(child, 0));
                 } else {
                     stack = stack.pop().push(np.nextPosition());
                 }
             } else {
                 // handle leaf
-                Entry<T> entry = ((Leaf<T>) np.node()).entries().get(np.position());
+                Entry<T, S> entry = ((Leaf<T, S>) np.node()).entries().get(np.position());
                 final long nextRequest;
                 if (condition.call(entry.geometry())) {
                     subscriber.onNext(entry);
