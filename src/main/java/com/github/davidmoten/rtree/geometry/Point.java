@@ -26,6 +26,12 @@ public final class Point implements Geometry {
         return mbr.distance(r);
     }
 
+    public double distance(Point p) {
+        float dx = mbr().x1() - p.mbr().x1();
+        float dy = mbr().y1() - p.mbr().y1();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
     @Override
     public boolean intersects(Rectangle r) {
         return mbr.intersects(r);

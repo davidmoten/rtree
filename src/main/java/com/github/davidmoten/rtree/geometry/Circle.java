@@ -43,6 +43,10 @@ public final class Circle implements Geometry {
         return distance(r) == 0;
     }
 
+    public boolean intersects(Circle c) {
+        return new Point(x, y).distance(new Point(c.x, c.y)) <= radius + c.radius;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(x, y, radius);
@@ -58,4 +62,11 @@ public final class Circle implements Geometry {
             return false;
     }
 
+    public boolean intersects(Point point) {
+        return Math.sqrt(sqr(x - point.x()) + sqr(y - point.y())) <= radius;
+    }
+
+    private float sqr(float x) {
+        return x * x;
+    }
 }
