@@ -21,7 +21,10 @@ import com.google.common.collect.Lists;
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
  * 
- * @param <T,S> the entry type
+ * @param <T>
+ *            the entry value type
+ * @param <S>
+ *            the entry geometry type
  */
 public final class RTree<T, S extends Geometry> {
 
@@ -82,8 +85,10 @@ public final class RTree<T, S extends Geometry> {
      * Returns a new Builder instance for {@link RTree}. Defaults to
      * maxChildren=128, minChildren=64, splitter=QuadraticSplitter.
      *
-     * @param <R>
+     * @param <T>
      *            the value type of the entries in the tree
+     * @param <S>
+     *            the geometry type of the entries in the tree
      * @return a new RTree instance
      */
     public static <T, S extends Geometry> RTree<T, S> create() {
@@ -262,11 +267,9 @@ public final class RTree<T, S extends Geometry> {
         /**
          * Builds the {@link RTree}.
          * 
-         * @param <R>
-         *            the entry type
          * @return RTree
          */
-        public <R, P extends Geometry> RTree<R, P> create() {
+        public <T, S extends Geometry> RTree<T, S> create() {
             if (!maxChildren.isPresent())
                 if (star)
                     maxChildren = of(MAX_CHILDREN_DEFAULT_STAR);
@@ -274,7 +277,7 @@ public final class RTree<T, S extends Geometry> {
                     maxChildren = of(MAX_CHILDREN_DEFAULT_GUTTMAN);
             if (!minChildren.isPresent())
                 minChildren = of((int) Math.round(maxChildren.get() * DEFAULT_FILLING_FACTOR));
-            return new RTree<R, P>(new Context(minChildren.get(), maxChildren.get(), selector,
+            return new RTree<T, S>(new Context(minChildren.get(), maxChildren.get(), selector,
                     splitter));
         }
 
