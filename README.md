@@ -72,8 +72,16 @@ RTree<String, Geometry> tree = RTree.create();
 You can specify a few parameters to the builder, including *minChildren*, *maxChildren*, *splitter*, *selector*:
 
 ```java
-RTree<String, Geometry> tree = RTree.minChildren(3).maxChildren(6).create();
+RTree<String, Geometry> tree = RTree.minChildren(3).maxChildren(6).create();
 ```
+###Generic typing
+
+If for instance you know that the entry geometry is always ```Point``` then create an ```RTree``` specifying that generic type to gain more type safety:
+
+```java
+RTree<String, Point> tree = RTree.create();
+```
+
 
 ###R*-tree
 If you'd like an R*-tree (which uses a topological splitter on minimal margin, overlap area and area and a selector combination of minimal area increase, minimal overlap, and area):
