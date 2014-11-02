@@ -72,7 +72,7 @@ RTree<String, Geometry> tree = RTree.create();
 You can specify a few parameters to the builder, including *minChildren*, *maxChildren*, *splitter*, *selector*:
 
 ```java
-RTree<String, Point> tree = RTree.minChildren(3).maxChildren(6).create();
+RTree<String, Geometry> tree = RTree.minChildren(3).maxChildren(6).create();
 ```
 
 ###R*-tree
