@@ -57,7 +57,7 @@ Add this maven dependency to your pom.xml:
 <dependency>
   <groupId>com.github.davidmoten</groupId>
   <artifactId>rtree</artifactId>
-  <version>0.4</version>
+  <version>0.4.1</version>
 </dependency>
 ```
 ###Instantiate an R-Tree
@@ -67,19 +67,19 @@ Use the static builder methods on the ```RTree``` class:
 // create an R-tree using Quadratic split with max
 // children per node 4, min children 2 (the threshold
 // at which members are redistributed)
-RTree<String> tree = RTree.create();
+RTree<String, Geometry> tree = RTree.create();
 ```
 You can specify a few parameters to the builder, including *minChildren*, *maxChildren*, *splitter*, *selector*:
 
 ```java
-RTree<String> tree = RTree.minChildren(3).maxChildren(6).create();
+RTree<String, Point> tree = RTree.minChildren(3).maxChildren(6).create();
 ```
 
 ###R*-tree
 If you'd like an R*-tree (which uses a topological splitter on minimal margin, overlap area and area and a selector combination of minimal area increase, minimal overlap, and area):
 
 ```
-RTree<String> tree = RTree.star().maxChildren(6).create();
+RTree<String, Geometry> tree = RTree.star().maxChildren(6).create();
 ```
 
 See benchmarks below for some of the performance differences.
@@ -95,12 +95,12 @@ extension of the item. The ``Geometries`` builder provides these factory methods
 To add an item to an R-tree:
 
 ```java
-RTree<T> tree = RTree.create();
+RTree<T,Geometry> tree = RTree.create();
 tree = tree.add(item, Geometries.point(10,20));
 ```
 or 
 ```java
-tree = tree.add(Enry.entry(item, Geometries.point(10,20));
+tree = tree.add(Entry.entry(item, Geometries.point(10,20));
 ```
 
 ###Remove an item in the R-tree
@@ -134,15 +134,15 @@ On average search is ```O(log(n))``` but worst case is ```O(n)```.
 
 Search methods return ```Observable``` sequences:
 ```java
-Observable<Entry<T>> results = tree.search(Geometries.rectangle(0,0,2,2));
+Observable<Entry<T, Geometry>> results = tree.search(Geometries.rectangle(0,0,2,2));
 ```
 or search for items within a distance from the given geometry:
 ```java
-Observable<Entry<T>> results = tree.search(Geometries.rectangle(0,0,2,2),5.0);
+Observable<Entry<T, Geometry>> results = tree.search(Geometries.rectangle(0,0,2,2),5.0);
 ```
 To return all entries from an R-tree:
 ```java
-Observable<Entry<T>> results = tree.entries();
+Observable<Entry<T, Geometry>> results = tree.entries();
 ```
 
 Example
@@ -151,12 +151,12 @@ Example
 import com.github.davidmoten.rtree.RTree;
 import static com.github.davidmoten.rtree.geometry.Geometries.*;
 
-RTree<String> tree = RTree.maxChildren(5).create();
+RTree<String, Point> tree = RTree.maxChildren(5).create();
 tree = tree.add("DAVE", point(10, 20))
            .add("FRED", point(12, 25))
            .add("MARY", point(97, 125));
  
-Observable<Entry<String>> entries = tree.search(Rectangle.create(8, 15, 30, 35));
+Observable<Entry<String, Point>> entries = tree.search(Rectangle.create(8, 15, 30, 35));
 ```
 
 What do I do with the Observable thing?
@@ -170,7 +170,7 @@ import rx.Observable;
 import rx.functions.*;
 import rx.schedulers.Schedulers;
 
-Func1<Entry<String>, Character> firstCharacter = entry -> entry.value().charAt(0);
+Func1<Entry<String, Geometry>, Character> firstCharacter = entry -> entry.value().charAt(0);
 Func2<Character,Character,Character> firstAlphabetically = (x,y) -> x <=y ? x : y;
 
 Character result = 
