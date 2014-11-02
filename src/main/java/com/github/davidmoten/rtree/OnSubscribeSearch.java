@@ -10,35 +10,35 @@ import rx.functions.Func1;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.util.ImmutableStack;
 
-final class OnSubscribeSearch<T> implements OnSubscribe<Entry<T>> {
+final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entry<T, S>> {
 
-    private final Node<T> node;
+    private final Node<T, S> node;
     private final Func1<? super Geometry, Boolean> condition;
 
-    OnSubscribeSearch(Node<T> node, Func1<? super Geometry, Boolean> condition) {
+    OnSubscribeSearch(Node<T, S> node, Func1<? super Geometry, Boolean> condition) {
         this.node = node;
         this.condition = condition;
     }
 
     @Override
-    public void call(Subscriber<? super Entry<T>> subscriber) {
-        subscriber.setProducer(new SearchProducer<T>(node, condition, subscriber));
+    public void call(Subscriber<? super Entry<T, S>> subscriber) {
+        subscriber.setProducer(new SearchProducer<T, S>(node, condition, subscriber));
     }
 
-    private static class SearchProducer<T> implements Producer {
+    private static class SearchProducer<T, S extends Geometry> implements Producer {
 
-        private final Subscriber<? super Entry<T>> subscriber;
-        private final Node<T> node;
+        private final Subscriber<? super Entry<T, S>> subscriber;
+        private final Node<T, S> node;
         private final Func1<? super Geometry, Boolean> condition;
-        private volatile ImmutableStack<NodePosition<T>> stack;
+        private volatile ImmutableStack<NodePosition<T, S>> stack;
         private final AtomicLong requested = new AtomicLong(0);
 
-        SearchProducer(Node<T> node, Func1<? super Geometry, Boolean> condition,
-                Subscriber<? super Entry<T>> subscriber) {
+        SearchProducer(Node<T, S> node, Func1<? super Geometry, Boolean> condition,
+                Subscriber<? super Entry<T, S>> subscriber) {
             this.node = node;
             this.condition = condition;
             this.subscriber = subscriber;
-            stack = ImmutableStack.create(new NodePosition<T>(node, 0));
+            stack = ImmutableStack.create(new NodePosition<T, S>(node, 0));
         }
 
         @Override

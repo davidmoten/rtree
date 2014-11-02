@@ -35,7 +35,8 @@ public final class Util {
      * c.g.d.r.BenchmarksMbr.mbrOldList4    thrpt       10  14891862.638   198765.157  ops/s
      * </pre>
      * 
-     * @param items items to bound
+     * @param items
+     *            items to bound
      * @return the minimum bounding rectangle containings items
      */
     public static Rectangle mbr(Collection<? extends HasGeometry> items) {

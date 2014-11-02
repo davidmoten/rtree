@@ -21,12 +21,11 @@ import com.google.common.collect.Lists;
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
  * 
- * @param <T>
- *            the entry type
+ * @param <T,S> the entry type
  */
-public final class RTree<T> {
+public final class RTree<T, S extends Geometry> {
 
-    private final Optional<? extends Node<T>> root;
+    private final Optional<? extends Node<T, S>> root;
     private final Context context;
 
     /**
@@ -51,7 +50,7 @@ public final class RTree<T> {
      * @param context
      *            options for the R-tree
      */
-    private RTree(Optional<? extends Node<T>> root, int size, Context context) {
+    private RTree(Optional<? extends Node<T, S>> root, int size, Context context) {
         this.root = root;
         this.size = size;
         this.context = context;
@@ -65,7 +64,7 @@ public final class RTree<T> {
      * @param context
      *            options for the R-tree
      */
-    private RTree(Node<T> root, int size, Context context) {
+    private RTree(Node<T, S> root, int size, Context context) {
         this(of(root), size, context);
     }
 
@@ -76,7 +75,7 @@ public final class RTree<T> {
      *            specifies parameters and behaviour for the R-tree
      */
     public RTree(Context context) {
-        this(Optional.<Node<T>> absent(), 0, context);
+        this(Optional.<Node<T, S>> absent(), 0, context);
     }
 
     /**
@@ -87,7 +86,7 @@ public final class RTree<T> {
      *            the value type of the entries in the tree
      * @return a new RTree instance
      */
-    public static <R> RTree<R> create() {
+    public static <T, S extends Geometry> RTree<T, S> create() {
         return new Builder().create();
     }
 
@@ -102,18 +101,18 @@ public final class RTree<T> {
         return calculateDepth(root);
     }
 
-    private static <T> int calculateDepth(Optional<? extends Node<T>> root) {
+    private static <T, S extends Geometry> int calculateDepth(Optional<? extends Node<T, S>> root) {
         if (!root.isPresent())
             return 0;
         else
             return calculateDepth(root.get(), 0);
     }
 
-    private static <T> int calculateDepth(Node<T> node, int depth) {
+    private static <T, S extends Geometry> int calculateDepth(Node<T, S> node, int depth) {
         if (node instanceof Leaf)
             return depth + 1;
         else
-            return calculateDepth(((NonLeaf<T>) node).children().get(0), depth + 1);
+            return calculateDepth(((NonLeaf<T, S>) node).children().get(0), depth + 1);
     }
 
     /**
@@ -267,7 +266,7 @@ public final class RTree<T> {
          *            the entry type
          * @return RTree
          */
-        public <R> RTree<R> create() {
+        public <R, P extends Geometry> RTree<R, P> create() {
             if (!maxChildren.isPresent())
                 if (star)
                     maxChildren = of(MAX_CHILDREN_DEFAULT_STAR);
@@ -275,7 +274,7 @@ public final class RTree<T> {
                     maxChildren = of(MAX_CHILDREN_DEFAULT_GUTTMAN);
             if (!minChildren.isPresent())
                 minChildren = of((int) Math.round(maxChildren.get() * DEFAULT_FILLING_FACTOR));
-            return new RTree<R>(new Context(minChildren.get(), maxChildren.get(), selector,
+            return new RTree<R, P>(new Context(minChildren.get(), maxChildren.get(), selector,
                     splitter));
         }
 
@@ -289,18 +288,20 @@ public final class RTree<T> {
      * @return a new immutable R-tree including the new entry
      */
     @SuppressWarnings("unchecked")
-    public RTree<T> add(Entry<T> entry) {
+    public RTree<T, S> add(Entry<? extends T, ? extends S> entry) {
         if (root.isPresent()) {
-            List<Node<T>> nodes = root.get().add(entry);
-            Node<T> node;
+            List<Node<T, S>> nodes = root.get().add(entry);
+            Node<T, S> node;
             if (nodes.size() == 1)
                 node = nodes.get(0);
             else {
-                node = new NonLeaf<T>(nodes, context);
+                node = new NonLeaf<T, S>(nodes, context);
             }
-            return new RTree<T>(node, size + 1, context);
+            return new RTree<T, S>(node, size + 1, context);
         } else
-            return new RTree<T>(new Leaf<T>(Lists.newArrayList(entry), context), size + 1, context);
+            return new RTree<T, S>(
+                    new Leaf<T, S>(Lists.newArrayList((Entry<T, S>) entry), context), size + 1,
+                    context);
     }
 
     /**
@@ -312,7 +313,7 @@ public final class RTree<T> {
      *            the geometry of the {@link Entry} to be added
      * @return a new immutable R-tree including the new entry
      */
-    public RTree<T> add(T value, Geometry geometry) {
+    public RTree<T, S> add(T value, S geometry) {
         return add(Entry.entry(value, geometry));
     }
 
@@ -324,9 +325,9 @@ public final class RTree<T> {
      *            entries to add
      * @return R-tree with entries added
      */
-    public RTree<T> add(Iterable<Entry<T>> entries) {
-        RTree<T> tree = this;
-        for (Entry<T> entry : entries)
+    public RTree<T, S> add(Iterable<Entry<T, S>> entries) {
+        RTree<T, S> tree = this;
+        for (Entry<T, S> entry : entries)
             tree = tree.add(entry);
         return tree;
     }
@@ -339,11 +340,11 @@ public final class RTree<T> {
      *            the entries to add
      * @return a sequence of trees
      */
-    public Observable<RTree<T>> add(Observable<Entry<T>> entries) {
-        return entries.scan(this, new Func2<RTree<T>, Entry<T>, RTree<T>>() {
+    public Observable<RTree<T, S>> add(Observable<Entry<T, S>> entries) {
+        return entries.scan(this, new Func2<RTree<T, S>, Entry<T, S>, RTree<T, S>>() {
 
             @Override
-            public RTree<T> call(RTree<T> tree, Entry<T> entry) {
+            public RTree<T, S> call(RTree<T, S> tree, Entry<T, S> entry) {
                 return tree.add(entry);
             }
         });
@@ -359,11 +360,11 @@ public final class RTree<T> {
      *            if true delete all matching otherwise just first matching
      * @return a sequence of trees
      */
-    public Observable<RTree<T>> delete(Observable<Entry<T>> entries, final boolean all) {
-        return entries.scan(this, new Func2<RTree<T>, Entry<T>, RTree<T>>() {
+    public Observable<RTree<T, S>> delete(Observable<Entry<T, S>> entries, final boolean all) {
+        return entries.scan(this, new Func2<RTree<T, S>, Entry<T, S>, RTree<T, S>>() {
 
             @Override
-            public RTree<T> call(RTree<T> tree, Entry<T> entry) {
+            public RTree<T, S> call(RTree<T, S> tree, Entry<T, S> entry) {
                 return tree.delete(entry, all);
             }
         });
@@ -380,9 +381,9 @@ public final class RTree<T> {
      *            if false deletes one if exists else deletes all
      * @return R-tree with entries deleted
      */
-    public RTree<T> delete(Iterable<Entry<T>> entries, boolean all) {
-        RTree<T> tree = this;
-        for (Entry<T> entry : entries)
+    public RTree<T, S> delete(Iterable<Entry<T, S>> entries, boolean all) {
+        RTree<T, S> tree = this;
+        for (Entry<T, S> entry : entries)
             tree = tree.delete(entry, all);
         return tree;
     }
@@ -403,11 +404,11 @@ public final class RTree<T> {
      * @return a new immutable R-tree without one instance of the specified
      *         entry
      */
-    public RTree<T> delete(T value, Geometry geometry, boolean all) {
+    public RTree<T, S> delete(T value, S geometry, boolean all) {
         return delete(Entry.entry(value, geometry), all);
     }
 
-    public RTree<T> delete(T value, Geometry geometry) {
+    public RTree<T, S> delete(T value, S geometry) {
         return delete(Entry.entry(value, geometry), false);
     }
 
@@ -423,26 +424,26 @@ public final class RTree<T> {
      * @return a new immutable R-tree without one instance of the specified
      *         entry
      */
-    public RTree<T> delete(Entry<T> entry, boolean all) {
+    public RTree<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all) {
         if (root.isPresent()) {
-            NodeAndEntries<T> nodeAndEntries = root.get().delete(entry, all);
+            NodeAndEntries<T, S> nodeAndEntries = root.get().delete(entry, all);
             if (nodeAndEntries.node().isPresent() && nodeAndEntries.node().get() == root.get())
                 return this;
             else
-                return new RTree<T>(nodeAndEntries.node(), size - nodeAndEntries.countDeleted()
+                return new RTree<T, S>(nodeAndEntries.node(), size - nodeAndEntries.countDeleted()
                         - nodeAndEntries.entriesToAdd().size(), context).add(nodeAndEntries
                         .entriesToAdd());
         } else
             return this;
     }
 
-    public RTree<T> delete(Entry<T> entry) {
+    public RTree<T, S> delete(Entry<? extends T, ? extends S> entry) {
         return delete(entry, false);
     }
 
-    public RTree<T> delete(Iterable<Entry<T>> entries) {
-        RTree<T> tree = this;
-        for (Entry<T> entry : entries)
+    public RTree<T, S> delete(Iterable<Entry<T, S>> entries) {
+        RTree<T, S> tree = this;
+        for (Entry<T, S> entry : entries)
             tree = tree.delete(entry);
         return tree;
     }
@@ -464,9 +465,9 @@ public final class RTree<T> {
      * @return sequence of matching entries
      */
     @VisibleForTesting
-    Observable<Entry<T>> search(Func1<? super Geometry, Boolean> condition) {
+    Observable<Entry<T, S>> search(Func1<? super Geometry, Boolean> condition) {
         if (root.isPresent())
-            return Observable.create(new OnSubscribeSearch<T>(root.get(), condition));
+            return Observable.create(new OnSubscribeSearch<T, S>(root.get(), condition));
         else
             return Observable.empty();
     }
@@ -508,7 +509,7 @@ public final class RTree<T> {
      *            rectangle to check intersection with the entry mbr
      * @return entries that intersect with the rectangle r
      */
-    public Observable<Entry<T>> search(final Rectangle r) {
+    public Observable<Entry<T, S>> search(final Rectangle r) {
         return search(intersects(r));
     }
 
@@ -520,7 +521,7 @@ public final class RTree<T> {
      *            point to check intersection with the entry mbr
      * @return entries that intersect with the point p
      */
-    public Observable<Entry<T>> search(final Point p) {
+    public Observable<Entry<T, S>> search(final Point p) {
         return search(p.mbr());
     }
 
@@ -535,7 +536,7 @@ public final class RTree<T> {
      *            entries returned must be within this distance from rectangle r
      * @return the sequence of matching entries
      */
-    public Observable<Entry<T>> search(final Rectangle r, final double maxDistance) {
+    public Observable<Entry<T, S>> search(final Rectangle r, final double maxDistance) {
         return search(new Func1<Geometry, Boolean>() {
             @Override
             public Boolean call(Geometry g) {
@@ -555,7 +556,7 @@ public final class RTree<T> {
      *            entries returned must be within this distance from point p
      * @return the sequence of matching entries
      */
-    public Observable<Entry<T>> search(final Point p, final double maxDistance) {
+    public Observable<Entry<T, S>> search(final Point p, final double maxDistance) {
         return search(p.mbr(), maxDistance);
     }
 
@@ -571,10 +572,10 @@ public final class RTree<T> {
      *            max number of entries to return
      * @return nearest entries to maxCount, not in any particular order
      */
-    public Observable<Entry<T>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
+    public Observable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
         return search(r, maxDistance).lift(
-                new OperatorBoundedPriorityQueue<Entry<T>>(maxCount, Comparators
-                        .<T> ascendingDistance(r)));
+                new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount, Comparators
+                        .<T, S> ascendingDistance(r)));
     }
 
     /**
@@ -589,7 +590,7 @@ public final class RTree<T> {
      *            max number of entries to return
      * @return nearest entries to maxCount, not in any particular order
      */
-    public Observable<Entry<T>> nearest(final Point p, final double maxDistance, int maxCount) {
+    public Observable<Entry<T, S>> nearest(final Point p, final double maxDistance, int maxCount) {
         return nearest(p.mbr(), maxDistance, maxCount);
     }
 
@@ -598,7 +599,7 @@ public final class RTree<T> {
      * 
      * @return all entries in the R-tree
      */
-    public Observable<Entry<T>> entries() {
+    public Observable<Entry<T, S>> entries() {
         return search(ALWAYS_TRUE);
     }
 
@@ -615,8 +616,9 @@ public final class RTree<T> {
      *            using the coordinate system of the entries
      * @return visualizer
      */
+    @SuppressWarnings("unchecked")
     public Visualizer visualize(int width, int height, Rectangle view) {
-        return new Visualizer(this, width, height, view);
+        return new Visualizer((RTree<?, Geometry>) this, width, height, view);
     }
 
     /**
@@ -635,14 +637,14 @@ public final class RTree<T> {
         return visualize(width, height, calculateMaxView(this));
     }
 
-    private Rectangle calculateMaxView(RTree<T> tree) {
+    private Rectangle calculateMaxView(RTree<T, S> tree) {
         return tree
                 .entries()
                 .reduce(Optional.<Rectangle> absent(),
-                        new Func2<Optional<Rectangle>, Entry<T>, Optional<Rectangle>>() {
+                        new Func2<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>>() {
 
                             @Override
-                            public Optional<Rectangle> call(Optional<Rectangle> r, Entry<T> entry) {
+                            public Optional<Rectangle> call(Optional<Rectangle> r, Entry<T, S> entry) {
                                 if (r.isPresent())
                                     return of(r.get().add(entry.geometry().mbr()));
                                 else
@@ -651,7 +653,7 @@ public final class RTree<T> {
                         }).toBlocking().single().or(rectangle(0, 0, 0, 0));
     }
 
-    Optional<? extends Node<T>> root() {
+    Optional<? extends Node<T, S>> root() {
         return root;
     }
 
@@ -690,24 +692,24 @@ public final class RTree<T> {
             return asString(root.get(), "");
     }
 
-    private String asString(Node<T> node, String margin) {
+    private String asString(Node<T, S> node, String margin) {
         final String marginIncrement = "  ";
         StringBuilder s = new StringBuilder();
         if (node instanceof NonLeaf) {
             s.append(margin);
             s.append("mbr=" + node.geometry());
             s.append('\n');
-            NonLeaf<T> n = (NonLeaf<T>) node;
-            for (Node<T> child : n.children()) {
+            NonLeaf<T, S> n = (NonLeaf<T, S>) node;
+            for (Node<T, S> child : n.children()) {
                 s.append(asString(child, margin + marginIncrement));
             }
         } else {
-            Leaf<T> leaf = (Leaf<T>) node;
+            Leaf<T, S> leaf = (Leaf<T, S>) node;
             s.append(margin);
             s.append("mbr=");
             s.append(leaf.geometry());
             s.append('\n');
-            for (Entry<T> entry : leaf.entries()) {
+            for (Entry<T, S> entry : leaf.entries()) {
                 s.append(margin);
                 s.append(marginIncrement);
                 s.append("entry=");

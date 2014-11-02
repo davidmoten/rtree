@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree;
 import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Point;
 
 public class Main {
 
@@ -15,11 +16,12 @@ public class Main {
             System.out.println("m=" + m + ", order=" + order);
         }
 
-        List<Entry<Object>> entries = GreekEarthquakes.entriesList();
+        List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
         int maxChildren = 10;
-        RTree<Object> tree = RTree.maxChildren(maxChildren).create().add(entries);
-        List<Entry<Object>> list = tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).toList()
-                .toBlocking().single();
+        RTree<Object, Point> tree = RTree.maxChildren(maxChildren).<Object, Point> create()
+                .add(entries);
+        List<Entry<Object, Point>> list = tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5))
+                .toList().toBlocking().single();
         System.out.println(list.size());
         while (true) {
             // tree.search(Geometries.rectangle(40, 27.0, 40.5,

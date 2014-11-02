@@ -1,16 +1,18 @@
 package com.github.davidmoten.rtree;
 
-final class NodePosition<T> {
+import com.github.davidmoten.rtree.geometry.Geometry;
 
-    private final Node<T> node;
+final class NodePosition<T, S extends Geometry> {
+
+    private final Node<T, S> node;
     private final int position;
 
-    NodePosition(Node<T> node, int position) {
+    NodePosition(Node<T, S> node, int position) {
         this.node = node;
         this.position = position;
     }
 
-    Node<T> node() {
+    Node<T, S> node() {
         return node;
     }
 
@@ -18,8 +20,8 @@ final class NodePosition<T> {
         return position;
     }
 
-    NodePosition<T> nextPosition() {
-        return new NodePosition<T>(node, position + 1);
+    NodePosition<T, S> nextPosition() {
+        return new NodePosition<T, S>(node, position + 1);
     }
 
 }

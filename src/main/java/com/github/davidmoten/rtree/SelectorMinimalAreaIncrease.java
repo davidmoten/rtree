@@ -17,7 +17,7 @@ public final class SelectorMinimalAreaIncrease implements Selector {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> Node<T> select(Geometry g, List<? extends Node<T>> nodes) {
+    public <T, S extends Geometry> Node<T, S> select(Geometry g, List<? extends Node<T, S>> nodes) {
         return min(nodes, compose(areaIncreaseComparator(g.mbr()), areaComparator(g.mbr())));
     }
 }

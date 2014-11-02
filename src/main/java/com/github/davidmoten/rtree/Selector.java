@@ -15,7 +15,8 @@ public interface Selector {
      * Returns the node from a list of nodes that an object with the given
      * geometry would be added to.
      * 
-     * @param <T> type of value of entry in tree
+     * @param <T>
+     *            type of value of entry in tree
      * @param g
      *            geometry
      * @param nodes
@@ -24,6 +25,6 @@ public interface Selector {
      * @throws NoSuchElementException
      *             if nodes is empty
      */
-    <T> Node<T> select(Geometry g, List<? extends Node<T>> nodes);
+    <T, S extends Geometry> Node<T, S> select(Geometry g, List<? extends Node<T, S>> nodes);
 
 }

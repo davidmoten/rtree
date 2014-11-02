@@ -2,6 +2,7 @@ package com.github.davidmoten.rtree;
 
 import java.util.List;
 
+import com.github.davidmoten.rtree.geometry.Geometry;
 import com.google.common.base.Optional;
 
 /**
@@ -10,10 +11,10 @@ import com.google.common.base.Optional;
  * @param <T>
  *            entry type
  */
-class NodeAndEntries<T> {
+class NodeAndEntries<T, S extends Geometry> {
 
-    private final Optional<? extends Node<T>> node;
-    private final List<Entry<T>> entries;
+    private final Optional<? extends Node<T, S>> node;
+    private final List<Entry<T, S>> entries;
     private final int count;
 
     /**
@@ -29,17 +30,18 @@ class NodeAndEntries<T> {
      * @param countDeleted
      *            count of the number of entries removed
      */
-    public NodeAndEntries(Optional<? extends Node<T>> node, List<Entry<T>> entries, int countDeleted) {
+    public NodeAndEntries(Optional<? extends Node<T, S>> node, List<Entry<T, S>> entries,
+            int countDeleted) {
         this.node = node;
         this.entries = entries;
         this.count = countDeleted;
     }
 
-    public Optional<? extends Node<T>> node() {
+    public Optional<? extends Node<T, S>> node() {
         return node;
     }
 
-    public List<Entry<T>> entriesToAdd() {
+    public List<Entry<T, S>> entriesToAdd() {
         return entries;
     }
 
