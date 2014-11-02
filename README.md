@@ -134,11 +134,13 @@ On average search is ```O(log(n))``` but worst case is ```O(n)```.
 
 Search methods return ```Observable``` sequences:
 ```java
-Observable<Entry<T, Geometry>> results = tree.search(Geometries.rectangle(0,0,2,2));
+Observable<Entry<T, Geometry>> results =
+    tree.search(Geometries.rectangle(0,0,2,2));
 ```
 or search for items within a distance from the given geometry:
 ```java
-Observable<Entry<T, Geometry>> results = tree.search(Geometries.rectangle(0,0,2,2),5.0);
+Observable<Entry<T, Geometry>> results =
+    tree.search(Geometries.rectangle(0,0,2,2),5.0);
 ```
 To return all entries from an R-tree:
 ```java
@@ -156,7 +158,8 @@ tree = tree.add("DAVE", point(10, 20))
            .add("FRED", point(12, 25))
            .add("MARY", point(97, 125));
  
-Observable<Entry<String, Point>> entries = tree.search(Rectangle.create(8, 15, 30, 35));
+Observable<Entry<String, Point>> entries =
+    tree.search(Rectangle.create(8, 15, 30, 35));
 ```
 
 What do I do with the Observable thing?
@@ -170,8 +173,10 @@ import rx.Observable;
 import rx.functions.*;
 import rx.schedulers.Schedulers;
 
-Func1<Entry<String, Geometry>, Character> firstCharacter = entry -> entry.value().charAt(0);
-Func2<Character,Character,Character> firstAlphabetically = (x,y) -> x <=y ? x : y;
+Func1<Entry<String, Geometry>, Character> firstCharacter =
+    entry -> entry.value().charAt(0);
+Func2<Character,Character,Character> firstAlphabetically 
+    = (x,y) -> x <=y ? x : y;
 
 Character result = 
     tree.search(Geometries.rectangle(8, 15, 30, 35))
@@ -205,7 +210,8 @@ How do I just get an Iterable back from a search?
 If you are not familiar with the Observable API and want to skip the reactive stuff then here's how to get an ```Iterable``` from a search:
 
 ```java
-Iterable<T> it = tree.search(Geometries.point(4,5)).toBlocking().toIterable();
+Iterable<T> it = tree.search(Geometries.point(4,5))
+                     .toBlocking().toIterable();
 ```
 
 Backpressure
@@ -216,7 +222,8 @@ Visualizer
 --------------
 To visualize the R-tree in a PNG file of size 600 by 600 pixels just call:
 ```java
-tree.visualize(600,600).save("target/mytree.png");
+tree.visualize(600,600)
+    .save("target/mytree.png");
 ```
 The result is like the images in the Features section above.
 
