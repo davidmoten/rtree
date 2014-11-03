@@ -1,8 +1,11 @@
 package com.github.davidmoten.rtree;
 
 import static com.github.davidmoten.rtree.Entry.entry;
+import static com.github.davidmoten.rtree.geometry.Geometries.circle;
 import static com.github.davidmoten.rtree.geometry.Geometries.point;
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
+import static com.github.davidmoten.rtree.geometry.Intersects.pointIntersectsCircle;
+import static com.github.davidmoten.rtree.geometry.Intersects.rectangleIntersectsCircle;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -30,6 +33,7 @@ import rx.functions.Functions;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
+import com.github.davidmoten.rtree.geometry.Intersects;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.common.collect.Lists;
@@ -657,6 +661,18 @@ public class RTreeTest {
             assertEquals(res1.size(), res2.size());
         }
     }
+    
+    @Test
+	public void testSearchWithIntersectsRectangleFunction() {
+		RTree<Integer, Rectangle> tree = RTree.create();
+		tree.search(circle(0, 0, 1), rectangleIntersectsCircle);
+	}
+
+	@Test
+	public void testSearchWithIntersectsPointFunction() {
+		RTree<Integer, Point> tree = RTree.create();
+		tree.search(circle(0, 0, 1), pointIntersectsCircle);
+	}
 
     private static <T> Func1<Entry<T, ?>, T> toValue() {
         return new Func1<Entry<T, ?>, T>() {

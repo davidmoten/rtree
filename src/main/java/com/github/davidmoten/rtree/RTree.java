@@ -547,6 +547,30 @@ public final class RTree<T, S extends Geometry> {
             }
         });
     }
+    
+    /**
+	 * Searches for intersections with the the given (arbitrary) geometry using
+	 * an intersection function to filter the search results returned from a
+	 * search of the mbr of <code>g</code>.
+	 * 
+	 * @param <R>
+	 *            type of geometry being searched for intersection with.
+	 * @param g
+	 *            geometry being searched for intersection with
+	 * @param intersects
+	 *            function to determine if the two geometries intersect
+	 * @return a sequence of entries that intersect with g
+	 */
+	public <R extends Geometry> Observable<Entry<T, S>> search(final R g,
+			final Func2<? super S, ? super R, Boolean> intersects) {
+		return search(g.mbr()).filter(new Func1<Entry<T, S>, Boolean>() {
+			@Override
+			public Boolean call(Entry<T, S> entry) {
+				return intersects.call(entry.geometry(), g);
+			}
+		});
+	}
+
 
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the
