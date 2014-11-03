@@ -530,7 +530,7 @@ public final class RTree<T, S extends Geometry> {
 
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the
-     * R-tree whose minimum bounding rectangles are less than maxDistance from
+     * R-tree whose minimum bounding rectangles are strictly less than maxDistance from
      * the given rectangle.
      * 
      * @param r
@@ -589,7 +589,7 @@ public final class RTree<T, S extends Geometry> {
 
     /**
      * Returns the nearest k entries (k=maxCount) to the given rectangle where
-     * the entries are within a given maximum distance from the rectangle.
+     * the entries are strictly less than a given maximum distance from the rectangle.
      * 
      * @param r
      *            rectangle
@@ -607,7 +607,7 @@ public final class RTree<T, S extends Geometry> {
 
     /**
      * Returns the nearest k entries (k=maxCount) to the given point where the
-     * entries are within a given maximum distance from the point.
+     * entries are strictly less than a given maximum distance from the point.
      * 
      * @param p
      *            point
