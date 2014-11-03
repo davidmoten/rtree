@@ -570,7 +570,41 @@ public final class RTree<T, S extends Geometry> {
             }
         });
     }
-
+    
+    /**
+     * Returns all entries strictly less than <code>maxDistance</code> from the
+     * given geometry. Because the geometry may be of an arbitrary type it is
+     * necessary to also pass a distance function.
+     * 
+     * @param <R>
+     *            type of the geometry being searched for
+     * @param g
+     *            geometry to search for entries within maxDistance of
+     * @param maxDistance
+     *            strict max distance that entries must be from g
+     * @param distance
+     *            function to calculate the distance between geometries of type
+     *            <S> and <R>.
+     * @return entries strictly less than maxDistance from g
+     */
+    public <R extends Geometry> Observable<Entry<T, S>> search(final R g, final double maxDistance,
+            final Func2<S, R, Double> distance) {
+        return search(new Func1<Geometry, Boolean>() {
+            @Override
+            public Boolean call(Geometry g) {
+                // just use the mbr initially
+                return g.distance(g.mbr()) < maxDistance;
+            }
+        })
+        // refine with distance function
+        .filter(new Func1<Entry<T, S>, Boolean>() {
+            @Override
+            public Boolean call(Entry<T, S> entry) {
+                return distance.call(entry.geometry(), g) < maxDistance;
+            }
+        });
+    }
+    
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the
      * R-tree whose minimum bounding rectangles are within maxDistance from the
