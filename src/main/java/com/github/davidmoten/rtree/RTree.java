@@ -530,8 +530,8 @@ public final class RTree<T, S extends Geometry> {
 
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the
-     * R-tree whose minimum bounding rectangles are strictly less than maxDistance from
-     * the given rectangle.
+     * R-tree whose minimum bounding rectangles are strictly less than
+     * maxDistance from the given rectangle.
      * 
      * @param r
      *            rectangle to measure distance from
@@ -547,30 +547,29 @@ public final class RTree<T, S extends Geometry> {
             }
         });
     }
-    
-    /**
-	 * Searches for intersections with the the given (arbitrary) geometry using
-	 * an intersection function to filter the search results returned from a
-	 * search of the mbr of <code>g</code>.
-	 * 
-	 * @param <R>
-	 *            type of geometry being searched for intersection with.
-	 * @param g
-	 *            geometry being searched for intersection with
-	 * @param intersects
-	 *            function to determine if the two geometries intersect
-	 * @return a sequence of entries that intersect with g
-	 */
-	public <R extends Geometry> Observable<Entry<T, S>> search(final R g,
-			final Func2<? super S, ? super R, Boolean> intersects) {
-		return search(g.mbr()).filter(new Func1<Entry<T, S>, Boolean>() {
-			@Override
-			public Boolean call(Entry<T, S> entry) {
-				return intersects.call(entry.geometry(), g);
-			}
-		});
-	}
 
+    /**
+     * Returns the intersections with the the given (arbitrary) geometry using
+     * an intersection function to filter the search results returned from a
+     * search of the mbr of <code>g</code>.
+     * 
+     * @param <R>
+     *            type of geometry being searched for intersection with
+     * @param g
+     *            geometry being searched for intersection with
+     * @param intersects
+     *            function to determine if the two geometries intersect
+     * @return a sequence of entries that intersect with g
+     */
+    public <R extends Geometry> Observable<Entry<T, S>> search(final R g,
+            final Func2<? super S, ? super R, Boolean> intersects) {
+        return search(g.mbr()).filter(new Func1<Entry<T, S>, Boolean>() {
+            @Override
+            public Boolean call(Entry<T, S> entry) {
+                return intersects.call(entry.geometry(), g);
+            }
+        });
+    }
 
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the
@@ -589,7 +588,8 @@ public final class RTree<T, S extends Geometry> {
 
     /**
      * Returns the nearest k entries (k=maxCount) to the given rectangle where
-     * the entries are strictly less than a given maximum distance from the rectangle.
+     * the entries are strictly less than a given maximum distance from the
+     * rectangle.
      * 
      * @param r
      *            rectangle
