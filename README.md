@@ -168,6 +168,17 @@ entries = tree.search(polygon, pointInPolygon);
 ```
 The key is that you need to supply the ```intersects``` function (```pointInPolygon```) to the search. It is on you to implement that for all types of geometry present in the ```RTree```. This is one reason that the generic ```Geometry``` type was added in *rtree* 0.5 (so the type system could tell you what geometry types you needed to calculate intersection for) .
 
+Search with a custom geometry and maxDistance
+--------------------------------------------------
+As per the example above to do a proximity search you need to specify how to calculate distance between the geometry you are searching and the entry geometries:
+
+```java
+RTree<String, Point> tree = RTree.create();
+Func2<Point,Polygon,Boolean> distancePointToPolygon = ...
+Polygon polygon = ...
+...
+entries = tree.search(polygon, 10, distancePointToPolygon);
+```
 Example
 --------------
 ```java
