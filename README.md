@@ -155,6 +155,18 @@ To return all entries from an R-tree:
 Observable<Entry<T, Geometry>> results = tree.entries();
 ```
 
+Search with a custom geometry
+-----------------------------------
+Suppose you make a custom geometry like ```Polygon``` and you want to search an ```RTree<String,Point>``` for points inside the polygon. This is how you do it:
+
+```java
+RTree<String, Point> tree = RTree.create();
+Func2<Point,Polygon,Boolean> pointInPolygon = ...
+Polygon polygon = ...
+...
+entries = tree.search(polygon,pointInPolygon);
+```
+
 Example
 --------------
 ```java
