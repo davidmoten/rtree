@@ -14,7 +14,7 @@ import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.google.common.base.Preconditions;
 
-public class SplitterRStar implements Splitter {
+public final class SplitterRStar implements Splitter {
 
     private final Comparator<ListPair<?>> comparator;
 

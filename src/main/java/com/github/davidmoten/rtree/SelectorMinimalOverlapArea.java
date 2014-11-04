@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 
-public class SelectorMinimalOverlapArea implements Selector {
+public final class SelectorMinimalOverlapArea implements Selector {
 
     @SuppressWarnings("unchecked")
     @Override
