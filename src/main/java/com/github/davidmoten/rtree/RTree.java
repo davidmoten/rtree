@@ -595,9 +595,9 @@ public final class RTree<T, S extends Geometry> {
             final Func2<S, R, Double> distance) {
         return search(new Func1<Geometry, Boolean>() {
             @Override
-            public Boolean call(Geometry g) {
+            public Boolean call(Geometry entry) {
                 // just use the mbr initially
-                return g.distance(g.mbr()) < maxDistance;
+                return entry.distance(g.mbr()) < maxDistance;
             }
         })
         // refine with distance function

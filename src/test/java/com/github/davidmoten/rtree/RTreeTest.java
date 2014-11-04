@@ -671,9 +671,17 @@ public class RTreeTest {
     }
 
     @Test
-    public void testSearchWithIntersectsPointFunction() {
-        RTree<Integer, Point> tree = RTree.create();
-        tree.search(circle(0, 0, 1), pointIntersectsCircle);
+    public void testSearchWithIntersectsPointFunctionReturnsOne() {
+        RTree<Integer, Point> tree = RTree.<Integer,Point> create().add(1, point(0,0));
+        Observable<Entry<Integer, Point>> entries = tree.search(circle(0, 0, 1), pointIntersectsCircle);
+        assertEquals(1,(int) entries.count().toBlocking().single());
+    }
+    
+    @Test
+    public void testSearchWithIntersectsPointFunctionReturnsNone() {
+        RTree<Integer, Point> tree = RTree.<Integer,Point> create().add(1, point(10,10));
+        Observable<Entry<Integer, Point>> entries = tree.search(circle(0, 0, 1), pointIntersectsCircle);
+        assertEquals(0,(int) entries.count().toBlocking().single());
     }
 
     @Test
@@ -682,12 +690,7 @@ public class RTreeTest {
                 .add(2, point(1, 1));
 
         Observable<Entry<Integer, Point>> entries = tree.search(circle(0, 0, 1), 0.1,
-                new Func2<Point, Circle, Double>() {
-                    @Override
-                    public Double call(Point point, Circle circle) {
-                        return circle.distance(point.mbr());
-                    }
-                });
+                distanceCircleToPoint);
         assertEquals(1, (int) entries.count().toBlocking().single());
     }
 
@@ -697,14 +700,26 @@ public class RTreeTest {
                 .add(2, point(1, 1));
 
         Observable<Entry<Integer, Point>> entries = tree.search(circle(0, 0, 1), 0.5,
-                new Func2<Point, Circle, Double>() {
-                    @Override
-                    public Double call(Point point, Circle circle) {
-                        return circle.distance(point.mbr());
-                    }
-                });
+                distanceCircleToPoint);
         assertEquals(2, (int) entries.count().toBlocking().single());
     }
+
+    @Test
+    public void testSearchWithDistanceFunctionIntersectsNothing() {
+        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(0, 0))
+                .add(2, point(1, 1));
+
+        Observable<Entry<Integer, Point>> entries = tree.search(circle(10, 10, 1), 0.5,
+                distanceCircleToPoint);
+        assertEquals(0, (int) entries.count().toBlocking().single());
+    }
+
+    private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
+        @Override
+        public Double call(Point point, Circle circle) {
+            return circle.distance(point.mbr());
+        }
+    };
 
     private static <T> Func1<Entry<T, ?>, T> toValue() {
         return new Func1<Entry<T, ?>, T>() {
