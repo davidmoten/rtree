@@ -17,6 +17,8 @@ public interface Selector {
      * 
      * @param <T>
      *            type of value of entry in tree
+     * @param <S>
+     *            type of geometry of entry in tree
      * @param g
      *            geometry
      * @param nodes

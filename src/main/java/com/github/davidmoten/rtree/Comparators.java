@@ -13,7 +13,7 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 /**
  * Utility functions asociated with {@link Comparator}s, especially for use with
  * {@link Selector}s and {@link Splitter}s.
- *
+ * 
  */
 public final class Comparators {
 
@@ -102,10 +102,12 @@ public final class Comparators {
      * <code>search(100).toSortedList(ascendingDistance(r))</code>
      * </p>
      * 
-     * @param r
-     *            rectangle to measure distance to
+     * @param <T>
+     *            the value type
      * @param <S>
      *            the entry type
+     * @param r
+     *            rectangle to measure distance to
      * @return a comparator to sort by ascending distance from the rectangle
      */
     public static <T, S extends Geometry> Comparator<Entry<T, S>> ascendingDistance(

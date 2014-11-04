@@ -84,7 +84,7 @@ public final class RTree<T, S extends Geometry> {
     /**
      * Returns a new Builder instance for {@link RTree}. Defaults to
      * maxChildren=128, minChildren=64, splitter=QuadraticSplitter.
-     *
+     * 
      * @param <T>
      *            the value type of the entries in the tree
      * @param <S>
@@ -267,6 +267,10 @@ public final class RTree<T, S extends Geometry> {
         /**
          * Builds the {@link RTree}.
          * 
+         * @param <T>
+         *            value type
+         * @param <S>
+         *            geometry type
          * @return RTree
          */
         public <T, S extends Geometry> RTree<T, S> create() {
@@ -570,7 +574,7 @@ public final class RTree<T, S extends Geometry> {
             }
         });
     }
-    
+
     /**
      * Returns all entries strictly less than <code>maxDistance</code> from the
      * given geometry. Because the geometry may be of an arbitrary type it is
@@ -584,16 +588,16 @@ public final class RTree<T, S extends Geometry> {
      *            strict max distance that entries must be from g
      * @param distance
      *            function to calculate the distance between geometries of type
-     *            <S> and <R>.
+     *            S and R.
      * @return entries strictly less than maxDistance from g
      */
     public <R extends Geometry> Observable<Entry<T, S>> search(final R g, final double maxDistance,
             final Func2<S, R, Double> distance) {
         return search(new Func1<Geometry, Boolean>() {
             @Override
-            public Boolean call(Geometry g) {
+            public Boolean call(Geometry entry) {
                 // just use the mbr initially
-                return g.distance(g.mbr()) < maxDistance;
+                return entry.distance(g.mbr()) < maxDistance;
             }
         })
         // refine with distance function
@@ -604,7 +608,7 @@ public final class RTree<T, S extends Geometry> {
             }
         });
     }
-    
+
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the
      * R-tree whose minimum bounding rectangles are within maxDistance from the

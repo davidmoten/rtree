@@ -9,7 +9,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * An entry in the R-tree which has a spatial representation.
- *
+ * 
  * @param <T>
  *            the type of Entry
  */
@@ -36,6 +36,8 @@ public final class Entry<T, S extends Geometry> implements HasGeometry {
      * 
      * @param <T>
      *            type of value
+     * @param <S>
+     *            type of geometry
      * @param value
      *            object being given a spatial context
      * @param geometry
