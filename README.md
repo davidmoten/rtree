@@ -1,5 +1,6 @@
 rtree
 =========
+<a href="https://travis-ci.org/davidmoten/rtree"><img src="https://travis-ci.org/davidmoten/rtree.svg"/></a>
 
 In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive processing of search results. 
 
@@ -16,8 +17,6 @@ it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/Leaf.java) and [N
 [Backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure) support required some complexity because effectively a
 bookmark needed to be kept for a position in the tree and returned to later to continue traversal. An immutable stack containing
  the node and child index of the path nodes came to the rescue here and recursion was abandoned in favour of looping to prevent stack overflow (unfortunately java doesn't support tail recursion!).
-
-Continuous integration with Travis: <a href="https://travis-ci.org/davidmoten/rtree"><img src="https://travis-ci.org/davidmoten/rtree.svg"/></a>
 
 Maven site reports are [here](http://davidmoten.github.io/rtree/index.html) including [javadoc](http://davidmoten.github.io/rtree/apidocs/index.html).
 
