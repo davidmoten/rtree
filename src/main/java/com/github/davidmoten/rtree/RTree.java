@@ -592,7 +592,7 @@ public final class RTree<T, S extends Geometry> {
      * @return entries strictly less than maxDistance from g
      */
     public <R extends Geometry> Observable<Entry<T, S>> search(final R g, final double maxDistance,
-            final Func2<S, R, Double> distance) {
+            final Func2<? super S, ? super R, Double> distance) {
         return search(new Func1<Geometry, Boolean>() {
             @Override
             public Boolean call(Geometry entry) {
