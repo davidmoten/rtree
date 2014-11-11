@@ -579,14 +579,14 @@ public class RTreeTest {
     @Test
     public void testSearchConditionAlwaysFalse() {
         @SuppressWarnings("unchecked")
-        RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?,?>)create(3, 3);
+        RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?, ?>) create(3, 3);
         assertEquals(0, (int) tree.search(Functions.alwaysFalse()).count().toBlocking().single());
     }
 
     @Test
     public void testAddOverload() {
         @SuppressWarnings("unchecked")
-        RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?,?>) create(3, 0);
+        RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?, ?>) create(3, 0);
         tree = tree.add(123, Geometries.point(1, 2));
         assertEquals(1, (int) tree.entries().count().toBlocking().single());
     }
@@ -594,7 +594,7 @@ public class RTreeTest {
     @Test
     public void testDeleteOverload() {
         @SuppressWarnings("unchecked")
-        RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?,?>) create(3, 0);
+        RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?, ?>) create(3, 0);
         tree = tree.add(123, Geometries.point(1, 2)).delete(123, Geometries.point(1, 2));
         assertEquals(0, (int) tree.entries().count().toBlocking().single());
     }
@@ -668,6 +668,27 @@ public class RTreeTest {
             // System.out.println("res1=" + res1 + ",res2=" + res2);
             assertEquals(res1.size(), res2.size());
         }
+    }
+
+    @Test
+    public void testUnsubscribeWhileIteratingLeafNode() {
+        RTree<Object, Rectangle> tree = RTree.maxChildren(5).<Object, Rectangle> create().add(e(1))
+                .add(e(2));
+        tree.entries().subscribe(new Subscriber<Object>() {
+            
+            @Override
+            public void onCompleted() {
+                
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onNext(Object t) {
+                unsubscribe();
+            }});
     }
 
     @Test
