@@ -13,6 +13,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileLock;
@@ -92,7 +93,12 @@ public class RTreeTest {
             }
         }
     }
-
+    
+    @Test(expected=NullPointerException.class)
+    public void testSaveFileThrowsNPEIfPathDoesNotExist() throws IOException {
+        RTree.create().visualize(600, 600).save("/abcdefg/abcdefg/blahblah", "PNG");
+    }
+    
     @Test
     public void testVisualizerWithEmptyTree() {
         RTree<Object, Geometry> tree = RTree.create();
