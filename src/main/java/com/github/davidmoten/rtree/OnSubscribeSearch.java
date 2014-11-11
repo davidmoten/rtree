@@ -9,6 +9,7 @@ import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.util.ImmutableStack;
+import com.google.common.annotations.VisibleForTesting;
 
 final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entry<T, S>> {
 
@@ -25,7 +26,8 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
         subscriber.setProducer(new SearchProducer<T, S>(node, condition, subscriber));
     }
 
-    private static class SearchProducer<T, S extends Geometry> implements Producer {
+    @VisibleForTesting
+    static class SearchProducer<T, S extends Geometry> implements Producer {
 
         private final Subscriber<? super Entry<T, S>> subscriber;
         private final Node<T, S> node;
@@ -50,9 +52,8 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
                 else if (n == Long.MAX_VALUE) {
                     // fast path
                     requestAll();
-                } else {
+                } else 
                     requestSome(n);
-                }
             } catch (RuntimeException e) {
                 subscriber.onError(e);
             }
