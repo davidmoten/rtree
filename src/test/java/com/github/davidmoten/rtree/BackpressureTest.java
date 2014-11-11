@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -199,19 +200,15 @@ public class BackpressureTest {
         tree.entries().subscribe(backpressureSubscriber(found));
         assertEquals(expected, found);
     }
-
+    
     @Test
     public void testBackpressureIterateWhenConditionFailsAgainstLeafNode() {
-        Entry<Object, Rectangle> e1 = e(1);
-        List<Entry<Object, Rectangle>> list = new ArrayList<Entry<Object, Rectangle>>();
-        for (int i = 1; i <= 17; i++)
-            list.add(e1);
-        list.add(e(2));
+        Entry<Object, Rectangle> e3 = e(3);
         RTree<Object, Rectangle> tree = RTree.star().maxChildren(4).<Object, Rectangle> create()
-                .add(list);
-        HashSet<Entry<Object, Rectangle>> expected = new HashSet<Entry<Object, Rectangle>>(list);
-        final HashSet<Entry<Object, Rectangle>> found = new HashSet<Entry<Object, Rectangle>>();
-        tree.search(e(2).geometry().mbr()).subscribe(backpressureSubscriber(found));
+                .add(e(1)).add(e3);
+        Set<Entry<Object, Rectangle>> expected = Collections.singleton(e3);
+        final Set<Entry<Object, Rectangle>> found = new HashSet<Entry<Object, Rectangle>>();
+        tree.search(e3.geometry()).subscribe(backpressureSubscriber(found));
         assertEquals(expected, found);
     }
 
