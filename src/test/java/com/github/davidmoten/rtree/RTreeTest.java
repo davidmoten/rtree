@@ -743,6 +743,19 @@ public class RTreeTest {
         assertEquals(0, (int) entries.count().toBlocking().single());
     }
 
+    @Test
+    public void calculateDepthOfEmptyTree() {
+        RTree<Object, Geometry> tree = RTree.create();
+        assertEquals(0,tree.calculateDepth());
+    }
+    
+    @Test
+    public void calculateAsStringOfEmptyTree() {
+        RTree<Object, Geometry> tree = RTree.create();
+        assertEquals("", tree.asString());
+    }
+    
+    
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
         @Override
         public Double call(Point point, Circle circle) {
