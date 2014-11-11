@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -129,31 +130,10 @@ public class BackpressureTest {
         RTree<Object, Geometry> tree = RTree.star().maxChildren(4).create().add(list);
         HashSet<Entry<Object, Geometry>> expected = new HashSet<Entry<Object, Geometry>>(list);
         final HashSet<Entry<Object, Geometry>> found = new HashSet<Entry<Object, Geometry>>();
-        tree.entries().subscribe(new Subscriber<Entry<Object, Geometry>>() {
-
-            @Override
-            public void onStart() {
-                request(1);
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(Entry<Object, Geometry> t) {
-                found.add(t);
-                request(1);
-            }
-        });
+        tree.entries().subscribe(backpressureSubscriber(found));
         assertEquals(expected, found);
     }
+
 
     @Test
     public void testBackpressureRequestZero() {
@@ -198,29 +178,7 @@ public class BackpressureTest {
         RTree<Object, Geometry> tree = RTree.star().maxChildren(4).create().add(list);
         HashSet<Entry<Object, Geometry>> expected = new HashSet<Entry<Object, Geometry>>(list);
         final HashSet<Entry<Object, Geometry>> found = new HashSet<Entry<Object, Geometry>>();
-        tree.entries().subscribe(new Subscriber<Entry<Object, Geometry>>() {
-
-            @Override
-            public void onStart() {
-                request(1);
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(Entry<Object, Geometry> t) {
-                found.add(t);
-                request(1);
-            }
-        });
+        tree.entries().subscribe(backpressureSubscriber(found));
         assertEquals(expected, found);
     }
 
@@ -234,7 +192,13 @@ public class BackpressureTest {
         RTree<Object, Geometry> tree = RTree.star().maxChildren(4).create().add(list);
         HashSet<Entry<Object, Geometry>> expected = new HashSet<Entry<Object, Geometry>>(list);
         final HashSet<Entry<Object, Geometry>> found = new HashSet<Entry<Object, Geometry>>();
-        tree.entries().subscribe(new Subscriber<Entry<Object, Geometry>>() {
+        tree.entries().subscribe(backpressureSubscriber(found));
+        assertEquals(expected, found);
+    }
+
+    private static Subscriber<Entry<Object, Geometry>> backpressureSubscriber(
+            final Set<Entry<Object, Geometry>> found) {
+        return new Subscriber<Entry<Object, Geometry>>() {
 
             @Override
             public void onStart() {
@@ -256,8 +220,7 @@ public class BackpressureTest {
                 found.add(t);
                 request(1);
             }
-        });
-        assertEquals(expected, found);
+        };
     }
-
+    
 }
