@@ -40,8 +40,9 @@ Features
 * requires java 1.6 or later
 
 Number of points = 1000, max children per node 8, Quadratic split: 
-
-<img src="src/docs/quad-1000-8.png?raw=true" width="30%" height="30%"/><img src="src/docs/star-1000-8.png?raw=true" width="30%" height="30%"/>
+|Quadratic split|R*-tree split|
+|-------|-------------|
+| <img src="src/docs/quad-1000-8.png?raw=true" width="30%" height="30%"/> | <img src="src/docs/star-1000-8.png?raw=true" width="30%" height="30%"/>|
 
 Number of points = 1000, max children per node 8, R*-tree split. Notice that there is little overlap compared to the 
 Quadratic split. This should provide better search performance (and in general benchmarks show this).
