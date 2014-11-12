@@ -464,7 +464,7 @@ public final class RTree<T, S extends Geometry> {
         return delete(entry, false);
     }
 
-    //TODO javadoc
+    // TODO javadoc
     public RTree<T, S> delete(Iterable<Entry<T, S>> entries) {
         RTree<T, S> tree = this;
         for (Entry<T, S> entry : entries)
@@ -768,7 +768,18 @@ public final class RTree<T, S extends Geometry> {
     }
 
     /**
-     * Returns a human readable form of the RTree.
+     * Returns a human readable form of the RTree. Here's an example:
+     * 
+     * <pre>
+     * mbr=Rectangle [x1=10.0, y1=4.0, x2=62.0, y2=85.0]
+     *   mbr=Rectangle [x1=28.0, y1=4.0, x2=34.0, y2=85.0]
+     *     entry=Entry [value=2, geometry=Point [x=29.0, y=4.0]]
+     *     entry=Entry [value=1, geometry=Point [x=28.0, y=19.0]]
+     *     entry=Entry [value=4, geometry=Point [x=34.0, y=85.0]]
+     *   mbr=Rectangle [x1=10.0, y1=45.0, x2=62.0, y2=63.0]
+     *     entry=Entry [value=5, geometry=Point [x=62.0, y=45.0]]
+     *     entry=Entry [value=3, geometry=Point [x=10.0, y=63.0]]
+     * </pre>
      * 
      * @return a string representation of the RTree
      */
