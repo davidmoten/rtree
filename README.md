@@ -344,7 +344,7 @@ c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128          
 Notes
 -----------
 For next release:
-* fixed wildcard typing in ```RTree.search```
-* made ```Intersects``` final
-* add tests to achieve 100% coverage
+* made RTree constructor with Context private
+* refactored Backpressure class to use more immutability
+* add javadoc
 

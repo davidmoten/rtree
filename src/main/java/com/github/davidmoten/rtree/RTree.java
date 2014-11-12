@@ -43,6 +43,9 @@ public final class RTree<T, S extends Geometry> {
      */
     public static final int MAX_CHILDREN_DEFAULT_STAR = 4;
 
+    /**
+     * Current size in Entries of the RTree.
+     */
     private int size;
 
     /**
@@ -77,7 +80,7 @@ public final class RTree<T, S extends Geometry> {
      * @param context
      *            specifies parameters and behaviour for the R-tree
      */
-    public RTree(Context context) {
+    private RTree(Context context) {
         this(Optional.<Node<T, S>> absent(), 0, context);
     }
 
@@ -288,7 +291,7 @@ public final class RTree<T, S extends Geometry> {
     }
 
     /**
-     * Adds an entry to the R-tree.
+     * Returns an immutable copy of the RTree with the addition of given entry.
      * 
      * @param entry
      *            item to add to the R-tree.
@@ -312,7 +315,8 @@ public final class RTree<T, S extends Geometry> {
     }
 
     /**
-     * Adds an entry comprised of the given value and Geometry.
+     * Returns an immutable copy of the RTree with the addition of an entry
+     * comprised of the given value and Geometry.
      * 
      * @param value
      *            the value of the {@link Entry} to be added
@@ -325,8 +329,8 @@ public final class RTree<T, S extends Geometry> {
     }
 
     /**
-     * Returns a new R-tree with the current entries and the additional entries
-     * supplied as a parameter.
+     * Returns an immutable RTree with the current entries and the additional
+     * entries supplied as a parameter.
      * 
      * @param entries
      *            entries to add
@@ -408,13 +412,24 @@ public final class RTree<T, S extends Geometry> {
      *            the geometry of the {@link Entry} to be deleted
      * @param all
      *            if false deletes one if exists else deletes all
-     * @return a new immutable R-tree without one instance of the specified
-     *         entry
+     * @return a new immutable R-tree without one or many instances of the
+     *         specified entry if it exists otherwise returns the original RTree
+     *         object
      */
     public RTree<T, S> delete(T value, S geometry, boolean all) {
         return delete(Entry.entry(value, geometry), all);
     }
 
+    /**
+     * Deletes maximum one entry matching the given value and geometry. This
+     * method has no effect if the entry is not present. The entry must match on
+     * both value and geometry to be deleted.
+     * 
+     * @param value
+     * @param geometry
+     * @return an immutable RTree without one entry (if found) matching the
+     *         given value and geometry
+     */
     public RTree<T, S> delete(T value, S geometry) {
         return delete(Entry.entry(value, geometry), false);
     }
@@ -444,10 +459,12 @@ public final class RTree<T, S extends Geometry> {
             return this;
     }
 
+    // TODO add another version of this method with boolean all parameter?
     public RTree<T, S> delete(Entry<? extends T, ? extends S> entry) {
         return delete(entry, false);
     }
 
+    //TODO javadoc
     public RTree<T, S> delete(Iterable<Entry<T, S>> entries) {
         RTree<T, S> tree = this;
         for (Entry<T, S> entry : entries)
@@ -750,6 +767,11 @@ public final class RTree<T, S extends Geometry> {
         return context;
     }
 
+    /**
+     * Returns a human readable form of the RTree.
+     * 
+     * @return a string representation of the RTree
+     */
     public String asString() {
         if (!root.isPresent())
             return "";
