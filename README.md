@@ -39,13 +39,13 @@ Features
 * R*-tree performs 425,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=4, minChildren=4). Insert at 135,000 entries per second.
 * requires java 1.6 or later
 
-Number of points = 1000, max children per node 8, Quadratic split: 
+Number of points = 1000, max children per node 8: 
 
 | Quadratic split | R*-tree split |
 | ------- | ------------- |
-| <img src="src/docs/quad-1000-8.png?raw=true" width="30%" height="30%"/> | <img src="src/docs/star-1000-8.png?raw=true" width="30%" height="30%"/> |
+| <img src="src/docs/quad-1000-8.png?raw=true" width="30%" height="30%"/> | <img src="src/docs/star-1000-8.png?raw=true" width="60%" height="60%"/> |
 
-Number of points = 1000, max children per node 8, R*-tree split. Notice that there is little overlap compared to the 
+Notice that there is little overlap in the R*-tree split compared to the 
 Quadratic split. This should provide better search performance (and in general benchmarks show this).
 
 <img src="src/docs/star-1000-8.png?raw=true"/>
