@@ -40,6 +40,16 @@ public class BackpressureTest {
         Mockito.verify(sub, Mockito.never()).onNext(Mockito.any());
     }
 
+    @Test
+    public void testBackpressureSearchNodeWithConditionThatAlwaysReturnsFalse() {
+        RTree<Object, Rectangle> tree = RTree.maxChildren(3).<Object, Rectangle> create().add(e(1))
+                .add(e(3)).add(e(5)).add(e(7));
+
+        Set<Entry<Object, Rectangle>> found = new HashSet<Entry<Object, Rectangle>>();
+        tree.search(e(1).geometry()).subscribe(backpressureSubscriber(found));
+        assertEquals(1, found.size());
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void testRequestZero() {
@@ -200,7 +210,7 @@ public class BackpressureTest {
         tree.entries().subscribe(backpressureSubscriber(found));
         assertEquals(expected, found);
     }
-    
+
     @Test
     public void testBackpressureIterateWhenConditionFailsAgainstLeafNode() {
         Entry<Object, Rectangle> e3 = e(3);
