@@ -36,6 +36,7 @@ Features
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 * visualizer included
+* 100% unit test code coverage (for what that's worth of course)
 * R*-tree performs 425,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=4, minChildren=4). Insert at 135,000 entries per second.
 * requires java 1.6 or later
 
