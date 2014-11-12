@@ -6,13 +6,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
@@ -48,7 +45,7 @@ public final class Visualizer {
             return calculateDepth(((NonLeaf<R, S>) node).children().get(0), depth + 1);
     }
 
-    public BufferedImage create() {
+    public BufferedImage createImage() {
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g = (Graphics2D) image.getGraphics();
         g.setBackground(Color.white);
@@ -115,11 +112,7 @@ public final class Visualizer {
     }
 
     public void save(File file, String imageFormat) {
-        try {
-            ImageIO.write(create(), imageFormat, file);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
+        ImageSaver.save(createImage(), file, imageFormat);
     }
 
     public void save(String filename, String imageFormat) {
