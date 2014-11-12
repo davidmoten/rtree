@@ -19,6 +19,9 @@ final class Backpressure {
             final Func1<? super Geometry, Boolean> condition,
             final Subscriber<? super Entry<T, S>> subscriber,
             ImmutableStack<NodePosition<T, S>> stack, long request) {
+        // TODO this loop would be a lot cleaner if written in functional style
+        // as a transformation on the pair stack and request. Maybe slightly
+        // less performant?
         while (!stack.isEmpty()) {
             NodePosition<T, S> np = stack.peek();
             if (subscriber.isUnsubscribed())
