@@ -1,7 +1,6 @@
 package com.github.davidmoten.rtree;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 
@@ -24,8 +23,6 @@ public interface Selector {
      * @param nodes
      *            nodes to select from
      * @return one of the given nodes
-     * @throws NoSuchElementException
-     *             if nodes is empty
      */
     <T, S extends Geometry> Node<T, S> select(Geometry g, List<? extends Node<T, S>> nodes);
 

@@ -1,11 +1,10 @@
 package com.github.davidmoten.rtree.geometry;
 
-import com.github.davidmoten.rtree.Entry;
 
 /**
  * A geometrical region that represents an Entry spatially. It is recommended
  * that implementations of this interface implement equals() and hashCode()
- * appropriately that {@link Entry} equality checks work as expected.
+ * appropriately that entry equality checks work as expected.
  */
 public interface Geometry {
 
