@@ -13,7 +13,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileLock;
@@ -24,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
@@ -92,11 +92,6 @@ public class RTreeTest {
                 e.printStackTrace();
             }
         }
-    }
-    
-    @Test(expected=NullPointerException.class)
-    public void testSaveFileThrowsNPEIfPathDoesNotExist() throws IOException {
-        RTree.create().visualize(600, 600).save("/abcdefg/abcdefg/blahblah", "PNG");
     }
     
     @Test
@@ -695,6 +690,29 @@ public class RTreeTest {
             public void onNext(Object t) {
                 unsubscribe();
             }});
+    }
+    
+    @Test
+    public void testUnsubscribeWhileIteratingNonLeafNode() {
+        final AtomicBoolean completed = new AtomicBoolean(false);
+        RTree<Object, Rectangle> tree = RTree.maxChildren(3).<Object, Rectangle> create().add(e(1))
+                .add(e(2)).add(e(3)).add(e(4));
+        tree.entries().subscribe(new Subscriber<Object>() {
+            
+            @Override
+            public void onCompleted() {
+              completed.set(true);  
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onNext(Object t) {
+                unsubscribe();
+            }});
+        assertFalse(completed.get());
     }
 
     @Test
