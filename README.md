@@ -42,7 +42,7 @@ Features
 Number of points = 1000, max children per node 8: 
 
 | Quadratic split | R*-tree split |
-| ------- | ------------- |
+| :-------------: | :-----------: |
 | <img src="src/docs/quad-1000-8.png?raw=true" width="75%" height="75%"/> | <img src="src/docs/star-1000-8.png?raw=true" width="75%" height="75%"/> |
 
 Notice that there is little overlap in the R*-tree split compared to the 
