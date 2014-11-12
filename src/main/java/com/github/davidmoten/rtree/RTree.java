@@ -399,6 +399,14 @@ public final class RTree<T, S extends Geometry> {
         return tree;
     }
 
+    // TODO javadoc
+    public RTree<T, S> delete(Iterable<Entry<T, S>> entries) {
+        RTree<T, S> tree = this;
+        for (Entry<T, S> entry : entries)
+            tree = tree.delete(entry);
+        return tree;
+    }
+
     /**
      * If <code>all</code> is false deletes one entry matching the given value
      * and Geometry. If <code>all</code> is true deletes all entries matching
@@ -435,9 +443,11 @@ public final class RTree<T, S extends Geometry> {
     }
 
     /**
-     * Delete one entry if it exists. If multiple copies of the entry are in the
-     * R-tree only one will be deleted. The entry must match on both value and
-     * geometry to be deleted.
+     * Deletes one or all matching entries depending on the value of
+     * <code>all</code>. If multiple copies of the entry are in the R-tree only
+     * one will be deleted if all is false otherwise all matching entries will
+     * be deleted. The entry must match on both value and geometry to be
+     * deleted.
      * 
      * @param entry
      *            the {@link Entry} to be deleted
@@ -459,17 +469,23 @@ public final class RTree<T, S extends Geometry> {
             return this;
     }
 
-    // TODO add another version of this method with boolean all parameter?
+    /**
+     * Deletes one entry if it exists, returning an immutable copy of the RTree
+     * without that entry. If multiple copies of the entry are in the R-tree
+     * only one will be deleted. The entry must match on both value and geometry
+     * to be deleted.
+     * 
+     * @param entry
+     *            the {@link Entry} to be deleted
+     * 
+     * @param all
+     *            if true deletes all matches otherwise deletes first found
+     * 
+     * @return a new immutable R-tree without one instance of the specified
+     *         entry
+     */
     public RTree<T, S> delete(Entry<? extends T, ? extends S> entry) {
         return delete(entry, false);
-    }
-
-    // TODO javadoc
-    public RTree<T, S> delete(Iterable<Entry<T, S>> entries) {
-        RTree<T, S> tree = this;
-        for (Entry<T, S> entry : entries)
-            tree = tree.delete(entry);
-        return tree;
     }
 
     /**
