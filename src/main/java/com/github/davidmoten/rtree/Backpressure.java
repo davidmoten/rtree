@@ -18,43 +18,61 @@ final class Backpressure {
     static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> search(
             final Func1<? super Geometry, Boolean> condition,
             final Subscriber<? super Entry<T, S>> subscriber,
-            ImmutableStack<NodePosition<T, S>> stack, long request) {
-        // TODO this loop would be a lot cleaner if written in functional style
-        // as a transformation on the pair stack and request. Maybe slightly
-        // less performant?
-        while (!stack.isEmpty()) {
-            NodePosition<T, S> np = stack.peek();
-            if (subscriber.isUnsubscribed())
-                return ImmutableStack.empty();
-            else if (request == 0)
-                return stack;
-            else if (np.position() == np.node().count()) {
-                // handle after last in node
-                stack = searchAfterLastInNode(stack);
-            } else if (np.node() instanceof NonLeaf) {
-                // handle non-leaf
-                stack = searchNonLeaf(condition, stack, np);
-            } else {
-                // handle leaf
-                long nextRequest = searchLeaf(condition, subscriber, request, np);
-                stack = stack.pop().push(np.nextPosition());
-                request = nextRequest;
-            }
-        }
-        return stack;
+            final ImmutableStack<NodePosition<T, S>> stack, final long request) {
+        StackAndRequest<NodePosition<T, S>> state = StackAndRequest.create(stack, request);
+        return searchAndReturnStack(condition, subscriber, state);
     }
 
-    private static <T, S extends Geometry> long searchLeaf(
+    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAndReturnStack(
             final Func1<? super Geometry, Boolean> condition,
-            final Subscriber<? super Entry<T, S>> subscriber, long request, NodePosition<T, S> np) {
+            final Subscriber<? super Entry<T, S>> subscriber, StackAndRequest<NodePosition<T, S>> state) {
+
+        while (!state.stack.isEmpty()) {
+            NodePosition<T, S> np = state.stack.peek();
+            if (subscriber.isUnsubscribed())
+                return ImmutableStack.empty();
+            else if (state.request == 0)
+                return state.stack;
+            else if (np.position() == np.node().count()) {
+                // handle after last in node
+                state = StackAndRequest.create(searchAfterLastInNode(state.stack), state.request);
+            } else if (np.node() instanceof NonLeaf) {
+                // handle non-leaf
+                state = StackAndRequest.create(searchNonLeaf(condition, state.stack, np), state.request);
+            } else {
+                // handle leaf
+                state = searchLeaf(condition, subscriber, state, np);
+            }
+        }
+        return state.stack;
+    }
+
+    private static class StackAndRequest<T> {
+        private final ImmutableStack<T> stack;
+        private final long request;
+
+        StackAndRequest(ImmutableStack<T> stack, long request) {
+            this.stack = stack;
+            this.request = request;
+        }
+
+        static <T> StackAndRequest<T> create(ImmutableStack<T> stack, long request) {
+            return new StackAndRequest<T>(stack, request);
+        }
+
+    }
+
+    private static <T, S extends Geometry> StackAndRequest<NodePosition<T, S>> searchLeaf(
+            final Func1<? super Geometry, Boolean> condition,
+            final Subscriber<? super Entry<T, S>> subscriber, StackAndRequest<NodePosition<T,S>> state, NodePosition<T, S> np) {
         final long nextRequest;
         Entry<T, S> entry = ((Leaf<T, S>) np.node()).entries().get(np.position());
         if (condition.call(entry.geometry())) {
             subscriber.onNext(entry);
-            nextRequest = request - 1;
+            nextRequest = state.request - 1;
         } else
-            nextRequest = request;
-        return nextRequest;
+            nextRequest = state.request;
+        return StackAndRequest.create(state.stack.pop().push(np.nextPosition()), nextRequest);
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAfterLastInNode(
