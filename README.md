@@ -351,5 +351,6 @@ For release 0.5.3:
 * set visiblity of Node.children to default, was public
 * use reflection to get unit test coverage of ```Geometries``` private constructor
 * update to rxjava 0.20.7
+* update site plugins to latest
 * add javadoc
 
