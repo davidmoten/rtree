@@ -350,5 +350,6 @@ For release 0.5.3:
 * set constructor and method visibility of ```NodeAndEntries``` to default, was public
 * set visiblity of Node.children to default, was public
 * use reflection to get unit test coverage of ```Geometries``` private constructor
+* update to rxjava 0.20.7
 * add javadoc
 
