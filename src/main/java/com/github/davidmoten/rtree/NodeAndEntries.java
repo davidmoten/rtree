@@ -30,22 +30,22 @@ class NodeAndEntries<T, S extends Geometry> {
      * @param countDeleted
      *            count of the number of entries removed
      */
-    public NodeAndEntries(Optional<? extends Node<T, S>> node, List<Entry<T, S>> entries,
+    NodeAndEntries(Optional<? extends Node<T, S>> node, List<Entry<T, S>> entries,
             int countDeleted) {
         this.node = node;
         this.entries = entries;
         this.count = countDeleted;
     }
 
-    public Optional<? extends Node<T, S>> node() {
+    Optional<? extends Node<T, S>> node() {
         return node;
     }
 
-    public List<Entry<T, S>> entriesToAdd() {
+    List<Entry<T, S>> entriesToAdd() {
         return entries;
     }
 
-    public int countDeleted() {
+    int countDeleted() {
         return count;
     }
 
