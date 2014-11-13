@@ -16,9 +16,9 @@ public final class Context {
      * Constructor.
      * 
      * @param minChildren
-     *            minimum number of children per node
+     *            minimum number of children per node (at least 1)
      * @param maxChildren
-     *            max number of children per node
+     *            max number of children per node (minimum is 3)
      * @param selector
      *            algorithm to select search path
      * @param splitter
@@ -26,6 +26,7 @@ public final class Context {
      */
     public Context(int minChildren, int maxChildren, Selector selector, Splitter splitter) {
         Preconditions.checkNotNull(splitter);
+        Preconditions.checkNotNull(selector);
         Preconditions.checkArgument(maxChildren > 2);
         Preconditions.checkArgument(minChildren >= 1);
         Preconditions.checkArgument(minChildren < maxChildren);
