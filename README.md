@@ -347,5 +347,6 @@ For next 0.5.3:
 * made ```RTree``` constructor with ```Context``` private
 * refactored ```Backpressure``` class to use more immutability
 * add ```Precondition.checkNotNull(selector)``` for ```Context``` constructor
+* set constructor and method visibility of ```NodeAndEntries``` to default, was public
 * add javadoc
 
