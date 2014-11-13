@@ -349,6 +349,6 @@ For next 0.5.3:
 * add ```Precondition.checkNotNull(selector)``` for ```Context``` constructor
 * set constructor and method visibility of ```NodeAndEntries``` to default, was public
 * set visiblity of Node.children to default, was public
-* use reflection to get unit test coverage of Geometries private constructor
+* use reflection to get unit test coverage of ```Geometries``` private constructor
 * add javadoc
 
