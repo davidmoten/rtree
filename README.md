@@ -344,7 +344,8 @@ c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128          
 Notes
 -----------
 For next release:
-* made RTree constructor with Context private
-* refactored Backpressure class to use more immutability
+* made ```RTree``` constructor with ```Context``` private
+* refactored ```Backpressure``` class to use more immutability
+* add ```Precondition.checkNotNull(selector)``` for ```Context``` constructor
 * add javadoc
 
