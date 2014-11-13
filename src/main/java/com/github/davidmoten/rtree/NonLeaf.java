@@ -53,7 +53,7 @@ final class NonLeaf<T, S extends Geometry> implements Node<T, S> {
         return children.size();
     }
 
-    public List<? extends Node<T, S>> children() {
+    List<? extends Node<T, S>> children() {
         return children;
     }
 
