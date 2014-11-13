@@ -343,7 +343,7 @@ c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128          
 
 Notes
 -----------
-For next release:
+For next 0.5.3:
 * made ```RTree``` constructor with ```Context``` private
 * refactored ```Backpressure``` class to use more immutability
 * add ```Precondition.checkNotNull(selector)``` for ```Context``` constructor
