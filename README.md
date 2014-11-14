@@ -341,16 +341,3 @@ c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032          
 c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128                    thrpt       10  208791.404     2751.306  ops/s
 ```
 
-Notes
------------
-For release 0.5.3:
-* made ```RTree``` constructor with ```Context``` private
-* refactored ```Backpressure``` class to use more immutability
-* add ```Precondition.checkNotNull(selector)``` for ```Context``` constructor
-* set constructor and method visibility of ```NodeAndEntries``` to default, was public
-* set visiblity of Node.children to default, was public
-* use reflection to get unit test coverage of ```Geometries``` private constructor
-* update to rxjava 0.20.7
-* update site plugins to latest
-* add javadoc
-
