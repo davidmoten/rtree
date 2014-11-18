@@ -581,9 +581,17 @@ public class RTreeTest {
     public void testSearchConditionAlwaysFalse() {
         @SuppressWarnings("unchecked")
         RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?, ?>) create(3, 3);
-        assertEquals(0, (int) tree.search(Functions.alwaysFalse()).count().toBlocking().single());
+        assertEquals(0, (int) tree.search(alwaysFalse()).count().toBlocking().single());
     }
 
+    private static <T> Func1<T, Boolean> alwaysFalse() {
+        return new Func1<T, Boolean>() {
+            @Override
+            public Boolean call(T t) {
+                return false;
+            }};
+    }
+    
     @Test
     public void testAddOverload() {
         @SuppressWarnings("unchecked")
