@@ -22,7 +22,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <slf4j.version>1.7.7</slf4j.version>
 
         <cobertura.version>2.6</cobertura.version>
