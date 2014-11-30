@@ -31,7 +31,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.functions.Functions;
 
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
@@ -93,7 +92,7 @@ public class RTreeTest {
             }
         }
     }
-    
+
     @Test
     public void testVisualizerWithEmptyTree() {
         RTree<Object, Geometry> tree = RTree.create();
@@ -581,7 +580,8 @@ public class RTreeTest {
     public void testSearchConditionAlwaysFalse() {
         @SuppressWarnings("unchecked")
         RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?, ?>) create(3, 3);
-        assertEquals(0, (int) tree.search(Functions.alwaysFalse()).count().toBlocking().single());
+        assertEquals(0, (int) tree.search(com.github.davidmoten.rx.Functions.alwaysFalse()).count()
+                .toBlocking().single());
     }
 
     @Test
@@ -676,10 +676,10 @@ public class RTreeTest {
         RTree<Object, Rectangle> tree = RTree.maxChildren(5).<Object, Rectangle> create().add(e(1))
                 .add(e(2));
         tree.entries().subscribe(new Subscriber<Object>() {
-            
+
             @Override
             public void onCompleted() {
-                
+
             }
 
             @Override
@@ -689,19 +689,20 @@ public class RTreeTest {
             @Override
             public void onNext(Object t) {
                 unsubscribe();
-            }});
+            }
+        });
     }
-    
+
     @Test
     public void testUnsubscribeWhileIteratingNonLeafNode() {
         final AtomicBoolean completed = new AtomicBoolean(false);
         RTree<Object, Rectangle> tree = RTree.maxChildren(3).<Object, Rectangle> create().add(e(1))
                 .add(e(2)).add(e(3)).add(e(4));
         tree.entries().subscribe(new Subscriber<Object>() {
-            
+
             @Override
             public void onCompleted() {
-              completed.set(true);  
+                completed.set(true);
             }
 
             @Override
@@ -711,7 +712,8 @@ public class RTreeTest {
             @Override
             public void onNext(Object t) {
                 unsubscribe();
-            }});
+            }
+        });
         assertFalse(completed.get());
     }
 
@@ -770,16 +772,15 @@ public class RTreeTest {
     @Test
     public void calculateDepthOfEmptyTree() {
         RTree<Object, Geometry> tree = RTree.create();
-        assertEquals(0,tree.calculateDepth());
+        assertEquals(0, tree.calculateDepth());
     }
-    
+
     @Test
     public void calculateAsStringOfEmptyTree() {
         RTree<Object, Geometry> tree = RTree.create();
         assertEquals("", tree.asString());
     }
-    
-    
+
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
         @Override
         public Double call(Point point, Circle circle) {

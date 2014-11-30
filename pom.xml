@@ -38,7 +38,6 @@
         <m3.site.version>3.4</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
-        <rxjava.version>0.20.7</rxjava.version>
         <jmh.version>1.2</jmh.version>
 
     </properties>
@@ -89,9 +88,9 @@
             <version>18.0</version>
         </dependency>
         <dependency>
-            <groupId>com.netflix.rxjava</groupId>
-            <artifactId>rxjava-core</artifactId>
-            <version>${rxjava.version}</version>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>1.0.1</version>
         </dependency>
 
         <!-- Test Dependencies -->
@@ -103,10 +102,17 @@
         </dependency>
 
         <dependency>
-            <groupId>com.netflix.rxjava</groupId>
+            <groupId>io.reactivex</groupId>
             <artifactId>rxjava-string</artifactId>
-            <version>${rxjava.version}</version>
+            <version>0.21.0</version>
             <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+        	<groupId>com.github.davidmoten</groupId>
+        	<artifactId>rxjava-extras</artifactId>
+        	<version>0.1</version>
+        	<scope>test</scope>
         </dependency>
 
         <dependency>
