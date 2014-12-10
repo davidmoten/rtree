@@ -1,6 +1,7 @@
 rtree
 =========
-<a href="https://travis-ci.org/davidmoten/rtree"><img src="https://travis-ci.org/davidmoten/rtree.svg"/></a>
+<a href="https://travis-ci.org/davidmoten/rtree"><img src="https://travis-ci.org/davidmoten/rtree.svg"/></a><br/>
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree)
 
 In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive processing of search results. 
 
