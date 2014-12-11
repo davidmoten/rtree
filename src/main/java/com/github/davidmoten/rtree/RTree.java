@@ -399,7 +399,15 @@ public final class RTree<T, S extends Geometry> {
         return tree;
     }
 
-    // TODO javadoc
+    /**
+     * Returns a new R-tree with the given entries deleted but only one
+     * matching occurence of each entry is deleted. 
+     * 
+     * @param entries
+     *            entries to delete
+     * @return R-tree with entries deleted up to one matching occurence 
+     *            per entry
+     */
     public RTree<T, S> delete(Iterable<Entry<T, S>> entries) {
         RTree<T, S> tree = this;
         for (Entry<T, S> entry : entries)

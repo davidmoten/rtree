@@ -1,6 +1,7 @@
 rtree
 =========
-<a href="https://travis-ci.org/davidmoten/rtree"><img src="https://travis-ci.org/davidmoten/rtree.svg"/></a>
+<a href="https://travis-ci.org/davidmoten/rtree"><img src="https://travis-ci.org/davidmoten/rtree.svg"/></a><br/>
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree)
 
 In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive processing of search results. 
 
@@ -57,7 +58,7 @@ Add this maven dependency to your pom.xml:
 <dependency>
   <groupId>com.github.davidmoten</groupId>
   <artifactId>rtree</artifactId>
-  <version>0.5.2</version>
+  <version>0.5.4</version>
 </dependency>
 ```
 ###Instantiate an R-Tree
@@ -340,17 +341,4 @@ c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpr
 c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032                    thrpt       10  279709.070     4622.236  ops/s
 c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128                    thrpt       10  208791.404     2751.306  ops/s
 ```
-
-Notes
------------
-For release 0.5.3:
-* made ```RTree``` constructor with ```Context``` private
-* refactored ```Backpressure``` class to use more immutability
-* add ```Precondition.checkNotNull(selector)``` for ```Context``` constructor
-* set constructor and method visibility of ```NodeAndEntries``` to default, was public
-* set visiblity of Node.children to default, was public
-* use reflection to get unit test coverage of ```Geometries``` private constructor
-* update to rxjava 0.20.7
-* update site plugins to latest
-* add javadoc
 
