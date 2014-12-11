@@ -38,11 +38,6 @@
         <m3.site.version>3.4</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
-<<<<<<< HEAD
-		<rxjava.version>1.0.0</rxjava.version>
-        <rxjava.string.version>0.22.0</rxjava.string.version>
-=======
->>>>>>> ff909f40af6847db414b3a4aba3ef7f49e44e790
         <jmh.version>1.2</jmh.version>
 
     </properties>
@@ -95,11 +90,7 @@
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
-<<<<<<< HEAD
-            <version>${rxjava.version}</version>
-=======
-            <version>1.0.1</version>
->>>>>>> ff909f40af6847db414b3a4aba3ef7f49e44e790
+            <version>1.0.2</version>
         </dependency>
 
         <!-- Test Dependencies -->
@@ -113,11 +104,7 @@
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava-string</artifactId>
-<<<<<<< HEAD
-            <version>${rxjava.string.version}</version>
-=======
-            <version>0.21.0</version>
->>>>>>> ff909f40af6847db414b3a4aba3ef7f49e44e790
+            <version>0.22.0</version>
             <scope>test</scope>
         </dependency>
         

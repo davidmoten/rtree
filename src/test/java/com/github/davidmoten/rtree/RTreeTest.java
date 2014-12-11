@@ -580,12 +580,8 @@ public class RTreeTest {
     public void testSearchConditionAlwaysFalse() {
         @SuppressWarnings("unchecked")
         RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?, ?>) create(3, 3);
-<<<<<<< HEAD
-        assertEquals(0, (int) tree.search(alwaysFalse()).count().toBlocking().single());
-=======
         assertEquals(0, (int) tree.search(com.github.davidmoten.rx.Functions.alwaysFalse()).count()
                 .toBlocking().single());
->>>>>>> ff909f40af6847db414b3a4aba3ef7f49e44e790
     }
 
     private static <T> Func1<T, Boolean> alwaysFalse() {
