@@ -27,9 +27,13 @@ public final class Point implements Geometry {
     }
 
     public double distance(Point p) {
+        return Math.sqrt(distanceSquared(p));
+    }
+
+    public double distanceSquared(Point p) {
         float dx = mbr().x1() - p.mbr().x1();
         float dy = mbr().y1() - p.mbr().y1();
-        return Math.sqrt(dx * dx + dy * dy);
+        return dx * dx + dy * dy;
     }
 
     @Override

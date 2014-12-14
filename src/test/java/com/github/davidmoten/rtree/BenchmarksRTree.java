@@ -288,10 +288,8 @@ public class BenchmarksRTree {
     }
 
     public static void main(String[] args) {
-        RTree<Object, Rectangle> tree = RTree.<Object, Rectangle> create().add(entries1000());
-        System.out.println();
-        System.out.println(tree.search(Geometries.rectangle(500, 500, 630, 630)).count()
-                .toBlocking().single());
-
+        BenchmarksRTree b = new BenchmarksRTree();
+        while (true)
+            b.searchGreek(b.starTreeM10);
     }
 }

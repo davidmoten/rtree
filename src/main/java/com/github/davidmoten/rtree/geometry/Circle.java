@@ -44,7 +44,8 @@ public final class Circle implements Geometry {
     }
 
     public boolean intersects(Circle c) {
-        return new Point(x, y).distance(new Point(c.x, c.y)) <= radius + c.radius;
+        double total = radius + c.radius;
+        return new Point(x, y).distanceSquared(new Point(c.x, c.y)) <= total * total;
     }
 
     @Override
