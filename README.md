@@ -194,6 +194,11 @@ Observable<Entry<String, Point>> entries =
     tree.search(Rectangle.create(8, 15, 30, 35));
 ```
 
+Searching by distance on lat longs
+------------------------------------
+See [LatLongExampleTest.java](src/test/java/com/github/davidmoten/rtree/LatLongExampleTest.java) for an example.
+
+
 What do I do with the Observable thing?
 -------------------------------------------
 Very useful, see [RxJava](http://github.com/ReactiveX/RxJava).
