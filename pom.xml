@@ -116,6 +116,13 @@
         </dependency>
 
         <dependency>
+        	<groupId>com.github.davidmoten</groupId>
+        	<artifactId>grumpy-core</artifactId>
+        	<version>0.2.2</version>
+        	<scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
             <version>${jmh.version}</version>
