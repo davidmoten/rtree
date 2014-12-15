@@ -198,6 +198,10 @@ Searching by distance on lat longs
 ------------------------------------
 See [LatLongExampleTest.java](src/test/java/com/github/davidmoten/rtree/LatLongExampleTest.java) for an example. The example depends on [*grumpy-core*](https://github.com/davidmoten/grumpy) artifact which is also on Maven Central.
 
+Another lat long example searching geo circles 
+------------------------------------------------
+See [LatLongExampleTest.testSearchLatLongCircles()](src/test/java/com/github/davidmoten/rtree/LatLongExampleTest.java) for an example of searching circles around geographic points (using great circle distance).
+
 
 What do I do with the Observable thing?
 -------------------------------------------
