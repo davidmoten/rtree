@@ -196,7 +196,7 @@ Observable<Entry<String, Point>> entries =
 
 Searching by distance on lat longs
 ------------------------------------
-See [LatLongExampleTest.java](src/test/java/com/github/davidmoten/rtree/LatLongExampleTest.java) for an example.
+See [LatLongExampleTest.java](src/test/java/com/github/davidmoten/rtree/LatLongExampleTest.java) for an example. The example depends on [*grumpy-core*](https://github.com/davidmoten/grumpy) artifact which is also on Maven Central.
 
 
 What do I do with the Observable thing?
