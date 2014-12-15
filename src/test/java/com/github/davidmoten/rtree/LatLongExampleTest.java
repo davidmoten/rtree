@@ -96,7 +96,7 @@ public class LatLongExampleTest {
                 // do the search (only expect one value)
                 .toBlocking().single()
                 // get the name of the GoeCircleValue returned
-                .value().t;
+                .value().value;
         assertEquals("Canberra", result);
     }
 
@@ -123,16 +123,16 @@ public class LatLongExampleTest {
 
     private static class GeoCircleValue<T> {
 
-        GeoCircleValue(float lat, float lon, double radiusKm, T t) {
+        GeoCircleValue(float lat, float lon, double radiusKm, T value) {
             this.lat = lat;
             this.lon = lon;
             this.radiusKm = radiusKm;
-            this.t = t;
+            this.value = value;
         }
 
         float lat;
         float lon;
         double radiusKm;
-        T t;
+        T value;
     }
 }
