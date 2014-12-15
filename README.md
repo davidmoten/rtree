@@ -125,12 +125,12 @@ tree = tree.delete(entry);
 ###Custom geometries
 You can also write your own implementation of [```Geometry```](src/main/java/com/github/davidmoten/rtree/geometry/Geometry.java). An implementation of ```Geometry``` needs to specify methods to:
 
-* measure distance to a rectangle (0 means they intersect)
 * check intersection with a rectangle (you can reuse the distance method here if you want but it might affect performance)
 * provide a minimum bounding rectangle
 * implement ```equals``` and ```hashCode``` for consistent equality checking
+* measure distance to a rectangle (0 means they intersect). Note that this method is only used for search within a distance so implementing this method is *optional*. If you don't want to implement this method just throw a ```RuntimeException```.
 
-For the R-tree to be well-behaved, the distance function needs to satisfy these properties:
+For the R-tree to be well-behaved, the distance function if implemented needs to satisfy these properties:
 
 * ```distance(r) >= 0 for all rectangles r```
 * ```if rectangle r1 contains r2 then distance(r1)<=distance(r2)```
