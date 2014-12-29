@@ -25,20 +25,22 @@ final class Backpressure {
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAndReturnStack(
             final Func1<? super Geometry, Boolean> condition,
-            final Subscriber<? super Entry<T, S>> subscriber, StackAndRequest<NodePosition<T, S>> state) {
+            final Subscriber<? super Entry<T, S>> subscriber,
+            StackAndRequest<NodePosition<T, S>> state) {
 
         while (!state.stack.isEmpty()) {
             NodePosition<T, S> np = state.stack.peek();
             if (subscriber.isUnsubscribed())
                 return ImmutableStack.empty();
-            else if (state.request == 0)
+            else if (state.request <= 0)
                 return state.stack;
             else if (np.position() == np.node().count()) {
                 // handle after last in node
                 state = StackAndRequest.create(searchAfterLastInNode(state.stack), state.request);
             } else if (np.node() instanceof NonLeaf) {
                 // handle non-leaf
-                state = StackAndRequest.create(searchNonLeaf(condition, state.stack, np), state.request);
+                state = StackAndRequest.create(searchNonLeaf(condition, state.stack, np),
+                        state.request);
             } else {
                 // handle leaf
                 state = searchLeaf(condition, subscriber, state, np);
@@ -64,7 +66,8 @@ final class Backpressure {
 
     private static <T, S extends Geometry> StackAndRequest<NodePosition<T, S>> searchLeaf(
             final Func1<? super Geometry, Boolean> condition,
-            final Subscriber<? super Entry<T, S>> subscriber, StackAndRequest<NodePosition<T,S>> state, NodePosition<T, S> np) {
+            final Subscriber<? super Entry<T, S>> subscriber,
+            StackAndRequest<NodePosition<T, S>> state, NodePosition<T, S> np) {
         final long nextRequest;
         Entry<T, S> entry = ((Leaf<T, S>) np.node()).entries().get(np.position());
         if (condition.call(entry.geometry())) {
