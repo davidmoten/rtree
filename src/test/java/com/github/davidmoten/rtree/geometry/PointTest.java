@@ -18,10 +18,17 @@ public class PointTest {
     }
 
     @Test
-    public void testDistance() {
+    public void testDistanceToRectangle() {
         Point p1 = Geometries.point(1, 2);
         Rectangle r = Geometries.rectangle(4, 6, 4, 6);
         assertEquals(5, p1.distance(r), PRECISION);
+    }
+
+    @Test
+    public void testDistanceToPoint() {
+        Point p1 = Geometries.point(1, 2);
+        Point p2 = Geometries.point(4, 6);
+        assertEquals(5, p1.distance(p2), PRECISION);
     }
 
     @Test
