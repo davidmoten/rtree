@@ -400,13 +400,13 @@ public final class RTree<T, S extends Geometry> {
     }
 
     /**
-     * Returns a new R-tree with the given entries deleted but only one
-     * matching occurence of each entry is deleted. 
+     * Returns a new R-tree with the given entries deleted but only one matching
+     * occurence of each entry is deleted.
      * 
      * @param entries
      *            entries to delete
-     * @return R-tree with entries deleted up to one matching occurence 
-     *            per entry
+     * @return R-tree with entries deleted up to one matching occurence per
+     *         entry
      */
     public RTree<T, S> delete(Iterable<Entry<T, S>> entries) {
         RTree<T, S> tree = this;
@@ -676,7 +676,7 @@ public final class RTree<T, S extends Geometry> {
      *            max distance of returned entries from the rectangle
      * @param maxCount
      *            max number of entries to return
-     * @return nearest entries to maxCount, not in any particular order
+     * @return nearest entries to maxCount, in ascending order of distance
      */
     public Observable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
         return search(r, maxDistance).lift(
@@ -694,7 +694,7 @@ public final class RTree<T, S extends Geometry> {
      *            max distance of returned entries from the point
      * @param maxCount
      *            max number of entries to return
-     * @return nearest entries to maxCount, not in any particular order
+     * @return nearest entries to maxCount, in ascending order of distance
      */
     public Observable<Entry<T, S>> nearest(final Point p, final double maxDistance, int maxCount) {
         return nearest(p.mbr(), maxDistance, maxCount);
