@@ -792,12 +792,15 @@ public class RTreeTest {
 
     @Test
     public void testForMeiZhao() {
-        RTree<Integer, Point> tree = RTree.maxChildren(3).minChildren(1).<Integer, Point> create()
-                .add(1, point(1, 9)).add(2, point(2, 10)).add(3, point(4, 8)).add(4, point(6, 7))
-                .add(5, point(9, 10)).add(6, point(7, 5)).add(7, point(5, 6)).add(8, point(4, 3))
-                .add(9, point(3, 2)).add(10, point(9, 1)).add(11, point(10, 4))
-                .add(12, point(6, 2)).add(13, point(8, 3));
-        System.out.println(tree.asString());
+        for (int minChildren = 1; minChildren <= 2; minChildren++) {
+            RTree<Integer, Point> tree = RTree.maxChildren(3).minChildren(minChildren)
+                    .<Integer, Point> create().add(1, point(1, 9)).add(2, point(2, 10))
+                    .add(3, point(4, 8)).add(4, point(6, 7)).add(5, point(9, 10))
+                    .add(6, point(7, 5)).add(7, point(5, 6)).add(8, point(4, 3))
+                    .add(9, point(3, 2)).add(10, point(9, 1)).add(11, point(10, 4))
+                    .add(12, point(6, 2)).add(13, point(8, 3));
+            System.out.println(tree.asString());
+        }
     }
 
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
