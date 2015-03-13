@@ -111,6 +111,9 @@ or
 tree = tree.add(Entry.entry(item, Geometries.point(10,20));
 ```
 
+*Important note:* being an immutable data structure, calling ```tree.add(item, geometry)``` does nothing to ```tree```, 
+it returns a new ```RTree``` containing the addition. Make sure you use the result of the ```add```!
+
 ###Remove an item in the R-tree
 To remove an item from an R-tree, you need to match the item and its geometry:
 
@@ -121,6 +124,9 @@ or
 ```java
 tree = tree.delete(entry);
 ```
+
+*Important note:* being an immutable data structure, calling ```tree.delete(item, geometry)``` does nothing to ```tree```, 
+it returns a new ```RTree``` without the deleted item. Make sure you use the result of the ```delete```!
 
 ###Custom geometries
 You can also write your own implementation of [```Geometry```](src/main/java/com/github/davidmoten/rtree/geometry/Geometry.java). An implementation of ```Geometry``` needs to specify methods to:
