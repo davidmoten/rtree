@@ -468,6 +468,46 @@ public class RTreeTest {
     }
 
     @Test
+    public void testNearestReturnsInOrder() {
+        Object value = new Object();
+        RTree<Object, Geometry> tree = RTree.create().add(value, point(1, 1))
+                .add(value, point(2, 2)).add(value, point(3, 3)).add(value, point(4, 4));
+        List<Entry<Object, Geometry>> list = tree.nearest(point(0, 0), 10, 10).toList()
+                .toBlocking().single();
+        System.out.println(list);
+        assertEquals(4, list.size());
+        assertEquals(point(1, 1), list.get(0).geometry());
+        assertEquals(point(2, 2), list.get(1).geometry());
+        assertEquals(point(3, 3), list.get(2).geometry());
+        assertEquals(point(4, 4), list.get(3).geometry());
+    }
+
+    @Test
+    public void testNearestHonoursUnsubscribeJustBeforeCompletion() {
+        Object value = new Object();
+        RTree<Object, Geometry> tree = RTree.create().add(value, point(1, 1));
+        final AtomicBoolean completeCalled = new AtomicBoolean(false);
+        tree.nearest(point(0, 0), 10, 10).subscribe(new Subscriber<Object>() {
+
+            @Override
+            public void onCompleted() {
+                completeCalled.set(true);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Object t) {
+                unsubscribe();
+            }
+        });
+        assertFalse(completeCalled.get());
+    }
+
+    @Test
     public void testVisualizer() {
         List<Entry<Object, Geometry>> entries = createRandomEntries(1000);
         int maxChildren = 8;
