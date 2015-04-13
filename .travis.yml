@@ -1,4 +1,4 @@
-language: java
+#language: java
 
 env:
   global:
@@ -12,6 +12,6 @@ addons:
       name: "davidmoten/rtree"
       description: "RTree java implementation with reactive api"
     notification_email: davidmoten@gmail.com
-    # build_command_prepend: "<Your build preprocessing command here>"
-    build_command:   "mvn install"
+    build_command_prepend: "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
+    build_command:   "mvn test -B"
     branch_pattern: coverity_scan
