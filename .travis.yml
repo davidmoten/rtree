@@ -1,4 +1,9 @@
-#language: java
+language: java
+
+jdk:
+  - oraclejdk8
+
+script: mvn verify -B
 
 env:
   global:
@@ -12,6 +17,6 @@ addons:
       name: "davidmoten/rtree"
       description: "RTree java implementation with reactive api"
     notification_email: davidmoten@gmail.com
-    build_command_prepend: ""
+    build_command_prepend: "mvn clean"
     build_command:   "mvn compile -DskipTests=true"
     branch_pattern: coverity_scan
