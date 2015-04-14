@@ -9,7 +9,6 @@
 		<version>0.1</version>
 	</parent>
 
-    <groupId>com.github.davidmoten</groupId>
     <artifactId>rtree</artifactId>
     <version>0.5.10-SNAPSHOT</version>
 

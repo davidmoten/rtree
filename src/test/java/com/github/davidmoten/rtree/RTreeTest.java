@@ -624,15 +624,6 @@ public class RTreeTest {
                 .toBlocking().single());
     }
 
-    private static <T> Func1<T, Boolean> alwaysFalse() {
-        return new Func1<T, Boolean>() {
-            @Override
-            public Boolean call(T t) {
-                return false;
-            }
-        };
-    }
-
     @Test
     public void testAddOverload() {
         @SuppressWarnings("unchecked")
