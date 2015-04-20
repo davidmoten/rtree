@@ -75,19 +75,24 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
             // but benchmarks showed no benefit here so reverted to AtomicLong
             long previousCount = requested.getAndAdd(n);
             if (previousCount == 0) {
+                // don't touch stack every time during the loop because
+                // is a volatile and every write forces a thread memory
+                // cache flush
+                ImmutableStack<NodePosition<T, S>> st = stack;
                 while (true) {
                     long r = requested.get();
                     long numToEmit = r;
 
-                    stack = Backpressure.search(condition, subscriber, stack, numToEmit);
-                    if (stack.isEmpty()) {
-                        if (!subscriber.isUnsubscribed())
+                    st = Backpressure.search(condition, subscriber, st, numToEmit);
+                    if (st.isEmpty()) {
+                        if (!subscriber.isUnsubscribed()) {
                             subscriber.onCompleted();
-                        else
-                            return;
+                        } else
+                            break;
                     } else if (requested.addAndGet(-r) == 0)
-                        return;
+                        break;
                 }
+                stack = st;
             }
         }
     }
