@@ -50,7 +50,7 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
                 if (n == 0 || requested.get() == Long.MAX_VALUE)
                     // none requested or already started with fast path
                     return;
-                else if (n == Long.MAX_VALUE) {
+                else if (n == Long.MAX_VALUE && requested.compareAndSet(0, Long.MAX_VALUE)) {
                     // fast path
                     requestAll();
                 } else
@@ -61,7 +61,6 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
         }
 
         private void requestAll() {
-            requested.set(Long.MAX_VALUE);
             node.search(condition, subscriber);
             if (!subscriber.isUnsubscribed())
                 subscriber.onCompleted();
