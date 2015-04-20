@@ -1,7 +1,8 @@
 rtree
 =========
-<a href="https://travis-ci.org/davidmoten/rtree"><img src="https://travis-ci.org/davidmoten/rtree.svg"/></a><br/>
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree)
+[![Travis CI](https://travis-ci.org/davidmoten/rtree.svg)](https://travis-ci.org/davidmoten/rtree)<br/>
+[![Coverity Scan](https://scan.coverity.com/projects/4762/badge.svg?flat=1)](https://scan.coverity.com/projects/4762?tab=overview)<br/>
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree)<br/>
 
 In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive processing of search results. 
 
@@ -58,7 +59,7 @@ Add this maven dependency to your pom.xml:
 <dependency>
   <groupId>com.github.davidmoten</groupId>
   <artifactId>rtree</artifactId>
-  <version>0.5.8</version>
+  <version>0.5.9</version>
 </dependency>
 ```
 ###Instantiate an R-Tree

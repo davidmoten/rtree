@@ -14,7 +14,6 @@ import org.junit.Test;
 import rx.Observable;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
-import rx.Subscription;
 
 public class OperatorBoundedPriorityQueueTest {
 
@@ -152,7 +151,7 @@ public class OperatorBoundedPriorityQueueTest {
                 .subscribe(subscriber);
         assertFalse(error.get());
     }
-    
+
     @Test
     public void testUnsubscribeCalledAfterFirst() {
         final AtomicBoolean completed = new AtomicBoolean(false);
