@@ -10,7 +10,7 @@
 	</parent>
 
     <artifactId>rtree</artifactId>
-    <version>0.5.10-SNAPSHOT</version>
+    <version>0.6.2-SNAPSHOT</version>
 
     <name>${project.artifactId}</name>
     <description>Java implementation of an immutable in-memory R-Tree for spatial indexing</description>
@@ -24,11 +24,11 @@
         <maven.compiler.target>1.6</maven.compiler.target>
         <slf4j.version>1.7.7</slf4j.version>
 
-        <cobertura.version>2.6</cobertura.version>
+        <cobertura.version>2.7</cobertura.version>
         <checkstyle.version>2.13</checkstyle.version>
-        <findbugs.version>3.0.0</findbugs.version>
-        <javadoc.version>2.10.1</javadoc.version>
-        <pmd.version>3.2</pmd.version>
+        <findbugs.version>3.0.1</findbugs.version>
+        <javadoc.version>2.10.2</javadoc.version>
+        <pmd.version>3.4</pmd.version>
         <jdepend.version>2.0-beta-2</jdepend.version>
         <javancss.version>2.1</javancss.version>
         <project.info.version>2.7</project.info.version>
@@ -78,7 +78,7 @@
         <connection>scm:git:git@github.com:davidmoten/rtree.git</connection>
         <developerConnection>scm:git:git@github.com:davidmoten/rtree.git</developerConnection>
         <url>scm:git:git@github.com:davidmoten/rtree.git</url>
-      <tag>HEAD</tag>
+      <tag>0.6.0</tag>
   </scm>
 
     <dependencies>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
-            <version>1.0.9</version>
+            <version>1.0.10</version>
         </dependency>
 
         <!-- Test Dependencies -->
