@@ -312,6 +312,18 @@ Benchmarks are provided by
 ```
 mvn clean install -Pbenchmark
 ```
+Coverity scan
+----------------
+This codebase is scanned by Coverity scan whenever the branch `coverity_scan` is updated. 
+
+For the project committers if a coverity scan is desired just do this:
+
+```bash
+git checkout coverity_scan
+git pull origin master
+git push origin coverity_scan
+```
+
 
 ### Notes
 The *Greek* data referred to in the benchmarks is a collection of some 38,377 entries corresponding to the epicentres of earthquakes in Greece between 1964 and 2000. This data set is used by multiple studies on R-trees as a test case.
