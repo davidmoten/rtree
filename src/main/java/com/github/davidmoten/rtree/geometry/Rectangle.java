@@ -77,10 +77,10 @@ public final class Rectangle implements Geometry, HasGeometry {
             double xDifference = Math.max(0, mostLeft.x1 == mostRight.x1 ? 0 : mostRight.x1
                     - mostLeft.x2);
 
-            Rectangle upper = y1 < r.y1 ? this : r;
-            Rectangle lower = y1 > r.y1 ? this : r;
+            Rectangle lower = y1 < r.y1 ? this : r;
+            Rectangle upper = y1 > r.y1 ? this : r;
 
-            double yDifference = Math.max(0, upper.y1 == lower.y1 ? 0 : lower.y1 - upper.y2);
+            double yDifference = Math.max(0, upper.y1 == lower.y1 ? 0 : upper.y1 - lower.y2);
 
             return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
         }
