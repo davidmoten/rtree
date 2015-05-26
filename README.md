@@ -221,9 +221,6 @@ import rx.Observable;
 import rx.functions.*;
 import rx.schedulers.Schedulers;
 
-Func2<Character,Character,Character> firstAlphabetically 
-    = (x,y) -> x <=y ? x : y;
-
 Character result = 
     tree.search(Geometries.rectangle(8, 15, 30, 35))
         // filter for names alphabetically less than M
