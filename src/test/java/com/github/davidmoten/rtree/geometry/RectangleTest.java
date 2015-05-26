@@ -1,4 +1,4 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.rtree.geometry;
 
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 import static org.junit.Assert.*;

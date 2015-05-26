@@ -70,6 +70,8 @@ public class GeometriesTest {
         Rectangle r = Geometries.rectangleLatLong(10, -10, 5, 10);
         assertEquals(10, r.x1(), PRECISION);
         assertEquals(365, r.x2(), PRECISION);
+        assertEquals(-10, r.y1(), PRECISION);
+        assertEquals(10, r.y2(), PRECISION);
     }
 
     @Test

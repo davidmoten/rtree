@@ -26,7 +26,7 @@ public final class Geometries {
         if (x2 < x1) {
             x2 += 360;
         }
-        return rectangle(x1, lat1, x2, lon2);
+        return rectangle(x1, lat1, x2, lat2);
     }
 
     public static Point pointLatLong(double lon, double lat) {
