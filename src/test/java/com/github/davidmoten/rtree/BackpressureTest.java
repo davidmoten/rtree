@@ -222,6 +222,34 @@ public class BackpressureTest {
         assertEquals(expected, found);
     }
 
+    @Test
+    public void testBackpressureFastPathNotInitiatedTwice() {
+        Entry<Object, Rectangle> e3 = e(3);
+        RTree<Object, Rectangle> tree = RTree.star().maxChildren(4).<Object, Rectangle> create()
+                .add(e(1)).add(e3);
+        Set<Entry<Object, Rectangle>> expected = Collections.singleton(e3);
+        final Set<Entry<Object, Rectangle>> found = new HashSet<Entry<Object, Rectangle>>();
+        tree.search(e3.geometry()).subscribe(new Subscriber<Entry<Object, Rectangle>>() {
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Entry<Object, Rectangle> t) {
+                found.add(t);
+                request(Long.MAX_VALUE);
+            }
+        });
+        assertEquals(expected, found);
+    }
+
     private static Subscriber<Entry<Object, Rectangle>> backpressureSubscriber(
             final Set<Entry<Object, Rectangle>> found) {
         return new Subscriber<Entry<Object, Rectangle>>() {
