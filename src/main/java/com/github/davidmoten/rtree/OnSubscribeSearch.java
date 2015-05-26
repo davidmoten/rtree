@@ -46,8 +46,7 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
         @Override
         public void request(long n) {
             try {
-                // n>=0 is assured by Subscriber class
-                if (n == 0 || requested.get() == Long.MAX_VALUE)
+                if (n <= 0 || requested.get() == Long.MAX_VALUE)
                     // none requested or already started with fast path
                     return;
                 else if (n == Long.MAX_VALUE && requested.compareAndSet(0, Long.MAX_VALUE)) {
