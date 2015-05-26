@@ -221,8 +221,6 @@ import rx.Observable;
 import rx.functions.*;
 import rx.schedulers.Schedulers;
 
-Func1<Entry<String, Geometry>, Character> firstCharacter =
-    entry -> entry.value().charAt(0);
 Func2<Character,Character,Character> firstAlphabetically 
     = (x,y) -> x <=y ? x : y;
 
@@ -231,9 +229,9 @@ Character result =
         // filter for names alphabetically less than M
         .filter(entry -> entry.value() < "M")
         // get the first character of the name
-        .map(entry -> firstCharacter(entry.value()))
+        .map(entry -> entry.value().charAt(0))
         // reduce to the first character alphabetically 
-        .reduce((x,y) -> firstAlphabetically(x,y))
+        .reduce((x,y) -> x <= y ? x : y)
         // subscribe to the stream and block for the result
         .toBlocking().single();
 System.out.println(list);
