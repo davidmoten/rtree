@@ -31,6 +31,11 @@ public class GeometriesTest {
     }
 
     @Test
+    public void testNormalizeLongitude3_1() {
+        assertEquals(-180, Geometries.normalizeLongitude(180), PRECISION);
+    }
+
+    @Test
     public void testNormalizeLongitude4() {
         assertEquals(-179, Geometries.normalizeLongitude(181), PRECISION);
     }
@@ -72,5 +77,12 @@ public class GeometriesTest {
         Rectangle r = Geometries.rectangleLatLong(5, -10, 10, 10);
         assertEquals(5, r.x1(), PRECISION);
         assertEquals(10, r.x2(), PRECISION);
+    }
+
+    @Test
+    public void testPointLatLong() {
+        Point point = Geometries.pointLatLong(181, 25);
+        assertEquals(-179, point.x(), PRECISION);
+        assertEquals(25, point.y(), PRECISION);
     }
 }
