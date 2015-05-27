@@ -20,7 +20,7 @@ public final class Geometries {
         return Circle.create(x, y, radius);
     }
 
-    public static Rectangle rectangleLatLong(double lon1, double lat1, double lon2, double lat2) {
+    public static Rectangle rectangleGeographic(double lon1, double lat1, double lon2, double lat2) {
         double x1 = normalizeLongitude(lon1);
         double x2 = normalizeLongitude(lon2);
         if (x2 < x1) {
@@ -29,7 +29,7 @@ public final class Geometries {
         return rectangle(x1, lat1, x2, lat2);
     }
 
-    public static Point pointLatLong(double lon, double lat) {
+    public static Point pointGeographic(double lon, double lat) {
         return point(normalizeLongitude(lon), lat);
     }
 
