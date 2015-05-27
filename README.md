@@ -130,11 +130,11 @@ tree = tree.delete(entry);
 it returns a new ```RTree``` without the deleted item. Make sure you use the result of the ```delete```!
 
 ###Geospatial geometries (lats and longs)
-To handle wraparounds of longitude values on the earth (180/-180 boundary trickiness) there are special factory methods in the `Geometries` class. If you want to do spatial searches then it is suggested to use these methods to build `Point`s and `Rectangle`s:
+To handle wraparounds of longitude values on the earth (180/-180 boundary trickiness) there are special factory methods in the `Geometries` class. If you want to do geospatial searches then you should use these methods to build `Point`s and `Rectangle`s:
 
 ```java
-Point point = Geometries.pointLatLon(lon, lat);
-Rectangle rectangle = Geometries.rectangleLatLon(lon1, lat1, lon2, lat2);
+Point point = Geometries.pointGeographic(lon, lat);
+Rectangle rectangle = Geometries.rectangleGeographic(lon1, lat1, lon2, lat2);
 ```
 
 ###Custom geometries
