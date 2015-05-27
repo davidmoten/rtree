@@ -137,6 +137,8 @@ Point point = Geometries.pointGeographic(lon, lat);
 Rectangle rectangle = Geometries.rectangleGeographic(lon1, lat1, lon2, lat2);
 ```
 
+Under the covers these methods normalize the longitude value to be in the interval [-180, 180) and for rectangles the rightmost longitude has 360 added to it if it is less than the leftmost longitude.
+
 ###Custom geometries
 You can also write your own implementation of [```Geometry```](src/main/java/com/github/davidmoten/rtree/geometry/Geometry.java). An implementation of ```Geometry``` needs to specify methods to:
 
