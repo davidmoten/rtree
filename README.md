@@ -10,7 +10,7 @@ Status: *released to Maven Central, ensure you use at least 0.4 to get fix for* 
 
 An [R-tree](http://en.wikipedia.org/wiki/R-tree) is a commonly used spatial index.
 
-This was fun to make, has an elegant concise algorithm, is thread-safe and fast.
+This was fun to make, has an elegant concise algorithm, is thread-safe, fast, and reasonably memory efficient (uses structural sharing).
 
 The algorithm to achieve immutability is cute. For insertion/deletion it involves recursion down to the 
 required leaf node then recursion back up to replace the parent nodes up to the root. The guts of 
