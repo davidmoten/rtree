@@ -12,6 +12,7 @@ import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
 public final class SplitterRStar implements Splitter {
@@ -69,9 +70,10 @@ public final class SplitterRStar implements Splitter {
         return sum;
     }
 
-    private static <T extends HasGeometry> List<ListPair<T>> getPairs(int minSize, List<T> list) {
+    @VisibleForTesting
+    static <T extends HasGeometry> List<ListPair<T>> getPairs(int minSize, List<T> list) {
         List<ListPair<T>> pairs = new ArrayList<ListPair<T>>(list.size() - 2 * minSize + 1);
-        for (int i = minSize; i < list.size() - minSize; i++) {
+        for (int i = minSize; i < list.size() - minSize + 1; i++) {
             List<T> list1 = list.subList(0, i);
             List<T> list2 = list.subList(i, list.size());
             ListPair<T> pair = new ListPair<T>(list1, list2);
