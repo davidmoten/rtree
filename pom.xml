@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.github.davidmoten</groupId>
-		<artifactId>sonatype-parent</artifactId>
-		<version>0.1</version>
-	</parent>
+    <parent>
+        <groupId>com.github.davidmoten</groupId>
+        <artifactId>sonatype-parent</artifactId>
+        <version>0.1</version>
+    </parent>
 
     <artifactId>rtree</artifactId>
     <version>0.6.5-SNAPSHOT</version>
@@ -78,8 +79,8 @@
         <connection>scm:git:git@github.com:davidmoten/rtree.git</connection>
         <developerConnection>scm:git:git@github.com:davidmoten/rtree.git</developerConnection>
         <url>scm:git:git@github.com:davidmoten/rtree.git</url>
-      <tag>0.6.0</tag>
-  </scm>
+        <tag>0.6.0</tag>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -107,19 +108,19 @@
             <version>0.22.0</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
-        	<groupId>com.github.davidmoten</groupId>
-        	<artifactId>rxjava-extras</artifactId>
-        	<version>0.5.1</version>
-        	<scope>test</scope>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>rxjava-extras</artifactId>
+            <version>0.5.1</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
-        	<groupId>com.github.davidmoten</groupId>
-        	<artifactId>grumpy-core</artifactId>
-        	<version>0.2.2</version>
-        	<scope>test</scope>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>grumpy-core</artifactId>
+            <version>0.2.2</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -143,6 +144,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>junit-extras</artifactId>
+            <version>0.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -251,8 +258,7 @@
         <excludeDefaults>true</excludeDefaults>
         <outputDirectory>${project.build.directory}/site</outputDirectory>
         <plugins>
-            <!-- this one should go first so that it is available to other plugins 
-                when they run -->
+            <!-- this one should go first so that it is available to other plugins when they run -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
@@ -327,8 +333,8 @@
             </plugin>
             <!-- commented this plugin out because cannot run offline (e.g. at home) -->
             <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-changelog-plugin</artifactId> 
-                <version>${changelog.version}</version> <configuration> <username>${svn.username}</username> 
-                <password>${svn.password}</password> </configuration> </plugin> -->
+                <version>${changelog.version}</version> <configuration> <username>${svn.username}</username> <password>${svn.password}</password> 
+                </configuration> </plugin> -->
         </plugins>
     </reporting>
 

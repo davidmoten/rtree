@@ -2,13 +2,13 @@ package com.github.davidmoten.rtree;
 
 import org.junit.Test;
 
-import com.github.davidmoten.util.TestingUtil;
+import com.github.davidmoten.junit.Asserts;
 
 public class UtilTest {
 
     @Test
     public void coverPrivateConstructor() {
-        TestingUtil.callConstructorAndCheckIsPrivate(Util.class);
+        Asserts.assertIsUtilityClass(Util.class);
     }
 
 }

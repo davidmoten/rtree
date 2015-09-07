@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.github.davidmoten.util.TestingUtil;
+import com.github.davidmoten.junit.Asserts;
 
 public class GeometriesTest {
 
@@ -12,7 +12,7 @@ public class GeometriesTest {
 
     @Test
     public void testPrivateConstructorForCoverageOnly() {
-        TestingUtil.callConstructorAndCheckIsPrivate(Geometries.class);
+        Asserts.assertIsUtilityClass(Geometries.class);
     }
 
     @Test

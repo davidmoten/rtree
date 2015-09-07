@@ -14,20 +14,20 @@ import java.util.Set;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.functions.Func1;
-
+import com.github.davidmoten.junit.Asserts;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.ImmutableStack;
-import com.github.davidmoten.util.TestingUtil;
+
+import rx.Subscriber;
+import rx.Subscription;
+import rx.functions.Func1;
 
 public class BackpressureTest {
 
     @Test
     public void testConstructorIsPrivate() {
-        TestingUtil.callConstructorAndCheckIsPrivate(Backpressure.class);
+        Asserts.assertIsUtilityClass(Backpressure.class);
     }
 
     @SuppressWarnings("unchecked")
