@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,7 +10,7 @@
     </parent>
 
     <artifactId>rtree</artifactId>
-    <version>0.6.5-SNAPSHOT</version>
+    <version>0.6.5</version>
 
     <name>${project.artifactId}</name>
     <description>Java implementation of an immutable in-memory R-Tree for spatial indexing</description>
@@ -79,7 +78,7 @@
         <connection>scm:git:git@github.com:davidmoten/rtree.git</connection>
         <developerConnection>scm:git:git@github.com:davidmoten/rtree.git</developerConnection>
         <url>scm:git:git@github.com:davidmoten/rtree.git</url>
-        <tag>0.6.0</tag>
+        <tag>0.6.5</tag>
     </scm>
 
     <dependencies>
