@@ -20,7 +20,8 @@ public final class Geometries {
         return Circle.create(x, y, radius);
     }
 
-    public static Rectangle rectangleGeographic(double lon1, double lat1, double lon2, double lat2) {
+    public static Rectangle rectangleGeographic(double lon1, double lat1, double lon2,
+            double lat2) {
         double x1 = normalizeLongitude(lon1);
         double x2 = normalizeLongitude(lon2);
         if (x2 < x1) {
@@ -35,11 +36,15 @@ public final class Geometries {
 
     @VisibleForTesting
     static double normalizeLongitude(double d) {
-        double sign = Math.signum(d);
-        double x = Math.abs(d) / 360;
-        double x2 = (x - Math.floor(x)) * 360;
-        if (x2 >= 180)
-            x2 -= 360;
-        return x2 * sign;
+        if (d == -180.0)
+            return -180.0;
+        else {
+            double sign = Math.signum(d);
+            double x = Math.abs(d) / 360;
+            double x2 = (x - Math.floor(x)) * 360;
+            if (x2 >= 180)
+                x2 -= 360;
+            return x2 * sign;
+        }
     }
 }
