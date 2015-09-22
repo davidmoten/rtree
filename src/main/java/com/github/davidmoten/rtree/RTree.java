@@ -442,7 +442,9 @@ public final class RTree<T, S extends Geometry> {
      * both value and geometry to be deleted.
      * 
      * @param value
+     *            the value to be matched for deletion
      * @param geometry
+     *            the geometry to be matched for deletion
      * @return an immutable RTree without one entry (if found) matching the
      *         given value and geometry
      */
@@ -485,10 +487,6 @@ public final class RTree<T, S extends Geometry> {
      * 
      * @param entry
      *            the {@link Entry} to be deleted
-     * 
-     * @param all
-     *            if true deletes all matches otherwise deletes first found
-     * 
      * @return a new immutable R-tree without one instance of the specified
      *         entry
      */
