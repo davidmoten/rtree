@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>1.6</maven.compiler.target>
-        <slf4j.version>1.7.7</slf4j.version>
+        <slf4j.version>1.7.12</slf4j.version>
 
         <cobertura.version>2.7</cobertura.version>
         <checkstyle.version>2.13</checkstyle.version>
@@ -37,7 +37,7 @@
         <m3.site.version>3.4</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
-        <jmh.version>1.2</jmh.version>
+        <jmh.version>1.11.1</jmh.version>
 
     </properties>
 
@@ -75,9 +75,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:davidmoten/rtree.git</connection>
-        <developerConnection>scm:git:git@github.com:davidmoten/rtree.git</developerConnection>
-        <url>scm:git:git@github.com:davidmoten/rtree.git</url>
+        <connection>scm:git:https://github.com/davidmoten/rtree.git</connection>
+        <developerConnection>scm:git:https://github.com/davidmoten/rtree.git</developerConnection>
+        <url>scm:git:https://github.com/davidmoten/rtree.git</url>
         <tag>0.6.5</tag>
     </scm>
 
