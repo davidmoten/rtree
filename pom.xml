@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,6 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>1.6</maven.compiler.target>
+        <scm.url>scm:git:https://github.com/davidmoten/rtree.git</scm.url>
         <slf4j.version>1.7.12</slf4j.version>
 
         <cobertura.version>2.7</cobertura.version>
@@ -51,8 +53,8 @@
     </licenses>
 
     <ciManagement>
-        <system>CloudBees</system>
-        <url>https://xuml-tools.ci.cloudbees.com</url>
+        <system>Travis</system>
+        <url>https://travis-ci.org/davidmoten/rtree</url>
     </ciManagement>
 
     <issueManagement>
@@ -75,9 +77,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/davidmoten/rtree.git</connection>
-        <developerConnection>scm:git:https://github.com/davidmoten/rtree.git</developerConnection>
-        <url>scm:git:https://github.com/davidmoten/rtree.git</url>
+        <connection>${scm.url}</connection>
+        <developerConnection>${scm.url}</developerConnection>
+        <url>${scm.url}</url>
         <tag>0.6.5</tag>
     </scm>
 
