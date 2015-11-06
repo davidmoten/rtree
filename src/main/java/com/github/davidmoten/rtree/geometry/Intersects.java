@@ -22,4 +22,11 @@ public final class Intersects {
         }
     };
 
+    public static final Func2<Circle, Circle, Boolean> circleIntersectsCircle = new Func2<Circle, Circle, Boolean>() {
+        @Override
+        public Boolean call(Circle a, Circle b) {
+            return a.intersects(b);
+        }
+    };
+
 }
