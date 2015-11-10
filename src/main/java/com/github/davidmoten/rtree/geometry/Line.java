@@ -58,10 +58,73 @@ public class Line implements Geometry {
         return y2;
     }
 
-    public Boolean intersects(Line b) {
+    public boolean intersects(Line b) {
         Line2D line1 = new Line2D.Float(x1, y1, x2, y2);
         Line2D line2 = new Line2D.Float(b.x1(), b.y1(), b.x2(), b.y2());
         return line2.intersectsLine(line1);
+    }
+
+    public boolean intersects(Circle circle) {
+        Vector c = Vector.create(circle.x(), circle.y());
+        Vector a = Vector.create(x1, y1);
+        Vector cMinusA = c.minus(a);
+        float radiusSquared = circle.radius() * circle.radius();
+        if (x1 == x2 && y1 == y2) {
+            return cMinusA.modulusSquared() <= radiusSquared;
+        } else {
+            Vector b = Vector.create(x2, y2);
+            Vector bMinusA = b.minus(a);
+            float bMinusAModulus = bMinusA.modulus();
+            float lambda = cMinusA.dot(bMinusA) / bMinusAModulus;
+            if (lambda >= 0 && lambda <= bMinusAModulus) {
+                Vector dMinusA = bMinusA.times(lambda / bMinusAModulus);
+                return cMinusA.modulusSquared() - dMinusA.modulusSquared() <= radiusSquared;
+            } else {
+                // test if endpoint are within radius of centre
+                return cMinusA.modulusSquared() <= radiusSquared
+                        && c.minus(b).modulusSquared() <= radiusSquared;
+            }
+        }
+    }
+
+    private static class Vector {
+        final float x;
+        final float y;
+
+        static Vector create(float x, float y) {
+            return new Vector(x, y);
+        }
+
+        Vector(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        float dot(Vector v) {
+            return x * v.x + y * v.y;
+        }
+
+        Vector times(float value) {
+            return create(value * x, value * y);
+        }
+
+        Vector minus(Vector v) {
+            return create(x - v.x, y - v.y);
+        }
+
+        float modulus() {
+            return (float) Math.sqrt(x * x + y * y);
+        }
+
+        float modulusSquared() {
+            return x * x + y * y;
+        }
+
+        @Override
+        public String toString() {
+            return "Vector [x=" + x + ", y=" + y + "]";
+        }
+
     }
 
 }

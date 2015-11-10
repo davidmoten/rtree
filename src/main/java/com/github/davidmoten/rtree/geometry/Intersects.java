@@ -43,4 +43,11 @@ public final class Intersects {
         }
     };
 
+    public static final Func2<Line, Circle, Boolean> lineIntersectsCircle = new Func2<Line, Circle, Boolean>() {
+        @Override
+        public Boolean call(Line a, Circle c) {
+            return a.intersects(c);
+        }
+    };
+
 }
