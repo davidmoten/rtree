@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree.geometry;
 
 import java.awt.geom.Line2D;
+import java.awt.geom.Line2D.Float;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -26,24 +27,23 @@ public final class Line implements Geometry {
 
     @Override
     public double distance(Rectangle r) {
-        if (x1 >= r.x1() && x2 <= r.x2() && y1 >= r.y1() && y2 <= r.y2())
+        if (r.contains(x1, y1) || r.contains(x2, y2)) {
             return 0;
-        else {
-            Line2D line1 = new Line2D.Float(r.x1(), r.y1(), r.x1(), r.y2());
-            double d1 = distance(line1);
-            Line2D line2 = new Line2D.Float(r.x1(), r.y2(), r.x2(), r.y2());
-            double d2 = distance(line2);
-            Line2D line3 = new Line2D.Float(r.x2(), r.y2(), r.x2(), r.y1());
-            double d3 = distance(line3);
-            Line2D line4 = new Line2D.Float(r.x2(), r.y1(), r.x1(), r.y1());
-            double d4 = distance(line4);
+        } else {
+            double d1 = distance(r.x1(), r.y1(), r.x1(), r.y2());
+            double d2 = distance(r.x1(), r.y2(), r.x2(), r.y2());
+            double d3 = distance(r.x2(), r.y2(), r.x2(), r.y1());
+            double d4 = distance(r.x2(), r.y1(), r.x1(), r.y1());
             return Math.min(d1, Math.min(d2, Math.min(d3, d4)));
         }
     }
 
-    private double distance(Line2D line) {
-        double d1 = line.ptSegDist(x1, y1);
-        double d2 = line.ptSegDist(x2, y2);
+    private double distance(float x1, float y1, float x2, float y2) {
+        Float line = new Line2D.Float(x1, y1, x2, y2);
+        double d1 = line.ptSegDist(this.x1, this.y1);
+        if (d1 == 0)
+            return 0;
+        double d2 = line.ptSegDist(this.x2, this.y2);
         if (d1 < d2)
             return d1;
         else
