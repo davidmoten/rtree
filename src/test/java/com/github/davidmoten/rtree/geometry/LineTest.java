@@ -132,4 +132,11 @@ public class LineTest {
         assertFalse(a.intersects(c));
     }
 
+    @Test
+    public void testLineDistanceToRectangle() {
+        Line a = Geometries.line(1, 2, 1, 2);
+        Rectangle r = Geometries.rectangle(3, 3, 7, 7);
+        assertEquals(Math.sqrt(5), a.distance(r), PRECISION);
+    }
+
 }

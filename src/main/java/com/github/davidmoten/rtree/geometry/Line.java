@@ -26,8 +26,28 @@ public final class Line implements Geometry {
 
     @Override
     public double distance(Rectangle r) {
-        // TODO compute distance
-        throw new RuntimeException("not implemented yet");
+        if (x1 >= r.x1() && x2 <= r.x2() && y1 >= r.y1() && y2 <= r.y2())
+            return 0;
+        else {
+            Line2D line1 = new Line2D.Float(r.x1(), r.y1(), r.x1(), r.y2());
+            double d1 = distance(line1);
+            Line2D line2 = new Line2D.Float(r.x1(), r.y2(), r.x2(), r.y2());
+            double d2 = distance(line2);
+            Line2D line3 = new Line2D.Float(r.x2(), r.y2(), r.x2(), r.y1());
+            double d3 = distance(line3);
+            Line2D line4 = new Line2D.Float(r.x2(), r.y1(), r.x1(), r.y1());
+            double d4 = distance(line4);
+            return Math.min(d1, Math.min(d2, Math.min(d3, d4)));
+        }
+    }
+
+    private double distance(Line2D line) {
+        double d1 = line.ptSegDist(x1, y1);
+        double d2 = line.ptSegDist(x2, y2);
+        if (d1 < d2)
+            return d1;
+        else
+            return d2;
     }
 
     @Override
