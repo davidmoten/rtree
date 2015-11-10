@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class LineTest {
+public final class LineTest {
 
     private static final double PRECISION = 0.00001;
 
