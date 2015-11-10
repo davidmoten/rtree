@@ -28,6 +28,14 @@ public final class Circle implements Geometry {
         return y;
     }
 
+    public float radius() {
+        return radius;
+    }
+
+    public float diameter() {
+        return 2 * radius;
+    }
+
     @Override
     public Rectangle mbr() {
         return mbr;

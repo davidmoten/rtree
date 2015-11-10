@@ -29,4 +29,18 @@ public final class Intersects {
         }
     };
 
+    public static final Func2<Line, Line, Boolean> lineIntersectsLine = new Func2<Line, Line, Boolean>() {
+        @Override
+        public Boolean call(Line a, Line b) {
+            return a.intersects(b);
+        }
+    };
+
+    public static final Func2<Line, Rectangle, Boolean> lineIntersectsRectangle = new Func2<Line, Rectangle, Boolean>() {
+        @Override
+        public Boolean call(Line a, Rectangle r) {
+            return a.intersects(r);
+        }
+    };
+
 }
