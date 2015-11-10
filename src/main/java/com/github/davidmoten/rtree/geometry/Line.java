@@ -6,7 +6,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * A line segment.
  */
-public class Line implements Geometry {
+public final class Line implements Geometry {
 
     private final float x1;
     private final float y1;
@@ -26,7 +26,8 @@ public class Line implements Geometry {
 
     @Override
     public double distance(Rectangle r) {
-        return 0;
+        // TODO compute distance
+        throw new RuntimeException("not implemented yet");
     }
 
     @Override
@@ -82,7 +83,7 @@ public class Line implements Geometry {
             } else {
                 // test if endpoint are within radius of centre
                 return cMinusA.modulusSquared() <= radiusSquared
-                        && c.minus(b).modulusSquared() <= radiusSquared;
+                        || c.minus(b).modulusSquared() <= radiusSquared;
             }
         }
     }
