@@ -93,6 +93,10 @@ public final class Line implements Geometry {
         return line2.intersectsLine(line1);
     }
 
+    public boolean intersects(Point point) {
+        return intersects(point.mbr());
+    }
+
     public boolean intersects(Circle circle) {
         // using Vector Projection
         // https://en.wikipedia.org/wiki/Vector_projection

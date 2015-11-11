@@ -90,7 +90,66 @@ public final class Intersects {
 
         @Override
         public Boolean call(Point point, Line line) {
-            return line.intersects(point.mbr());
+            return line.intersects(point);
+        }
+    };
+
+    public static final Func2<Geometry, Line, Boolean> geometryIntersectsLine = new Func2<Geometry, Line, Boolean>() {
+
+        @Override
+        public Boolean call(Geometry geometry, Line line) {
+            if (geometry instanceof Line)
+                return line.intersects((Line) geometry);
+            else if (geometry instanceof Rectangle)
+                return line.intersects((Rectangle) geometry);
+            else if (geometry instanceof Circle)
+                return line.intersects((Circle) geometry);
+            else if (geometry instanceof Point)
+                return line.intersects((Point) geometry);
+            else
+                throw new RuntimeException("unrecognized geometry: " + geometry);
+        }
+    };
+
+    public static final Func2<Geometry, Circle, Boolean> geometryIntersectsCircle = new Func2<Geometry, Circle, Boolean>() {
+
+        @Override
+        public Boolean call(Geometry geometry, Circle circle) {
+            if (geometry instanceof Line)
+                return circle.intersects((Line) geometry);
+            else if (geometry instanceof Rectangle)
+                return circle.intersects((Rectangle) geometry);
+            else if (geometry instanceof Circle)
+                return circle.intersects((Circle) geometry);
+            else if (geometry instanceof Point)
+                return circle.intersects((Point) geometry);
+            else
+                throw new RuntimeException("unrecognized geometry: " + geometry);
+        }
+    };
+
+    public static final Func2<Geometry, Rectangle, Boolean> geometryIntersectsRectangle = new Func2<Geometry, Rectangle, Boolean>() {
+
+        @Override
+        public Boolean call(Geometry geometry, Rectangle r) {
+            if (geometry instanceof Line)
+                return ((Line) geometry).intersects(r);
+            else if (geometry instanceof Rectangle)
+                return r.intersects((Rectangle) geometry);
+            else if (geometry instanceof Circle)
+                return ((Circle) geometry).intersects(r);
+            else if (geometry instanceof Point)
+                return ((Point) geometry).intersects(r);
+            else
+                throw new RuntimeException("unrecognized geometry: " + geometry);
+        }
+    };
+
+    public static final Func2<Geometry, Point, Boolean> geometryIntersectsPoint = new Func2<Geometry, Point, Boolean>() {
+
+        @Override
+        public Boolean call(Geometry geometry, Point point) {
+            return geometryIntersectsRectangle.call(geometry, point.mbr());
         }
     };
 
