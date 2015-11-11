@@ -92,6 +92,8 @@ Line line = ...
 Observable<Entry<String, Circle>> entries 
   = tree.search(line, Intersects.circleIntersectsLine); 
 ```
+
+The `Intersects` class includes intersection method for all geometry pairings with  at least one non rectangular geometry.
  
 ###Generic typing
 
