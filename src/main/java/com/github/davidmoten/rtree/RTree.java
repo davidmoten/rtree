@@ -6,17 +6,20 @@ import static com.google.common.base.Optional.of;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Func1;
-import rx.functions.Func2;
-
+import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Intersects;
+import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+
+import rx.Observable;
+import rx.functions.Func1;
+import rx.functions.Func2;
 
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
@@ -284,8 +287,8 @@ public final class RTree<T, S extends Geometry> {
                     maxChildren = of(MAX_CHILDREN_DEFAULT_GUTTMAN);
             if (!minChildren.isPresent())
                 minChildren = of((int) Math.round(maxChildren.get() * DEFAULT_FILLING_FACTOR));
-            return new RTree<T, S>(new Context(minChildren.get(), maxChildren.get(), selector,
-                    splitter));
+            return new RTree<T, S>(
+                    new Context(minChildren.get(), maxChildren.get(), selector, splitter));
         }
 
     }
@@ -309,9 +312,8 @@ public final class RTree<T, S extends Geometry> {
             }
             return new RTree<T, S>(node, size + 1, context);
         } else
-            return new RTree<T, S>(
-                    new Leaf<T, S>(Lists.newArrayList((Entry<T, S>) entry), context), size + 1,
-                    context);
+            return new RTree<T, S>(new Leaf<T, S>(Lists.newArrayList((Entry<T, S>) entry), context),
+                    size + 1, context);
     }
 
     /**
@@ -472,9 +474,9 @@ public final class RTree<T, S extends Geometry> {
             if (nodeAndEntries.node().isPresent() && nodeAndEntries.node().get() == root.get())
                 return this;
             else
-                return new RTree<T, S>(nodeAndEntries.node(), size - nodeAndEntries.countDeleted()
-                        - nodeAndEntries.entriesToAdd().size(), context).add(nodeAndEntries
-                        .entriesToAdd());
+                return new RTree<T, S>(nodeAndEntries.node(),
+                        size - nodeAndEntries.countDeleted() - nodeAndEntries.entriesToAdd().size(),
+                        context).add(nodeAndEntries.entriesToAdd());
         } else
             return this;
     }
@@ -571,6 +573,14 @@ public final class RTree<T, S extends Geometry> {
         return search(p.mbr());
     }
 
+    public Observable<Entry<T, S>> search(Circle circle) {
+        return search(circle, Intersects.geometryIntersectsCircle);
+    }
+
+    public Observable<Entry<T, S>> search(Line line) {
+        return search(line, Intersects.geometryIntersectsLine);
+    }
+
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the
      * R-tree whose minimum bounding rectangles are strictly less than
@@ -639,13 +649,13 @@ public final class RTree<T, S extends Geometry> {
                 return entry.distance(g.mbr()) < maxDistance;
             }
         })
-        // refine with distance function
-        .filter(new Func1<Entry<T, S>, Boolean>() {
-            @Override
-            public Boolean call(Entry<T, S> entry) {
-                return distance.call(entry.geometry(), g) < maxDistance;
-            }
-        });
+                // refine with distance function
+                .filter(new Func1<Entry<T, S>, Boolean>() {
+                    @Override
+                    public Boolean call(Entry<T, S> entry) {
+                        return distance.call(entry.geometry(), g) < maxDistance;
+                    }
+                });
     }
 
     /**
@@ -676,10 +686,10 @@ public final class RTree<T, S extends Geometry> {
      *            max number of entries to return
      * @return nearest entries to maxCount, in ascending order of distance
      */
-    public Observable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
-        return search(r, maxDistance).lift(
-                new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount, Comparators
-                        .<T, S> ascendingDistance(r)));
+    public Observable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
+            int maxCount) {
+        return search(r, maxDistance).lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount,
+                Comparators.<T, S> ascendingDistance(r)));
     }
 
     /**
@@ -742,19 +752,17 @@ public final class RTree<T, S extends Geometry> {
     }
 
     private Rectangle calculateMaxView(RTree<T, S> tree) {
-        return tree
-                .entries()
-                .reduce(Optional.<Rectangle> absent(),
-                        new Func2<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>>() {
+        return tree.entries().reduce(Optional.<Rectangle> absent(),
+                new Func2<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>>() {
 
-                            @Override
-                            public Optional<Rectangle> call(Optional<Rectangle> r, Entry<T, S> entry) {
-                                if (r.isPresent())
-                                    return of(r.get().add(entry.geometry().mbr()));
-                                else
-                                    return of(entry.geometry().mbr());
-                            }
-                        }).toBlocking().single().or(rectangle(0, 0, 0, 0));
+                    @Override
+                    public Optional<Rectangle> call(Optional<Rectangle> r, Entry<T, S> entry) {
+                        if (r.isPresent())
+                            return of(r.get().add(entry.geometry().mbr()));
+                        else
+                            return of(entry.geometry().mbr());
+                    }
+                }).toBlocking().single().or(rectangle(0, 0, 0, 0));
     }
 
     Optional<? extends Node<T, S>> root() {
