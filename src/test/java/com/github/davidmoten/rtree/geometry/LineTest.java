@@ -182,8 +182,13 @@ public final class LineTest {
     }
 
     @Test
-    public void testLineIntersectsPoint() {
+    public void testLineDoesNotIntersectsPoint() {
         assertFalse(Geometries.line(1.5, 1.5, 2.6, 2.5).intersects(new Point(2, 2)));
+    }
+
+    @Test
+    public void testLineDoesIntersectPoint() {
+        assertTrue(Geometries.line(1.5, 1.5, 2.5, 2.5).intersects(new Point(2, 2)));
     }
 
 }

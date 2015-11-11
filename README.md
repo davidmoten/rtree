@@ -82,21 +82,9 @@ The following geometries are supported for insertion in an RTree:
 * `Rectangle`
 * `Point`
 * `Circle`
-* `Line`
+* `Line` (requires [JTS](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22jts-core%22) dependency, look at [pom.xml](pom.xml))
 
-Under the covers the `RTree` uses the bounding rectangles of the given geometry to index the entries so that a search needs to filter the results if using a non-rectangular geometry (like `Circle` and `Line`). When `Circle` or `Line` are used then searches should use the generalized search method below:
-
-```java
-RTree<String, Circle> tree = ...
-Line line = ...
-Observable<Entry<String, Circle>> entries 
-  = tree.search(line, Intersects.circleIntersectsLine); 
-```
-
-The `Intersects` class includes intersection functions for all geometry pairings with  at least one non-rectangular geometry.
- 
 ###Generic typing
-
 If for instance you know that the entry geometry is always ```Point``` then create an ```RTree``` specifying that generic type to gain more type safety:
 
 ```java
