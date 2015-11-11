@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,7 +38,9 @@ public class SerializationTest {
 
         Input input = new Input(new FileInputStream(file));
         kryo.setInstantiatorStrategy(new StdInstantiatorStrategy());
+        @SuppressWarnings("unchecked")
         RTree<Object, Point> tree2 = kryo.readObject(input, RTree.class);
+        assertNotNull(tree2);
 
     }
 
