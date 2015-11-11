@@ -1,12 +1,13 @@
 package com.github.davidmoten.rtree.geometry;
 
 import java.awt.geom.Line2D;
+import java.awt.geom.Line2D.Float;
 import java.awt.geom.Rectangle2D;
 
 /**
  * A line segment.
  */
-public class Line implements Geometry {
+public final class Line implements Geometry {
 
     private final float x1;
     private final float y1;
@@ -26,7 +27,35 @@ public class Line implements Geometry {
 
     @Override
     public double distance(Rectangle r) {
-        return 0;
+        if (r.contains(x1, y1) || r.contains(x2, y2)) {
+            return 0;
+        } else {
+            double d1 = distance(r.x1(), r.y1(), r.x1(), r.y2());
+            if (d1 == 0)
+                return 0;
+            double d2 = distance(r.x1(), r.y2(), r.x2(), r.y2());
+            if (d2 == 0)
+                return 0;
+            double d3 = distance(r.x2(), r.y2(), r.x2(), r.y1());
+            double d4 = distance(r.x2(), r.y1(), r.x1(), r.y1());
+            return Math.min(d1, Math.min(d2, Math.min(d3, d4)));
+        }
+    }
+
+    private double distance(float x1, float y1, float x2, float y2) {
+        Float line = new Line2D.Float(x1, y1, x2, y2);
+        double d1 = line.ptSegDist(this.x1, this.y1);
+        double d2 = line.ptSegDist(this.x2, this.y2);
+        Float line2 = new Line2D.Float(this.x1, this.y1, this.x2, this.y2);
+        double d3 = line2.ptSegDist(x1, y1);
+        if (d3 == 0)
+            return 0;
+        double d4 = line2.ptSegDist(x2, y2);
+        if (d4 == 0)
+            return 0;
+        else
+            return Math.min(d1, Math.min(d2, Math.min(d3, d4)));
+
     }
 
     @Override
@@ -58,10 +87,68 @@ public class Line implements Geometry {
         return y2;
     }
 
-    public Boolean intersects(Line b) {
+    public boolean intersects(Line b) {
         Line2D line1 = new Line2D.Float(x1, y1, x2, y2);
         Line2D line2 = new Line2D.Float(b.x1(), b.y1(), b.x2(), b.y2());
         return line2.intersectsLine(line1);
+    }
+
+    public boolean intersects(Circle circle) {
+        Vector c = Vector.create(circle.x(), circle.y());
+        Vector a = Vector.create(x1, y1);
+        Vector cMinusA = c.minus(a);
+        float radiusSquared = circle.radius() * circle.radius();
+        if (x1 == x2 && y1 == y2) {
+            return cMinusA.modulusSquared() <= radiusSquared;
+        } else {
+            Vector b = Vector.create(x2, y2);
+            Vector bMinusA = b.minus(a);
+            float bMinusAModulus = bMinusA.modulus();
+            float lambda = cMinusA.dot(bMinusA) / bMinusAModulus;
+            if (lambda >= 0 && lambda <= bMinusAModulus) {
+                Vector dMinusA = bMinusA.times(lambda / bMinusAModulus);
+                return cMinusA.modulusSquared() - dMinusA.modulusSquared() <= radiusSquared;
+            } else {
+                // test if endpoint are within radius of centre
+                return cMinusA.modulusSquared() <= radiusSquared
+                        || c.minus(b).modulusSquared() <= radiusSquared;
+            }
+        }
+    }
+
+    private static final class Vector {
+        final float x;
+        final float y;
+
+        static Vector create(float x, float y) {
+            return new Vector(x, y);
+        }
+
+        Vector(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        float dot(Vector v) {
+            return x * v.x + y * v.y;
+        }
+
+        Vector times(float value) {
+            return create(value * x, value * y);
+        }
+
+        Vector minus(Vector v) {
+            return create(x - v.x, y - v.y);
+        }
+
+        float modulus() {
+            return (float) Math.sqrt(x * x + y * y);
+        }
+
+        float modulusSquared() {
+            return x * x + y * y;
+        }
+
     }
 
 }
