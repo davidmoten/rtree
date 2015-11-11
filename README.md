@@ -76,6 +76,23 @@ You can specify a few parameters to the builder, including *minChildren*, *maxCh
 ```java
 RTree<String, Geometry> tree = RTree.minChildren(3).maxChildren(6).create();
 ```
+### Geometries
+The following geometries are supported for insertion in an RTree:
+
+* `Rectangle`
+* `Point`
+* `Circle`
+* `Line`
+
+Under the covers the `RTree` uses the bounding rectangles of the given geometry to index the entries so that a search needs to filter the results if using a non-rectangular geometry (like `Circle` and `Line`). When `Circle` or `Line` are used then searches should use the generalized search method below:
+
+```java
+RTree<String, Circle> tree = ...
+Line line = ...
+Observable<Entry<String, Circle>> entries 
+  = tree.search(line, Intersects.circleIntersectsLine); 
+```
+ 
 ###Generic typing
 
 If for instance you know that the entry geometry is always ```Point``` then create an ```RTree``` specifying that generic type to gain more type safety:
