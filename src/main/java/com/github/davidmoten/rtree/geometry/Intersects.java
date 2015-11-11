@@ -128,6 +128,14 @@ public final class Intersects {
         }
     };
 
+    public static final Func2<Circle, Geometry, Boolean> circleIntersectsGeometry = new Func2<Circle, Geometry, Boolean>() {
+
+        @Override
+        public Boolean call(Circle circle, Geometry geometry) {
+            return geometryIntersectsCircle.call(geometry, circle);
+        }
+    };
+
     public static final Func2<Geometry, Rectangle, Boolean> geometryIntersectsRectangle = new Func2<Geometry, Rectangle, Boolean>() {
 
         @Override
@@ -145,11 +153,27 @@ public final class Intersects {
         }
     };
 
+    public static final Func2<Rectangle, Geometry, Boolean> rectangleIntersectsGeometry = new Func2<Rectangle, Geometry, Boolean>() {
+
+        @Override
+        public Boolean call(Rectangle r, Geometry geometry) {
+            return geometryIntersectsRectangle.call(geometry, r);
+        }
+    };
+
     public static final Func2<Geometry, Point, Boolean> geometryIntersectsPoint = new Func2<Geometry, Point, Boolean>() {
 
         @Override
         public Boolean call(Geometry geometry, Point point) {
             return geometryIntersectsRectangle.call(geometry, point.mbr());
+        }
+    };
+
+    public static final Func2<Point, Geometry, Boolean> pointIntersectsGeometry = new Func2<Point, Geometry, Boolean>() {
+
+        @Override
+        public Boolean call(Point point, Geometry geometry) {
+            return geometryIntersectsPoint.call(geometry, point);
         }
     };
 
