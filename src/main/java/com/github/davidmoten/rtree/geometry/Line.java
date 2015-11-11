@@ -94,6 +94,8 @@ public final class Line implements Geometry {
     }
 
     public boolean intersects(Circle circle) {
+        // using Vector Projection
+        // https://en.wikipedia.org/wiki/Vector_projection
         Vector c = Vector.create(circle.x(), circle.y());
         Vector a = Vector.create(x1, y1);
         Vector cMinusA = c.minus(a);
@@ -105,11 +107,14 @@ public final class Line implements Geometry {
             Vector bMinusA = b.minus(a);
             float bMinusAModulus = bMinusA.modulus();
             float lambda = cMinusA.dot(bMinusA) / bMinusAModulus;
+            // if projection is on the segment
             if (lambda >= 0 && lambda <= bMinusAModulus) {
                 Vector dMinusA = bMinusA.times(lambda / bMinusAModulus);
+                // calculate distance to line from c using pythagoras' theorem
                 return cMinusA.modulusSquared() - dMinusA.modulusSquared() <= radiusSquared;
             } else {
-                // test if endpoint are within radius of centre
+                // return true if and only if an endpoint is within radius of
+                // centre
                 return cMinusA.modulusSquared() <= radiusSquared
                         || c.minus(b).modulusSquared() <= radiusSquared;
             }
