@@ -2,7 +2,13 @@ package com.github.davidmoten.rtree.geometry;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Line2D.Float;
-import java.awt.geom.Rectangle2D;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineSegment;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.operation.predicate.RectangleIntersects;
+import com.vividsolutions.jts.util.GeometricShapeFactory;
 
 /**
  * A line segment.
@@ -66,9 +72,14 @@ public final class Line implements Geometry {
 
     @Override
     public boolean intersects(Rectangle r) {
-        Line2D line = new Line2D.Float(x1, y1, x2, y2);
-        Rectangle2D rect = new Rectangle2D.Float(r.x1(), r.y1(), r.x2(), r.y2());
-        return line.intersects(rect);
+        GeometryFactory gf = new GeometryFactory();
+        GeometricShapeFactory f = new GeometricShapeFactory(gf);
+        f.setBase(new Coordinate(r.x1(), r.y1()));
+        f.setWidth(r.x2() - r.x1());
+        f.setHeight(r.y2() - r.y1());
+        Polygon rect = f.createRectangle();
+        LineSegment line = new LineSegment(x1, y1, x2, y2);
+        return RectangleIntersects.intersects(rect, line.toGeometry(gf));
     }
 
     public float x1() {

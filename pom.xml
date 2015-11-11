@@ -94,6 +94,12 @@
             <artifactId>rxjava</artifactId>
             <version>1.0.14</version>
         </dependency>
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts-core</artifactId>
+            <version>1.14.0</version>
+            <optional>true</optional>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>
@@ -151,12 +157,12 @@
             <version>0.3</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
             <version>3.0.3</version>
-	        <scope>test</scope>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
