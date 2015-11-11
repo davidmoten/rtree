@@ -833,6 +833,52 @@ public class RTreeTest {
             System.out.println(tree.asString());
         }
     }
+    
+    @Test
+    public void testSearchWithCircleFindsCentreOnly() {
+        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+                .add(2, point(2, 2)).add(3, point(3, 3));
+        List<Entry<Integer, Point>> list = tree.search(Geometries.circle(2, 2, 1)).toList().toBlocking().single();
+        assertEquals(1, list.size());
+        assertEquals(2, (int) list.get(0).value());
+    }
+    
+    @Test
+    public void testSearchWithCircleFindsAll() {
+        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+                .add(2, point(2, 2)).add(3, point(3, 3));
+        List<Entry<Integer, Point>> list = tree.search(Geometries.circle(2, 2, 1.5)).toList().toBlocking().single();
+        assertEquals(3, list.size());
+    }
+    
+    @Test
+    public void testSearchWithLineFindsAll() {
+        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+                .add(2, point(2, 2)).add(3, point(3, 3));
+        List<Entry<Integer, Point>> list = tree.search(Geometries.line(0, 0, 4, 4)).toList()
+                .toBlocking().single();
+        assertEquals(3, list.size());
+    }
+    
+    @Test
+    public void testSearchWithLineFindsOne() {
+        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+                .add(2, point(2, 2)).add(3, point(3, 3));
+        List<Entry<Integer, Point>> list = tree.search(Geometries.line(1.5, 1.5, 2.5, 2.5)).toList()
+                .toBlocking().single();
+        assertEquals(1, list.size());
+        assertEquals(2, (int) list.get(0).value());
+    }
+    
+    @Test
+    public void testSearchWithLineFindsNone() {
+        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+                .add(2, point(2, 2)).add(3, point(3, 3));
+        List<Entry<Integer, Point>> list = tree.search(Geometries.line(1.5, 1.5, 2.6, 2.5)).toList()
+                .toBlocking().single();
+        System.out.println(list);
+        assertEquals(0, list.size());
+    }
 
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
         @Override

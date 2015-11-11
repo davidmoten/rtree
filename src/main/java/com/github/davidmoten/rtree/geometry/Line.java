@@ -66,9 +66,7 @@ public final class Line implements Geometry {
 
     @Override
     public boolean intersects(Rectangle r) {
-        Line2D line = new Line2D.Float(x1, y1, x2, y2);
-        Rectangle2D rect = new Rectangle2D.Float(r.x1(), r.y1(), r.x2(), r.y2());
-        return line.intersects(rect);
+        return distance(r)==0;
     }
 
     public float x1() {
