@@ -31,7 +31,11 @@ public final class Line implements Geometry {
             return 0;
         } else {
             double d1 = distance(r.x1(), r.y1(), r.x1(), r.y2());
+            if (d1 == 0)
+                return 0;
             double d2 = distance(r.x1(), r.y2(), r.x2(), r.y2());
+            if (d2 == 0)
+                return 0;
             double d3 = distance(r.x2(), r.y2(), r.x2(), r.y1());
             double d4 = distance(r.x2(), r.y1(), r.x1(), r.y1());
             return Math.min(d1, Math.min(d2, Math.min(d3, d4)));
@@ -41,13 +45,17 @@ public final class Line implements Geometry {
     private double distance(float x1, float y1, float x2, float y2) {
         Float line = new Line2D.Float(x1, y1, x2, y2);
         double d1 = line.ptSegDist(this.x1, this.y1);
-        if (d1 == 0)
-            return 0;
         double d2 = line.ptSegDist(this.x2, this.y2);
-        if (d1 < d2)
-            return d1;
+        Float line2 = new Line2D.Float(this.x1, this.y1, this.x2, this.y2);
+        double d3 = line2.ptSegDist(x1, y1);
+        if (d3 == 0)
+            return 0;
+        double d4 = line2.ptSegDist(x2, y2);
+        if (d4 == 0)
+            return 0;
         else
-            return d2;
+            return Math.min(d1, Math.min(d2, Math.min(d3, d4)));
+
     }
 
     @Override
@@ -108,7 +116,7 @@ public final class Line implements Geometry {
         }
     }
 
-    private static class Vector {
+    private static final class Vector {
         final float x;
         final float y;
 
@@ -139,11 +147,6 @@ public final class Line implements Geometry {
 
         float modulusSquared() {
             return x * x + y * y;
-        }
-
-        @Override
-        public String toString() {
-            return "Vector [x=" + x + ", y=" + y + "]";
         }
 
     }
