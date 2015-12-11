@@ -11,7 +11,7 @@ public final class Intersects {
     public static final Func2<Rectangle, Circle, Boolean> rectangleIntersectsCircle = new Func2<Rectangle, Circle, Boolean>() {
         @Override
         public Boolean call(Rectangle rectangle, Circle circle) {
-            return circle.intersects(rectangle);
+            return circleIntersectsRectangle.call(circle, rectangle);
         }
     };
 
@@ -25,7 +25,7 @@ public final class Intersects {
     public static final Func2<Point, Circle, Boolean> pointIntersectsCircle = new Func2<Point, Circle, Boolean>() {
         @Override
         public Boolean call(Point point, Circle circle) {
-            return circle.intersects(point);
+            return circleIntersectsPoint.call(circle, point);
         }
     };
 
@@ -53,7 +53,7 @@ public final class Intersects {
     public static final Func2<Line, Rectangle, Boolean> lineIntersectsRectangle = new Func2<Line, Rectangle, Boolean>() {
         @Override
         public Boolean call(Line a, Rectangle r) {
-            return a.intersects(r);
+            return rectangleIntersectsLine.call(r, a);
         }
     };
 
@@ -67,7 +67,7 @@ public final class Intersects {
     public static final Func2<Line, Circle, Boolean> lineIntersectsCircle = new Func2<Line, Circle, Boolean>() {
         @Override
         public Boolean call(Line a, Circle c) {
-            return a.intersects(c);
+            return circleIntersectsLine.call(c, a);
         }
     };
 
