@@ -38,6 +38,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -878,6 +879,18 @@ public class RTreeTest {
                 .toBlocking().single();
         System.out.println(list);
         assertEquals(0, list.size());
+    }
+    
+    @Test
+    public void testRTreeRootMbrWhenRTreeEmpty() {
+        assertFalse(RTree.create().mbr().isPresent());
+    }
+    
+    @Test
+    public void testRTreeRootMbrWhenRTreeNonEmpty() {
+        Optional<Rectangle> r = RTree.<Integer, Point> create().add(1, point(1, 1))
+                .add(2, point(2, 2)).mbr();
+        assertEquals(Geometries.rectangle(1, 1, 2, 2), r.get());
     }
 
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {

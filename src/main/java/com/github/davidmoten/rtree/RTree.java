@@ -768,6 +768,13 @@ public final class RTree<T, S extends Geometry> {
     Optional<? extends Node<T, S>> root() {
         return root;
     }
+    
+    public Optional<Rectangle> mbr() {
+        if (!root.isPresent())
+            return Optional.absent();
+        else
+            return Optional.of(root.get().geometry().mbr());
+    }
 
     /**
      * Returns true if and only if the R-tree is empty of entries.
