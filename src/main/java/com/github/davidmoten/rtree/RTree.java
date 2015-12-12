@@ -769,6 +769,12 @@ public final class RTree<T, S extends Geometry> {
         return root;
     }
     
+    /**
+     * If the RTree has no entries returns {@link com.github.davidmoten.util.Optional#absent()}
+     * otherwise returns the minimum bounding rectangle of all entries in the RTree.
+     * 
+     * @return minimum bounding rectangle of all entries in RTree
+     */
     public Optional<Rectangle> mbr() {
         if (!root.isPresent())
             return Optional.absent();

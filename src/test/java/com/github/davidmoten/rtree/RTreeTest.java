@@ -2,6 +2,7 @@ package com.github.davidmoten.rtree;
 
 import static com.github.davidmoten.rtree.Entry.entry;
 import static com.github.davidmoten.rtree.geometry.Geometries.circle;
+import static com.github.davidmoten.rtree.geometry.Geometries.line;
 import static com.github.davidmoten.rtree.geometry.Geometries.point;
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 import static com.github.davidmoten.rtree.geometry.Intersects.pointIntersectsCircle;
@@ -892,6 +893,11 @@ public class RTreeTest {
         Optional<Rectangle> r = RTree.<Integer, Point> create().add(1, point(1, 1))
                 .add(2, point(2, 2)).mbr();
         assertEquals(Geometries.rectangle(1, 1, 2, 2), r.get());
+    }
+
+    @Test
+    public void testIntersectsPointLine() {
+        assertTrue(Intersects.lineIntersectsPoint.call(line(1, 1, 2, 2), point(1, 1)));
     }
 
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
