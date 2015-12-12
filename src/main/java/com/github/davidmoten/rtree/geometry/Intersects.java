@@ -82,7 +82,7 @@ public final class Intersects {
 
         @Override
         public Boolean call(Line line, Point point) {
-            return line.intersects(point.mbr());
+            return pointIntersectsLine.call(point, line);
         }
     };
 
