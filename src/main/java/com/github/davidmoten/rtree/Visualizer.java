@@ -104,7 +104,7 @@ public final class Visualizer {
         final double y1 = (r.y1() - view.y1()) / (view.y2() - view.y1()) * height;
         final double x2 = (r.x2() - view.x1()) / (view.x2() - view.x1()) * width;
         final double y2 = (r.y2() - view.y1()) / (view.y2() - view.y1()) * height;
-        g.drawRect(rnd(x1), rnd(y1), rnd(x2 - x1), rnd(y2 - y1));
+        g.drawRect(rnd(x1), rnd(y1), Math.max(rnd(x2 - x1),1), Math.max(rnd(y2 - y1),1));
     }
 
     private static int rnd(double d) {
