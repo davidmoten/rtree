@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>rtree</artifactId>
-    <version>0.7</version>
+    <version>0.8-SNAPSHOT</version>
 
     <name>${project.artifactId}</name>
     <description>Java implementation of an immutable in-memory R-Tree for spatial indexing</description>
@@ -79,7 +79,7 @@
         <connection>${scm.url}</connection>
         <developerConnection>${scm.url}</developerConnection>
         <url>${scm.url}</url>
-        <tag>0.7</tag>
+        <tag>0.6.5</tag>
     </scm>
 
     <dependencies>
