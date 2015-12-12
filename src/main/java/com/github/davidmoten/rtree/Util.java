@@ -43,8 +43,8 @@ public final class Util {
         Preconditions.checkArgument(!items.isEmpty());
         float minX1 = Float.MAX_VALUE;
         float minY1 = Float.MAX_VALUE;
-        float maxX2 = Float.MIN_VALUE;
-        float maxY2 = Float.MIN_VALUE;
+        float maxX2 = -Float.MAX_VALUE;
+        float maxY2 = -Float.MAX_VALUE;
         for (final HasGeometry item : items) {
             Rectangle r = item.geometry().mbr();
             if (r.x1() < minX1)
@@ -80,4 +80,5 @@ public final class Util {
         list2.addAll(replacements);
         return list2;
     }
+    
 }
