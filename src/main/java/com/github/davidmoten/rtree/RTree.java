@@ -770,7 +770,7 @@ public final class RTree<T, S extends Geometry> {
     }
     
     /**
-     * If the RTree has no entries returns {@link com.github.davidmoten.util.Optional#absent()}
+     * If the RTree has no entries returns {@link Optional#absent}
      * otherwise returns the minimum bounding rectangle of all entries in the RTree.
      * 
      * @return minimum bounding rectangle of all entries in RTree
