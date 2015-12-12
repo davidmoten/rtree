@@ -107,6 +107,7 @@ extension of the item. The ``Geometries`` builder provides these factory methods
 * ```Geometries.rectangle```
 * ```Geometries.circle```
 * ```Geometries.point```
+* ```Geometries.line``` (requires *jts-core* dependency)
 
 To add an item to an R-tree:
 
