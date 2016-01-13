@@ -38,7 +38,7 @@
         <m3.site.version>3.4</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
-        <jmh.version>1.11.1</jmh.version>
+        <jmh.version>1.11.2</jmh.version>
 
     </properties>
 
@@ -189,7 +189,6 @@
                                         <classpath />
                                         <argument>org.openjdk.jmh.Main</argument>
                                         <!-- -h for help -->
-                                        <argument>-f</argument>
                                         <argument>-i</argument>
                                         <argument>10</argument>
                                         <argument>-wi</argument>
