@@ -49,7 +49,7 @@ public final class RTree<T, S extends Geometry> {
     /**
      * Current size in Entries of the RTree.
      */
-    private int size;
+    private final int size;
 
     /**
      * Constructor.
