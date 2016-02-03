@@ -59,7 +59,7 @@ Add this maven dependency to your pom.xml:
 <dependency>
   <groupId>com.github.davidmoten</groupId>
   <artifactId>rtree</artifactId>
-  <version>0.7.2</version>
+  <version>0.7.4</version>
 </dependency>
 ```
 ###Instantiate an R-Tree
