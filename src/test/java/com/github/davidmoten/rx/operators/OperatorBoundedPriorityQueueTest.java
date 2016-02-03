@@ -11,6 +11,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Line;
+
 import rx.Observable;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
@@ -37,7 +41,7 @@ public class OperatorBoundedPriorityQueueTest {
     public void testUnsubscribeAfterFirst() {
         final AtomicBoolean completed = new AtomicBoolean(false);
         Observable.range(1, 5)
-        // go through priority queue
+                // go through priority queue
                 .lift(new OperatorBoundedPriorityQueue<Integer>(2, integerComparator))
                 // subscribe
                 .subscribe(new Subscriber<Integer>() {
@@ -63,7 +67,7 @@ public class OperatorBoundedPriorityQueueTest {
     public void testUnsubscribeAfterLastButBeforeCompletedCalled() {
         final AtomicBoolean completed = new AtomicBoolean(false);
         Observable.range(1, 5)
-        // go through priority queue
+                // go through priority queue
                 .lift(new OperatorBoundedPriorityQueue<Integer>(2, integerComparator))
                 // subscribe
                 .subscribe(new Subscriber<Integer>() {
@@ -94,7 +98,7 @@ public class OperatorBoundedPriorityQueueTest {
         final AtomicBoolean completed = new AtomicBoolean(false);
         final AtomicBoolean error = new AtomicBoolean(false);
         Observable.<Integer> error(new RuntimeException())
-        // go through priority queue
+                // go through priority queue
                 .lift(new OperatorBoundedPriorityQueue<Integer>(2, integerComparator))
                 // subscribe
                 .subscribe(new Subscriber<Integer>() {
@@ -145,7 +149,7 @@ public class OperatorBoundedPriorityQueueTest {
                 sub.onError(new RuntimeException());
             }
         })
-        // go through priority queue
+                // go through priority queue
                 .lift(new OperatorBoundedPriorityQueue<Integer>(1, integerComparator))
                 // subscribe
                 .subscribe(subscriber);
@@ -182,12 +186,21 @@ public class OperatorBoundedPriorityQueueTest {
                 sub.onCompleted();
             }
         })
-        // go through priority queue
+                // go through priority queue
                 .lift(new OperatorBoundedPriorityQueue<Integer>(1, integerComparator))
                 // subscribe
                 .subscribe(subscriber);
         assertFalse(completed.get());
         assertFalse(next.get());
+    }
+
+    @Test(timeout = 3000)
+    public void testOperatorShouldRequestMaxFromUpstream() {
+        RTree<String, Line> tree = RTree.star().create();
+        for (int i = 0; i < 5; ++i) {
+            tree = tree.add(String.format("Hello %d", i), Geometries.line(-i, -i, 5 + i, i));
+        }
+        tree.nearest(Geometries.point(2, 0.4), Double.MAX_VALUE, 1).toBlocking().single();
     }
 
 }
