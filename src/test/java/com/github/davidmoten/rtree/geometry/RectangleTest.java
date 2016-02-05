@@ -1,11 +1,11 @@
 package com.github.davidmoten.rtree.geometry;
 
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public class RectangleTest {
 
@@ -137,35 +137,56 @@ public class RectangleTest {
         assertTrue(a.intersects(b));
         assertTrue(b.intersects(a));
     }
-    
+
     @Test
     public void testContains() {
-        Rectangle r = rectangle(10,20,30,40);
-        assertTrue(r.contains(20,30));
+        Rectangle r = rectangle(10, 20, 30, 40);
+        assertTrue(r.contains(20, 30));
     }
-    
+
     @Test
     public void testContainsReturnsFalseWhenLessThanMinY() {
-        Rectangle r = rectangle(10,20,30,40);
-        assertFalse(r.contains(20,19));
+        Rectangle r = rectangle(10, 20, 30, 40);
+        assertFalse(r.contains(20, 19));
     }
-    
+
     @Test
     public void testContainsReturnsFalseWhenGreaterThanMaxY() {
-        Rectangle r = rectangle(10,20,30,40);
-        assertFalse(r.contains(20,41));
+        Rectangle r = rectangle(10, 20, 30, 40);
+        assertFalse(r.contains(20, 41));
     }
-    
+
     @Test
     public void testContainsReturnsFalseWhenGreaterThanMaxX() {
-        Rectangle r = rectangle(10,20,30,40);
-        assertFalse(r.contains(31,30));
+        Rectangle r = rectangle(10, 20, 30, 40);
+        assertFalse(r.contains(31, 30));
     }
-    
+
     @Test
     public void testContainsReturnsFalseWhenLessThanMinX() {
-        Rectangle r = rectangle(10,20,30,40);
-        assertFalse(r.contains(9,30));
+        Rectangle r = rectangle(10, 20, 30, 40);
+        assertFalse(r.contains(9, 30));
+    }
+
+    @Test
+    public void testIntersectionAreWhenEqual() {
+        Rectangle a = rectangle(10, 10, 30, 20);
+        Rectangle b = rectangle(10, 10, 30, 20);
+        assertEquals(200f, a.intersectionArea(b), 0.0001);
+    }
+
+    @Test
+    public void testIntersectionAreaWhenDontIntersect() {
+        Rectangle a = rectangle(10, 10, 30, 20);
+        Rectangle b = rectangle(50, 50, 60, 60);
+        assertEquals(0f, a.intersectionArea(b), 0.0001);
+    }
+
+    @Test
+    public void testIntersectionAreaPartialOverlap() {
+        Rectangle a = rectangle(10, 10, 30, 20);
+        Rectangle b = rectangle(28, 17, 40, 40);
+        assertEquals(6f, a.intersectionArea(b), 0.0001);
     }
 
 }
