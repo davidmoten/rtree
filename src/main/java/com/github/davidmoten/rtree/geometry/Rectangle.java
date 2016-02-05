@@ -38,8 +38,8 @@ public final class Rectangle implements Geometry, HasGeometry {
     }
 
     public Rectangle add(Rectangle r) {
-        return new Rectangle(Math.min(x1, r.x1), Math.min(y1, r.y1), Math.max(x2, r.x2), Math.max(
-                y2, r.y2));
+        return new Rectangle(Math.min(x1, r.x1), Math.min(y1, r.y1), Math.max(x2, r.x2),
+                Math.max(y2, r.y2));
     }
 
     public static Rectangle create(double x1, double y1, double x2, double y2) {
@@ -56,15 +56,7 @@ public final class Rectangle implements Geometry, HasGeometry {
 
     @Override
     public boolean intersects(Rectangle r) {
-        float xMaxLeft = Math.max(x1(), r.x1());
-        float xMinRight = Math.min(x2(), r.x2());
-        if (xMinRight<xMaxLeft) 
-            return false;
-        else {
-            float yMaxBottom = Math.max(y1(), r.y1());
-            float yMinTop = Math.min(y2(), r.y2());
-            return yMinTop>=yMaxBottom;
-        }
+        return !(x1 > r.x2 || x2 < r.x1 || y1 > r.y2 || y2 < r.y1);
     }
 
     @Override
@@ -74,8 +66,8 @@ public final class Rectangle implements Geometry, HasGeometry {
         else {
             Rectangle mostLeft = x1 < r.x1 ? this : r;
             Rectangle mostRight = x1 > r.x1 ? this : r;
-            double xDifference = Math.max(0, mostLeft.x1 == mostRight.x1 ? 0 : mostRight.x1
-                    - mostLeft.x2);
+            double xDifference = Math.max(0,
+                    mostLeft.x1 == mostRight.x1 ? 0 : mostRight.x1 - mostLeft.x2);
 
             Rectangle upper = y1 < r.y1 ? this : r;
             Rectangle lower = y1 > r.y1 ? this : r;
