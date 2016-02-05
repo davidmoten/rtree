@@ -183,10 +183,17 @@ public class RectangleTest {
     }
 
     @Test
-    public void testIntersectionAreaPartialOverlap() {
+    public void testIntersectionAreaCornerIntersect() {
         Rectangle a = rectangle(10, 10, 30, 20);
         Rectangle b = rectangle(28, 17, 40, 40);
         assertEquals(6f, a.intersectionArea(b), 0.0001);
+    }
+
+    @Test
+    public void testIntersectionAreaTopIntersect() {
+        Rectangle a = rectangle(10, 10, 30, 20);
+        Rectangle b = rectangle(8, 17, 40, 40);
+        assertEquals(60f, a.intersectionArea(b), 0.0001);
     }
 
 }
