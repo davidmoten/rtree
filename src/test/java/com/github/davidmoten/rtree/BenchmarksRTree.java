@@ -238,6 +238,11 @@ public class BenchmarksRTree {
     public void rStarTreeDeleteOneEveryOccurrenceFromGreekDataChildren010() {
         deleteAll(starTreeM10);
     }
+    
+    @Benchmark
+    public void searchNearestGreek() {
+        searchNearestGreek(starTreeM4);
+    }
 
     private void deleteAll(RTree<Object, Point> tree) {
         tree.delete(entries.get(1000), true);
@@ -251,6 +256,10 @@ public class BenchmarksRTree {
     private void searchGreek(RTree<Object, Point> tree) {
         // should return 22 results
         tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+    }
+    
+    private void searchNearestGreek(RTree<Object, Point> tree) {
+        tree.nearest(Point.create(40.0,27.0), 50, 300).subscribe();
     }
 
     private void searchGreekWithBackpressure(RTree<Object, Point> tree) {
