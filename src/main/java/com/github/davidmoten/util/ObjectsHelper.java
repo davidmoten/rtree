@@ -1,9 +1,5 @@
 package com.github.davidmoten.util;
 
-import static com.google.common.base.Optional.absent;
-
-import com.google.common.base.Optional;
-
 public final class ObjectsHelper {
 
     private ObjectsHelper() {
@@ -15,13 +11,14 @@ public final class ObjectsHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Optional<T> asClass(Object object, Class<T> cls) {
+    public static <T> com.github.davidmoten.guavamini.Optional<T> asClass(Object object,
+            Class<T> cls) {
         if (object == null)
-            return absent();
+            return com.github.davidmoten.guavamini.Optional.absent();
         else if (object.getClass() != cls)
-            return absent();
+            return com.github.davidmoten.guavamini.Optional.absent();
         else
-            return Optional.of((T) object);
+            return com.github.davidmoten.guavamini.Optional.of((T) object);
     }
 
 }

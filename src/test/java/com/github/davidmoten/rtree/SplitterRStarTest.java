@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
-import com.google.common.collect.Lists;
 
 public class SplitterRStarTest {
 

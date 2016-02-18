@@ -1,19 +1,19 @@
 package com.github.davidmoten.rtree;
 
-import static com.google.common.base.Optional.of;
+import static com.github.davidmoten.guavamini.Optional.of;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import rx.Subscriber;
-import rx.functions.Func1;
-
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
+
+import rx.Subscriber;
+import rx.functions.Func1;
 
 final class NonLeaf<T, S extends Geometry> implements Node<T, S> {
 

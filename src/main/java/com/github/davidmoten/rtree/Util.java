@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.google.common.base.Preconditions;
 
 /**
  * @author dxm
@@ -80,5 +80,5 @@ public final class Util {
         list2.addAll(replacements);
         return list2;
     }
-    
+
 }

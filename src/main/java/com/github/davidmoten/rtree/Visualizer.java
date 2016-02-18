@@ -11,9 +11,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.google.common.base.Optional;
 
 public final class Visualizer {
 
@@ -31,7 +31,8 @@ public final class Visualizer {
         this.maxDepth = calculateMaxDepth(tree.root());
     }
 
-    private static <R, S extends Geometry> int calculateMaxDepth(Optional<? extends Node<R, S>> root) {
+    private static <R, S extends Geometry> int calculateMaxDepth(
+            Optional<? extends Node<R, S>> root) {
         if (!root.isPresent())
             return 0;
         else
@@ -59,7 +60,8 @@ public final class Visualizer {
         return image;
     }
 
-    private <T, S extends Geometry> List<RectangleDepth> getNodeDepthsSortedByDepth(Node<T, S> root) {
+    private <T, S extends Geometry> List<RectangleDepth> getNodeDepthsSortedByDepth(
+            Node<T, S> root) {
         final List<RectangleDepth> list = getRectangleDepths(root, 0);
         Collections.sort(list, new Comparator<RectangleDepth>() {
 
@@ -104,7 +106,7 @@ public final class Visualizer {
         final double y1 = (r.y1() - view.y1()) / (view.y2() - view.y1()) * height;
         final double x2 = (r.x2() - view.x1()) / (view.x2() - view.x1()) * width;
         final double y2 = (r.y2() - view.y1()) / (view.y2() - view.y1()) * height;
-        g.drawRect(rnd(x1), rnd(y1), Math.max(rnd(x2 - x1),1), Math.max(rnd(y2 - y1),1));
+        g.drawRect(rnd(x1), rnd(y1), Math.max(rnd(x2 - x1), 1), Math.max(rnd(y2 - y1), 1));
     }
 
     private static int rnd(double d) {

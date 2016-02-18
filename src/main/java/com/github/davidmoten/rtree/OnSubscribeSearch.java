@@ -2,14 +2,14 @@ package com.github.davidmoten.rtree;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.util.ImmutableStack;
+
 import rx.Observable.OnSubscribe;
 import rx.Producer;
 import rx.Subscriber;
 import rx.functions.Func1;
-
-import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.util.ImmutableStack;
-import com.google.common.annotations.VisibleForTesting;
 
 final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entry<T, S>> {
 

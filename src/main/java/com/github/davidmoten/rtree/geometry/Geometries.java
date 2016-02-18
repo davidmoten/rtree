@@ -1,6 +1,6 @@
 package com.github.davidmoten.rtree.geometry;
 
-import com.google.common.annotations.VisibleForTesting;
+import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 
 public final class Geometries {
 

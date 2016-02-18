@@ -1,11 +1,11 @@
 package com.github.davidmoten.rtree;
 
+import com.github.davidmoten.guavamini.Objects;
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.util.ObjectsHelper;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 
 /**
  * An entry in the R-tree which has a spatial representation.

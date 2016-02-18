@@ -1,10 +1,10 @@
 package com.github.davidmoten.util;
 
-import static com.google.common.base.Optional.of;
+import static com.github.davidmoten.guavamini.Optional.of;
 
 import java.util.Iterator;
 
-import com.google.common.base.Optional;
+import com.github.davidmoten.guavamini.Optional;
 
 public final class ImmutableStack<T> implements Iterable<T> {
     private final Optional<T> head;

@@ -28,11 +28,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
-import rx.functions.Func2;
-
+import com.github.davidmoten.guavamini.Lists;
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.guavamini.Sets;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -40,9 +38,11 @@ import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Intersects;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
+import rx.functions.Func2;
 
 public class RTreeTest {
 

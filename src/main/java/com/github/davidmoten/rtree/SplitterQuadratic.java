@@ -1,19 +1,19 @@
 package com.github.davidmoten.rtree;
 
-import static com.google.common.base.Optional.absent;
-import static com.google.common.base.Optional.of;
+import static com.github.davidmoten.guavamini.Optional.absent;
+import static com.github.davidmoten.guavamini.Optional.of;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.davidmoten.guavamini.Lists;
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.guavamini.Preconditions;
+import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.util.Pair;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 public final class SplitterQuadratic implements Splitter {
 
@@ -49,8 +49,8 @@ public final class SplitterQuadratic implements Splitter {
         return new ListPair<T>(group1, group2);
     }
 
-    private <T extends HasGeometry> void assignRemaining(final List<T> group1,
-            final List<T> group2, final List<T> remaining, final int minGroupSize) {
+    private <T extends HasGeometry> void assignRemaining(final List<T> group1, final List<T> group2,
+            final List<T> remaining, final int minGroupSize) {
         final Rectangle mbr1 = Util.mbr(group1);
         final Rectangle mbr2 = Util.mbr(group2);
         final T item1 = getBestCandidateForGroup(remaining, group1, mbr1);

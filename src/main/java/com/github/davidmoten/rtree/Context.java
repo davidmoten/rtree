@@ -1,6 +1,6 @@
 package com.github.davidmoten.rtree;
 
-import com.google.common.base.Preconditions;
+import com.github.davidmoten.guavamini.Preconditions;
 
 /**
  * Configures an RTree prior to instantiation of an {@link RTree}.

@@ -2,8 +2,8 @@ package com.github.davidmoten.rtree;
 
 import java.util.List;
 
+import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.google.common.base.Optional;
 
 /**
  * Used for tracking deletions through recursive calls.

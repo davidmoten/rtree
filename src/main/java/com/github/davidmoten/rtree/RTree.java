@@ -1,11 +1,14 @@
 package com.github.davidmoten.rtree;
 
+import static com.github.davidmoten.guavamini.Optional.absent;
+import static com.github.davidmoten.guavamini.Optional.of;
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
-import static com.google.common.base.Optional.absent;
-import static com.google.common.base.Optional.of;
 
 import java.util.List;
 
+import com.github.davidmoten.guavamini.Lists;
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Intersects;
@@ -13,9 +16,6 @@ import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -768,10 +768,10 @@ public final class RTree<T, S extends Geometry> {
     Optional<? extends Node<T, S>> root() {
         return root;
     }
-    
+
     /**
-     * If the RTree has no entries returns {@link Optional#absent}
-     * otherwise returns the minimum bounding rectangle of all entries in the RTree.
+     * If the RTree has no entries returns {@link Optional#absent} otherwise
+     * returns the minimum bounding rectangle of all entries in the RTree.
      * 
      * @return minimum bounding rectangle of all entries in RTree
      */
