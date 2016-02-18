@@ -29,7 +29,8 @@ public final class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
 
             @Override
             public void onCompleted() {
-                for (T t : q.asList()) {
+                T t;
+                while ((t = q.poll()) != null) {
                     if (isUnsubscribed()) {
                         return;
                     } else {

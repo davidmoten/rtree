@@ -75,6 +75,10 @@ public final class BoundedPriorityQueue<T> {
         }
         queue.add(t);
     }
+    
+    public T poll() {
+        return queue.poll();
+    }
 
     /**
      * @return Returns a sorted view of the queue as a
