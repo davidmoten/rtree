@@ -2,7 +2,7 @@ package com.github.davidmoten.rx.operators;
 
 import java.util.Comparator;
 
-import com.google.common.collect.MinMaxPriorityQueue;
+import com.github.davidmoten.util.BoundedPriorityQueue;
 
 import rx.Observable.Operator;
 import rx.Subscriber;
@@ -19,8 +19,7 @@ public final class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
 
     @Override
     public Subscriber<? super T> call(final Subscriber<? super T> child) {
-        final MinMaxPriorityQueue<T> q = MinMaxPriorityQueue.orderedBy(comparator)
-                .maximumSize(maximumSize).create();
+        final BoundedPriorityQueue<T> q = new BoundedPriorityQueue<T>(maximumSize, comparator);
         return new Subscriber<T>(child) {
 
             @Override
@@ -30,18 +29,16 @@ public final class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
 
             @Override
             public void onCompleted() {
-                while (true) {
-                    T t = q.poll();
-                    if (t == null)
-                        break;
-                    else if (!isUnsubscribed())
-                        child.onNext(t);
-                    else
+                for (T t : q.asOrderedList()) {
+                    if (isUnsubscribed()) {
                         return;
+                    } else {
+                        child.onNext(t);
+                    }
                 }
-                if (isUnsubscribed())
-                    return;
-                child.onCompleted();
+                if (!isUnsubscribed()) {
+                    child.onCompleted();
+                }
             }
 
             @Override
