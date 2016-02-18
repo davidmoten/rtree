@@ -55,7 +55,7 @@ public final class Rectangle implements Geometry, HasGeometry {
 
     @Override
     public boolean intersects(Rectangle r) {
-        return !(x1 > r.x2 || x2 < r.x1 || y1 > r.y2 || y2 < r.y1);
+        return r.x2 >= x1 && r.x1 <= x2 && r.y2 >= y1 && r.y1 <= y2;
     }
 
     @Override
