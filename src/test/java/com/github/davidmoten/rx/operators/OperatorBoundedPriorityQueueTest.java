@@ -32,7 +32,7 @@ public class OperatorBoundedPriorityQueueTest {
     @Test
     public void testPriority() {
         List<Integer> list = Observable.range(1, 5)
-                .lift(new OperatorBoundedPriorityQueue<Integer>(2, integerComparator)).toList()
+                .lift(new OperatorBoundedPriorityQueue<Integer>(2, integerComparator)).toSortedList()
                 .toBlocking().single();
         assertEquals(Arrays.asList(1, 2), list);
     }

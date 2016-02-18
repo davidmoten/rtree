@@ -29,7 +29,7 @@ public final class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
 
             @Override
             public void onCompleted() {
-                for (T t : q.asOrderedList()) {
+                for (T t : q.asList()) {
                     if (isUnsubscribed()) {
                         return;
                     } else {

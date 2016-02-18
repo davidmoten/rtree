@@ -85,9 +85,4 @@ public final class BoundedPriorityQueue<T> {
         return Collections.unmodifiableList(new ArrayList<T>(queue));
     }
 
-    public List<T> asOrderedList() {
-        ArrayList<T> list = new ArrayList<T>(queue);
-        Collections.sort(list, comparator);
-        return list;
-    }
 }
