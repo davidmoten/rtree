@@ -6,14 +6,14 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Point;
+
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.observables.StringObservable;
-
-import com.github.davidmoten.rtree.geometry.Geometries;
-import com.github.davidmoten.rtree.geometry.Point;
 
 public class GreekEarthquakes {
 
@@ -43,8 +43,8 @@ public class GreekEarthquakes {
                 }
             }
         });
-        return StringObservable.split(source, "\n").flatMap(
-                new Func1<String, Observable<Entry<Object, Point>>>() {
+        return StringObservable.split(source, "\n")
+                .flatMap(new Func1<String, Observable<Entry<Object, Point>>>() {
 
                     @Override
                     public Observable<Entry<Object, Point>> call(String line) {
@@ -52,8 +52,8 @@ public class GreekEarthquakes {
                             String[] items = line.split(" ");
                             double lat = Double.parseDouble(items[0]);
                             double lon = Double.parseDouble(items[1]);
-                            return Observable.just(Entry.entry(new Object(),
-                                    Geometries.point(lat, lon)));
+                            return Observable
+                                    .just(Entry.entry(new Object(), Geometries.point(lat, lon)));
                         } else
                             return Observable.empty();
                     }
@@ -61,6 +61,8 @@ public class GreekEarthquakes {
     }
 
     static List<Entry<Object, Point>> entriesList() {
-        return entries().toList().toBlocking().single();
+        List<Entry<Object, Point>> result = entries().toList().toBlocking().single();
+        System.out.println("loaded greek earthquakes into list");
+        return result;
     }
 }
