@@ -305,11 +305,7 @@ mbr=Rectangle [x1=10.0, y1=4.0, x2=62.0, y2=85.0]
 
 Dependencies
 ---------------------
-This library has a dependency on *guava* 18.0 which is about 2.2M. If you are coding for Android you may want to use *ProGuard* to trim 
-the final application size. The dependency is driven by extensive use of ```Optional```,```Preconditions```,```Objects```, and the use of
-```MinMaxPriorityQueue``` for the *nearest-k* search. I'm open to the possibility of internalizing these dependencies if people care
-about the dependency size a lot. Let me know.
-
+As of 0.7.5 this library does not depend on *guava* (>2M) but rather depends on *guava-mini* (11K).
 
 How to build
 ----------------

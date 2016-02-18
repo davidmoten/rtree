@@ -21,8 +21,6 @@ import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.functions.Functions;
-import rx.internal.util.UtilityFunctions;
 
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
