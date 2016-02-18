@@ -244,11 +244,6 @@ public class BenchmarksRTree {
         searchNearestGreek(starTreeM4);
     }
 
-    @Benchmark
-    public void searchNearestGreekUnordered() {
-        searchNearestGreekUnordered(starTreeM4);
-    }
-    
     private void deleteAll(RTree<Object, Point> tree) {
         tree.delete(entries.get(1000), true);
     }
@@ -265,10 +260,6 @@ public class BenchmarksRTree {
     
     private void searchNearestGreek(RTree<Object, Point> tree) {
         tree.nearest(Point.create(40.0,27.0), 50, 300).subscribe();
-    }
-
-    private void searchNearestGreekUnordered(RTree<Object, Point> tree) {
-        tree.nearestUnordered(Point.create(40.0,27.0), 50, 300).subscribe();
     }
 
     private void searchGreekWithBackpressure(RTree<Object, Point> tree) {

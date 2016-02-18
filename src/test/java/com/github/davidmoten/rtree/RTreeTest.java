@@ -445,8 +445,8 @@ public class RTreeTest {
         List<Entry<Object, Rectangle>> list2 = tree.nearest(r(10), 8, 3).toList().toBlocking()
                 .single();
         assertEquals(2, list2.size());
-        assertEquals(11, list2.get(0).geometry().mbr().x1(), PRECISION);
         assertEquals(10, list2.get(1).geometry().mbr().x1(), PRECISION);
+        assertEquals(11, list2.get(0).geometry().mbr().x1(), PRECISION);
     }
 
     @Test

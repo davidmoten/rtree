@@ -689,33 +689,10 @@ public final class RTree<T, S extends Geometry> {
      */
     public Observable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
             int maxCount) {
-        final Comparator<Entry<T, S>> comparator = Comparators.<T, S> ascendingDistance(r);
-        return sort(nearestUnordered(r, maxDistance, maxCount, comparator), comparator);
-    }
-
-    /**
-     * Returns the nearest k entries (k=maxCount) to the given rectangle where
-     * the entries are strictly less than a given maximum distance from the
-     * rectangle.
-     * 
-     * @param r
-     *            rectangle
-     * @param maxDistance
-     *            max distance of returned entries from the rectangle
-     * @param maxCount
-     *            max number of entries to return
-     * @return nearest entries to maxCount, in no particular order of distance
-     */
-    public Observable<Entry<T, S>> nearestUnordered(final Rectangle r, final double maxDistance,
-            int maxCount) {
-        return nearestUnordered(r, maxDistance, maxCount, Comparators.<T, S> ascendingDistance(r));
-    }
-
-    public Observable<Entry<T, S>> nearestUnordered(final Rectangle r, final double maxDistance,
-            int maxCount, Comparator<Entry<T, S>> comparator) {
         return search(r, maxDistance)
-                .lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount, comparator));
+                .lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount, Comparators.<T, S> ascendingDistance(r)));
     }
+
 
     /**
      * Returns the nearest k entries (k=maxCount) to the given point where the
@@ -731,23 +708,6 @@ public final class RTree<T, S extends Geometry> {
      */
     public Observable<Entry<T, S>> nearest(final Point p, final double maxDistance, int maxCount) {
         return nearest(p.mbr(), maxDistance, maxCount);
-    }
-
-    /**
-     * Returns the nearest k entries (k=maxCount) to the given point where the
-     * entries are strictly less than a given maximum distance from the point.
-     * 
-     * @param p
-     *            point
-     * @param maxDistance
-     *            max distance of returned entries from the point
-     * @param maxCount
-     *            max number of entries to return
-     * @return nearest entries to maxCount, in ascending order of distance
-     */
-    public Observable<Entry<T, S>> nearestUnordered(final Point p, final double maxDistance,
-            int maxCount) {
-        return nearestUnordered(p.mbr(), maxDistance, maxCount);
     }
 
     /**
@@ -903,17 +863,5 @@ public final class RTree<T, S extends Geometry> {
         return s.toString();
     }
     
-    private static <T, S extends Geometry> Observable<Entry<T, S>> sort(Observable<Entry<T, S>> o,
-            final Comparator<Entry<T, S>> comparator) {
-        // sort
-        return o.toSortedList(new Func2<Entry<T, S>, Entry<T, S>, Integer>() {
-            @Override
-            public Integer call(Entry<T, S> a, Entry<T, S> b) {
-                return comparator.compare(a, b);
-            }
-        })
-                // flatten the sorted list
-                .flatMapIterable(com.github.davidmoten.rtree.Functions.<List<Entry<T, S>>> identity());
-    }
 
 }

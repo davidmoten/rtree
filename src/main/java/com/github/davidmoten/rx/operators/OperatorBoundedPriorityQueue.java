@@ -1,6 +1,7 @@
 package com.github.davidmoten.rx.operators;
 
 import java.util.Comparator;
+import java.util.List;
 
 import com.github.davidmoten.util.BoundedPriorityQueue;
 
@@ -29,8 +30,8 @@ public final class OperatorBoundedPriorityQueue<T> implements Operator<T, T> {
 
             @Override
             public void onCompleted() {
-                T t;
-                while ((t = q.poll()) != null) {
+                List<T> list = q.asOrderedList();
+                for (T t:list) {
                     if (isUnsubscribed()) {
                         return;
                     } else {

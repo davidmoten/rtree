@@ -1,6 +1,7 @@
 package com.github.davidmoten.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -81,12 +82,18 @@ public final class BoundedPriorityQueue<T> {
     }
 
     /**
-     * @return Returns a sorted view of the queue as a
+     * @return Returns a view of the queue as a
      *         {@link Collections#unmodifiableList(java.util.List)}
-     *         unmodifiableList.
+     *         unmodifiableList sorted in reverse order.
      */
     public List<T> asList() {
         return Collections.unmodifiableList(new ArrayList<T>(queue));
+    }
+    
+    public List<T> asOrderedList() {
+        List<T> list = new ArrayList<T>(queue);
+        Collections.sort(list, comparator);
+        return list;
     }
 
 }
