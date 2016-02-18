@@ -85,4 +85,40 @@ public class BoundedPriorityQueueTest {
         assertEquals(Lists.newArrayList(1, 2), q.asOrderedList());
     }
 
+    @Test
+    public void threeItemsReturnsThreeItemsWhenMaxIsOneInputOrderFlipped() {
+        BoundedPriorityQueue<Integer> q = create(10, comparator);
+        q.add(3);
+        q.add(2);
+        q.add(1);
+        assertEquals(Lists.newArrayList(1, 2, 3), q.asOrderedList());
+    }
+
+    @Test
+    public void threeItemsReturnsThreeItemsWhenMaxIsOneInputOrderIncreasing() {
+        BoundedPriorityQueue<Integer> q = create(10, comparator);
+        q.add(1);
+        q.add(2);
+        q.add(3);
+        assertEquals(Lists.newArrayList(1, 2, 3), q.asOrderedList());
+    }
+
+    @Test
+    public void threeItemsReturnsThreeItemsWhenMaxIsOneInputOrderMixed() {
+        BoundedPriorityQueue<Integer> q = create(10, comparator);
+        q.add(3);
+        q.add(1);
+        q.add(2);
+        assertEquals(Lists.newArrayList(1, 2, 3), q.asOrderedList());
+    }
+
+    @Test
+    public void threeItemsReturnsThreeItemsWhenMaxIsOneInputOrderMixed2() {
+        BoundedPriorityQueue<Integer> q = create(10, comparator);
+        q.add(1);
+        q.add(3);
+        q.add(2);
+        assertEquals(Lists.newArrayList(1, 2, 3), q.asOrderedList());
+    }
+
 }
