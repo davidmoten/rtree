@@ -797,6 +797,8 @@ public class PriorityQueue<E> extends AbstractQueue<E> implements java.io.Serial
      *             {@code Object}) in the proper order.
      * @param s
      *            the stream
+     * @throws java.io.IOException
+     *             when a problem occurs writing the object
      */
     private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
         // Write out element count, and any hidden stuff
@@ -816,6 +818,12 @@ public class PriorityQueue<E> extends AbstractQueue<E> implements java.io.Serial
      *
      * @param s
      *            the stream
+     * @throws java.io.IOException
+     *             when a problem occurs reading the object
+     * @throws ClassNotFoundException
+     *             when an attempt to read the object was made but the class
+     *             corresponding to the serialized object was not on the
+     *             classpath
      */
     private void readObject(java.io.ObjectInputStream s)
             throws java.io.IOException, ClassNotFoundException {
