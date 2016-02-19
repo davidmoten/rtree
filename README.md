@@ -305,7 +305,7 @@ mbr=Rectangle [x1=10.0, y1=4.0, x2=62.0, y2=85.0]
 
 Dependencies
 ---------------------
-As of 0.7.5 this library does not depend on *guava* (>2M) but rather depends on *guava-mini* (11K).
+As of 0.7.5 this library does not depend on *guava* (>2M) but rather depends on *guava-mini* (11K). The `nearest` search used to depend on `MinMaxPriorityQueue` from guava but now uses a backport of Java 8 `PriorityQueue` inside a custom `BoundedPriorityQueue` class that gives about 1.7x the throughput as the guava class.
 
 How to build
 ----------------
