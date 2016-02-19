@@ -342,41 +342,41 @@ The *Greek* data referred to in the benchmarks is a collection of some 38,377 en
 These were run on i7-920@2.67GHz with *rtree* version 0.6.1:
 
 ```
-Benchmark                                                                                  Mode  Samples       Score       Error  Units
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004           thrpt       10  170629.988 ±  1992.468  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010           thrpt       10  199225.527 ±  3687.661  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032           thrpt       10   92269.915 ±  1777.963  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128           thrpt       10  282006.364 ±  4718.936  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004      thrpt       10  178533.217 ±  1397.901  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010      thrpt       10  211693.060 ±  2160.555  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032      thrpt       10  147575.589 ±  1309.416  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128      thrpt       10   81962.980 ±  1114.323  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren004                      thrpt       10  841284.193 ± 12172.013  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren010                      thrpt       10  331521.896 ± 15179.039  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren032                      thrpt       10  339449.893 ±  1768.640  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren128                      thrpt       10  430664.624 ±  7939.214  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren004                 thrpt       10  332686.163 ±  7647.466  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren010                 thrpt       10  213191.627 ±  2998.905  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren032                 thrpt       10  122136.799 ±  3024.498  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren128                 thrpt       10   49765.765 ±   391.503  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeDeleteOneEveryOccurrenceFromGreekDataChildren010         thrpt       10  195698.148 ±  1650.701  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren004              thrpt       10  155788.206 ±  1976.180  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren010              thrpt       10  143670.205 ±  1525.071  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren032              thrpt       10   37517.491 ±   634.409  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren128              thrpt       10  116450.918 ±  1461.198  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004         thrpt       10  135777.256 ±  1003.535  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010         thrpt       10  108184.558 ±  1210.154  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032         thrpt       10   31833.529 ±   349.885  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128         thrpt       10    3884.568 ±    34.335  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren004                         thrpt       10  438527.764 ±  5882.232  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren010                         thrpt       10  707710.764 ± 13940.099  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren032                         thrpt       10  426923.809 ±  6349.023  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren128                         thrpt       10  698529.029 ±  9430.641  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren004                    thrpt       10  531461.541 ±  8004.566  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010                    thrpt       10  407222.646 ±  4319.595  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpressure    thrpt       10  109341.392 ±  1624.047  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032                    thrpt       10  359887.451 ±  2771.129  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128                    thrpt       10  247366.614 ±  3056.753  ops/s
-
+Benchmark                                                                        Mode  Cnt        Score       Error  Units
+BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004         thrpt   30   224352.790 ±  1708.529  ops/s
+BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010         thrpt   30   247947.778 ±  4117.226  ops/s
+BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032         thrpt   30   112591.953 ±   972.987  ops/s
+BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128         thrpt   30   298989.140 ±  2330.185  ops/s
+BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004    thrpt   30   232324.058 ±  4633.187  ops/s
+BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010    thrpt   30   261633.063 ±  3662.058  ops/s
+BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032    thrpt   30   168265.317 ±  1423.151  ops/s
+BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128    thrpt   30    90238.666 ±  1499.261  ops/s
+BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren004                    thrpt   30  1104271.990 ± 14943.650  ops/s
+BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren010                    thrpt   30   540503.686 ± 31686.244  ops/s
+BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren032                    thrpt   30   485622.388 ±  8695.079  ops/s
+BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren128                    thrpt   30   450184.739 ± 30226.031  ops/s
+BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren004               thrpt   30   502553.106 ± 12470.482  ops/s
+BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren010               thrpt   30   315402.804 ±  9275.778  ops/s
+BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren032               thrpt   30   177839.569 ±  2287.869  ops/s
+BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren128               thrpt   30    69644.797 ±   746.576  ops/s
+BenchmarksRTree.rStarTreeDeleteOneEveryOccurrenceFromGreekDataChildren010       thrpt   30   185702.857 ±  2930.597  ops/s
+BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren004            thrpt   30   174669.627 ±  2074.800  ops/s
+BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren010            thrpt   30   171688.999 ±  3076.790  ops/s
+BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren032            thrpt   30    55837.241 ±   664.707  ops/s
+BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren128            thrpt   30   151179.610 ±  1238.763  ops/s
+BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004       thrpt   30   235920.973 ±  5500.595  ops/s
+BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010       thrpt   30   118197.954 ±  4518.481  ops/s
+BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032       thrpt   30    66987.641 ±   467.488  ops/s
+BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128       thrpt   30     6875.174 ±    71.504  ops/s
+BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren004                       thrpt   30  1197968.573 ± 22670.357  ops/s
+BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren010                       thrpt   30  1184954.723 ± 22827.081  ops/s
+BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren032                       thrpt   30   428978.258 ± 70457.574  ops/s
+BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren128                       thrpt   30   780809.809 ± 13247.115  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren004                  thrpt   30   639295.525 ± 10078.143  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010                  thrpt   30   807720.225 ±  8598.344  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpressure  thrpt   30   164140.964 ±  4891.246  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032                  thrpt   30   698007.832 ±  6154.096  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128                  thrpt   30   322591.739 ±  3092.862  ops/s
+BenchmarksRTree.searchNearestGreek                                              thrpt   30     3706.300 ±   182.112  ops/s
 ```
 
