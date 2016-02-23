@@ -86,6 +86,7 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
                     if (st.isEmpty()) {
                         if (!subscriber.isUnsubscribed()) {
                             subscriber.onCompleted();
+                            break;
                         } else
                             break;
                     } else if (requested.addAndGet(-r) == 0)
