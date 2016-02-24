@@ -191,7 +191,7 @@ public final class RTree<T, S extends Geometry> {
         private Splitter splitter = new SplitterQuadratic();
         private Selector selector = new SelectorMinimalAreaIncrease();
         private boolean star = false;
-        private final NodeFactory<Object, Geometry> nodeFactory = NodeFactoryDefault.instance();
+        private NodeFactory<Object, Geometry> factory = NodeFactoryDefault.instance();
 
         private Builder() {
         }
@@ -261,6 +261,15 @@ public final class RTree<T, S extends Geometry> {
             return this;
         }
 
+        @SuppressWarnings("unchecked")
+        public Builder factory(NodeFactory<? extends Object, ? extends Geometry> factory) {
+            // TODO could change the signature of Builder to have types to
+            // support this method but would be breaking change for existing
+            // clients
+            this.factory = (NodeFactory<Object, Geometry>) factory;
+            return this;
+        }
+
         /**
          * Builds the {@link RTree}.
          * 
@@ -281,7 +290,7 @@ public final class RTree<T, S extends Geometry> {
                 minChildren = of((int) Math.round(maxChildren.get() * DEFAULT_FILLING_FACTOR));
             return new RTree<T, S>(Optional.<Node<T, S>> absent(), 0,
                     new Context<T, S>(minChildren.get(), maxChildren.get(), selector, splitter,
-                            (NodeFactory<T, S>) nodeFactory));
+                            (NodeFactory<T, S>) factory));
         }
 
     }
