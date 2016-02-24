@@ -12,8 +12,9 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public class LeafTest {
 
-    private static Context<Object, Rectangle> context = new Context(2, 4,
-            new SelectorMinimalAreaIncrease(), new SplitterQuadratic(), NodeFactoryDefault.instance());
+    private static Context<Object, Rectangle> context = new Context<Object, Rectangle>(2, 4,
+            new SelectorMinimalAreaIncrease(), new SplitterQuadratic(),
+            NodeFactoryDefault.<Object, Rectangle> instance());
 
     @Test(expected = IllegalArgumentException.class)
     public void testCannotHaveZeroChildren() {

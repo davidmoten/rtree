@@ -30,7 +30,7 @@ public class NonLeafMethods {
 
     public static <T, S extends Geometry> List<Node<T, S>> add(
             Entry<? extends T, ? extends S> entry, NonLeaf<T, S> node) {
-        Context context = node.context();
+        Context<T, S> context = node.context();
         final Node<T, S> child = context.selector().select(entry.geometry().mbr(), node.children());
         List<Node<T, S>> list = child.add(entry);
         List<? extends Node<T, S>> children2 = Util.replace(node.children(), child, list);
@@ -45,7 +45,7 @@ public class NonLeafMethods {
     }
 
     private static <T, S extends Geometry> List<Node<T, S>> makeNonLeaves(
-            ListPair<? extends Node<T, S>> pair, Context context) {
+            ListPair<? extends Node<T, S>> pair, Context<T, S> context) {
         List<Node<T, S>> list = new ArrayList<Node<T, S>>();
         list.add(new NonLeafDefault<T, S>(pair.group1().list(), context));
         list.add(new NonLeafDefault<T, S>(pair.group2().list(), context));

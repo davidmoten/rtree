@@ -13,9 +13,9 @@ final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S> {
 
     private final List<? extends Node<T, S>> children;
     private final Rectangle mbr;
-    private final Context context;
+    private final Context<T, S> context;
 
-    NonLeafDefault(List<? extends Node<T, S>> children, Context context) {
+    NonLeafDefault(List<? extends Node<T, S>> children, Context<T, S> context) {
         Preconditions.checkArgument(!children.isEmpty());
         this.context = context;
         this.children = children;
@@ -54,7 +54,7 @@ final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S> {
     }
 
     @Override
-    public Context context() {
+    public Context<T, S> context() {
         return context;
     }
 }
