@@ -119,7 +119,6 @@
             <groupId>com.github.davidmoten</groupId>
             <artifactId>rxjava-extras</artifactId>
             <version>0.7</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rx.util.BackpressureUtils;
 import com.github.davidmoten.util.ImmutableStack;
 
 import rx.Observable.OnSubscribe;
@@ -72,17 +73,16 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
 
             // rxjava used AtomicLongFieldUpdater instead of AtomicLong
             // but benchmarks showed no benefit here so reverted to AtomicLong
-            long previousCount = requested.getAndAdd(n);
+            long previousCount = BackpressureUtils.getAndAddRequest(requested, n);
             if (previousCount == 0) {
                 // don't touch stack every time during the loop because
                 // is a volatile and every write forces a thread memory
                 // cache flush
                 ImmutableStack<NodePosition<T, S>> st = stack;
                 while (true) {
+                    // minimize atomic reads by assigning to a variable here
                     long r = requested.get();
-                    long numToEmit = r;
-
-                    st = Backpressure.search(condition, subscriber, st, numToEmit);
+                    st = Backpressure.search(condition, subscriber, st, r);
                     if (st.isEmpty()) {
                         if (!subscriber.isUnsubscribed()) {
                             subscriber.onCompleted();

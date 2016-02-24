@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
@@ -903,7 +904,7 @@ public class RTreeTest {
         assertTrue(Intersects.lineIntersectsPoint.call(line(1, 1, 2, 2), point(1, 1)));
     }
 
-    @Test(timeout = 3000)
+    @Test(timeout = 30000000)
     public void testGroupByIssue40() {
         RTree<Integer, Geometry> tree = RTree.star().create();
 
@@ -915,17 +916,21 @@ public class RTreeTest {
         tree = tree.add(6, Geometries.point(13.0, 52.0));
 
         Rectangle rectangle = Geometries.rectangle(12.9, 51.9, 13.1, 52.1);
-        assertEquals(Integer.valueOf(6), tree.search(rectangle).count().toBlocking().single());
         assertEquals(Integer.valueOf(2), tree.search(rectangle).doOnRequest(new Action1<Long>() {
             @Override
             public void call(Long n) {
-                System.out.println(n);
+                System.out.println("requestFromGroupBy=" + n);
             }
         }).groupBy(new Func1<Entry<Integer, Geometry>, Boolean>() {
             @Override
             public Boolean call(Entry<Integer, Geometry> entry) {
                 System.out.println(entry);
                 return entry.value() % 2 == 0;
+            }
+        }).doOnRequest(new Action1<Long>() {
+            @Override
+            public void call(Long n) {
+                System.out.println("requestFromFlatMap=" + n);
             }
         }).flatMap(
                 new Func1<GroupedObservable<Boolean, Entry<Integer, Geometry>>, Observable<Integer>>() {
@@ -937,8 +942,8 @@ public class RTreeTest {
                 }).count().toBlocking().single());
     }
 
-    @Test(timeout = 3000)
-    public void testBackpressureSearchWhenLotsRequestedButNotMaxValue() {
+    @Test
+    public void testBackpressureForOverflow() {
         RTree<Integer, Geometry> tree = RTree.star().create();
 
         tree = tree.add(1, Geometries.point(13.0, 52.0));
@@ -947,36 +952,34 @@ public class RTreeTest {
         tree = tree.add(4, Geometries.point(13.0, 52.0));
         tree = tree.add(5, Geometries.point(13.0, 52.0));
         tree = tree.add(6, Geometries.point(13.0, 52.0));
-
+        final AtomicInteger count = new AtomicInteger();
         Rectangle rectangle = Geometries.rectangle(12.9, 51.9, 13.1, 52.1);
-
-        tree.search(rectangle).doOnRequest(new Action1<Long>() {
-            @Override
-            public void call(Long n) {
-                System.out.println(n);
-            }
-        }).subscribe(new Subscriber<Object>() {
+        tree.search(rectangle).subscribe(new Subscriber<Object>() {
 
             @Override
             public void onStart() {
-                request(Long.MAX_VALUE - 100);
+                request(4);
             }
 
             @Override
             public void onCompleted() {
-            }
-
-            @Override
-            public void onError(Throwable arg0) {
 
             }
 
             @Override
-            public void onNext(Object arg0) {
-                request(1);
-                request(1);
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Object t) {
+                request(Long.MAX_VALUE);
+                count.incrementAndGet();
             }
         });
+        assertEquals(6, count.get());
+        assertEquals(6, (int) tree.search(rectangle).count().toBlocking().single());
+
     }
 
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
