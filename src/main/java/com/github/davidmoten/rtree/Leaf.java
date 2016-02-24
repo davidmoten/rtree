@@ -14,7 +14,7 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-final class Leaf<T, S extends Geometry> implements Node<T, S> {
+final class Leaf<T, S extends Geometry> implements LeafInterface<T, S> {
 
     private final List<Entry<T, S>> entries;
     private final Rectangle mbr;
@@ -31,7 +31,8 @@ final class Leaf<T, S extends Geometry> implements Node<T, S> {
         return mbr;
     }
 
-    List<Entry<T, S>> entries() {
+    @Override
+    public List<Entry<T, S>> entries() {
         return entries;
     }
 

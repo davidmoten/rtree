@@ -43,7 +43,7 @@ public final class Visualizer {
         if (node instanceof Leaf)
             return depth + 1;
         else
-            return calculateDepth(((NonLeaf<R, S>) node).children().get(0), depth + 1);
+            return calculateDepth(((NodeLeafInterface<R, S>) node).children().get(0), depth + 1);
     }
 
     public BufferedImage createImage() {
@@ -78,12 +78,12 @@ public final class Visualizer {
         final List<RectangleDepth> list = new ArrayList<RectangleDepth>();
         list.add(new RectangleDepth(node.geometry().mbr(), depth));
         if (node instanceof Leaf) {
-            final Leaf<T, S> leaf = (Leaf<T, S>) node;
+            final LeafInterface<T, S> leaf = (LeafInterface<T, S>) node;
             for (final Entry<T, S> entry : leaf.entries()) {
                 list.add(new RectangleDepth(entry.geometry().mbr(), depth + 2));
             }
         } else {
-            final NonLeaf<T, S> n = (NonLeaf<T, S>) node;
+            final NodeLeafInterface<T, S> n = (NodeLeafInterface<T, S>) node;
             for (final Node<T, S> child : n.children()) {
                 list.addAll(getRectangleDepths(child, depth + 1));
             }
