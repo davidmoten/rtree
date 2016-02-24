@@ -19,6 +19,6 @@ interface Node<T, S extends Geometry> extends HasGeometry {
 
     int count();
 
-    Context context();
+    Context<T, S> context();
 
 }

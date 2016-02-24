@@ -29,7 +29,7 @@ public class LeafMethods {
                 numDeleted += 1;
 
             if (entries2.size() >= leaf.context().minChildren()) {
-                Leaf<T, S> node = new LeafImpl<T, S>(entries2, leaf.context());
+                Leaf<T, S> node = new LeafDefault<T, S>(entries2, leaf.context());
                 return new NodeAndEntries<T, S>(of(node), Collections.<Entry<T, S>> emptyList(),
                         numDeleted);
             } else {
@@ -42,11 +42,12 @@ public class LeafMethods {
     public static <T, S extends Geometry> List<Node<T, S>> add(
             Entry<? extends T, ? extends S> entry, Leaf<T, S> leaf) {
         List<Entry<T, S>> entries = leaf.entries();
-        Context context = leaf.context();
+        Context<T, S> context = leaf.context();
         @SuppressWarnings("unchecked")
         final List<Entry<T, S>> entries2 = Util.add(entries, (Entry<T, S>) entry);
         if (entries2.size() <= context.maxChildren())
-            return Collections.singletonList((Node<T, S>) new LeafImpl<T, S>(entries2, context));
+            return Collections
+                    .singletonList((Node<T, S>) context.factory().createLeaf(entries2, context));
         else {
             ListPair<Entry<T, S>> pair = context.splitter().split(entries2, context.minChildren());
             return makeLeaves(pair, context);
@@ -54,10 +55,10 @@ public class LeafMethods {
     }
 
     private static <T, S extends Geometry> List<Node<T, S>> makeLeaves(ListPair<Entry<T, S>> pair,
-            Context context) {
+            Context<T, S> context) {
         List<Node<T, S>> list = new ArrayList<Node<T, S>>();
-        list.add(new LeafImpl<T, S>(pair.group1().list(), context));
-        list.add(new LeafImpl<T, S>(pair.group2().list(), context));
+        list.add(context.factory().createLeaf(pair.group1().list(), context));
+        list.add(context.factory().createLeaf(pair.group2().list(), context));
         return list;
     }
 

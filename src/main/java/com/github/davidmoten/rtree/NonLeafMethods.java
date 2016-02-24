@@ -36,7 +36,7 @@ public class NonLeafMethods {
         List<? extends Node<T, S>> children2 = Util.replace(node.children(), child, list);
         if (children2.size() <= context.maxChildren())
             return Collections
-                    .singletonList((Node<T, S>) new NonLeafImpl<T, S>(children2, context));
+                    .singletonList((Node<T, S>) new NonLeafDefault<T, S>(children2, context));
         else {
             ListPair<? extends Node<T, S>> pair = context.splitter().split(children2,
                     context.minChildren());
@@ -47,8 +47,8 @@ public class NonLeafMethods {
     private static <T, S extends Geometry> List<Node<T, S>> makeNonLeaves(
             ListPair<? extends Node<T, S>> pair, Context context) {
         List<Node<T, S>> list = new ArrayList<Node<T, S>>();
-        list.add(new NonLeafImpl<T, S>(pair.group1().list(), context));
-        list.add(new NonLeafImpl<T, S>(pair.group2().list(), context));
+        list.add(new NonLeafDefault<T, S>(pair.group1().list(), context));
+        list.add(new NonLeafDefault<T, S>(pair.group2().list(), context));
         return list;
     }
 
@@ -106,7 +106,7 @@ public class NonLeafMethods {
                 return new NodeAndEntries<T, S>(Optional.<Node<T, S>> absent(), addTheseEntries,
                         countDeleted);
             else {
-                NonLeafImpl<T, S> nd = new NonLeafImpl<T, S>(nodes, node.context());
+                NonLeafDefault<T, S> nd = new NonLeafDefault<T, S>(nodes, node.context());
                 return new NodeAndEntries<T, S>(of(nd), addTheseEntries, countDeleted);
             }
         }

@@ -8,13 +8,13 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-final class LeafImpl<T, S extends Geometry> implements Leaf<T, S> {
+final class LeafDefault<T, S extends Geometry> implements Leaf<T, S> {
 
     private final List<Entry<T, S>> entries;
     private final Rectangle mbr;
-    private final Context context;
+    private final Context<T, S> context;
 
-    LeafImpl(List<Entry<T, S>> entries, Context context) {
+    LeafDefault(List<Entry<T, S>> entries, Context<T, S> context) {
         this.entries = entries;
         this.context = context;
         this.mbr = Util.mbr(entries);
@@ -52,7 +52,7 @@ final class LeafImpl<T, S extends Geometry> implements Leaf<T, S> {
     }
 
     @Override
-    public Context context() {
+    public Context<T, S> context() {
         return context;
     }
 

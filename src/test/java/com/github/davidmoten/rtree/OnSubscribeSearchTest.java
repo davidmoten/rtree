@@ -32,7 +32,7 @@ public class OnSubscribeSearchTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testSearchProducerThrowsExceptionFromRequestSome() {
-        Node<Integer, Point> node = new LeafImpl<Integer, Point>(Collections.singletonList(Entry.entry(
+        Node<Integer, Point> node = new LeafDefault<Integer, Point>(Collections.singletonList(Entry.entry(
                 1, Geometries.point(1, 1))), null);
 
         Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);

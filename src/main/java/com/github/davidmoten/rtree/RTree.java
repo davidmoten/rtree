@@ -32,7 +32,7 @@ import rx.functions.Func2;
 public final class RTree<T, S extends Geometry> {
 
     private final Optional<? extends Node<T, S>> root;
-    private final Context context;
+    private final Context<T, S> context;
 
     /**
      * Benchmarks show that this is a good choice for up to O(10,000) entries
@@ -59,7 +59,7 @@ public final class RTree<T, S extends Geometry> {
      * @param context
      *            options for the R-tree
      */
-    private RTree(Optional<? extends Node<T, S>> root, int size, Context context) {
+    private RTree(Optional<? extends Node<T, S>> root, int size, Context<T, S> context) {
         this.root = root;
         this.size = size;
         this.context = context;
@@ -73,18 +73,8 @@ public final class RTree<T, S extends Geometry> {
      * @param context
      *            options for the R-tree
      */
-    private RTree(Node<T, S> root, int size, Context context) {
+    private RTree(Node<T, S> root, int size, Context<T, S> context) {
         this(of(root), size, context);
-    }
-
-    /**
-     * Constructor.
-     * 
-     * @param context
-     *            specifies parameters and behaviour for the R-tree
-     */
-    private RTree(Context context) {
-        this(Optional.<Node<T, S>> absent(), 0, context);
     }
 
     /**
@@ -201,6 +191,7 @@ public final class RTree<T, S extends Geometry> {
         private Splitter splitter = new SplitterQuadratic();
         private Selector selector = new SelectorMinimalAreaIncrease();
         private boolean star = false;
+        private final NodeFactory<Object, Geometry> nodeFactory = NodeFactoryDefault.instance();
 
         private Builder() {
         }
@@ -279,6 +270,7 @@ public final class RTree<T, S extends Geometry> {
          *            geometry type
          * @return RTree
          */
+        @SuppressWarnings("unchecked")
         public <T, S extends Geometry> RTree<T, S> create() {
             if (!maxChildren.isPresent())
                 if (star)
@@ -287,8 +279,9 @@ public final class RTree<T, S extends Geometry> {
                     maxChildren = of(MAX_CHILDREN_DEFAULT_GUTTMAN);
             if (!minChildren.isPresent())
                 minChildren = of((int) Math.round(maxChildren.get() * DEFAULT_FILLING_FACTOR));
-            return new RTree<T, S>(
-                    new Context(minChildren.get(), maxChildren.get(), selector, splitter));
+            return new RTree<T, S>(Optional.<Node<T, S>> absent(), 0,
+                    new Context<T, S>(minChildren.get(), maxChildren.get(), selector, splitter,
+                            (NodeFactory<T, S>) nodeFactory));
         }
 
     }
@@ -308,13 +301,13 @@ public final class RTree<T, S extends Geometry> {
             if (nodes.size() == 1)
                 node = nodes.get(0);
             else {
-                node = new NonLeafImpl<T, S>(nodes, context);
+                node = new NonLeafDefault<T, S>(nodes, context);
             }
             return new RTree<T, S>(node, size + 1, context);
         } else
             return new RTree<T, S>(
-                    new LeafImpl<T, S>(Lists.newArrayList((Entry<T, S>) entry), context), size + 1,
-                    context);
+                    context.factory().createLeaf(Lists.newArrayList((Entry<T, S>) entry), context),
+                    size + 1, context);
     }
 
     /**
@@ -807,7 +800,7 @@ public final class RTree<T, S extends Geometry> {
      * 
      * @return the configuration of the RTree prior to instantiation
      */
-    public Context context() {
+    public Context<T, S> context() {
         return context;
     }
 
@@ -837,7 +830,7 @@ public final class RTree<T, S extends Geometry> {
     private String asString(Node<T, S> node, String margin) {
         final String marginIncrement = "  ";
         StringBuilder s = new StringBuilder();
-        if (node instanceof NonLeafImpl) {
+        if (node instanceof NonLeafDefault) {
             s.append(margin);
             s.append("mbr=" + node.geometry());
             s.append('\n');
@@ -846,7 +839,7 @@ public final class RTree<T, S extends Geometry> {
                 s.append(asString(child, margin + marginIncrement));
             }
         } else {
-            Leaf<T, S> leaf = (LeafImpl<T, S>) node;
+            Leaf<T, S> leaf = (LeafDefault<T, S>) node;
             s.append(margin);
             s.append("mbr=");
             s.append(leaf.geometry());

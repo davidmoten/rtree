@@ -9,13 +9,13 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-final class NonLeafImpl<T, S extends Geometry> implements NonLeaf<T, S> {
+final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S> {
 
     private final List<? extends Node<T, S>> children;
     private final Rectangle mbr;
     private final Context context;
 
-    NonLeafImpl(List<? extends Node<T, S>> children, Context context) {
+    NonLeafDefault(List<? extends Node<T, S>> children, Context context) {
         Preconditions.checkArgument(!children.isEmpty());
         this.context = context;
         this.children = children;

@@ -10,7 +10,7 @@ public class NonLeafTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testNonLeafPrecondition() {
-        new NonLeafImpl<Object,Geometry>(Collections.<Node<Object,Geometry>>emptyList(), null);
+        new NonLeafDefault<Object,Geometry>(Collections.<Node<Object,Geometry>>emptyList(), null);
     }
     
 }

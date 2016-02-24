@@ -77,7 +77,7 @@ public final class Visualizer {
             int depth) {
         final List<RectangleDepth> list = new ArrayList<RectangleDepth>();
         list.add(new RectangleDepth(node.geometry().mbr(), depth));
-        if (node instanceof LeafImpl) {
+        if (node instanceof LeafDefault) {
             final Leaf<T, S> leaf = (Leaf<T, S>) node;
             for (final Entry<T, S> entry : leaf.entries()) {
                 list.add(new RectangleDepth(entry.geometry().mbr(), depth + 2));
