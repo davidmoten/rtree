@@ -4,7 +4,6 @@ import static com.github.davidmoten.guavamini.Optional.absent;
 import static com.github.davidmoten.guavamini.Optional.of;
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 
-import java.util.Comparator;
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Lists;
@@ -124,7 +123,7 @@ public final class RTree<T, S extends Geometry> {
         if (node instanceof Leaf)
             return depth + 1;
         else
-            return calculateDepth(((NodeLeafInterface<T, S>) node).children().get(0), depth + 1);
+            return calculateDepth(((NonLeaf<T, S>) node).children().get(0), depth + 1);
     }
 
     /**
@@ -309,12 +308,13 @@ public final class RTree<T, S extends Geometry> {
             if (nodes.size() == 1)
                 node = nodes.get(0);
             else {
-                node = new NonLeaf<T, S>(nodes, context);
+                node = new NonLeafImpl<T, S>(nodes, context);
             }
             return new RTree<T, S>(node, size + 1, context);
         } else
-            return new RTree<T, S>(new Leaf<T, S>(Lists.newArrayList((Entry<T, S>) entry), context),
-                    size + 1, context);
+            return new RTree<T, S>(
+                    new LeafImpl<T, S>(Lists.newArrayList((Entry<T, S>) entry), context), size + 1,
+                    context);
     }
 
     /**
@@ -689,10 +689,9 @@ public final class RTree<T, S extends Geometry> {
      */
     public Observable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
             int maxCount) {
-        return search(r, maxDistance)
-                .lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount, Comparators.<T, S> ascendingDistance(r)));
+        return search(r, maxDistance).lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount,
+                Comparators.<T, S> ascendingDistance(r)));
     }
-
 
     /**
      * Returns the nearest k entries (k=maxCount) to the given point where the
@@ -838,16 +837,16 @@ public final class RTree<T, S extends Geometry> {
     private String asString(Node<T, S> node, String margin) {
         final String marginIncrement = "  ";
         StringBuilder s = new StringBuilder();
-        if (node instanceof NonLeaf) {
+        if (node instanceof NonLeafImpl) {
             s.append(margin);
             s.append("mbr=" + node.geometry());
             s.append('\n');
-            NodeLeafInterface<T, S> n = (NodeLeafInterface<T, S>) node;
+            NonLeaf<T, S> n = (NonLeaf<T, S>) node;
             for (Node<T, S> child : n.children()) {
                 s.append(asString(child, margin + marginIncrement));
             }
         } else {
-            Leaf<T, S> leaf = (Leaf<T, S>) node;
+            Leaf<T, S> leaf = (LeafImpl<T, S>) node;
             s.append(margin);
             s.append("mbr=");
             s.append(leaf.geometry());
@@ -862,6 +861,5 @@ public final class RTree<T, S extends Geometry> {
         }
         return s.toString();
     }
-    
 
 }

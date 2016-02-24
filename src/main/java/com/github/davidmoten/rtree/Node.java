@@ -2,11 +2,11 @@ package com.github.davidmoten.rtree;
 
 import java.util.List;
 
-import rx.Subscriber;
-import rx.functions.Func1;
-
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
+
+import rx.Subscriber;
+import rx.functions.Func1;
 
 interface Node<T, S extends Geometry> extends HasGeometry {
 
@@ -18,5 +18,7 @@ interface Node<T, S extends Geometry> extends HasGeometry {
             Subscriber<? super Entry<T, S>> subscriber);
 
     int count();
+
+    Context context();
 
 }
