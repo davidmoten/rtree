@@ -301,7 +301,7 @@ public final class RTree<T, S extends Geometry> {
             if (nodes.size() == 1)
                 node = nodes.get(0);
             else {
-                node = new NonLeafDefault<T, S>(nodes, context);
+                node = context.factory().createNonLeaf(nodes, context);
             }
             return new RTree<T, S>(node, size + 1, context);
         } else
@@ -830,7 +830,7 @@ public final class RTree<T, S extends Geometry> {
     private String asString(Node<T, S> node, String margin) {
         final String marginIncrement = "  ";
         StringBuilder s = new StringBuilder();
-        if (node instanceof NonLeafDefault) {
+        if (node instanceof NonLeaf) {
             s.append(margin);
             s.append("mbr=" + node.geometry());
             s.append('\n');
@@ -839,7 +839,7 @@ public final class RTree<T, S extends Geometry> {
                 s.append(asString(child, margin + marginIncrement));
             }
         } else {
-            Leaf<T, S> leaf = (LeafDefault<T, S>) node;
+            Leaf<T, S> leaf = (Leaf<T, S>) node;
             s.append(margin);
             s.append("mbr=");
             s.append(leaf.geometry());

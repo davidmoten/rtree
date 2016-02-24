@@ -6,7 +6,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 /**
  * Configures an RTree prior to instantiation of an {@link RTree}.
  */
-public final class Context<T, S extends Geometry> implements ContextBase {
+public final class Context<T, S extends Geometry> {
 
     private final int maxChildren;
     private final int minChildren;
@@ -25,6 +25,8 @@ public final class Context<T, S extends Geometry> implements ContextBase {
      *            algorithm to select search path
      * @param splitter
      *            algorithm to split the children across two new nodes
+     * @param factory
+     *            node creation factory
      */
     public Context(int minChildren, int maxChildren, Selector selector, Splitter splitter,
             NodeFactory<T, S> factory) {
@@ -41,22 +43,18 @@ public final class Context<T, S extends Geometry> implements ContextBase {
         this.factory = factory;
     }
 
-    @Override
     public int maxChildren() {
         return maxChildren;
     }
 
-    @Override
     public int minChildren() {
         return minChildren;
     }
 
-    @Override
     public Splitter splitter() {
         return splitter;
     }
 
-    @Override
     public Selector selector() {
         return selector;
     }

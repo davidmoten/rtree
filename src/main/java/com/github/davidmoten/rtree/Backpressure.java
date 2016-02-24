@@ -1,10 +1,10 @@
 package com.github.davidmoten.rtree;
 
-import rx.Subscriber;
-import rx.functions.Func1;
-
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.util.ImmutableStack;
+
+import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Utility methods for controlling backpressure of the tree search.
@@ -37,7 +37,7 @@ final class Backpressure {
             else if (np.position() == np.node().count()) {
                 // handle after last in node
                 state = StackAndRequest.create(searchAfterLastInNode(state.stack), state.request);
-            } else if (np.node() instanceof NonLeafDefault) {
+            } else if (np.node() instanceof NonLeaf) {
                 // handle non-leaf
                 state = StackAndRequest.create(searchNonLeaf(condition, state.stack, np),
                         state.request);

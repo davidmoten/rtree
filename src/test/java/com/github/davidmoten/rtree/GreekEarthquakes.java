@@ -65,4 +65,12 @@ public class GreekEarthquakes {
         System.out.println("loaded greek earthquakes into list");
         return result;
     }
+
+    public static void main(String[] args) throws InterruptedException {
+        RTree<Object, Point> tree = RTree.star().create();
+        tree = tree.add(entries()).last().toBlocking().single();
+        System.gc();
+        Thread.sleep(10000000);
+        System.out.println(tree.size());
+    }
 }

@@ -29,7 +29,7 @@ public class LeafMethods {
                 numDeleted += 1;
 
             if (entries2.size() >= leaf.context().minChildren()) {
-                Leaf<T, S> node = new LeafDefault<T, S>(entries2, leaf.context());
+                Leaf<T, S> node = leaf.context().factory().createLeaf(entries2, leaf.context());
                 return new NodeAndEntries<T, S>(of(node), Collections.<Entry<T, S>> emptyList(),
                         numDeleted);
             } else {
