@@ -4,7 +4,6 @@ import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.util.ObjectsHelper;
 
 /**
@@ -13,7 +12,7 @@ import com.github.davidmoten.util.ObjectsHelper;
  * @param <T>
  *            the type of Entry
  */
-public final class EntryDefault<T, S extends Geometry> implements  Entry<T, S> {
+public final class EntryDefault<T, S extends Geometry> implements Entry<T, S> {
     private final T value;
     private final S geometry;
 

@@ -19,7 +19,7 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
+public class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S>, HasNode_ {
 
     private final Node_ node;
     private final Context<T, S> context;
@@ -99,6 +99,11 @@ public class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
             list.add(EntryDefault.<T, S> entry((T) new Object(), (S) geometry));
         }
         return list;
+    }
+
+    @Override
+    public Node_ node() {
+        return node;
     }
 
 }
