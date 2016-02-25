@@ -12,7 +12,7 @@ public final class Context<T, S extends Geometry> {
     private final int minChildren;
     private final Splitter splitter;
     private final Selector selector;
-    private final NodeFactory<T, S> factory;
+    private final Factory<T, S> factory;
 
     /**
      * Constructor.
@@ -29,7 +29,7 @@ public final class Context<T, S extends Geometry> {
      *            node creation factory
      */
     public Context(int minChildren, int maxChildren, Selector selector, Splitter splitter,
-            NodeFactory<T, S> factory) {
+            Factory<T, S> factory) {
         Preconditions.checkNotNull(splitter);
         Preconditions.checkNotNull(selector);
         Preconditions.checkArgument(maxChildren > 2);
@@ -59,7 +59,7 @@ public final class Context<T, S extends Geometry> {
         return selector;
     }
 
-    public NodeFactory<T, S> factory() {
+    public Factory<T, S> factory() {
         return factory;
     }
 

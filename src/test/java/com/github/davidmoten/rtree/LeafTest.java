@@ -14,7 +14,7 @@ public class LeafTest {
 
     private static Context<Object, Rectangle> context = new Context<Object, Rectangle>(2, 4,
             new SelectorMinimalAreaIncrease(), new SplitterQuadratic(),
-            NodeFactoryDefault.<Object, Rectangle> instance());
+            FactoryDefault.<Object, Rectangle> instance());
 
     @Test(expected = IllegalArgumentException.class)
     public void testCannotHaveZeroChildren() {

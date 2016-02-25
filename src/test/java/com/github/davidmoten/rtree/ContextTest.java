@@ -9,37 +9,37 @@ public class ContextTest {
     @Test(expected = RuntimeException.class)
     public void testContextIllegalMinChildren() {
         new Context<Object, Geometry>(0, 4, new SelectorMinimalAreaIncrease(),
-                new SplitterQuadratic(), NodeFactoryDefault.instance());
+                new SplitterQuadratic(), FactoryDefault.instance());
     }
 
     @Test(expected = RuntimeException.class)
     public void testContextIllegalMaxChildren() {
         new Context<Object, Geometry>(1, 2, new SelectorMinimalAreaIncrease(),
-                new SplitterQuadratic(), NodeFactoryDefault.instance());
+                new SplitterQuadratic(), FactoryDefault.instance());
     }
 
     @Test(expected = RuntimeException.class)
     public void testContextIllegalMinMaxChildren() {
         new Context<Object, Geometry>(4, 3, new SelectorMinimalAreaIncrease(),
-                new SplitterQuadratic(), NodeFactoryDefault.instance());
+                new SplitterQuadratic(), FactoryDefault.instance());
     }
 
     @Test
     public void testContextLegalChildren() {
         new Context<Object, Geometry>(2, 4, new SelectorMinimalAreaIncrease(),
-                new SplitterQuadratic(), NodeFactoryDefault.instance());
+                new SplitterQuadratic(), FactoryDefault.instance());
     }
 
     @Test(expected = NullPointerException.class)
     public void testContextSelectorNullThrowsNPE() {
         new Context<Object, Geometry>(2, 4, null, new SplitterQuadratic(),
-                NodeFactoryDefault.instance());
+                FactoryDefault.instance());
     }
 
     @Test(expected = NullPointerException.class)
     public void testContextSplitterNullThrowsNPE() {
         new Context<Object, Geometry>(2, 4, new SelectorMinimalAreaIncrease(), null,
-                NodeFactoryDefault.instance());
+                FactoryDefault.instance());
     }
 
     @Test(expected = NullPointerException.class)

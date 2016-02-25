@@ -191,7 +191,7 @@ public final class RTree<T, S extends Geometry> {
         private Splitter splitter = new SplitterQuadratic();
         private Selector selector = new SelectorMinimalAreaIncrease();
         private boolean star = false;
-        private NodeFactory<Object, Geometry> factory = NodeFactoryDefault.instance();
+        private Factory<Object, Geometry> factory = FactoryDefault.instance();
 
         private Builder() {
         }
@@ -262,11 +262,11 @@ public final class RTree<T, S extends Geometry> {
         }
 
         @SuppressWarnings("unchecked")
-        public Builder factory(NodeFactory<? extends Object, ? extends Geometry> factory) {
+        public Builder factory(Factory<? extends Object, ? extends Geometry> factory) {
             // TODO could change the signature of Builder to have types to
             // support this method but would be breaking change for existing
             // clients
-            this.factory = (NodeFactory<Object, Geometry>) factory;
+            this.factory = (Factory<Object, Geometry>) factory;
             return this;
         }
 
@@ -290,7 +290,7 @@ public final class RTree<T, S extends Geometry> {
                 minChildren = of((int) Math.round(maxChildren.get() * DEFAULT_FILLING_FACTOR));
             return new RTree<T, S>(Optional.<Node<T, S>> absent(), 0,
                     new Context<T, S>(minChildren.get(), maxChildren.get(), selector, splitter,
-                            (NodeFactory<T, S>) factory));
+                            (Factory<T, S>) factory));
         }
 
     }
@@ -330,7 +330,7 @@ public final class RTree<T, S extends Geometry> {
      * @return a new immutable R-tree including the new entry
      */
     public RTree<T, S> add(T value, S geometry) {
-        return add(EntryDefault.entry(value, geometry));
+        return add(context.factory().createEntry(value, geometry));
     }
 
     /**
@@ -438,7 +438,7 @@ public final class RTree<T, S extends Geometry> {
      *         object
      */
     public RTree<T, S> delete(T value, S geometry, boolean all) {
-        return delete(EntryDefault.entry(value, geometry), all);
+        return delete(context.factory().createEntry(value, geometry), all);
     }
 
     /**
@@ -454,7 +454,7 @@ public final class RTree<T, S extends Geometry> {
      *         given value and geometry
      */
     public RTree<T, S> delete(T value, S geometry) {
-        return delete(EntryDefault.entry(value, geometry), false);
+        return delete(context.factory().createEntry(value, geometry), false);
     }
 
     /**

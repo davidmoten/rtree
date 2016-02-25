@@ -4,15 +4,15 @@ import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 
-public class NodeFactoryDefault<T, S extends Geometry> implements NodeFactory<T, S> {
+public class FactoryDefault<T, S extends Geometry> implements Factory<T, S> {
 
     private static class Holder {
-        private static final NodeFactory<Object, Geometry> INSTANCE = new NodeFactoryDefault<Object, Geometry>();
+        private static final Factory<Object, Geometry> INSTANCE = new FactoryDefault<Object, Geometry>();
     }
 
     @SuppressWarnings("unchecked")
-    public static <T, S extends Geometry> NodeFactory<T, S> instance() {
-        return (NodeFactory<T, S>) Holder.INSTANCE;
+    public static <T, S extends Geometry> Factory<T, S> instance() {
+        return (Factory<T, S>) Holder.INSTANCE;
     }
 
     @Override
@@ -23,6 +23,11 @@ public class NodeFactoryDefault<T, S extends Geometry> implements NodeFactory<T,
     @Override
     public NonLeaf<T, S> createNonLeaf(List<? extends Node<T, S>> children, Context<T, S> context) {
         return new NonLeafDefault<T, S>(children, context);
+    }
+
+    @Override
+    public Entry<T, S> createEntry(T value, S geometry) {
+        return EntryDefault.entry(value, geometry);
     }
 
 }
