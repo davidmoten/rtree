@@ -13,7 +13,7 @@ import com.github.davidmoten.rtree.geometry.ListPair;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class NonLeafMethods {
+public class NonLeafHelper {
 
     public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber, NonLeaf<T, S> node) {

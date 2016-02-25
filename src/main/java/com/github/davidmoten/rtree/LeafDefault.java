@@ -33,7 +33,7 @@ final class LeafDefault<T, S extends Geometry> implements Leaf<T, S> {
     @Override
     public void search(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T, S>> subscriber) {
-        LeafMethods.search(condition, subscriber, this);
+        LeafHelper.search(condition, subscriber, this);
     }
 
     @Override
@@ -43,12 +43,12 @@ final class LeafDefault<T, S extends Geometry> implements Leaf<T, S> {
 
     @Override
     public List<Node<T, S>> add(Entry<? extends T, ? extends S> entry) {
-        return LeafMethods.add(entry, this);
+        return LeafHelper.add(entry, this);
     }
 
     @Override
     public NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all) {
-        return LeafMethods.delete(entry, all, this);
+        return LeafHelper.delete(entry, all, this);
     }
 
     @Override

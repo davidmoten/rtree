@@ -30,12 +30,12 @@ final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S> {
     @Override
     public void search(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber) {
-        NonLeafMethods.search(criterion, subscriber, this);
+        NonLeafHelper.search(criterion, subscriber, this);
     }
 
     @Override
     public int count() {
-        return NonLeafMethods.count(this);
+        return NonLeafHelper.count(this);
     }
 
     @Override
@@ -45,12 +45,12 @@ final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S> {
 
     @Override
     public List<Node<T, S>> add(Entry<? extends T, ? extends S> entry) {
-        return NonLeafMethods.add(entry, this);
+        return NonLeafHelper.add(entry, this);
     }
 
     @Override
     public NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all) {
-        return NonLeafMethods.delete(entry, all, this);
+        return NonLeafHelper.delete(entry, all, this);
     }
 
     @Override

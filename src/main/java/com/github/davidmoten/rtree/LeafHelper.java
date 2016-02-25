@@ -13,7 +13,7 @@ import com.github.davidmoten.rtree.geometry.ListPair;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class LeafMethods {
+public class LeafHelper {
 
     public static <T, S extends Geometry> NodeAndEntries<T, S> delete(
             Entry<? extends T, ? extends S> entry, boolean all, Leaf<T, S> leaf) {
