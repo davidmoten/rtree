@@ -11,7 +11,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
  * @param <T>
  *            entry type
  */
-class NodeAndEntries<T, S extends Geometry> {
+public final class NodeAndEntries<T, S extends Geometry> {
 
     private final Optional<? extends Node<T, S>> node;
     private final List<Entry<T, S>> entries;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,6 +20,9 @@
     <url>http://github.com/davidmoten/rtree</url>
 
     <properties>
+        <fbs.sources>${basedir}/src/test/fbs</fbs.sources>
+        <fbs.generated.sources>${project.build.directory}/generated-test-sources/java</fbs.generated.sources>
+    
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>1.6</maven.compiler.target>
@@ -83,7 +87,7 @@
     </scm>
 
     <dependencies>
-         <dependency>
+        <dependency>
             <groupId>com.github.davidmoten</groupId>
             <artifactId>guava-mini</artifactId>
             <version>0.1</version>
@@ -106,6 +110,12 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>flatbuffers-java</artifactId>
+            <version>1.3.0.1</version>
         </dependency>
 
         <dependency>
@@ -162,6 +172,7 @@
             <version>3.0.3</version>
             <scope>test</scope>
         </dependency>
+        
     </dependencies>
 
     <profiles>
@@ -264,6 +275,75 @@
                         </excludes>
                     </instrumentation>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.github.davidmoten</groupId>
+                                    <artifactId>flatbuffers-compiler</artifactId>
+                                    <version>1.3.0.1</version>
+                                    <type>tar.gz</type>
+                                    <classifier>distribution-linux</classifier>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>${project.build.directory}/bin/flatc</executable>
+                    <workingDirectory>${fbs.sources}</workingDirectory>
+                    <arguments>
+                        <argument>--java</argument>
+                        <argument>-o</argument>
+                        <argument>${fbs.generated.sources}</argument>
+                        <argument>rtree.fbs</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${fbs.generated.sources}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
