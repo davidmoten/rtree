@@ -44,7 +44,8 @@ public class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S>, HasNo
         Node_.startNode_(builder);
         Node_.addMbb(builder, b);
         Node_.addEntries(builder, ents);
-        Node_.endNode_(builder);
+        int nd = Node_.endNode_(builder);
+        builder.finish(nd);
         node = Node_.getRootAsNode_(builder.dataBuffer());
     }
 

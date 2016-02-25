@@ -32,6 +32,7 @@ import org.junit.Test;
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Sets;
+import com.github.davidmoten.rtree.flatbuffers.FactoryFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -531,16 +532,24 @@ public class RTreeTest {
     }
 
     @Test
+    public void testSearchOnGreekDataUsingFlatBuffersFactory() {
+
+    }
+
+    @Test
     public void testVisualizerWithGreekData() {
         List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
         int maxChildren = 8;
-        RTree<Object, Point> tree = RTree.maxChildren(maxChildren).<Object, Point> create()
+        RTree<Object, Point> tree = RTree.maxChildren(maxChildren)
+                .factory(new FactoryFlatBuffers<Object, Geometry>()).<Object, Point> create()
                 .add(entries);
         tree.visualize(2000, 2000).save("target/greek.png");
 
         // do search
-        System.out.println("found=" + tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5))
-                .count().toBlocking().single());
+        int found = tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).count().toBlocking()
+                .single();
+        System.out.println("found=" + found);
+        assertEquals(22, found);
 
         RTree<Object, Point> tree2 = RTree.maxChildren(maxChildren).star().<Object, Point> create()
                 .add(entries);

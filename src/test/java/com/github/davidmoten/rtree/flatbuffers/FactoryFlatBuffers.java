@@ -12,7 +12,7 @@ import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.NonLeafDefault;
 import com.github.davidmoten.rtree.geometry.Geometry;
 
-public class NodeFactoryFlatBuffers<T, S extends Geometry> implements Factory<T, S> {
+public class FactoryFlatBuffers<T, S extends Geometry> implements Factory<T, S> {
 
     @Override
     public Leaf<T, S> createLeaf(List<Entry<T, S>> entries, Context<T, S> context) {
