@@ -37,12 +37,12 @@ public class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
             int obj = Entry_.createObjectVector(builder, new byte[] { 'b', 'o', 'o' });
             entries2[i] = Entry_.createEntry_(builder, g, obj);
         }
-        int entries2Pointers = Node_.createEntriesVector(builder, entries2);
+        int ents = Node_.createEntriesVector(builder, entries2);
         Rectangle mbb = Util.mbr(entries);
-        int boxPointer = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
+        int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
         Node_.startNode_(builder);
-        Node_.addMbb(builder, boxPointer);
-        Node_.addEntries(builder, entries2Pointers);
+        Node_.addMbb(builder, b);
+        Node_.addEntries(builder, ents);
         Node_.endNode_(builder);
         node = Node_.getRootAsNode_(builder.dataBuffer());
     }
