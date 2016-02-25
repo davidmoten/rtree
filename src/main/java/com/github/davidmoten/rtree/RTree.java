@@ -330,7 +330,7 @@ public final class RTree<T, S extends Geometry> {
      * @return a new immutable R-tree including the new entry
      */
     public RTree<T, S> add(T value, S geometry) {
-        return add(Entry.entry(value, geometry));
+        return add(EntryDefault.entry(value, geometry));
     }
 
     /**
@@ -438,7 +438,7 @@ public final class RTree<T, S extends Geometry> {
      *         object
      */
     public RTree<T, S> delete(T value, S geometry, boolean all) {
-        return delete(Entry.entry(value, geometry), all);
+        return delete(EntryDefault.entry(value, geometry), all);
     }
 
     /**
@@ -454,7 +454,7 @@ public final class RTree<T, S extends Geometry> {
      *         given value and geometry
      */
     public RTree<T, S> delete(T value, S geometry) {
-        return delete(Entry.entry(value, geometry), false);
+        return delete(EntryDefault.entry(value, geometry), false);
     }
 
     /**

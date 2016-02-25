@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.EntryDefault;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.LeafHelper;
 import com.github.davidmoten.rtree.Node;
@@ -95,7 +96,7 @@ public class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
                 geometry = Point.create(p.x(), p.y());
             } else
                 throw new RuntimeException("unexpected");
-            list.add(Entry.<T, S> entry((T) new Object(), (S) geometry));
+            list.add(EntryDefault.<T, S> entry((T) new Object(), (S) geometry));
         }
         return list;
     }
