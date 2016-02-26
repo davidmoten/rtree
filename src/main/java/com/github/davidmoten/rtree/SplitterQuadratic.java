@@ -89,16 +89,15 @@ public final class SplitterQuadratic implements Splitter {
         Optional<T> e2 = absent();
         {
             Optional<Double> maxArea = absent();
-            for (final T entry1 : items) {
-                for (final T entry2 : items) {
-                    if (entry1 != entry2) {
-                        final double area = entry1.geometry().mbr().add(entry2.geometry().mbr())
-                                .area();
-                        if (!maxArea.isPresent() || area > maxArea.get()) {
-                            e1 = of(entry1);
-                            e2 = of(entry2);
-                            maxArea = of(area);
-                        }
+            for (int i = 0; i < items.size(); i++) {
+                for (int j = i + 1; j < items.size(); j++) {
+                    T entry1 = items.get(i);
+                    T entry2 = items.get(j);
+                    final double area = entry1.geometry().mbr().add(entry2.geometry().mbr()).area();
+                    if (!maxArea.isPresent() || area > maxArea.get()) {
+                        e1 = of(entry1);
+                        e2 = of(entry2);
+                        maxArea = of(area);
                     }
                 }
             }
