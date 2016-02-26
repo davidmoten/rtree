@@ -17,7 +17,7 @@ import rx.observables.StringObservable;
 
 public class GreekEarthquakes {
 
-    static Observable<Entry<Object, Point>> entries() {
+    public static Observable<Entry<Object, Point>> entries() {
         Observable<String> source = Observable.using(new Func0<InputStream>() {
             @Override
             public InputStream call() {
@@ -52,8 +52,8 @@ public class GreekEarthquakes {
                             String[] items = line.split(" ");
                             double lat = Double.parseDouble(items[0]);
                             double lon = Double.parseDouble(items[1]);
-                            return Observable
-                                    .just(EntryDefault.entry(new Object(), Geometries.point(lat, lon)));
+                            return Observable.just(
+                                    EntryDefault.entry(new Object(), Geometries.point(lat, lon)));
                         } else
                             return Observable.empty();
                     }

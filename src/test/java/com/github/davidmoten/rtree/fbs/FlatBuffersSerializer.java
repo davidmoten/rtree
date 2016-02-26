@@ -1,9 +1,14 @@
 package com.github.davidmoten.rtree.fbs;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.junit.Test;
+
+import com.github.davidmoten.rtree.GreekEarthquakes;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
@@ -13,6 +18,7 @@ import com.github.davidmoten.rtree.flatbuffers.Context_;
 import com.github.davidmoten.rtree.flatbuffers.Node_;
 import com.github.davidmoten.rtree.flatbuffers.Tree_;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.flatbuffers.FlatBufferBuilder;
 
@@ -50,8 +56,9 @@ public class FlatBuffersSerializer {
                 Node<T, S> child = nonLeaf.children().get(i);
                 nodes[i] = addNode(child, builder, serializer);
             }
+            int ch = Node_.createChildrenVector(builder, nodes);
             Node_.startNode_(builder);
-            Node_.addChildren(builder, Node_.createChildrenVector(builder, nodes));
+            Node_.addChildren(builder, ch);
             Rectangle mbb = nonLeaf.geometry().mbr();
             int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
             Node_.addMbb(builder, b);
@@ -61,6 +68,20 @@ public class FlatBuffersSerializer {
 
     public <T, S extends Geometry> RTree<T, S> deserialize(InputStream is) {
         throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    @Test
+    public void testSerialize() throws IOException {
+        RTree<Object, Point> tree = RTree.star().create();
+        tree = tree.add(GreekEarthquakes.entries()).last().toBlocking().single();
+        FileOutputStream os = new FileOutputStream(new File("target/file"));
+        new FlatBuffersSerializer().serialize(tree, new Func1<Object, byte[]>() {
+            @Override
+            public byte[] call(Object o) {
+                return "boo".getBytes();
+            }
+        }, os);
+        os.close();
     }
 
 }
