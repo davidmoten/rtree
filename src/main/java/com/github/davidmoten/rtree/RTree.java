@@ -768,7 +768,7 @@ public final class RTree<T, S extends Geometry> {
                 }).toBlocking().single().or(rectangle(0, 0, 0, 0));
     }
 
-    Optional<? extends Node<T, S>> root() {
+    public Optional<? extends Node<T, S>> root() {
         return root;
     }
 

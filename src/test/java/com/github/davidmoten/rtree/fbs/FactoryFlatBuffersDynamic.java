@@ -1,4 +1,4 @@
-package com.github.davidmoten.rtree.flatbuffers;
+package com.github.davidmoten.rtree.fbs;
 
 import java.util.List;
 
@@ -12,11 +12,20 @@ import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.NonLeafDefault;
 import com.github.davidmoten.rtree.geometry.Geometry;
 
-public class FactoryFlatBuffers<T, S extends Geometry> implements Factory<T, S> {
+import rx.functions.Func1;
+
+public class FactoryFlatBuffersDynamic<T, S extends Geometry> implements Factory<T, S> {
+    private final Func1<T, byte[]> serializer;
+    private final Func1<byte[], T> deserializer;
+
+    public FactoryFlatBuffersDynamic(Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+        this.serializer = serializer;
+        this.deserializer = deserializer;
+    }
 
     @Override
     public Leaf<T, S> createLeaf(List<Entry<T, S>> entries, Context<T, S> context) {
-        return new LeafFlatBuffers<T, S>(entries, context);
+        return new LeafFlatBuffersDynamic<T, S>(entries, context);
     }
 
     @Override

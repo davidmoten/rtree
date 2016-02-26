@@ -32,7 +32,7 @@ import org.junit.Test;
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Sets;
-import com.github.davidmoten.rtree.flatbuffers.FactoryFlatBuffers;
+import com.github.davidmoten.rtree.fbs.FactoryFlatBuffersDynamic;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -541,8 +541,8 @@ public class RTreeTest {
         List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
         int maxChildren = 8;
         RTree<Object, Point> tree = RTree.maxChildren(maxChildren)
-                .factory(new FactoryFlatBuffers<Object, Geometry>()).<Object, Point> create()
-                .add(entries);
+                .factory(new FactoryFlatBuffersDynamic<Object, Geometry>(null, null))
+                .<Object, Point> create().add(entries);
         tree.visualize(2000, 2000).save("target/greek.png");
 
         // do search
