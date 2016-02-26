@@ -28,10 +28,11 @@ public final class LeafFlatBuffersDynamic<T, S extends Geometry> implements Leaf
     private final Node_ node;
     private final Context<T, S> context;
 
-    public LeafFlatBuffersDynamic(List<Entry<T, S>> entries, Context<T, S> context) {
+    public LeafFlatBuffersDynamic(List<Entry<T, S>> entries, Context<T, S> context,
+            Func1<T, byte[]> serializer) {
         this.context = context;
         FlatBufferBuilder builder = new FlatBufferBuilder(0);
-        builder.finish(FlatBuffersHelper.addEntries(entries, builder));
+        builder.finish(FlatBuffersHelper.addEntries(entries, builder, serializer));
         node = Node_.getRootAsNode_(builder.dataBuffer());
     }
 

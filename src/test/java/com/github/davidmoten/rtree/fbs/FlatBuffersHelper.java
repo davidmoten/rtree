@@ -13,9 +13,12 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.flatbuffers.FlatBufferBuilder;
 
+import rx.functions.Func1;
+
 class FlatBuffersHelper {
 
-    static <T, S extends Geometry> int addEntries(List<Entry<T, S>> entries, FlatBufferBuilder builder) {
+    static <T, S extends Geometry> int addEntries(List<Entry<T, S>> entries,
+            FlatBufferBuilder builder, Func1<T, byte[]> serializer) {
         int[] entries2 = new int[entries.size()];
         for (int i = 0; i < entries.size(); i++) {
             Rectangle b = entries.get(i).geometry().mbr();
@@ -24,7 +27,7 @@ class FlatBuffersHelper {
             Geometry_.addBox(builder, box);
             Geometry_.addType(builder, GeometryType_.Box);
             int g = Geometry_.endGeometry_(builder);
-            int obj = Entry_.createObjectVector(builder, new byte[] { 'b', 'o', 'o' });
+            int obj = Entry_.createObjectVector(builder, serializer.call(entries.get(i).value()));
             entries2[i] = Entry_.createEntry_(builder, g, obj);
         }
         int ents = Node_.createEntriesVector(builder, entries2);
@@ -35,4 +38,5 @@ class FlatBuffersHelper {
         Node_.addEntries(builder, ents);
         return Node_.endNode_(builder);
     }
+
 }

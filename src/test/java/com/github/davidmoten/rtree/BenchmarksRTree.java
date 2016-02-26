@@ -298,7 +298,8 @@ public class BenchmarksRTree {
 
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
+        System.out.println("starting searches");
         while (true)
-            b.searchNearestGreek();
+            b.insertPoint(b.defaultTreeM4);
     }
 }
