@@ -72,9 +72,11 @@ public class FlatBuffersSerializer {
 
     @Test
     public void testSerialize() throws IOException {
-        RTree<Object, Point> tree = RTree.star().create();
+        RTree<Object, Point> tree = RTree.star().maxChildren(4).create();
         tree = tree.add(GreekEarthquakes.entries()).last().toBlocking().single();
-        FileOutputStream os = new FileOutputStream(new File("target/file"));
+        long t = System.currentTimeMillis();
+        File output = new File("target/file");
+        FileOutputStream os = new FileOutputStream(output);
         new FlatBuffersSerializer().serialize(tree, new Func1<Object, byte[]>() {
             @Override
             public byte[] call(Object o) {
@@ -82,6 +84,8 @@ public class FlatBuffersSerializer {
             }
         }, os);
         os.close();
+        System.out.println("written in " + (System.currentTimeMillis() - t) + "ms, " + "file size="
+                + output.length());
     }
 
 }
