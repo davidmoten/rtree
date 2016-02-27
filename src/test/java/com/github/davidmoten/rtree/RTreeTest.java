@@ -540,9 +540,13 @@ public class RTreeTest {
     public void testVisualizerWithGreekData() {
         List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
         int maxChildren = 8;
-        RTree<Object, Point> tree = RTree.maxChildren(maxChildren)
-                .factory(new FactoryFlatBuffersDynamic<Object, Geometry>(null, null))
-                .<Object, Point> create().add(entries);
+        RTree<Object, Point> tree = RTree.maxChildren(maxChildren).factory(
+                new FactoryFlatBuffersDynamic<Object, Geometry>(new Func1<Object, byte[]>() {
+                    @Override
+                    public byte[] call(Object o) {
+                        return "boo".getBytes();
+                    }
+                }, null)).<Object, Point> create().add(entries);
         tree.visualize(2000, 2000).save("target/greek.png");
 
         // do search
