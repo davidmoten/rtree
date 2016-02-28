@@ -21,7 +21,7 @@ public class Utilities {
                 String[] items = line.split(" ");
                 double x = Double.parseDouble(items[0]);
                 double y = Double.parseDouble(items[1]);
-                list.add(EntryDefault.entry(new Object(), Geometries.rectangle(x, y, x + 1, y + 1)));
+                list.add(Entries.entry(new Object(), Geometries.rectangle(x, y, x + 1, y + 1)));
             }
             br.close();
         } catch (IOException e) {

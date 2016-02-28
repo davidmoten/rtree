@@ -12,29 +12,29 @@ public class EntryTest {
 
     @Test
     public void testValue() {
-        assertEquals(1, (int) EntryDefault.entry(1, Geometries.point(0, 0)).value());
+        assertEquals(1, (int) Entries.entry(1, Geometries.point(0, 0)).value());
     }
 
     @Test
     public void testEquality() {
-        assertEquals(EntryDefault.entry(1, Geometries.point(0, 0)), EntryDefault.entry(1, Geometries.point(0, 0)));
+        assertEquals(Entries.entry(1, Geometries.point(0, 0)), Entries.entry(1, Geometries.point(0, 0)));
     }
 
     @Test
     public void testEqualityWithGeometry() {
-        assertNotEquals(EntryDefault.entry(1, Geometries.point(0, 0)),
-                EntryDefault.entry(1, Geometries.point(0, 1)));
+        assertNotEquals(Entries.entry(1, Geometries.point(0, 0)),
+                Entries.entry(1, Geometries.point(0, 1)));
     }
 
     @Test
     public void testInequality() {
-        assertNotEquals(EntryDefault.entry(1, Geometries.point(0, 0)),
-                EntryDefault.entry(2, Geometries.point(0, 0)));
+        assertNotEquals(Entries.entry(1, Geometries.point(0, 0)),
+                Entries.entry(2, Geometries.point(0, 0)));
     }
 
     @Test
     public void testInequalityWithNull() {
-        assertFalse(EntryDefault.entry(1, Geometries.point(0, 0)).equals(null));
+        assertFalse(Entries.entry(1, Geometries.point(0, 0)).equals(null));
     }
 
 }

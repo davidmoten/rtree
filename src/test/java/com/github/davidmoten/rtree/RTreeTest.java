@@ -1,6 +1,6 @@
 package com.github.davidmoten.rtree;
 
-import static com.github.davidmoten.rtree.EntryDefault.entry;
+import static com.github.davidmoten.rtree.Entries.entry;
 import static com.github.davidmoten.rtree.geometry.Geometries.circle;
 import static com.github.davidmoten.rtree.geometry.Geometries.line;
 import static com.github.davidmoten.rtree.geometry.Geometries.point;
@@ -1023,11 +1023,11 @@ public class RTreeTest {
     }
 
     static Entry<Object, Rectangle> e(int n) {
-        return EntryDefault.<Object, Rectangle> entry(n, r(n));
+        return Entries.<Object, Rectangle> entry(n, r(n));
     }
 
     static Entry<Object, Rectangle> e2(int n) {
-        return EntryDefault.<Object, Rectangle> entry(n, r(n - 1));
+        return Entries.<Object, Rectangle> entry(n, r(n - 1));
     }
 
     private static Rectangle r(int n) {
