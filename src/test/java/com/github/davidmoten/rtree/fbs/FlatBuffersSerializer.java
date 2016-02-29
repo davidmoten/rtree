@@ -42,7 +42,7 @@ public class FlatBuffersSerializer {
         int t = Tree_.createTree_(builder, c, n);
         Tree_.finishTree_Buffer(builder, t);
         ByteBuffer bb = builder.dataBuffer();
-        os.write(bb.array(), bb.position(), bb.array().length - bb.position());
+        os.write(bb.array(), bb.position(), bb.remaining());
     }
 
     private static <T, S extends Geometry> int addNode(Node<T, S> node, FlatBufferBuilder builder,

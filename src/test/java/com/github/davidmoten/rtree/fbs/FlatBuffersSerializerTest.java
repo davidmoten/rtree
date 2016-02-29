@@ -47,7 +47,7 @@ public class FlatBuffersSerializerTest {
                 new Func1<byte[], Object>() {
                     @Override
                     public Object call(byte[] bytes) {
-                        return "a";
+                        return null;
                     }
                 });
         System.out.println("read in " + (System.currentTimeMillis() - t) + "ms");

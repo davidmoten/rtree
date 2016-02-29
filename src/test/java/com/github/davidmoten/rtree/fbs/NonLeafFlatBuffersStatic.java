@@ -1,6 +1,8 @@
 package com.github.davidmoten.rtree.fbs;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Preconditions;
@@ -77,7 +79,9 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
 
             @Override
             public T value() {
-                return deserializer.call(node.entries(index).objectAsByteBuffer().array());
+                ByteBuffer bb = node.entries(index).objectAsByteBuffer();
+                byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.remaining());
+                return deserializer.call(bytes);
             }
 
             @Override
