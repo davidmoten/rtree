@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree.fbs;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.LeafDefault;
@@ -10,9 +11,13 @@ import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NodeAndEntries;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.NonLeafDefault;
+import com.github.davidmoten.rtree.flatbuffers.Box_;
+import com.github.davidmoten.rtree.flatbuffers.GeometryType_;
 import com.github.davidmoten.rtree.flatbuffers.Geometry_;
 import com.github.davidmoten.rtree.flatbuffers.Node_;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Point;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -24,6 +29,7 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
     private final Func1<byte[], T> deserializer;
 
     NonLeafFlatBuffersStatic(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
+        Preconditions.checkArgument(node.childrenLength() > 0 || node.entriesLength() > 0);
         this.node = node;
         this.context = context;
         this.deserializer = deserializer;
@@ -44,11 +50,7 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
             Subscriber<? super Entry<T, S>> subscriber) {
         final Node<T, S> nd;
         if (node.childrenLength() > 0) {
-            List<Node<T, S>> children = new ArrayList<Node<T, S>>(node.childrenLength());
-            for (int i = 0; i < node.childrenLength(); i++) {
-                children.add(new NonLeafFlatBuffersStatic<T, S>(node.children(i), context,
-                        deserializer));
-            }
+            List<Node<T, S>> children = createChildren();
             nd = new NonLeafDefault<T, S>(children, context);
         } else {
             List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>(node.entriesLength());
@@ -59,6 +61,15 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
             nd = new LeafDefault<T, S>(entries, context);
         }
         nd.search(condition, subscriber);
+    }
+
+    private List<Node<T, S>> createChildren() {
+        List<Node<T, S>> children = new ArrayList<Node<T, S>>(node.childrenLength());
+        for (int i = 0; i < node.childrenLength(); i++) {
+            children.add(
+                    new NonLeafFlatBuffersStatic<T, S>(node.children(i), context, deserializer));
+        }
+        return children;
     }
 
     private Entry<T, S> createEntry(final int index) {
@@ -89,19 +100,28 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
 
     @Override
     public Geometry geometry() {
-        // TODO Auto-generated method stub
-        return null;
+        return createBox(node.mbb());
+    }
+
+    private static Geometry createBox(Box_ b) {
+        return Rectangle.create(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
     @Override
     public List<? extends Node<T, S>> children() {
-        // TODO Auto-generated method stub
-        return null;
+        return createChildren();
     }
 
+    @SuppressWarnings("unchecked")
     private static <S extends Geometry> S toGeometry(Geometry_ g) {
-        // TODO
-        return null;
+        final Geometry result;
+        if (g.type() == GeometryType_.Box) {
+            result = createBox(g.box());
+        } else if (g.type() == GeometryType_.Point) {
+            result = Point.create(g.point().x(), g.point().y());
+        } else
+            throw new UnsupportedOperationException();
+        return (S) result;
     }
 
 }

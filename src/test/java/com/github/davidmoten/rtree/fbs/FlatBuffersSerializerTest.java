@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree.fbs;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,6 +12,7 @@ import org.junit.Test;
 
 import com.github.davidmoten.rtree.GreekEarthquakes;
 import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 
@@ -39,14 +42,19 @@ public class FlatBuffersSerializerTest {
         System.out.println("bytes per entry=" + output.length() / tree.size());
 
         InputStream is = new FileInputStream(output);
-        if (false) {
-            RTree<Object, Geometry> tr = serializer.deserialize(is, new Func1<byte[], Object>() {
-                @Override
-                public Object call(byte[] bytes) {
-                    return "a";
-                }
-            });
-        }
+        t = System.currentTimeMillis();
+        RTree<Object, Geometry> tr = serializer.deserialize(output.length(), is,
+                new Func1<byte[], Object>() {
+                    @Override
+                    public Object call(byte[] bytes) {
+                        return "a";
+                    }
+                });
+        System.out.println("read in " + (System.currentTimeMillis() - t) + "ms");
+        int found = tr.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).count().toBlocking()
+                .single();
+        System.out.println("found=" + found);
+        assertEquals(22, found);
     }
 
 }

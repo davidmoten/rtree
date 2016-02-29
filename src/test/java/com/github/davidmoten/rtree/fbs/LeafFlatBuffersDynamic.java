@@ -84,6 +84,7 @@ public final class LeafFlatBuffersDynamic<T, S extends Geometry> implements Leaf
                 geometry = Point.create(p.x(), p.y());
             } else
                 throw new RuntimeException("unexpected");
+            node.entries(i).object(i);
             list.add(EntryDefault.<T, S> entry((T) new Object(), (S) geometry));
         }
         return list;

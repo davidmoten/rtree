@@ -1,6 +1,5 @@
 package com.github.davidmoten.rtree.fbs;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,7 +41,8 @@ public class FlatBuffersSerializer {
 
         int t = Tree_.createTree_(builder, c, n);
         Tree_.finishTree_Buffer(builder, t);
-        os.write(builder.dataBuffer().array());
+        ByteBuffer bb = builder.dataBuffer();
+        os.write(bb.array(), bb.position(), bb.array().length - bb.position());
     }
 
     private static <T, S extends Geometry> int addNode(Node<T, S> node, FlatBufferBuilder builder,
@@ -67,9 +67,9 @@ public class FlatBuffersSerializer {
         }
     }
 
-    public <T, S extends Geometry> RTree<T, S> deserialize(InputStream is,
+    public <T, S extends Geometry> RTree<T, S> deserialize(long sizeBytes, InputStream is,
             Func1<byte[], T> deserializer) throws IOException {
-        byte[] bytes = readFully(is);
+        byte[] bytes = readFully(is, (int) sizeBytes);
         Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
         Node_ node = t.root();
         Context<T, S> context = new Context<T, S>(t.context().minChildren(),
@@ -79,14 +79,12 @@ public class FlatBuffersSerializer {
         return SerializerHelper.create(Optional.of(root), 1, context);
     }
 
-    private static byte[] readFully(InputStream is) throws IOException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        byte[] b = new byte[8192];
-        int len;
-        while ((len = is.read(b)) > 0) {
-            bytes.write(b, 0, len);
-        }
-        return bytes.toByteArray();
+    private static byte[] readFully(InputStream is, int numBytes) throws IOException {
+        byte[] b = new byte[numBytes];
+        int n = is.read(b);
+        if (n != numBytes)
+            throw new RuntimeException("unexpected");
+        return b;
     }
 
 }
