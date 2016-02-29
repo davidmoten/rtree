@@ -1,10 +1,12 @@
 package com.github.davidmoten.rtree.fbs;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 import org.junit.Test;
 
@@ -66,8 +68,20 @@ public class FlatBuffersSerializer {
         }
     }
 
-    public <T, S extends Geometry> RTree<T, S> deserialize(InputStream is) {
+    public <T, S extends Geometry> RTree<T, S> deserialize(InputStream is) throws IOException {
+        byte[] bytes = readFully(is);
+        Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
         throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    private static byte[] readFully(InputStream is) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        byte[] b = new byte[8192];
+        int len;
+        while ((len = is.read(b)) > 0) {
+            bytes.write(b, 0, len);
+        }
+        return bytes.toByteArray();
     }
 
     @Test
