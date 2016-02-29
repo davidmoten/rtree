@@ -1,13 +1,16 @@
 package com.github.davidmoten.rtree.fbs;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.junit.Test;
 
 import com.github.davidmoten.rtree.GreekEarthquakes;
 import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 
 import rx.functions.Func1;
@@ -35,9 +38,15 @@ public class FlatBuffersSerializerTest {
                 + output.length() / 1000000.0 + "MB");
         System.out.println("bytes per entry=" + output.length() / tree.size());
 
-        // InputStream is = new FileInputStream(output);
-        // RTree<Object, Geometry> tr = serializer.deserialize(is);
-
+        InputStream is = new FileInputStream(output);
+        if (false) {
+            RTree<Object, Geometry> tr = serializer.deserialize(is, new Func1<byte[], Object>() {
+                @Override
+                public Object call(byte[] bytes) {
+                    return "a";
+                }
+            });
+        }
     }
 
 }

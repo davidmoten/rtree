@@ -6,10 +6,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.SelectorRStar;
+import com.github.davidmoten.rtree.SerializerHelper;
+import com.github.davidmoten.rtree.SplitterRStar;
 import com.github.davidmoten.rtree.flatbuffers.Box_;
 import com.github.davidmoten.rtree.flatbuffers.Context_;
 import com.github.davidmoten.rtree.flatbuffers.Node_;
@@ -62,12 +67,16 @@ public class FlatBuffersSerializer {
         }
     }
 
-    public <T, S extends Geometry> RTree<T, S> deserialize(InputStream is) throws IOException {
+    public <T, S extends Geometry> RTree<T, S> deserialize(InputStream is,
+            Func1<byte[], T> deserializer) throws IOException {
         byte[] bytes = readFully(is);
         Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
         Node_ node = t.root();
-
-        throw new UnsupportedOperationException("not implemented yet");
+        Context<T, S> context = new Context<T, S>(t.context().minChildren(),
+                t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(),
+                new FactoryImmutable<T, S>());
+        Node<T, S> root = new NonLeafFlatBuffersStatic<T, S>(node, context, deserializer);
+        return SerializerHelper.create(Optional.of(root), 1, context);
     }
 
     private static byte[] readFully(InputStream is) throws IOException {
