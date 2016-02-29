@@ -66,6 +66,7 @@ public class FlatBuffersSerializer {
         byte[] bytes = readFully(is);
         Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
         Node_ node = t.root();
+
         throw new UnsupportedOperationException("not implemented yet");
     }
 
