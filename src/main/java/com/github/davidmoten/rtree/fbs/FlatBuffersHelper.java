@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree.fbs;
 
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ import com.google.flatbuffers.FlatBufferBuilder;
 
 import rx.functions.Func1;
 
-class FlatBuffersHelper {
+final class FlatBuffersHelper {
 
     static <T, S extends Geometry> int addEntries(List<Entry<T, S>> entries,
             FlatBufferBuilder builder, Func1<T, byte[]> serializer) {

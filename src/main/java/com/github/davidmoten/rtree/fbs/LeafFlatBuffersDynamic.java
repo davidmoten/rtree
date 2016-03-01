@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree.fbs;
 
+
 import java.util.List;
 
 import com.github.davidmoten.rtree.Context;
@@ -17,7 +18,7 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public final class LeafFlatBuffersDynamic<T, S extends Geometry> implements Leaf<T, S> {
+final class LeafFlatBuffersDynamic<T, S extends Geometry> implements Leaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;

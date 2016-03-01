@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 
-public class FactoryDefault<T, S extends Geometry> implements Factory<T, S> {
+public final class FactoryDefault<T, S extends Geometry> implements Factory<T, S> {
 
     private static class Holder {
         private static final Factory<Object, Geometry> INSTANCE = new FactoryDefault<Object, Geometry>();

@@ -13,12 +13,11 @@ import org.junit.Test;
 import com.github.davidmoten.rtree.GreekEarthquakes;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
-import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 
 import rx.functions.Func1;
 
-public class FlatBuffersSerializerTest {
+public class SerializerFlatBuffersTest {
 
     private static final byte[] EMPTY = new byte[] {};
 
@@ -29,13 +28,22 @@ public class FlatBuffersSerializerTest {
         long t = System.currentTimeMillis();
         File output = new File("target/file");
         FileOutputStream os = new FileOutputStream(output);
-        FlatBuffersSerializer serializer = new FlatBuffersSerializer();
-        serializer.serialize(tree, new Func1<Object, byte[]>() {
+        Func1<Object, byte[]> serializer = new Func1<Object, byte[]>() {
             @Override
             public byte[] call(Object o) {
                 return EMPTY;
             }
-        }, os);
+        };
+        Func1<byte[], Object> deserializer = new Func1<byte[], Object>() {
+            @Override
+            public Object call(byte[] bytes) {
+                return null;
+            }
+        };
+        SerializerFlatBuffers<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
+                deserializer);
+
+        fbSerializer.serialize(tree, os);
         os.close();
         System.out.println("written in " + (System.currentTimeMillis() - t) + "ms, " + "file size="
                 + output.length() / 1000000.0 + "MB");
@@ -43,13 +51,7 @@ public class FlatBuffersSerializerTest {
 
         InputStream is = new FileInputStream(output);
         t = System.currentTimeMillis();
-        RTree<Object, Geometry> tr = serializer.deserialize(output.length(), is,
-                new Func1<byte[], Object>() {
-                    @Override
-                    public Object call(byte[] bytes) {
-                        return null;
-                    }
-                });
+        RTree<Object, Point> tr = fbSerializer.deserialize(output.length(), is);
         System.out.println(tr.root().get());
 
         System.out.println("read in " + (System.currentTimeMillis() - t) + "ms");
