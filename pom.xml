@@ -242,10 +242,9 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <target>
-                                        <delete>
-                                            <fileset dir="${fbs.dest}">
-                                                <include name="*" />
-                                            </fileset>
+                                        <echo message="${fbs.dest}"/>
+                                        <delete verbose="true">
+                                            <fileset dir="${fbs.dest}" includes="*.java"/>
                                         </delete>
                                         <copy todir="${basedir}/src/main/java" overwrite="true">
                                             <fileset dir="${fbs.generated.sources}" >
