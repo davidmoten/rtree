@@ -4,8 +4,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 import com.github.davidmoten.rx.util.BackpressureUtils;
-import com.github.davidmoten.util.ImmutableStack;
 
 import rx.Observable.OnSubscribe;
 import rx.Producer;

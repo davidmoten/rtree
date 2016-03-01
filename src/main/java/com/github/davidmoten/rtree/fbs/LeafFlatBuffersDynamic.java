@@ -6,13 +6,13 @@ import java.util.List;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Leaf;
-import com.github.davidmoten.rtree.LeafHelper;
 import com.github.davidmoten.rtree.Node;
-import com.github.davidmoten.rtree.NodeAndEntries;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.internal.LeafHelper;
+import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.google.flatbuffers.FlatBufferBuilder;
 
 import rx.Subscriber;
@@ -24,7 +24,7 @@ final class LeafFlatBuffersDynamic<T, S extends Geometry> implements Leaf<T, S> 
     private final Context<T, S> context;
     private final Func1<byte[], T> deserializer;
 
-    public LeafFlatBuffersDynamic(List<Entry<T, S>> entries, Context<T, S> context,
+    LeafFlatBuffersDynamic(List<Entry<T, S>> entries, Context<T, S> context,
             Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
         this.context = context;
         this.deserializer = deserializer;

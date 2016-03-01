@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.junit.Test;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.internal.NonLeafDefault;
 
 public class NonLeafTest {
 

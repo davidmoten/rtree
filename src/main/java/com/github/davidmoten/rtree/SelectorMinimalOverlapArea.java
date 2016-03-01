@@ -1,9 +1,9 @@
 package com.github.davidmoten.rtree;
 
-import static com.github.davidmoten.rtree.Comparators.areaComparator;
-import static com.github.davidmoten.rtree.Comparators.areaIncreaseComparator;
-import static com.github.davidmoten.rtree.Comparators.compose;
-import static com.github.davidmoten.rtree.Comparators.overlapAreaComparator;
+import static com.github.davidmoten.rtree.internal.Comparators.areaComparator;
+import static com.github.davidmoten.rtree.internal.Comparators.areaIncreaseComparator;
+import static com.github.davidmoten.rtree.internal.Comparators.compose;
+import static com.github.davidmoten.rtree.internal.Comparators.overlapAreaComparator;
 import static java.util.Collections.min;
 
 import java.util.List;

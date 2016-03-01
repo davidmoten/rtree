@@ -12,6 +12,7 @@ import com.github.davidmoten.rtree.OnSubscribeSearch.SearchProducer;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
+import com.github.davidmoten.rtree.internal.LeafDefault;
 
 public class OnSubscribeSearchTest {
 

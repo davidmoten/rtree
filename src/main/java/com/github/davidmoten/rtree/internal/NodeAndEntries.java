@@ -1,8 +1,10 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.rtree.internal;
 
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.geometry.Geometry;
 
 /**
@@ -30,22 +32,22 @@ public final class NodeAndEntries<T, S extends Geometry> {
      * @param countDeleted
      *            count of the number of entries removed
      */
-    NodeAndEntries(Optional<? extends Node<T, S>> node, List<Entry<T, S>> entries,
+    public NodeAndEntries(Optional<? extends Node<T, S>> node, List<Entry<T, S>> entries,
             int countDeleted) {
         this.node = node;
         this.entries = entries;
         this.count = countDeleted;
     }
 
-    Optional<? extends Node<T, S>> node() {
+    public Optional<? extends Node<T, S>> node() {
         return node;
     }
 
-    List<Entry<T, S>> entriesToAdd() {
+    public List<Entry<T, S>> entriesToAdd() {
         return entries;
     }
 
-    int countDeleted() {
+    public int countDeleted() {
         return count;
     }
 

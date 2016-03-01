@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.github.davidmoten.rtree.Entry;
-import com.github.davidmoten.rtree.EntryDefault;
-import com.github.davidmoten.rtree.Util;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
 import com.github.davidmoten.rtree.fbs.generated.Circle_;
 import com.github.davidmoten.rtree.fbs.generated.Entry_;
@@ -20,6 +18,8 @@ import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.internal.EntryDefault;
+import com.github.davidmoten.rtree.internal.Util;
 import com.google.flatbuffers.FlatBufferBuilder;
 
 import rx.functions.Func1;

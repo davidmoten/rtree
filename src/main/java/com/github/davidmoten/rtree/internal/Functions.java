@@ -1,9 +1,11 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.rtree.internal;
 
 import java.util.List;
 
 import rx.functions.Func1;
 
+import com.github.davidmoten.rtree.Selector;
+import com.github.davidmoten.rtree.Splitter;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;

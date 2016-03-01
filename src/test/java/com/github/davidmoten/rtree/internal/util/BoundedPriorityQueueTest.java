@@ -1,6 +1,6 @@
-package com.github.davidmoten.util;
+package com.github.davidmoten.rtree.internal.util;
 
-import static com.github.davidmoten.util.BoundedPriorityQueue.create;
+import static com.github.davidmoten.rtree.internal.util.BoundedPriorityQueue.create;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -9,6 +9,7 @@ import java.util.Comparator;
 import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Sets;
+import com.github.davidmoten.rtree.internal.util.BoundedPriorityQueue;
 
 public class BoundedPriorityQueueTest {
 

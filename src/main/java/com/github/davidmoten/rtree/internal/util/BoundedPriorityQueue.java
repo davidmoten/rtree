@@ -1,4 +1,4 @@
-package com.github.davidmoten.util;
+package com.github.davidmoten.rtree.internal.util;
 
 import java.util.ArrayList;
 import java.util.Collections;

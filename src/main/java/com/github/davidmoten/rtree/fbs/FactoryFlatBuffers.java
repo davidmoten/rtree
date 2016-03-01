@@ -11,8 +11,8 @@ import com.github.davidmoten.rtree.FactoryDefault;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
-import com.github.davidmoten.rtree.NonLeafDefault;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.internal.NonLeafDefault;
 import com.github.davidmoten.util.Preconditions;
 
 import rx.functions.Func1;

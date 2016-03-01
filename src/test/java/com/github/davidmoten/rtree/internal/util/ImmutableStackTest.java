@@ -1,4 +1,4 @@
-package com.github.davidmoten.util;
+package com.github.davidmoten.rtree.internal.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 
 import org.junit.Test;
+
+import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
 public class ImmutableStackTest {
 

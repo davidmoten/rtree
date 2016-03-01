@@ -3,6 +3,8 @@ package com.github.davidmoten.rtree;
 import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.internal.LeafDefault;
+import com.github.davidmoten.rtree.internal.NonLeafDefault;
 
 public final class FactoryDefault<T, S extends Geometry> implements Factory<T, S> {
 
@@ -27,7 +29,7 @@ public final class FactoryDefault<T, S extends Geometry> implements Factory<T, S
 
     @Override
     public Entry<T, S> createEntry(T value, S geometry) {
-        return EntryDefault.entry(value, geometry);
+        return Entries.entry(value, geometry);
     }
 
 }

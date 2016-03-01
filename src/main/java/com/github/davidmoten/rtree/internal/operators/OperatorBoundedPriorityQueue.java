@@ -1,9 +1,9 @@
-package com.github.davidmoten.rx.operators;
+package com.github.davidmoten.rtree.internal.operators;
 
 import java.util.Comparator;
 import java.util.List;
 
-import com.github.davidmoten.util.BoundedPriorityQueue;
+import com.github.davidmoten.rtree.internal.util.BoundedPriorityQueue;
 
 import rx.Observable.Operator;
 import rx.Subscriber;
