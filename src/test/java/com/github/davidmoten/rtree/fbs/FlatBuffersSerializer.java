@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
+import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Leaf;
+import com.github.davidmoten.rtree.LeafDefault;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.RTree;
@@ -35,8 +38,8 @@ public class FlatBuffersSerializer {
         int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
         Context_.startContext_(builder);
         Context_.addBounds(builder, b);
-        Context_.addMaxChildren(builder, tree.context().maxChildren());
         Context_.addMinChildren(builder, tree.context().minChildren());
+        Context_.addMaxChildren(builder, tree.context().maxChildren());
         int c = Context_.endContext_(builder);
 
         int t = Tree_.createTree_(builder, c, n);
@@ -75,7 +78,13 @@ public class FlatBuffersSerializer {
         Context<T, S> context = new Context<T, S>(t.context().minChildren(),
                 t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(),
                 new FactoryImmutable<T, S>());
-        Node<T, S> root = new NonLeafFlatBuffersStatic<T, S>(node, context, deserializer);
+        final Node<T, S> root;
+        if (node.childrenLength() > 0)
+            root = new NonLeafFlatBuffersStatic<T, S>(node, context, deserializer);
+        else {
+            List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node);
+            root = new LeafDefault<T, S>(entries, context);
+        }
         return SerializerHelper.create(Optional.of(root), 1, context);
     }
 

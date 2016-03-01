@@ -1,22 +1,16 @@
 package com.github.davidmoten.rtree.fbs;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
-import com.github.davidmoten.rtree.EntryDefault;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.LeafHelper;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NodeAndEntries;
 import com.github.davidmoten.rtree.flatbuffers.Box_;
-import com.github.davidmoten.rtree.flatbuffers.GeometryType_;
-import com.github.davidmoten.rtree.flatbuffers.Geometry_;
 import com.github.davidmoten.rtree.flatbuffers.Node_;
-import com.github.davidmoten.rtree.flatbuffers.Point_;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.google.flatbuffers.FlatBufferBuilder;
 
@@ -69,25 +63,9 @@ public final class LeafFlatBuffersDynamic<T, S extends Geometry> implements Leaf
         return Rectangle.create(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<Entry<T, S>> entries() {
-        List<Entry<T, S>> list = new ArrayList<Entry<T, S>>(node.entriesLength());
-        for (int i = 0; i < node.entriesLength(); i++) {
-            Geometry_ g = node.entries(i).geometry();
-            final Geometry geometry;
-            if (g.type() == GeometryType_.Box) {
-                Box_ b = g.box();
-                geometry = Rectangle.create(b.minX(), b.minY(), b.maxX(), b.maxY());
-            } else if (g.type() == GeometryType_.Point) {
-                Point_ p = g.point();
-                geometry = Point.create(p.x(), p.y());
-            } else
-                throw new RuntimeException("unexpected");
-            node.entries(i).object(i);
-            list.add(EntryDefault.<T, S> entry((T) new Object(), (S) geometry));
-        }
-        return list;
+        return FlatBuffersHelper.createEntries(node);
     }
 
 }
