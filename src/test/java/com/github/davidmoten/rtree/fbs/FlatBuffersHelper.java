@@ -6,12 +6,14 @@ import java.util.List;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.EntryDefault;
 import com.github.davidmoten.rtree.Util;
-import com.github.davidmoten.rtree.flatbuffers.Box_;
-import com.github.davidmoten.rtree.flatbuffers.Entry_;
-import com.github.davidmoten.rtree.flatbuffers.GeometryType_;
-import com.github.davidmoten.rtree.flatbuffers.Geometry_;
-import com.github.davidmoten.rtree.flatbuffers.Node_;
-import com.github.davidmoten.rtree.flatbuffers.Point_;
+import com.github.davidmoten.rtree.fbs.generated.Box_;
+import com.github.davidmoten.rtree.fbs.generated.Circle_;
+import com.github.davidmoten.rtree.fbs.generated.Entry_;
+import com.github.davidmoten.rtree.fbs.generated.GeometryType_;
+import com.github.davidmoten.rtree.fbs.generated.Geometry_;
+import com.github.davidmoten.rtree.fbs.generated.Node_;
+import com.github.davidmoten.rtree.fbs.generated.Point_;
+import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
@@ -36,15 +38,21 @@ class FlatBuffersHelper {
                 Point p = (Point) g;
                 geom = Point_.createPoint_(builder, p.x(), p.y());
                 geomType = GeometryType_.Point;
+            } else if (g instanceof Circle) {
+                Circle c = (Circle) g;
+                geom = Circle_.createCircle_(builder, c.x(), c.y(), c.radius());
+                geomType = GeometryType_.Circle;
             } else
                 throw new RuntimeException("unexpected");
 
             Geometry_.startGeometry_(builder);
-            if (geomType == GeometryType_.Box)
+            if (geomType == GeometryType_.Box) {
                 Geometry_.addBox(builder, geom);
-            else if (geomType == GeometryType_.Point)
+            } else if (geomType == GeometryType_.Point) {
                 Geometry_.addPoint(builder, geom);
-            else
+            } else if (geomType == GeometryType_.Circle) {
+                Geometry_.addCircle(builder, geom);
+            } else
                 throw new RuntimeException("unexpected");
 
             Geometry_.addType(builder, geomType);
@@ -52,6 +60,7 @@ class FlatBuffersHelper {
             int obj = Entry_.createObjectVector(builder, serializer.call(entries.get(i).value()));
             entries2[i] = Entry_.createEntry_(builder, geo, obj);
         }
+
         int ents = Node_.createEntriesVector(builder, entries2);
         Rectangle mbb = Util.mbr(entries);
         int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
@@ -59,6 +68,7 @@ class FlatBuffersHelper {
         Node_.addMbb(builder, b);
         Node_.addEntries(builder, ents);
         return Node_.endNode_(builder);
+
     }
 
     static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node) {
@@ -72,6 +82,9 @@ class FlatBuffersHelper {
             } else if (g.type() == GeometryType_.Point) {
                 Point_ p = g.point();
                 geometry = Point.create(p.x(), p.y());
+            } else if (g.type() == GeometryType_.Circle) {
+                Circle_ c = g.circle();
+                geometry = Circle.create(c.x(), c.y(), c.radius());
             } else
                 throw new RuntimeException("unexpected");
             node.entries(i).object(i);
