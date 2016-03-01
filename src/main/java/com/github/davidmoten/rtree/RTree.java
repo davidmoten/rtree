@@ -841,23 +841,22 @@ public final class RTree<T, S extends Geometry> {
             return asString(root.get(), "");
     }
 
+    private final static String marginIncrement = "  ";
+
     private String asString(Node<T, S> node, String margin) {
-        final String marginIncrement = "  ";
         StringBuilder s = new StringBuilder();
+        s.append(margin);
+        s.append("mbr=");
+        s.append(node.geometry());
+        s.append('\n');
         if (node instanceof NonLeaf) {
-            s.append(margin);
-            s.append("mbr=" + node.geometry());
-            s.append('\n');
             NonLeaf<T, S> n = (NonLeaf<T, S>) node;
             for (Node<T, S> child : n.children()) {
                 s.append(asString(child, margin + marginIncrement));
             }
         } else {
             Leaf<T, S> leaf = (Leaf<T, S>) node;
-            s.append(margin);
-            s.append("mbr=");
-            s.append(leaf.geometry());
-            s.append('\n');
+
             for (Entry<T, S> entry : leaf.entries()) {
                 s.append(margin);
                 s.append(marginIncrement);

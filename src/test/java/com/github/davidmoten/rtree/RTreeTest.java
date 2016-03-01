@@ -546,7 +546,12 @@ public class RTreeTest {
                     public byte[] call(Object o) {
                         return "boo".getBytes();
                     }
-                }, null)).<Object, Point> create().add(entries);
+                }, new Func1<byte[], Object>() {
+                    @Override
+                    public Object call(byte[] t) {
+                        return new String(t);
+                    }
+                })).<Object, Point> create().add(entries);
         tree.visualize(2000, 2000).save("target/greek.png");
 
         // do search

@@ -13,10 +13,10 @@ import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NodeAndEntries;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.NonLeafDefault;
-import com.github.davidmoten.rtree.flatbuffers.Box_;
-import com.github.davidmoten.rtree.flatbuffers.GeometryType_;
-import com.github.davidmoten.rtree.flatbuffers.Geometry_;
-import com.github.davidmoten.rtree.flatbuffers.Node_;
+import com.github.davidmoten.rtree.fbs.generated.Box_;
+import com.github.davidmoten.rtree.fbs.generated.GeometryType_;
+import com.github.davidmoten.rtree.fbs.generated.Geometry_;
+import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
@@ -50,15 +50,17 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
     @Override
     public void search(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T, S>> subscriber) {
+        System.out.println("searching " + node);
         final Node<T, S> nd;
         if (node.childrenLength() > 0) {
             List<Node<T, S>> children = createChildren();
             nd = new NonLeafDefault<T, S>(children, context);
         } else {
             List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>(node.entriesLength());
+            if (entries.isEmpty())
+                throw new RuntimeException("unexpected");
             for (int i = 0; i < node.entriesLength(); i++) {
-                final int index = i;
-                entries.add(createEntry(index));
+                entries.add(createEntry(i));
             }
             nd = new LeafDefault<T, S>(entries, context);
         }
@@ -68,8 +70,12 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
     private List<Node<T, S>> createChildren() {
         List<Node<T, S>> children = new ArrayList<Node<T, S>>(node.childrenLength());
         for (int i = 0; i < node.childrenLength(); i++) {
-            children.add(
-                    new NonLeafFlatBuffersStatic<T, S>(node.children(i), context, deserializer));
+            Node_ child = node.children(i);
+            if (child.childrenLength() > 0)
+                children.add(new NonLeafFlatBuffersStatic<T, S>(child, context, deserializer));
+            else
+                children.add(new LeafDefault<T, S>(
+                        FlatBuffersHelper.<T, S> createEntries(child, deserializer), context));
         }
         return children;
     }
@@ -80,7 +86,7 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
             @Override
             public T value() {
                 ByteBuffer bb = node.entries(index).objectAsByteBuffer();
-                byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.remaining());
+                byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
                 return deserializer.call(bytes);
             }
 
@@ -94,7 +100,10 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
 
     @Override
     public int count() {
-        return node.childrenLength();
+        if (node.childrenLength() > 0)
+            return node.childrenLength();
+        else
+            return node.entriesLength();
     }
 
     @Override
@@ -126,6 +135,12 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
         } else
             throw new UnsupportedOperationException();
         return (S) result;
+    }
+
+    @Override
+    public String toString() {
+        return "Node [" + (node.childrenLength() > 0 ? "NonLeaf" : "Leaf") + ","
+                + createBox(node.mbb()).toString() + "]";
     }
 
 }

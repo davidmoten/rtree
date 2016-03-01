@@ -1,8 +1,9 @@
-namespace com.github.davidmoten.rtree.flatbuffers;
+namespace com.github.davidmoten.rtree.fbs.generated;
 
 table Tree_ {
   context: Context_;
   root: Node_;
+  size: uint;
 }
 
 table Node_ {
@@ -26,7 +27,14 @@ struct Point_ {
 struct Circle_ {
   x: float;
   y: float;
-  r: float;
+  radius: float;
+}
+
+struct Line_ {
+  minX:float;
+  minY:float;
+  maxX:float;
+  maxY:float;
 }
 
 table Entry_ {

@@ -50,6 +50,8 @@ public class FlatBuffersSerializerTest {
                         return null;
                     }
                 });
+        System.out.println(tr.root().get());
+
         System.out.println("read in " + (System.currentTimeMillis() - t) + "ms");
         int found = tr.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).count().toBlocking()
                 .single();
