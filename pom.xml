@@ -178,7 +178,7 @@
         <profile>
             <id>fbs</id>
             <properties>
-                <fbs.sources>${basedir}/src/test/fbs</fbs.sources>
+                <fbs.sources>${basedir}/src/main/fbs</fbs.sources>
                 <fbs.generated.sources>${project.build.directory}/fbs-generated/java</fbs.generated.sources>
             </properties>
             <build>

@@ -27,13 +27,17 @@ import com.google.flatbuffers.FlatBufferBuilder;
 
 import rx.functions.Func1;
 
-public class FlatBuffersSerializer {
+public class FlatBuffersSerializer<T, S extends Geometry> {
 
-    public <T, S extends Geometry> void serialize(RTree<T, S> tree, Func1<T, byte[]> serializer,
-            OutputStream os) throws IOException {
+    private final FactoryFlatBuffers<T, S> factory;
+
+    public FlatBuffersSerializer(FactoryFlatBuffers<T, S> factory) {
+        this.factory = factory;
+    }
+
+    public void serialize(RTree<T, S> tree, OutputStream os) throws IOException {
         FlatBufferBuilder builder = new FlatBufferBuilder();
-        int n = addNode(tree.root().get(), builder, serializer);
-
+        int n = addNode(tree.root().get(), builder, factory.serializer());
         Rectangle mbb = tree.root().get().geometry().mbr();
         int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
         Context_.startContext_(builder);
@@ -70,8 +74,7 @@ public class FlatBuffersSerializer {
         }
     }
 
-    public <T, S extends Geometry> RTree<T, S> deserialize(long sizeBytes, InputStream is,
-            Func1<byte[], T> deserializer, Factory<T, S> factory) throws IOException {
+    public RTree<T, S> deserialize(long sizeBytes, InputStream is) throws IOException {
         byte[] bytes = readFully(is, (int) sizeBytes);
         Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
         Node_ node = t.root();
@@ -79,9 +82,10 @@ public class FlatBuffersSerializer {
                 t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(), factory);
         final Node<T, S> root;
         if (node.childrenLength() > 0)
-            root = new NonLeafFlatBuffersStatic<T, S>(node, context, deserializer);
+            root = new NonLeafFlatBuffersStatic<T, S>(node, context, factory.deserializer());
         else {
-            List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node, deserializer);
+            List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node,
+                    factory.deserializer());
             root = new LeafDefault<T, S>(entries, context);
         }
         return SerializerHelper.create(Optional.of(root), (int) t.size(), context);

@@ -52,4 +52,12 @@ public final class FactoryFlatBuffers<T, S extends Geometry> implements Factory<
         return Entries.entry(value, geometry);
     }
 
+    public Func1<T, byte[]> serializer() {
+        return serializer;
+    }
+
+    public Func1<byte[], T> deserializer() {
+        return deserializer;
+    }
+
 }
