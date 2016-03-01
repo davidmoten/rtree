@@ -1,4 +1,4 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.rtree.internal;
 
 import static com.github.davidmoten.guavamini.Optional.of;
 
@@ -7,13 +7,17 @@ import java.util.Collections;
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.rtree.Context;
+import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.Node;
+import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class NonLeafHelper {
+public final class NonLeafHelper {
 
     public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber, NonLeaf<T, S> node) {

@@ -15,6 +15,7 @@ import com.github.davidmoten.rtree.geometry.Intersects;
 import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
 
 import rx.Observable;

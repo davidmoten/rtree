@@ -1,8 +1,12 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.rtree.internal;
 
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Preconditions;
+import com.github.davidmoten.rtree.Context;
+import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.Node;
+import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 

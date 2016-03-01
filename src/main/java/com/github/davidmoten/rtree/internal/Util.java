@@ -1,4 +1,4 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.rtree.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,20 +59,20 @@ public final class Util {
         return Rectangle.create(minX1, minY1, maxX2, maxY2);
     }
 
-    static <T> List<T> add(List<T> list, T element) {
+    public static <T> List<T> add(List<T> list, T element) {
         final ArrayList<T> result = new ArrayList<T>(list.size() + 2);
         result.addAll(list);
         result.add(element);
         return result;
     }
 
-    static <T> List<T> remove(List<? extends T> list, List<? extends T> elements) {
+    public static <T> List<T> remove(List<? extends T> list, List<? extends T> elements) {
         final ArrayList<T> result = new ArrayList<T>(list);
         result.removeAll(elements);
         return result;
     }
 
-    static <T> List<? extends T> replace(List<? extends T> list, T element, List<T> replacements) {
+    public static <T> List<? extends T> replace(List<? extends T> list, T element, List<T> replacements) {
         List<T> list2 = new ArrayList<T>(list.size() + replacements.size());
         for (T node : list)
             if (node != element)

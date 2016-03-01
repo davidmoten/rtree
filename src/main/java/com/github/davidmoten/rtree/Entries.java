@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.internal.EntryDefault;
 
 public final class Entries {
 

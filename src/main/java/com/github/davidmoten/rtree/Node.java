@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
+import com.github.davidmoten.rtree.internal.NodeAndEntries;
 
 import rx.Subscriber;
 import rx.functions.Func1;

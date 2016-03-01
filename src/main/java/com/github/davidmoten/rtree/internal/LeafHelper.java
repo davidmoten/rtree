@@ -1,4 +1,4 @@
-package com.github.davidmoten.rtree;
+package com.github.davidmoten.rtree.internal;
 
 import static com.github.davidmoten.guavamini.Optional.of;
 
@@ -7,13 +7,17 @@ import java.util.Collections;
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.rtree.Context;
+import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.Leaf;
+import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class LeafHelper {
+public final class LeafHelper {
 
     public static <T, S extends Geometry> NodeAndEntries<T, S> delete(
             Entry<? extends T, ? extends S> entry, boolean all, Leaf<T, S> leaf) {
