@@ -17,7 +17,7 @@ import com.github.davidmoten.rtree.geometry.Point;
 
 import rx.functions.Func1;
 
-public class FlatBuffersSerializerTest {
+public class SerializerFlatBuffersTest {
 
     private static final byte[] EMPTY = new byte[] {};
 

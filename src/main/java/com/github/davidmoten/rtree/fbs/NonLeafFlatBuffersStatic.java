@@ -25,7 +25,7 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T, S> {
+final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;
