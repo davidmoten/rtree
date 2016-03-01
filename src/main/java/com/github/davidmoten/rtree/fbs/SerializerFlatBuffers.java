@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree.fbs;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,17 +28,17 @@ import com.google.flatbuffers.FlatBufferBuilder;
 
 import rx.functions.Func1;
 
-public class FlatBuffersSerializer<T, S extends Geometry> {
+public final class SerializerFlatBuffers<T, S extends Geometry> {
 
     private final FactoryFlatBuffers<T, S> factory;
 
-    private FlatBuffersSerializer(Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+    private SerializerFlatBuffers(Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
         this.factory = new FactoryFlatBuffers<T, S>(serializer, deserializer);
     }
 
-    public static <T, S extends Geometry> FlatBuffersSerializer<T, S> create(
+    public static <T, S extends Geometry> SerializerFlatBuffers<T, S> create(
             Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
-        return new FlatBuffersSerializer<T, S>(serializer, deserializer);
+        return new SerializerFlatBuffers<T, S>(serializer, deserializer);
     }
 
     public void serialize(RTree<T, S> tree, OutputStream os) throws IOException {

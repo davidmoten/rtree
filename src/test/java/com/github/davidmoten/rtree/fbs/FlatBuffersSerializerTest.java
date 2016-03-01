@@ -40,7 +40,7 @@ public class FlatBuffersSerializerTest {
                 return null;
             }
         };
-        FlatBuffersSerializer<Object, Point> fbSerializer = FlatBuffersSerializer.create(serializer,
+        SerializerFlatBuffers<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
                 deserializer);
 
         fbSerializer.serialize(tree, os);
