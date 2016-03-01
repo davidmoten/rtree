@@ -1,0 +1,62 @@
+namespace com.github.davidmoten.rtree.fbs.generated;
+
+table Tree_ {
+  context: Context_;
+  root: Node_;
+  size: uint;
+}
+
+table Node_ {
+  mbb: Box_;
+  children: [Node_];
+  entries: [Entry_];
+}
+
+struct Box_ {
+  minX:float;
+  minY:float;
+  maxX:float;
+  maxY:float;
+}
+
+struct Point_ {
+  x: float;
+  y: float;
+}
+
+struct Circle_ {
+  x: float;
+  y: float;
+  radius: float;
+}
+
+struct Line_ {
+  minX:float;
+  minY:float;
+  maxX:float;
+  maxY:float;
+}
+
+table Entry_ {
+  geometry:Geometry_;
+  object:[byte];
+}
+
+enum GeometryType_ : byte {Point, Box, Circle, Line}
+
+table Geometry_ {
+  type: GeometryType_;
+  box: Box_;
+  point: Point_;
+  circle: Circle_;
+  line: Box_;
+}
+
+table Context_ {
+  bounds: Box_;
+  minChildren: int;
+  maxChildren: int;
+}
+
+root_type Tree_;
+

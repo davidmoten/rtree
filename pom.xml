@@ -180,6 +180,7 @@
             <properties>
                 <fbs.sources>${basedir}/src/main/fbs</fbs.sources>
                 <fbs.generated.sources>${project.build.directory}/fbs-generated/java</fbs.generated.sources>
+                <fbs.dest>${basedir}/src/main/java/com/github/davidmoten/rtree/fbs/generated</fbs.dest>
             </properties>
             <build>
                 <plugins>
@@ -232,6 +233,32 @@
                                 <argument>rtree.fbs</argument>
                             </arguments>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <target>
+                                        <delete>
+                                            <fileset dir="${fbs.dest}">
+                                                <include name="*" />
+                                            </fileset>
+                                        </delete>
+                                        <copy todir="${basedir}/src/main/java" overwrite="true">
+                                            <fileset dir="${fbs.generated.sources}" >
+                                                <include name="**/*.java"/>
+                                            </fileset>
+                                        </copy>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
