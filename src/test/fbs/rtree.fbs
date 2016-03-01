@@ -3,6 +3,7 @@ namespace com.github.davidmoten.rtree.fbs.generated;
 table Tree_ {
   context: Context_;
   root: Node_;
+  size: uint;
 }
 
 table Node_ {
@@ -27,6 +28,13 @@ struct Circle_ {
   x: float;
   y: float;
   radius: float;
+}
+
+struct Line_ {
+  minX:float;
+  minY:float;
+  maxX:float;
+  maxY:float;
 }
 
 table Entry_ {

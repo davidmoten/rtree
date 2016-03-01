@@ -11,6 +11,7 @@ import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.NonLeafDefault;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.util.Preconditions;
 
 import rx.functions.Func1;
 
@@ -19,6 +20,8 @@ public class FactoryFlatBuffersDynamic<T, S extends Geometry> implements Factory
     private final Func1<byte[], T> deserializer;
 
     public FactoryFlatBuffersDynamic(Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+        Preconditions.checkNotNull(serializer);
+        Preconditions.checkNotNull(deserializer);
         this.serializer = serializer;
         this.deserializer = deserializer;
     }

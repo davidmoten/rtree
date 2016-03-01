@@ -42,7 +42,7 @@ public class FlatBuffersSerializer {
         Context_.addMaxChildren(builder, tree.context().maxChildren());
         int c = Context_.endContext_(builder);
 
-        int t = Tree_.createTree_(builder, c, n);
+        int t = Tree_.createTree_(builder, c, n, tree.size());
         Tree_.finishTree_Buffer(builder, t);
         ByteBuffer bb = builder.dataBuffer();
         os.write(bb.array(), bb.position(), bb.remaining());
@@ -85,7 +85,7 @@ public class FlatBuffersSerializer {
             List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node, deserializer);
             root = new LeafDefault<T, S>(entries, context);
         }
-        return SerializerHelper.create(Optional.of(root), 1, context);
+        return SerializerHelper.create(Optional.of(root), (int) t.size(), context);
     }
 
     private static byte[] readFully(InputStream is, int numBytes) throws IOException {
