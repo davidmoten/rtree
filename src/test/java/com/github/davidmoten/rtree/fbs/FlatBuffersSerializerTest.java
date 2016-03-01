@@ -40,10 +40,9 @@ public class FlatBuffersSerializerTest {
                 return null;
             }
         };
-        FactoryFlatBuffers<Object, Point> factory = new FactoryFlatBuffers<Object, Point>(
-                serializer, deserializer);
-        FlatBuffersSerializer<Object, Point> fbSerializer = new FlatBuffersSerializer<Object, Point>(
-                factory);
+        FlatBuffersSerializer<Object, Point> fbSerializer = FlatBuffersSerializer.create(serializer,
+                deserializer);
+
         fbSerializer.serialize(tree, os);
         os.close();
         System.out.println("written in " + (System.currentTimeMillis() - t) + "ms, " + "file size="

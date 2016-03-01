@@ -31,8 +31,13 @@ public class FlatBuffersSerializer<T, S extends Geometry> {
 
     private final FactoryFlatBuffers<T, S> factory;
 
-    public FlatBuffersSerializer(FactoryFlatBuffers<T, S> factory) {
-        this.factory = factory;
+    private FlatBuffersSerializer(Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+        this.factory = new FactoryFlatBuffers<T, S>(serializer, deserializer);
+    }
+
+    public static <T, S extends Geometry> FlatBuffersSerializer<T, S> create(
+            Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+        return new FlatBuffersSerializer<T, S>(serializer, deserializer);
     }
 
     public void serialize(RTree<T, S> tree, OutputStream os) throws IOException {
