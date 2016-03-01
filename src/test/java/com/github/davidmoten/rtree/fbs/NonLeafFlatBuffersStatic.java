@@ -74,8 +74,8 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
             if (child.childrenLength() > 0)
                 children.add(new NonLeafFlatBuffersStatic<T, S>(child, context, deserializer));
             else
-                children.add(new LeafDefault<T, S>(FlatBuffersHelper.<T, S> createEntries(child),
-                        context));
+                children.add(new LeafDefault<T, S>(
+                        FlatBuffersHelper.<T, S> createEntries(child, deserializer), context));
         }
         return children;
     }
@@ -86,7 +86,7 @@ public class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<
             @Override
             public T value() {
                 ByteBuffer bb = node.entries(index).objectAsByteBuffer();
-                byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.remaining());
+                byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
                 return deserializer.call(bytes);
             }
 

@@ -1,6 +1,8 @@
 package com.github.davidmoten.rtree.fbs;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.davidmoten.rtree.Entry;
@@ -71,9 +73,12 @@ class FlatBuffersHelper {
 
     }
 
-    static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node) {
+    @SuppressWarnings("unchecked")
+    static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node,
+            Func1<byte[], T> deserializer) {
         List<Entry<T, S>> list = new ArrayList<Entry<T, S>>(node.entriesLength());
         for (int i = 0; i < node.entriesLength(); i++) {
+            Entry_ entry = node.entries(i);
             Geometry_ g = node.entries(i).geometry();
             final Geometry geometry;
             if (g.type() == GeometryType_.Box) {
@@ -87,8 +92,9 @@ class FlatBuffersHelper {
                 geometry = Circle.create(c.x(), c.y(), c.radius());
             } else
                 throw new RuntimeException("unexpected");
-            node.entries(i).object(i);
-            list.add(EntryDefault.<T, S> entry((T) new Object(), (S) geometry));
+            ByteBuffer bb = entry.objectAsByteBuffer();
+            byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
+            list.add(EntryDefault.<T, S> entry(deserializer.call(bytes), (S) geometry));
         }
         return list;
     }

@@ -82,7 +82,7 @@ public class FlatBuffersSerializer {
         if (node.childrenLength() > 0)
             root = new NonLeafFlatBuffersStatic<T, S>(node, context, deserializer);
         else {
-            List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node);
+            List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node, deserializer);
             root = new LeafDefault<T, S>(entries, context);
         }
         return SerializerHelper.create(Optional.of(root), 1, context);
