@@ -32,7 +32,7 @@ import org.junit.Test;
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Sets;
-import com.github.davidmoten.rtree.fbs.FactoryFlatBuffersDynamic;
+import com.github.davidmoten.rtree.fbs.FactoryFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -541,7 +541,7 @@ public class RTreeTest {
         List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
         int maxChildren = 8;
         RTree<Object, Point> tree = RTree.maxChildren(maxChildren).factory(
-                new FactoryFlatBuffersDynamic<Object, Geometry>(new Func1<Object, byte[]>() {
+                new FactoryFlatBuffers<Object, Geometry>(new Func1<Object, byte[]>() {
                     @Override
                     public byte[] call(Object o) {
                         return "boo".getBytes();

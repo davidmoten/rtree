@@ -71,13 +71,12 @@ public class FlatBuffersSerializer {
     }
 
     public <T, S extends Geometry> RTree<T, S> deserialize(long sizeBytes, InputStream is,
-            Func1<byte[], T> deserializer) throws IOException {
+            Func1<byte[], T> deserializer, Factory<T, S> factory) throws IOException {
         byte[] bytes = readFully(is, (int) sizeBytes);
         Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
         Node_ node = t.root();
         Context<T, S> context = new Context<T, S>(t.context().minChildren(),
-                t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(),
-                new FactoryImmutable<T, S>());
+                t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(), factory);
         final Node<T, S> root;
         if (node.childrenLength() > 0)
             root = new NonLeafFlatBuffersStatic<T, S>(node, context, deserializer);
