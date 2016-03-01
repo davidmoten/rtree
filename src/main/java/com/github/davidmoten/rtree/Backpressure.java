@@ -1,7 +1,7 @@
 package com.github.davidmoten.rtree;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.util.ImmutableStack;
+import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
 import rx.Subscriber;
 import rx.functions.Func1;

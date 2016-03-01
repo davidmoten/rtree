@@ -3,7 +3,7 @@ package com.github.davidmoten.rtree.geometry;
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
-import com.github.davidmoten.util.ObjectsHelper;
+import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
 public final class Rectangle implements Geometry, HasGeometry {
     private final float x1, y1, x2, y2;

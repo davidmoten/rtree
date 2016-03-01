@@ -13,7 +13,7 @@ import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Util;
-import com.github.davidmoten.util.Pair;
+import com.github.davidmoten.rtree.internal.util.Pair;
 
 public class QuadraticSplitterTest {
 

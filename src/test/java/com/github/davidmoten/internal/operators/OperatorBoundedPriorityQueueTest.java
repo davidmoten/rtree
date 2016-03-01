@@ -1,4 +1,4 @@
-package com.github.davidmoten.rx.operators;
+package com.github.davidmoten.internal.operators;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,6 +14,7 @@ import org.junit.Test;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Line;
+import com.github.davidmoten.rtree.internal.operators.OperatorBoundedPriorityQueue;
 
 import rx.Observable;
 import rx.Observable.OnSubscribe;

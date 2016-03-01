@@ -5,7 +5,7 @@ import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.util.ObjectsHelper;
+import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
 /**
  * An entry in the R-tree which has a spatial representation.

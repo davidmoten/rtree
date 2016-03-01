@@ -1,4 +1,4 @@
-package com.github.davidmoten.util;
+package com.github.davidmoten.rtree.internal.util;
 
 public final class ObjectsHelper {
 
