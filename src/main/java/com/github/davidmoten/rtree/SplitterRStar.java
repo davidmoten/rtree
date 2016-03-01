@@ -12,6 +12,7 @@ import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
+import com.github.davidmoten.rtree.internal.Comparators;
 
 import rx.functions.Func1;
 
