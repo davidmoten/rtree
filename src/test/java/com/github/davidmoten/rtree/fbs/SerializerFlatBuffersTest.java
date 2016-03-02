@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import org.junit.Test;
 
 import com.github.davidmoten.rtree.GreekEarthquakes;
+import com.github.davidmoten.rtree.InternalStructure;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
@@ -22,7 +24,16 @@ public class SerializerFlatBuffersTest {
     private static final byte[] EMPTY = new byte[] {};
 
     @Test
-    public void testSerializeRoundTrip() throws IOException {
+    public void testSerializeRoundTripToFlatBuffersSingleArray() throws IOException {
+        roundTrip(InternalStructure.FLATBUFFERS_SINGLE_ARRAY);
+    }
+
+    @Test
+    public void testSerializeRoundTripToDefaultStructure() throws IOException {
+        roundTrip(InternalStructure.FLATBUFFERS_SINGLE_ARRAY);
+    }
+
+    private void roundTrip(InternalStructure structure) throws FileNotFoundException, IOException {
         RTree<Object, Point> tree = RTree.star().maxChildren(10).create();
         tree = tree.add(GreekEarthquakes.entries()).last().toBlocking().single();
         long t = System.currentTimeMillis();
@@ -51,7 +62,7 @@ public class SerializerFlatBuffersTest {
 
         InputStream is = new FileInputStream(output);
         t = System.currentTimeMillis();
-        RTree<Object, Point> tr = fbSerializer.deserialize(output.length(), is);
+        RTree<Object, Point> tr = fbSerializer.deserialize(output.length(), is, structure);
         System.out.println(tr.root().get());
 
         System.out.println("read in " + (System.currentTimeMillis() - t) + "ms");
