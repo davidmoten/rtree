@@ -78,18 +78,6 @@ final class Backpressure {
         return StackAndRequest.create(state.stack.pop().push(np.nextPosition()), nextRequest);
     }
 
-    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAfterLastInNode(
-            ImmutableStack<NodePosition<T, S>> stack) {
-        ImmutableStack<NodePosition<T, S>> stack2 = stack.pop();
-        if (stack2.isEmpty())
-            stack = stack2;
-        else {
-            NodePosition<T, S> previous = stack2.peek();
-            stack = stack2.pop().push(previous.nextPosition());
-        }
-        return stack;
-    }
-
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
             final Func1<? super Geometry, Boolean> condition,
             ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
@@ -98,6 +86,18 @@ final class Backpressure {
             stack = stack.push(new NodePosition<T, S>(child, 0));
         } else {
             stack = stack.pop().push(np.nextPosition());
+        }
+        return stack;
+    }
+
+    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAfterLastInNode(
+            ImmutableStack<NodePosition<T, S>> stack) {
+        ImmutableStack<NodePosition<T, S>> stack2 = stack.pop();
+        if (stack2.isEmpty())
+            stack = stack2;
+        else {
+            NodePosition<T, S> previous = stack2.peek();
+            stack = stack2.pop().push(previous.nextPosition());
         }
         return stack;
     }

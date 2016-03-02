@@ -17,12 +17,12 @@ public interface Node<T, S extends Geometry> extends HasGeometry {
 
     /**
      * Run when a search requests Long.MAX_VALUE results. This is the
-     * no-backpressure fast path.s
+     * no-backpressure fast path.
      * 
      * @param condition
      * @param subscriber
      */
-    void search(Func1<? super Geometry, Boolean> condition,
+    void searchWithoutBackpressure(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T, S>> subscriber);
 
     int count();

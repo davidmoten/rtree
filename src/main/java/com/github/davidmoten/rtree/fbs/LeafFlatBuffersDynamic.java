@@ -44,7 +44,7 @@ final class LeafFlatBuffersDynamic<T, S extends Geometry> implements Leaf<T, S> 
     }
 
     @Override
-    public void search(Func1<? super Geometry, Boolean> condition,
+    public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T, S>> subscriber) {
         LeafHelper.search(condition, subscriber, this);
     }

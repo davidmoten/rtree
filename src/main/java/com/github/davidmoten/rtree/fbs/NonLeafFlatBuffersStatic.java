@@ -50,7 +50,7 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
     }
 
     @Override
-    public void search(Func1<? super Geometry, Boolean> criterion,
+    public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber) {
         search(node, criterion, subscriber, deserializer);
     }

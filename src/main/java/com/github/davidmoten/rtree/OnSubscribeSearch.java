@@ -64,7 +64,7 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
         }
 
         private void requestAll() {
-            node.search(condition, subscriber);
+            node.searchWithoutBackpressure(condition, subscriber);
             if (!subscriber.isUnsubscribed())
                 subscriber.onCompleted();
         }

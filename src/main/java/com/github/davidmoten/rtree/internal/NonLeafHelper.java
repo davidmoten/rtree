@@ -28,7 +28,7 @@ public final class NonLeafHelper {
             if (subscriber.isUnsubscribed())
                 return;
             else
-                child.search(criterion, subscriber);
+                child.searchWithoutBackpressure(criterion, subscriber);
         }
     }
 

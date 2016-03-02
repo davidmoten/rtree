@@ -23,7 +23,7 @@ public class OnSubscribeSearchTest {
         Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);
         Subscriber<Entry<Integer, Geometry>> subscriber = Mockito.mock(Subscriber.class);
         RuntimeException error = new RuntimeException();
-        Mockito.doThrow(error).when(node).search(condition, subscriber);
+        Mockito.doThrow(error).when(node).searchWithoutBackpressure(condition, subscriber);
         SearchProducer<Integer, Geometry> p = new OnSubscribeSearch.SearchProducer<Integer, Geometry>(
                 node, condition, subscriber);
         p.request(Long.MAX_VALUE);

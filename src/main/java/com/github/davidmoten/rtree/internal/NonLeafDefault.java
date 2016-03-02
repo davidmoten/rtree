@@ -32,7 +32,7 @@ public final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S
     }
 
     @Override
-    public void search(Func1<? super Geometry, Boolean> criterion,
+    public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber) {
         NonLeafHelper.search(criterion, subscriber, this);
     }
