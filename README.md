@@ -303,6 +303,12 @@ mbr=Rectangle [x1=10.0, y1=4.0, x2=62.0, y2=85.0]
     entry=Entry [value=3, geometry=Point [x=10.0, y=63.0]]
 ```
 
+Serialization
+------------------
+Upcoming release 0.8 includes [flatbuffers](https://github.com/google-code/flatbuffers) support as a serialization format and as a lower performance but lower memory consumption (approximately one third) option for an RTree. 
+
+The greek earthquake data (38,377 entries) when placed in a default RTree with `maxChildren=10` takes up 4,548,133 bytes in memory. If that data is serialized then reloaded into memory using the `InternalStructure.FLATBUFFERS_SINGLE_ARRAY` option then the RTree takes up 1,431,772 bytes in memory (approximately one third the memory usage). Bear in mind though that searches are much more expensive (at the moment) with this data structure because of object creation and gc pressures (see benchmarks). Further work would be to enable direct searching of the underlying array without object creation expenses required to match the current search routines. 
+
 Dependencies
 ---------------------
 As of 0.7.5 this library does not depend on *guava* (>2M) but rather depends on *guava-mini* (11K). The `nearest` search used to depend on `MinMaxPriorityQueue` from guava but now uses a backport of Java 8 `PriorityQueue` inside a custom `BoundedPriorityQueue` class that gives about 1.7x the throughput as the guava class.
@@ -332,7 +338,6 @@ git checkout coverity_scan
 git pull origin master
 git push origin coverity_scan
 ```
-
 
 ### Notes
 The *Greek* data referred to in the benchmarks is a collection of some 38,377 entries corresponding to the epicentres of earthquakes in Greece between 1964 and 2000. This data set is used by multiple studies on R-trees as a test case.
