@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,21 +23,29 @@ public class SerializerFlatBuffersTest {
     private static final byte[] EMPTY = new byte[] {};
 
     @Test
-    public void testSerializeRoundTripToFlatBuffersSingleArray() throws IOException {
+    public void testSerializeRoundTripToFlatBuffersSingleArray() throws Exception {
         roundTrip(InternalStructure.FLATBUFFERS_SINGLE_ARRAY);
     }
 
     @Test
-    public void testSerializeRoundTripToDefaultStructure() throws IOException {
+    public void testSerializeRoundTripToDefaultStructure() throws Exception {
         roundTrip(InternalStructure.FLATBUFFERS_SINGLE_ARRAY);
     }
 
-    private void roundTrip(InternalStructure structure) throws FileNotFoundException, IOException {
+    private void roundTrip(InternalStructure structure) throws Exception {
         RTree<Object, Point> tree = RTree.star().maxChildren(10).create();
         tree = tree.add(GreekEarthquakes.entries()).last().toBlocking().single();
         long t = System.currentTimeMillis();
-        File output = new File("target/file");
-        FileOutputStream os = new FileOutputStream(output);
+        File file = new File("target/file");
+        FileOutputStream os = new FileOutputStream(file);
+        SerializerFlatBuffers<Object, Point> fbSerializer = createSerializer();
+
+        serialize(tree, t, file, os, fbSerializer);
+
+        deserialize(structure, file, fbSerializer);
+    }
+
+    private static SerializerFlatBuffers<Object, Point> createSerializer() {
         Func1<Object, byte[]> serializer = new Func1<Object, byte[]>() {
             @Override
             public byte[] call(Object o) {
@@ -53,16 +60,24 @@ public class SerializerFlatBuffersTest {
         };
         SerializerFlatBuffers<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
                 deserializer);
+        return fbSerializer;
+    }
 
+    private static void serialize(RTree<Object, Point> tree, long t, File file, FileOutputStream os,
+            SerializerFlatBuffers<Object, Point> fbSerializer) throws IOException {
         fbSerializer.serialize(tree, os);
         os.close();
         System.out.println("written in " + (System.currentTimeMillis() - t) + "ms, " + "file size="
-                + output.length() / 1000000.0 + "MB");
-        System.out.println("bytes per entry=" + output.length() / tree.size());
+                + file.length() / 1000000.0 + "MB");
+        System.out.println("bytes per entry=" + file.length() / tree.size());
+    }
 
-        InputStream is = new FileInputStream(output);
+    private static void deserialize(InternalStructure structure, File file,
+            SerializerFlatBuffers<Object, Point> fbSerializer) throws Exception {
+        long t = System.currentTimeMillis();
+        InputStream is = new FileInputStream(file);
         t = System.currentTimeMillis();
-        RTree<Object, Point> tr = fbSerializer.deserialize(output.length(), is, structure);
+        RTree<Object, Point> tr = fbSerializer.deserialize(file.length(), is, structure);
         System.out.println(tr.root().get());
 
         System.out.println("read in " + (System.currentTimeMillis() - t) + "ms");
@@ -70,6 +85,14 @@ public class SerializerFlatBuffersTest {
                 .single();
         System.out.println("found=" + found);
         assertEquals(22, found);
+        System.out.println(tr.size());
+    }
+
+    public static void main(String[] args) throws Exception {
+        // use this with jvisualvm and heap dump, find biggest objects to check
+        // memory usage of rtree
+        deserialize(InternalStructure.FLATBUFFERS_SINGLE_ARRAY, new File("target/file"),
+                createSerializer());
     }
 
 }
