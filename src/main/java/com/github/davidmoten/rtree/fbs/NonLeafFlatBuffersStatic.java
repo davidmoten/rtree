@@ -65,11 +65,14 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
                 return;
         }
         int numChildren = node.childrenLength();
+        // reduce allocations by reusing objects
+        Node_ child = new Node_();
         if (numChildren > 0) {
             for (int i = 0; i < numChildren; i++) {
                 if (subscriber.isUnsubscribed())
                     return;
-                search(node.children(i), criterion, subscriber, deserializer);
+                node.children(child, i);
+                search(child, criterion, subscriber, deserializer);
             }
         } else {
             int numEntries = node.entriesLength();
@@ -80,7 +83,9 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
             for (int i = 0; i < numEntries; i++) {
                 if (subscriber.isUnsubscribed())
                     return;
+                // set entry
                 node.entries(entry, i);
+                // set geometry
                 entry.geometry(geometry);
                 final Geometry g = toGeometry(geometry);
                 if (criterion.call(g)) {
@@ -105,24 +110,6 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
                         FlatBuffersHelper.<T, S> createEntries(child, deserializer), context));
         }
         return children;
-    }
-
-    private Entry<T, S> createEntry(final int index) {
-        return new Entry<T, S>() {
-
-            @Override
-            public T value() {
-                ByteBuffer bb = node.entries(index).objectAsByteBuffer();
-                byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
-                return deserializer.call(bytes);
-            }
-
-            @Override
-            public S geometry() {
-                Geometry_ g = node.entries(index).geometry();
-                return toGeometry(g);
-            }
-        };
     }
 
     @Override
@@ -155,9 +142,10 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
     @SuppressWarnings("unchecked")
     private static <S extends Geometry> S toGeometry(Geometry_ g) {
         final Geometry result;
-        if (g.type() == GeometryType_.Box) {
+        byte type = g.type();
+        if (type == GeometryType_.Box) {
             result = createBox(g.box());
-        } else if (g.type() == GeometryType_.Point) {
+        } else if (type == GeometryType_.Point) {
             result = Point.create(g.point().x(), g.point().y());
         } else
             throw new UnsupportedOperationException();
