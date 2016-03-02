@@ -1,6 +1,5 @@
 package com.github.davidmoten.rtree.fbs;
 
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +50,6 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
     @Override
     public void search(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T, S>> subscriber) {
-        System.out.println("searching " + node);
         final Node<T, S> nd;
         if (node.childrenLength() > 0) {
             List<Node<T, S>> children = createChildren();
