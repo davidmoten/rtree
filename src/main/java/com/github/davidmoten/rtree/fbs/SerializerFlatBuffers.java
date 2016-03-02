@@ -1,10 +1,10 @@
 package com.github.davidmoten.rtree.fbs;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Optional;
@@ -17,6 +17,7 @@ import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.SelectorRStar;
 import com.github.davidmoten.rtree.SerializerHelper;
 import com.github.davidmoten.rtree.SplitterRStar;
+import com.github.davidmoten.rtree.InternalStructure;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
 import com.github.davidmoten.rtree.fbs.generated.Context_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
@@ -24,6 +25,7 @@ import com.github.davidmoten.rtree.fbs.generated.Tree_;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.LeafDefault;
+import com.github.davidmoten.rtree.internal.NonLeafDefault;
 import com.google.flatbuffers.FlatBufferBuilder;
 
 import rx.functions.Func1;
@@ -80,21 +82,40 @@ public final class SerializerFlatBuffers<T, S extends Geometry> {
         }
     }
 
-    public RTree<T, S> deserialize(long sizeBytes, InputStream is) throws IOException {
+    public RTree<T, S> deserialize(long sizeBytes, InputStream is, InternalStructure structure)
+            throws IOException {
         byte[] bytes = readFully(is, (int) sizeBytes);
         Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
         Node_ node = t.root();
         Context<T, S> context = new Context<T, S>(t.context().minChildren(),
                 t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(), factory);
         final Node<T, S> root;
-        if (node.childrenLength() > 0)
-            root = new NonLeafFlatBuffersStatic<T, S>(node, context, factory.deserializer());
-        else {
-            List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node,
-                    factory.deserializer());
-            root = new LeafDefault<T, S>(entries, context);
+        if (structure == InternalStructure.FLATBUFFERS_SINGLE_ARRAY) {
+            if (node.childrenLength() > 0) {
+                root = new NonLeafFlatBuffersStatic<T, S>(node, context, factory.deserializer());
+            } else {
+                List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node,
+                        factory.deserializer());
+                root = new LeafDefault<T, S>(entries, context);
+            }
+        } else {
+            root = toNodeDefault(node, context, factory.deserializer());
         }
         return SerializerHelper.create(Optional.of(root), (int) t.size(), context);
+    }
+
+    private static <T, S extends Geometry> Node<T, S> toNodeDefault(Node_ node,
+            Context<T, S> context, Func1<byte[], T> deserializer) {
+        if (node.childrenLength() > 0) {
+            List<Node<T, S>> children = new ArrayList<Node<T, S>>(node.childrenLength());
+            for (int i = 0; i < node.childrenLength(); i++) {
+                children.add(toNodeDefault(node.children(i), context, deserializer));
+            }
+            return new NonLeafDefault<T, S>(children, context);
+        } else {
+            List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node, deserializer);
+            return new LeafDefault<T, S>(entries, context);
+        }
     }
 
     private static byte[] readFully(InputStream is, int numBytes) throws IOException {
