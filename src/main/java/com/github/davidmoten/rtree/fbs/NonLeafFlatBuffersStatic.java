@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.Context;
+import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
@@ -21,7 +22,6 @@ import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.LeafDefault;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
-import com.github.davidmoten.rtree.internal.NonLeafDefault;
 
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -52,65 +52,46 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
     @Override
     public void search(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber) {
-        Box_ b = node.mbb();
-        if (!criterion.call(Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY())))
-            return;
-        final Node<T, S> nd;
-        if (node.childrenLength() > 0) {
-            List<Node<T, S>> children = createChildren();
-            nd = new NonLeafDefault<T, S>(children, context);
-        } else {
-            List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>(node.entriesLength());
-            if (entries.isEmpty())
-                throw new RuntimeException("unexpected");
-            for (int i = 0; i < node.entriesLength(); i++) {
-                entries.add(createEntry(i));
-            }
-            nd = new LeafDefault<T, S>(entries, context);
-        }
-        nd.search(criterion, subscriber);
+        search(node, criterion, subscriber, deserializer);
     }
 
+    @SuppressWarnings("unchecked")
     private static <T, S extends Geometry> void search(Node_ node,
-            Func1<? super Geometry, Boolean> criterion,
-            Subscriber<? super Entry<T, S>> subscriber) {
+            Func1<? super Geometry, Boolean> criterion, Subscriber<? super Entry<T, S>> subscriber,
+            Func1<byte[], T> deserializer) {
         {
             Box_ b = node.mbb();
             if (!criterion.call(Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY())))
                 return;
         }
-        final Node<T, S> nd;
         int numChildren = node.childrenLength();
         if (numChildren > 0) {
             for (int i = 0; i < numChildren; i++) {
                 if (subscriber.isUnsubscribed())
                     return;
-                search(node.children(i), criterion, subscriber);
+                search(node.children(i), criterion, subscriber, deserializer);
             }
         } else {
             int numEntries = node.entriesLength();
+            // reduce allocations by reusing objects
+            Entry_ entry = new Entry_();
+            Geometry_ geometry = new Geometry_();
+            // check all entries
             for (int i = 0; i < numEntries; i++) {
-                Entry_ entry = node.entries(i);
-                final Geometry g;
-                Geometry_ geom = entry.geometry();
-                byte gt = geom.type();
-                if (gt == GeometryType_.Box) {
-                    Box_ b = geom.box();
-                    g = Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
-                }
-                if (!condition.call(leaf.geometry().mbr()))
+                if (subscriber.isUnsubscribed())
                     return;
-
-                for (final Entry<T, S> entry : leaf.entries()) {
-                    if (subscriber.isUnsubscribed())
-                        return;
-                    else {
-                        if (condition.call(entry.geometry()))
-                            subscriber.onNext(entry);
-                    }
+                node.entries(entry, i);
+                entry.geometry(geometry);
+                final Geometry g = toGeometry(geometry);
+                if (criterion.call(g)) {
+                    ByteBuffer bb = entry.objectAsByteBuffer();
+                    byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
+                    T t = deserializer.call(bytes);
+                    subscriber.onNext(Entries.entry(t, (S) g));
                 }
             }
         }
+
     }
 
     private List<Node<T, S>> createChildren() {
