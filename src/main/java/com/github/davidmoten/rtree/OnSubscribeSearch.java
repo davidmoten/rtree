@@ -46,6 +46,9 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
 
         @Override
         public void request(long n) {
+            //TODO remove this patch that exists because of RxJava PR 3727
+            if (n == Long.MAX_VALUE - 1)
+                n = Long.MAX_VALUE;
             try {
                 if (n <= 0 || requested.get() == Long.MAX_VALUE)
                     // none requested or already started with fast path

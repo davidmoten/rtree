@@ -379,7 +379,7 @@ BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren032                       
 BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren128                       thrpt   10   778095.844 ± 28671.720  ops/s
 BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren004                  thrpt   10   600819.078 ± 13978.946  ops/s
 BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010                  thrpt   10   722358.314 ± 16517.944  ops/s
-BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers       thrpt   10     6380.921 ±   158.691  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers       thrpt   10    18305.348 ±   318.022  ops/s
 BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpressure  thrpt   10   122664.342 ±  1862.070  ops/s
 BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032                  thrpt   10   636731.010 ± 16644.316  ops/s
 BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128                  thrpt   10   295903.518 ±  5487.560  ops/s

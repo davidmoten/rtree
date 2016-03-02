@@ -11,9 +11,11 @@ import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
+import com.github.davidmoten.rtree.fbs.generated.Entry_;
 import com.github.davidmoten.rtree.fbs.generated.GeometryType_;
 import com.github.davidmoten.rtree.fbs.generated.Geometry_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
@@ -48,8 +50,11 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
     }
 
     @Override
-    public void search(Func1<? super Geometry, Boolean> condition,
+    public void search(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber) {
+        Box_ b = node.mbb();
+        if (!criterion.call(Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY())))
+            return;
         final Node<T, S> nd;
         if (node.childrenLength() > 0) {
             List<Node<T, S>> children = createChildren();
@@ -63,7 +68,49 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
             }
             nd = new LeafDefault<T, S>(entries, context);
         }
-        nd.search(condition, subscriber);
+        nd.search(criterion, subscriber);
+    }
+
+    private static <T, S extends Geometry> void search(Node_ node,
+            Func1<? super Geometry, Boolean> criterion,
+            Subscriber<? super Entry<T, S>> subscriber) {
+        {
+            Box_ b = node.mbb();
+            if (!criterion.call(Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY())))
+                return;
+        }
+        final Node<T, S> nd;
+        int numChildren = node.childrenLength();
+        if (numChildren > 0) {
+            for (int i = 0; i < numChildren; i++) {
+                if (subscriber.isUnsubscribed())
+                    return;
+                search(node.children(i), criterion, subscriber);
+            }
+        } else {
+            int numEntries = node.entriesLength();
+            for (int i = 0; i < numEntries; i++) {
+                Entry_ entry = node.entries(i);
+                final Geometry g;
+                Geometry_ geom = entry.geometry();
+                byte gt = geom.type();
+                if (gt == GeometryType_.Box) {
+                    Box_ b = geom.box();
+                    g = Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+                }
+                if (!condition.call(leaf.geometry().mbr()))
+                    return;
+
+                for (final Entry<T, S> entry : leaf.entries()) {
+                    if (subscriber.isUnsubscribed())
+                        return;
+                    else {
+                        if (condition.call(entry.geometry()))
+                            subscriber.onNext(entry);
+                    }
+                }
+            }
+        }
     }
 
     private List<Node<T, S>> createChildren() {
