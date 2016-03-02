@@ -15,6 +15,13 @@ public interface Node<T, S extends Geometry> extends HasGeometry {
 
     NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all);
 
+    /**
+     * Run when a search requests Long.MAX_VALUE results. This is the
+     * no-backpressure fast path.s
+     * 
+     * @param condition
+     * @param subscriber
+     */
     void search(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T, S>> subscriber);
 

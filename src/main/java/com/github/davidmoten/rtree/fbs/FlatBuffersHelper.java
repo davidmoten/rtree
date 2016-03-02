@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
 import com.github.davidmoten.rtree.fbs.generated.Circle_;
@@ -17,7 +18,6 @@ import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.rtree.internal.EntryDefault;
 import com.github.davidmoten.rtree.internal.Util;
 import com.google.flatbuffers.FlatBufferBuilder;
 
@@ -94,7 +94,7 @@ final class FlatBuffersHelper {
                 throw new RuntimeException("unexpected");
             ByteBuffer bb = entry.objectAsByteBuffer();
             byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
-            list.add(EntryDefault.<T, S> entry(deserializer.call(bytes), (S) geometry));
+            list.add(Entries.<T, S> entry(deserializer.call(bytes), (S) geometry));
         }
         return list;
     }
