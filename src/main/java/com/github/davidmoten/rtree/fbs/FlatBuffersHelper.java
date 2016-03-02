@@ -1,6 +1,5 @@
 package com.github.davidmoten.rtree.fbs;
 
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,7 +79,7 @@ final class FlatBuffersHelper {
         List<Entry<T, S>> list = new ArrayList<Entry<T, S>>(node.entriesLength());
         for (int i = 0; i < node.entriesLength(); i++) {
             Entry_ entry = node.entries(i);
-            Geometry_ g = node.entries(i).geometry();
+            Geometry_ g = entry.geometry();
             final Geometry geometry;
             if (g.type() == GeometryType_.Box) {
                 Box_ b = g.box();
