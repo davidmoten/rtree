@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.github.davidmoten.guavamini.Preconditions;
+
 public final class BoundedPriorityQueue<T> {
 
     private final PriorityQueue<T> queue; /* backing data structure */
@@ -23,13 +25,8 @@ public final class BoundedPriorityQueue<T> {
      *            queue, must be non-null.
      */
     public BoundedPriorityQueue(final int maxSize, final Comparator<? super T> comparator) {
-        if (maxSize <= 0) {
-            throw new IllegalArgumentException(
-                    "maxSize = " + maxSize + "; expected a positive integer.");
-        }
-        if (comparator == null) {
-            throw new NullPointerException("Comparator is null.");
-        }
+        Preconditions.checkArgument(maxSize <= 0, "maxSize must be > 0");
+        Preconditions.checkNotNull(comparator, "comparator cannot be null");
         this.queue = new PriorityQueue<T>(reverse(comparator));
         this.comparator = comparator;
         this.maxSize = maxSize;
