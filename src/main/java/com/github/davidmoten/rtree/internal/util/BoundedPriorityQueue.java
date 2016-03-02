@@ -25,7 +25,7 @@ public final class BoundedPriorityQueue<T> {
      *            queue, must be non-null.
      */
     public BoundedPriorityQueue(final int maxSize, final Comparator<? super T> comparator) {
-        Preconditions.checkArgument(maxSize <= 0, "maxSize must be > 0");
+        Preconditions.checkArgument(maxSize > 0, "maxSize must be > 0");
         Preconditions.checkNotNull(comparator, "comparator cannot be null");
         this.queue = new PriorityQueue<T>(reverse(comparator));
         this.comparator = comparator;

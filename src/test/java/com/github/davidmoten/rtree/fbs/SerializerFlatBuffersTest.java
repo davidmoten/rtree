@@ -29,7 +29,7 @@ public class SerializerFlatBuffersTest {
 
     @Test
     public void testSerializeRoundTripToDefaultStructure() throws Exception {
-        roundTrip(InternalStructure.FLATBUFFERS_SINGLE_ARRAY);
+        roundTrip(InternalStructure.DEFAULT);
     }
 
     private void roundTrip(InternalStructure structure) throws Exception {
