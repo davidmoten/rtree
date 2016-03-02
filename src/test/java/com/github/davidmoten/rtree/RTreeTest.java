@@ -1,6 +1,6 @@
 package com.github.davidmoten.rtree;
 
-import static com.github.davidmoten.rtree.Entry.entry;
+import static com.github.davidmoten.rtree.Entries.entry;
 import static com.github.davidmoten.rtree.geometry.Geometries.circle;
 import static com.github.davidmoten.rtree.geometry.Geometries.line;
 import static com.github.davidmoten.rtree.geometry.Geometries.point;
@@ -32,6 +32,7 @@ import org.junit.Test;
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Sets;
+import com.github.davidmoten.rtree.fbs.FactoryFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -531,16 +532,33 @@ public class RTreeTest {
     }
 
     @Test
+    public void testSearchOnGreekDataUsingFlatBuffersFactory() {
+
+    }
+
+    @Test
     public void testVisualizerWithGreekData() {
         List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
         int maxChildren = 8;
-        RTree<Object, Point> tree = RTree.maxChildren(maxChildren).<Object, Point> create()
-                .add(entries);
+        RTree<Object, Point> tree = RTree.maxChildren(maxChildren).factory(
+                new FactoryFlatBuffers<Object, Geometry>(new Func1<Object, byte[]>() {
+                    @Override
+                    public byte[] call(Object o) {
+                        return "boo".getBytes();
+                    }
+                }, new Func1<byte[], Object>() {
+                    @Override
+                    public Object call(byte[] t) {
+                        return new String(t);
+                    }
+                })).<Object, Point> create().add(entries);
         tree.visualize(2000, 2000).save("target/greek.png");
 
         // do search
-        System.out.println("found=" + tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5))
-                .count().toBlocking().single());
+        int found = tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).count().toBlocking()
+                .single();
+        System.out.println("found=" + found);
+        assertEquals(22, found);
 
         RTree<Object, Point> tree2 = RTree.maxChildren(maxChildren).star().<Object, Point> create()
                 .add(entries);
@@ -1010,11 +1028,11 @@ public class RTreeTest {
     }
 
     static Entry<Object, Rectangle> e(int n) {
-        return Entry.<Object, Rectangle> entry(n, r(n));
+        return Entries.<Object, Rectangle> entry(n, r(n));
     }
 
     static Entry<Object, Rectangle> e2(int n) {
-        return Entry.<Object, Rectangle> entry(n, r(n - 1));
+        return Entries.<Object, Rectangle> entry(n, r(n - 1));
     }
 
     private static Rectangle r(int n) {

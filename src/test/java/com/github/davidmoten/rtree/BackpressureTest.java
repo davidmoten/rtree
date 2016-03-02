@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import com.github.davidmoten.junit.Asserts;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.util.ImmutableStack;
+import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
 import rx.Subscriber;
 import rx.Subscription;

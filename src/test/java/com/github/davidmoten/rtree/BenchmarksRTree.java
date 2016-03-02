@@ -2,17 +2,22 @@ package com.github.davidmoten.rtree;
 
 import static com.github.davidmoten.rtree.Utilities.entries1000;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 
+import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
 import rx.Subscriber;
+import rx.functions.Func1;
 
 @State(Scope.Benchmark)
 public class BenchmarksRTree {
@@ -69,9 +74,39 @@ public class BenchmarksRTree {
     private final RTree<Object, Rectangle> smallStarTreeM128 = RTree.maxChildren(128).star()
             .<Object, Rectangle> create().add(some);
 
+    private final RTree<Object, Point> starTreeM10FlatBuffers = createFlatBuffersGreek();
+
     @Benchmark
     public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
         insertPoint(defaultTreeM4);
+    }
+
+    private RTree<Object, Point> createFlatBuffersGreek() {
+        RTree<Object, Point> tree = RTree.maxChildren(10).star().<Object, Point> create()
+                .add(entries);
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        Func1<Object, byte[]> serializer = new Func1<Object, byte[]>() {
+            @Override
+            public byte[] call(Object o) {
+                return new byte[0];
+            }
+        };
+        Func1<byte[], Object> deserializer = new Func1<byte[], Object>() {
+            @Override
+            public Object call(byte[] bytes) {
+                return null;
+            }
+        };
+        SerializerFlatBuffers<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
+                deserializer);
+        try {
+            fbSerializer.serialize(tree, os);
+            os.close();
+            ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+            return fbSerializer.deserialize(os.size(), is, InternalStructure.FLATBUFFERS_SINGLE_ARRAY);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Benchmark
@@ -107,6 +142,11 @@ public class BenchmarksRTree {
     @Benchmark
     public void rStarTreeSearchOfGreekDataPointsMaxChildren010() {
         searchGreek(starTreeM10);
+    }
+
+    @Benchmark
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers() {
+        searchGreek(starTreeM10FlatBuffers);
     }
 
     @Benchmark
@@ -298,7 +338,8 @@ public class BenchmarksRTree {
 
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
+        System.out.println("starting searches");
         while (true)
-            b.searchNearestGreek();
+            b.rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers();
     }
 }

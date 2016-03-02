@@ -1,10 +1,10 @@
 package com.github.davidmoten.rtree;
 
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.internal.util.ImmutableStack;
+
 import rx.Subscriber;
 import rx.functions.Func1;
-
-import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.util.ImmutableStack;
 
 /**
  * Utility methods for controlling backpressure of the tree search.
