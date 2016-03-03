@@ -20,7 +20,6 @@ import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.rtree.internal.LeafDefault;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 
 import rx.Subscriber;
@@ -105,15 +104,10 @@ final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
     private List<Node<T, S>> createChildren() {
         List<Node<T, S>> children = new ArrayList<Node<T, S>>(node.childrenLength());
         // reduce allocations by resusing objects
-        Node_ child = new Node_();
         int numChildren = node.childrenLength();
         for (int i = 0; i < numChildren; i++) {
-            node.children(child, i);
-            if (child.childrenLength() > 0)
-                children.add(new NodeFlatBuffers<T, S>(child, context, deserializer));
-            else
-                children.add(new LeafDefault<T, S>(
-                        FlatBuffersHelper.<T, S> createEntries(child, deserializer), context));
+            Node_ child = node.children(i);
+            children.add(new NodeFlatBuffers<T, S>(child, context, deserializer));
         }
         return children;
     }
