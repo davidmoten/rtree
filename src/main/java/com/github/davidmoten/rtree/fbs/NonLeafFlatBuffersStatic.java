@@ -52,16 +52,18 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
     @Override
     public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber) {
-        search(node, criterion, subscriber, deserializer);
+        search(node, criterion, subscriber, deserializer, new Entry_(), new Geometry_(),
+                new Box_());
     }
 
     @SuppressWarnings("unchecked")
     private static <T, S extends Geometry> void search(Node_ node,
             Func1<? super Geometry, Boolean> criterion, Subscriber<? super Entry<T, S>> subscriber,
-            Func1<byte[], T> deserializer) {
+            Func1<byte[], T> deserializer, Entry_ entry, Geometry_ geometry, Box_ box) {
         {
-            Box_ b = node.mbb();
-            if (!criterion.call(Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY())))
+            node.mbb(box);
+            if (!criterion
+                    .call(Geometries.rectangle(box.minX(), box.minY(), box.maxX(), box.maxY())))
                 return;
         }
         int numChildren = node.childrenLength();
@@ -72,13 +74,11 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
                 if (subscriber.isUnsubscribed())
                     return;
                 node.children(child, i);
-                search(child, criterion, subscriber, deserializer);
+                search(child, criterion, subscriber, deserializer, entry, geometry, box);
             }
         } else {
             int numEntries = node.entriesLength();
             // reduce allocations by reusing objects
-            Entry_ entry = new Entry_();
-            Geometry_ geometry = new Geometry_();
             // check all entries
             for (int i = 0; i < numEntries; i++) {
                 if (subscriber.isUnsubscribed())
