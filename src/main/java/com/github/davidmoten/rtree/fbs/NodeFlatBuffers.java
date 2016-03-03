@@ -26,13 +26,13 @@ import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T, S> {
+final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;
     private final Func1<byte[], T> deserializer;
 
-    NonLeafFlatBuffersStatic(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
+    NodeFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
         Preconditions.checkArgument(node.childrenLength() > 0 || node.entriesLength() > 0);
         this.node = node;
         this.context = context;
@@ -52,6 +52,9 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
     @Override
     public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber) {
+        // pass through entry and geometry and box instances to be reused for
+        // flatbuffers extraction this reduces allocation/gc costs (but of
+        // course introduces some mutable ugliness into the codebase)
         search(node, criterion, subscriber, deserializer, new Entry_(), new Geometry_(),
                 new Box_());
     }
@@ -101,10 +104,13 @@ final class NonLeafFlatBuffersStatic<T, S extends Geometry> implements NonLeaf<T
 
     private List<Node<T, S>> createChildren() {
         List<Node<T, S>> children = new ArrayList<Node<T, S>>(node.childrenLength());
-        for (int i = 0; i < node.childrenLength(); i++) {
-            Node_ child = node.children(i);
+        // reduce allocations by resusing objects
+        Node_ child = new Node_();
+        int numChildren = node.childrenLength();
+        for (int i = 0; i < numChildren; i++) {
+            node.children(child, i);
             if (child.childrenLength() > 0)
-                children.add(new NonLeafFlatBuffersStatic<T, S>(child, context, deserializer));
+                children.add(new NodeFlatBuffers<T, S>(child, context, deserializer));
             else
                 children.add(new LeafDefault<T, S>(
                         FlatBuffersHelper.<T, S> createEntries(child, deserializer), context));

@@ -10,6 +10,7 @@ import java.util.List;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.InternalStructure;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
@@ -17,7 +18,6 @@ import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.SelectorRStar;
 import com.github.davidmoten.rtree.SerializerHelper;
 import com.github.davidmoten.rtree.SplitterRStar;
-import com.github.davidmoten.rtree.InternalStructure;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
 import com.github.davidmoten.rtree.fbs.generated.Context_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
@@ -91,13 +91,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> {
                 t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(), factory);
         final Node<T, S> root;
         if (structure == InternalStructure.FLATBUFFERS_SINGLE_ARRAY) {
-            if (node.childrenLength() > 0) {
-                root = new NonLeafFlatBuffersStatic<T, S>(node, context, factory.deserializer());
-            } else {
-                List<Entry<T, S>> entries = FlatBuffersHelper.createEntries(node,
-                        factory.deserializer());
-                root = new LeafDefault<T, S>(entries, context);
-            }
+            root = new NodeFlatBuffers<T, S>(node, context, factory.deserializer());
         } else {
             root = toNodeDefault(node, context, factory.deserializer());
         }
