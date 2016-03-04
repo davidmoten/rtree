@@ -26,4 +26,15 @@ final class NodePosition<T, S extends Geometry> {
         return new NodePosition<T, S>(node, position + 1);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("NodePosition [node=");
+        builder.append(node);
+        builder.append(", position=");
+        builder.append(position);
+        builder.append("]");
+        return builder.toString();
+    }
+
 }

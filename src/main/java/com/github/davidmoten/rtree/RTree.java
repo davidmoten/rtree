@@ -120,7 +120,7 @@ public final class RTree<T, S extends Geometry> {
         if (node instanceof Leaf)
             return depth + 1;
         else
-            return calculateDepth(((NonLeaf<T, S>) node).children().get(0), depth + 1);
+            return calculateDepth(((NonLeaf<T, S>) node).child(0), depth + 1);
     }
 
     /**
@@ -853,7 +853,8 @@ public final class RTree<T, S extends Geometry> {
         s.append('\n');
         if (node instanceof NonLeaf) {
             NonLeaf<T, S> n = (NonLeaf<T, S>) node;
-            for (Node<T, S> child : n.children()) {
+            for (int i = 0; i < n.childrenCount(); i++) {
+                Node<T, S> child = n.child(i);
                 s.append(asString(child, margin + marginIncrement));
             }
         } else {

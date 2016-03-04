@@ -43,11 +43,6 @@ public final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S
     }
 
     @Override
-    public List<? extends Node<T, S>> children() {
-        return children;
-    }
-
-    @Override
     public List<Node<T, S>> add(Entry<? extends T, ? extends S> entry) {
         return NonLeafHelper.add(entry, this);
     }
@@ -60,5 +55,21 @@ public final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S
     @Override
     public Context<T, S> context() {
         return context;
+    }
+
+    @Override
+    public int childrenCount() {
+        return children.size();
+    }
+
+    @Override
+    public Node<T, S> child(int i) {
+        return children.get(i);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Node<T, S>> children() {
+        return (List<Node<T, S>>) children;
     }
 }

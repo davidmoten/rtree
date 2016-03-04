@@ -81,7 +81,7 @@ final class Backpressure {
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
             final Func1<? super Geometry, Boolean> condition,
             ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
-        Node<T, S> child = ((NonLeaf<T, S>) np.node()).children().get(np.position());
+        Node<T, S> child = ((NonLeaf<T, S>) np.node()).child(np.position());
         if (condition.call(child.geometry())) {
             stack = stack.push(new NodePosition<T, S>(child, 0));
         } else {

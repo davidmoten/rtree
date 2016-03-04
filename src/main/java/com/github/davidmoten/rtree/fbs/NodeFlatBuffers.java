@@ -20,6 +20,7 @@ import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.internal.LeafDefault;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 
 import rx.Subscriber;
@@ -32,6 +33,7 @@ final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
     private final Func1<byte[], T> deserializer;
 
     NodeFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
+        Preconditions.checkNotNull(node);
         Preconditions.checkArgument(node.childrenLength() > 0 || node.entriesLength() > 0);
         this.node = node;
         this.context = context;
@@ -91,14 +93,20 @@ final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
                 entry.geometry(geometry);
                 final Geometry g = toGeometry(geometry);
                 if (criterion.call(g)) {
-                    ByteBuffer bb = entry.objectAsByteBuffer();
-                    byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
-                    T t = deserializer.call(bytes);
-                    subscriber.onNext(Entries.entry(t, (S) g));
+                    T t = parseObject(deserializer, entry);
+                    Entry<T, S> ent = Entries.entry(t, (S) g);
+                    subscriber.onNext(ent);
                 }
             }
         }
 
+    }
+
+    private static <T> T parseObject(Func1<byte[], T> deserializer, Entry_ entry) {
+        ByteBuffer bb = entry.objectAsByteBuffer();
+        byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
+        T t = deserializer.call(bytes);
+        return t;
     }
 
     private List<Node<T, S>> createChildren() {
@@ -114,8 +122,9 @@ final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     @Override
     public int count() {
-        if (node.childrenLength() > 0)
-            return node.childrenLength();
+        int childrenCount = node.childrenLength();
+        if (childrenCount > 0)
+            return childrenCount;
         else
             return node.entriesLength();
     }
@@ -132,11 +141,6 @@ final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     private static Geometry createBox(Box_ b) {
         return Rectangle.create(b.minX(), b.minY(), b.maxX(), b.maxY());
-    }
-
-    @Override
-    public List<? extends Node<T, S>> children() {
-        return createChildren();
     }
 
     @SuppressWarnings("unchecked")
@@ -156,6 +160,41 @@ final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
     public String toString() {
         return "Node [" + (node.childrenLength() > 0 ? "NonLeaf" : "Leaf") + ","
                 + createBox(node.mbb()).toString() + "]";
+    }
+
+    @Override
+    public int childrenCount() {
+        return node.childrenLength();
+    }
+
+    @Override
+    public Node<T, S> child(int i) {
+        Node_ child = node.children(i);
+        if (child.childrenLength() > 0)
+            return new NodeFlatBuffers<T, S>(child, context, deserializer);
+        else
+            return new LeafDefault<T, S>(createEntries(), context);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Entry<T, S>> createEntries() {
+        List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>();
+        int numEntries = node.entriesLength();
+        Preconditions.checkArgument(numEntries > 0);
+        Entry_ entry = new Entry_();
+        Geometry_ geom = new Geometry_();
+        for (int i = 0; i < numEntries; i++) {
+            node.entries(entry, i);
+            entry.geometry(geom);
+            final Geometry g = toGeometry(geom);
+            entries.add(Entries.entry(parseObject(deserializer, entry), (S) g));
+        }
+        return entries;
+    }
+
+    @Override
+    public List<Node<T, S>> children() {
+        return createChildren();
     }
 
 }

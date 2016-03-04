@@ -69,7 +69,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> {
             NonLeaf<T, S> nonLeaf = (NonLeaf<T, S>) node;
             int[] nodes = new int[nonLeaf.count()];
             for (int i = 0; i < nonLeaf.count(); i++) {
-                Node<T, S> child = nonLeaf.children().get(i);
+                Node<T, S> child = nonLeaf.child(i);
                 nodes[i] = addNode(child, builder, serializer);
             }
             int ch = Node_.createChildrenVector(builder, nodes);

@@ -24,7 +24,8 @@ public final class NonLeafHelper {
         if (!criterion.call(node.geometry().mbr()))
             return;
 
-        for (final Node<T, S> child : node.children()) {
+        for (int i = 0; i < node.childrenCount(); i++) {
+            Node<T, S> child = node.child(i);
             if (subscriber.isUnsubscribed())
                 return;
             else
@@ -35,9 +36,10 @@ public final class NonLeafHelper {
     public static <T, S extends Geometry> List<Node<T, S>> add(
             Entry<? extends T, ? extends S> entry, NonLeaf<T, S> node) {
         Context<T, S> context = node.context();
-        final Node<T, S> child = context.selector().select(entry.geometry().mbr(), node.children());
+        List<Node<T, S>> children = node.children();
+        final Node<T, S> child = context.selector().select(entry.geometry().mbr(), children);
         List<Node<T, S>> list = child.add(entry);
-        List<? extends Node<T, S>> children2 = Util.replace(node.children(), child, list);
+        List<? extends Node<T, S>> children2 = Util.replace(children, child, list);
         if (children2.size() <= context.maxChildren())
             return Collections.singletonList(
                     (Node<T, S>) context.factory().createNonLeaf(children2, context));
@@ -57,7 +59,7 @@ public final class NonLeafHelper {
     }
 
     public static <T, S extends Geometry> int count(NonLeaf<T, S> nonLeaf) {
-        return nonLeaf.children().size();
+        return nonLeaf.childrenCount();
     }
 
     public static <T, S extends Geometry> NodeAndEntries<T, S> delete(

@@ -43,7 +43,7 @@ public final class Visualizer {
         if (node instanceof Leaf)
             return depth + 1;
         else
-            return calculateDepth(((NonLeaf<R, S>) node).children().get(0), depth + 1);
+            return calculateDepth(((NonLeaf<R, S>) node).child(0), depth + 1);
     }
 
     public BufferedImage createImage() {
@@ -84,8 +84,8 @@ public final class Visualizer {
             }
         } else {
             final NonLeaf<T, S> n = (NonLeaf<T, S>) node;
-            for (final Node<T, S> child : n.children()) {
-                list.addAll(getRectangleDepths(child, depth + 1));
+            for (int i = 0; i < n.childrenCount(); i++) {
+                list.addAll(getRectangleDepths(n.child(i), depth + 1));
             }
         }
         return list;
