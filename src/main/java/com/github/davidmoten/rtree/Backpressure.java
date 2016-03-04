@@ -69,7 +69,7 @@ final class Backpressure {
             final Subscriber<? super Entry<T, S>> subscriber,
             StackAndRequest<NodePosition<T, S>> state, NodePosition<T, S> np) {
         final long nextRequest;
-        Entry<T, S> entry = ((Leaf<T, S>) np.node()).entries().get(np.position());
+        Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
         if (condition.call(entry.geometry())) {
             subscriber.onNext(entry);
             nextRequest = state.request - 1;
