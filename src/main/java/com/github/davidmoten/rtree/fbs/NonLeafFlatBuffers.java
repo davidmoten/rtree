@@ -157,12 +157,6 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
     }
 
     @Override
-    public String toString() {
-        return "Node [" + (node.childrenLength() > 0 ? "NonLeaf" : "Leaf") + ","
-                + createBox(node.mbb()).toString() + "]";
-    }
-
-    @Override
     public int childrenCount() {
         return node.childrenLength();
     }
@@ -173,11 +167,13 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
         if (child.childrenLength() > 0)
             return new NonLeafFlatBuffers<T, S>(child, context, deserializer);
         else
-            return new LeafDefault<T, S>(createEntries(child), context);
+            return new LeafDefault<T, S>(
+                    NonLeafFlatBuffers.<T, S> createEntries(child, deserializer), context);
     }
 
     @SuppressWarnings("unchecked")
-    private List<Entry<T, S>> createEntries(Node_ node) {
+    private static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node,
+            Func1<byte[], T> deserializer) {
         List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>();
         int numEntries = node.entriesLength();
         Preconditions.checkArgument(numEntries > 0);
@@ -195,6 +191,12 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
     @Override
     public List<Node<T, S>> children() {
         return createChildren();
+    }
+
+    @Override
+    public String toString() {
+        return "Node [" + (node.childrenLength() > 0 ? "NonLeaf" : "Leaf") + ","
+                + createBox(node.mbb()).toString() + "]";
     }
 
 }
