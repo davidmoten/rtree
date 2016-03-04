@@ -72,7 +72,8 @@ public final class LeafHelper {
         if (!condition.call(leaf.geometry().mbr()))
             return;
 
-        for (final Entry<T, S> entry : leaf.entries()) {
+        for (int i = 0; i < leaf.count(); i++) {
+            Entry<T, S> entry = leaf.entry(i);
             if (subscriber.isUnsubscribed())
                 return;
             else {

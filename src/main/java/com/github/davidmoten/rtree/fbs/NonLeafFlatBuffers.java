@@ -20,6 +20,7 @@ import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
+import com.github.davidmoten.rtree.internal.NonLeafHelper;
 
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -40,12 +41,12 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     @Override
     public List<Node<T, S>> add(Entry<? extends T, ? extends S> entry) {
-        throw new UnsupportedOperationException();
+        return NonLeafHelper.add(entry, this);
     }
 
     @Override
     public NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all) {
-        throw new UnsupportedOperationException();
+        return NonLeafHelper.delete(entry, all, this);
     }
 
     @Override
@@ -54,8 +55,8 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
         // pass through entry and geometry and box instances to be reused for
         // flatbuffers extraction this reduces allocation/gc costs (but of
         // course introduces some mutable ugliness into the codebase)
-        searchWithoutBackpressure(node, criterion, subscriber, deserializer, new Entry_(), new Geometry_(),
-                new Box_());
+        searchWithoutBackpressure(node, criterion, subscriber, deserializer, new Entry_(),
+                new Geometry_(), new Box_());
     }
 
     @SuppressWarnings("unchecked")
@@ -76,7 +77,8 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
                 if (subscriber.isUnsubscribed())
                     return;
                 node.children(child, i);
-                searchWithoutBackpressure(child, criterion, subscriber, deserializer, entry, geometry, box);
+                searchWithoutBackpressure(child, criterion, subscriber, deserializer, entry,
+                        geometry, box);
             }
         } else {
             int numEntries = node.entriesLength();
