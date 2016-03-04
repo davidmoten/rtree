@@ -80,4 +80,9 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
         return FlatBuffersHelper.createEntries(node, deserializer);
     }
 
+    @Override
+    public Entry<T, S> entry(int i) {
+       return FlatBuffersHelper.createEntry(node, deserializer, i);
+    }
+
 }

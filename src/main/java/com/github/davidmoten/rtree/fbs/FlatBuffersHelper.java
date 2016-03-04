@@ -78,7 +78,6 @@ final class FlatBuffersHelper {
 
     }
 
-    @SuppressWarnings("unchecked")
     static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node,
             Func1<byte[], T> deserializer) {
         List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>();
@@ -87,14 +86,26 @@ final class FlatBuffersHelper {
         Entry_ entry = new Entry_();
         Geometry_ geom = new Geometry_();
         for (int i = 0; i < numEntries; i++) {
-            node.entries(entry, i);
-            entry.geometry(geom);
-            final Geometry g = toGeometry(geom);
-            entries.add(Entries.entry(parseObject(deserializer, entry), (S) g));
+            Entry<T, S> ent = createEntry(node, deserializer, entry, geom, i);
+            entries.add(ent);
         }
         return entries;
     }
-    
+
+    @SuppressWarnings("unchecked")
+    private static <T, S extends Geometry> Entry<T, S> createEntry(Node_ node,
+            Func1<byte[], T> deserializer, Entry_ entry, Geometry_ geom, int i) {
+        node.entries(entry, i);
+        entry.geometry(geom);
+        final Geometry g = toGeometry(geom);
+        return Entries.entry(parseObject(deserializer, entry), (S) g);
+    }
+
+    static <T, S extends Geometry> Entry<T, S> createEntry(Node_ node,
+            Func1<byte[], T> deserializer, int i) {
+        return createEntry(node, deserializer, new Entry_(), new Geometry_(), i);
+    }
+
     static <T> T parseObject(Func1<byte[], T> deserializer, Entry_ entry) {
         ByteBuffer bb = entry.objectAsByteBuffer();
         byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());

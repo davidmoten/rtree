@@ -60,4 +60,9 @@ public final class LeafDefault<T, S extends Geometry> implements Leaf<T, S> {
         return context;
     }
 
+    @Override
+    public Entry<T, S> entry(int i) {
+        return entries.get(i);
+    }
+
 }
