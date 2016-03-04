@@ -39,7 +39,7 @@ public final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S
 
     @Override
     public int count() {
-        return NonLeafHelper.count(this);
+        return children.size();
     }
 
     @Override
@@ -55,11 +55,6 @@ public final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S
     @Override
     public Context<T, S> context() {
         return context;
-    }
-
-    @Override
-    public int childrenCount() {
-        return children.size();
     }
 
     @Override

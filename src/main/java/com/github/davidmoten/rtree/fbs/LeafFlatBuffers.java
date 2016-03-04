@@ -1,6 +1,5 @@
 package com.github.davidmoten.rtree.fbs;
 
-
 import java.util.List;
 
 import com.github.davidmoten.rtree.Context;
@@ -18,19 +17,28 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-final class LeafFlatBuffersDynamic<T, S extends Geometry> implements Leaf<T, S> {
+final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;
     private final Func1<byte[], T> deserializer;
 
-    LeafFlatBuffersDynamic(List<Entry<T, S>> entries, Context<T, S> context,
+    LeafFlatBuffers(List<Entry<T, S>> entries, Context<T, S> context,
             Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+        this(createNode(entries, serializer), context, deserializer);
+    }
+
+    LeafFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
         this.context = context;
         this.deserializer = deserializer;
+        this.node = node;
+    }
+
+    private static <T, S extends Geometry> Node_ createNode(List<Entry<T, S>> entries,
+            Func1<T, byte[]> serializer) {
         FlatBufferBuilder builder = new FlatBufferBuilder(0);
         builder.finish(FlatBuffersHelper.addEntries(entries, builder, serializer));
-        node = Node_.getRootAsNode_(builder.dataBuffer());
+        return Node_.getRootAsNode_(builder.dataBuffer());
     }
 
     @Override

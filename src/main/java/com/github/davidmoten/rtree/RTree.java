@@ -853,7 +853,7 @@ public final class RTree<T, S extends Geometry> {
         s.append('\n');
         if (node instanceof NonLeaf) {
             NonLeaf<T, S> n = (NonLeaf<T, S>) node;
-            for (int i = 0; i < n.childrenCount(); i++) {
+            for (int i = 0; i < n.count(); i++) {
                 Node<T, S> child = n.child(i);
                 s.append(asString(child, margin + marginIncrement));
             }

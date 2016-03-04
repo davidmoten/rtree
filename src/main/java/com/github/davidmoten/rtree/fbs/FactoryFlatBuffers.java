@@ -40,7 +40,7 @@ public final class FactoryFlatBuffers<T, S extends Geometry> implements Factory<
 
     @Override
     public Leaf<T, S> createLeaf(List<Entry<T, S>> entries, Context<T, S> context) {
-        return new LeafFlatBuffersDynamic<T, S>(entries, context, serializer, deserializer);
+        return new LeafFlatBuffers<T, S>(entries, context, serializer, deserializer);
     }
 
     @Override

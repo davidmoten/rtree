@@ -1,5 +1,8 @@
 package com.github.davidmoten.rtree.fbs;
 
+import static com.github.davidmoten.rtree.fbs.FlatBuffersHelper.createBox;
+import static com.github.davidmoten.rtree.fbs.FlatBuffersHelper.toGeometry;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,7 +118,11 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
         int numChildren = node.childrenLength();
         for (int i = 0; i < numChildren; i++) {
             Node_ child = node.children(i);
-            children.add(new NonLeafFlatBuffers<T, S>(child, context, deserializer));
+            if (child.childrenLength()>0) {
+                children.add(new NonLeafFlatBuffers<T, S>(child, context, deserializer));
+            } else {
+                children.add(new LeafFlatBuffers<T,S>(child, context, deserializer));
+            }
         }
         return children;
     }
@@ -136,30 +143,9 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     @Override
     public Geometry geometry() {
-        return createBox(node.mbb());
+        return FlatBuffersHelper.createBox(node.mbb());
     }
 
-    private static Geometry createBox(Box_ b) {
-        return Rectangle.create(b.minX(), b.minY(), b.maxX(), b.maxY());
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <S extends Geometry> S toGeometry(Geometry_ g) {
-        final Geometry result;
-        byte type = g.type();
-        if (type == GeometryType_.Box) {
-            result = createBox(g.box());
-        } else if (type == GeometryType_.Point) {
-            result = Point.create(g.point().x(), g.point().y());
-        } else
-            throw new UnsupportedOperationException();
-        return (S) result;
-    }
-
-    @Override
-    public int childrenCount() {
-        return node.childrenLength();
-    }
 
     @Override
     public Node<T, S> child(int i) {

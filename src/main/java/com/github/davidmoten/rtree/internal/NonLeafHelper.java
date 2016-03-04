@@ -24,7 +24,7 @@ public final class NonLeafHelper {
         if (!criterion.call(node.geometry().mbr()))
             return;
 
-        for (int i = 0; i < node.childrenCount(); i++) {
+        for (int i = 0; i < node.count(); i++) {
             Node<T, S> child = node.child(i);
             if (subscriber.isUnsubscribed())
                 return;
@@ -58,9 +58,6 @@ public final class NonLeafHelper {
         return list;
     }
 
-    public static <T, S extends Geometry> int count(NonLeaf<T, S> nonLeaf) {
-        return nonLeaf.childrenCount();
-    }
 
     public static <T, S extends Geometry> NodeAndEntries<T, S> delete(
             Entry<? extends T, ? extends S> entry, boolean all, NonLeaf<T, S> node) {

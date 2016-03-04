@@ -6,8 +6,6 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 
 public interface NonLeaf<T, S extends Geometry> extends Node<T, S> {
 
-    int childrenCount();
-
     Node<T, S> child(int i);
 
     /**

@@ -84,7 +84,7 @@ public final class Visualizer {
             }
         } else {
             final NonLeaf<T, S> n = (NonLeaf<T, S>) node;
-            for (int i = 0; i < n.childrenCount(); i++) {
+            for (int i = 0; i < n.count(); i++) {
                 list.addAll(getRectangleDepths(n.child(i), depth + 1));
             }
         }

@@ -24,9 +24,9 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import rx.functions.Func1;
 
 final class FlatBuffersHelper {
-    
+
     private FlatBuffersHelper() {
-        //prevent instantiation
+        // prevent instantiation
     }
 
     static <T, S extends Geometry> int addEntries(List<Entry<T, S>> entries,
@@ -77,30 +77,38 @@ final class FlatBuffersHelper {
 
     }
 
-    @SuppressWarnings("unchecked")
     static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node,
             Func1<byte[], T> deserializer) {
         List<Entry<T, S>> list = new ArrayList<Entry<T, S>>(node.entriesLength());
         for (int i = 0; i < node.entriesLength(); i++) {
             Entry_ entry = node.entries(i);
             Geometry_ g = entry.geometry();
-            final Geometry geometry;
-            if (g.type() == GeometryType_.Box) {
-                Box_ b = g.box();
-                geometry = Rectangle.create(b.minX(), b.minY(), b.maxX(), b.maxY());
-            } else if (g.type() == GeometryType_.Point) {
-                Point_ p = g.point();
-                geometry = Point.create(p.x(), p.y());
-            } else if (g.type() == GeometryType_.Circle) {
-                Circle_ c = g.circle();
-                geometry = Circle.create(c.x(), c.y(), c.radius());
-            } else
-                throw new RuntimeException("unexpected");
+            final S geometry = toGeometry(g);
             ByteBuffer bb = entry.objectAsByteBuffer();
             byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
-            list.add(Entries.<T, S> entry(deserializer.call(bytes), (S) geometry));
+            list.add(Entries.<T, S> entry(deserializer.call(bytes), geometry));
         }
         return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    static <S extends Geometry> S toGeometry(Geometry_ g) {
+        final Geometry result;
+        byte type = g.type();
+        if (type == GeometryType_.Box) {
+            result = createBox(g.box());
+        } else if (type == GeometryType_.Point) {
+            result = Point.create(g.point().x(), g.point().y());
+        } else if (type == GeometryType_.Circle) {
+            Circle_ c = g.circle();
+            result = Circle.create(c.x(), c.y(), c.radius());
+        } else
+            throw new UnsupportedOperationException();
+        return (S) result;
+    }
+
+    static Geometry createBox(Box_ b) {
+        return Rectangle.create(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
 }
