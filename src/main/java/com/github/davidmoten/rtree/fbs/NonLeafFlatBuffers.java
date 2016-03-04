@@ -54,12 +54,12 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
         // pass through entry and geometry and box instances to be reused for
         // flatbuffers extraction this reduces allocation/gc costs (but of
         // course introduces some mutable ugliness into the codebase)
-        search(node, criterion, subscriber, deserializer, new Entry_(), new Geometry_(),
+        searchWithoutBackpressure(node, criterion, subscriber, deserializer, new Entry_(), new Geometry_(),
                 new Box_());
     }
 
     @SuppressWarnings("unchecked")
-    private static <T, S extends Geometry> void search(Node_ node,
+    private static <T, S extends Geometry> void searchWithoutBackpressure(Node_ node,
             Func1<? super Geometry, Boolean> criterion, Subscriber<? super Entry<T, S>> subscriber,
             Func1<byte[], T> deserializer, Entry_ entry, Geometry_ geometry, Box_ box) {
         {
@@ -76,7 +76,7 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
                 if (subscriber.isUnsubscribed())
                     return;
                 node.children(child, i);
-                search(child, criterion, subscriber, deserializer, entry, geometry, box);
+                searchWithoutBackpressure(child, criterion, subscriber, deserializer, entry, geometry, box);
             }
         } else {
             int numEntries = node.entriesLength();
