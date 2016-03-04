@@ -76,7 +76,7 @@ public class BenchmarksRTree {
 
     private final RTree<Object, Point> starTreeM10FlatBuffers = createFlatBuffersGreek();
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
         insertPoint(defaultTreeM4);
     }
@@ -103,38 +103,39 @@ public class BenchmarksRTree {
             fbSerializer.serialize(tree, os);
             os.close();
             ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-            return fbSerializer.deserialize(os.size(), is, InternalStructure.FLATBUFFERS_SINGLE_ARRAY);
+            return fbSerializer.deserialize(os.size(), is,
+                    InternalStructure.FLATBUFFERS_SINGLE_ARRAY);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeSearchOfGreekDataPointsMaxChildren004() {
         searchGreek(defaultTreeM4);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
         insertPoint(defaultTreeM10);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeSearchOfGreekDataPointsMaxChildren010() {
         searchGreek(defaultTreeM10);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
         insertPoint(starTreeM4);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
         insertPoint(starTreeM10);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeSearchOfGreekDataPointsMaxChildren004() {
         searchGreek(starTreeM4);
     }
@@ -148,138 +149,143 @@ public class BenchmarksRTree {
     public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers() {
         searchGreek(starTreeM10FlatBuffers);
     }
+    
+    @Benchmark
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffersBackpressure() {
+        searchGreekBackpressure(starTreeM10FlatBuffers);
+    }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpressure() {
         searchGreekWithBackpressure(starTreeM10);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
         insertPoint(defaultTreeM32);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeSearchOfGreekDataPointsMaxChildren032() {
         searchGreek(defaultTreeM32);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
         insertPoint(starTreeM32);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeSearchOfGreekDataPointsMaxChildren032() {
         searchGreek(starTreeM32);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
         insertPoint(defaultTreeM128);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeSearchOfGreekDataPointsMaxChildren128() {
         searchGreek(defaultTreeM128);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
         insertPoint(starTreeM128);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeSearchOfGreekDataPointsMaxChildren128() {
         searchGreek(starTreeM128);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004() {
         insertRectangle(smallDefaultTreeM4);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeSearchOf1000PointsMaxChildren004() {
         search(smallDefaultTreeM4);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010() {
         insertRectangle(smallDefaultTreeM10);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeSearchOf1000PointsMaxChildren010() {
         search(smallDefaultTreeM10);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren004() {
         insertRectangle(smallStarTreeM4);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren010() {
         insertRectangle(smallStarTreeM10);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeSearchOf1000PointsMaxChildren004() {
         search(smallStarTreeM4);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeSearchOf1000PointsMaxChildren010() {
         search(smallStarTreeM10);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032() {
         insertRectangle(smallDefaultTreeM32);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeSearchOf1000PointsMaxChildren032() {
         search(smallDefaultTreeM32);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren032() {
         insertRectangle(smallStarTreeM32);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeSearchOf1000PointsMaxChildren032() {
         search(smallStarTreeM32);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128() {
         insertRectangle(smallDefaultTreeM128);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void defaultRTreeSearchOf1000PointsMaxChildren128() {
         search(smallDefaultTreeM128);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren128() {
         insertRectangle(smallStarTreeM128);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeSearchOf1000PointsMaxChildren128() {
         search(smallStarTreeM128);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void rStarTreeDeleteOneEveryOccurrenceFromGreekDataChildren010() {
         deleteAll(starTreeM10);
     }
 
-    //@Benchmark
+    // @Benchmark
     public void searchNearestGreek() {
         searchNearestGreek(starTreeM4);
     }
@@ -296,6 +302,11 @@ public class BenchmarksRTree {
     private void searchGreek(RTree<Object, Point> tree) {
         // should return 22 results
         tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+    }
+
+    private void searchGreekBackpressure(RTree<Object, Point> tree) {
+        // should return 22 results
+        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).take(1000).subscribe();
     }
 
     private void searchNearestGreek(RTree<Object, Point> tree) {

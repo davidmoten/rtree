@@ -26,13 +26,13 @@ import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
+final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;
     private final Func1<byte[], T> deserializer;
 
-    NodeFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
+    NonLeafFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
         Preconditions.checkNotNull(node);
         Preconditions.checkArgument(node.childrenLength() > 0 || node.entriesLength() > 0);
         this.node = node;
@@ -115,7 +115,7 @@ final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
         int numChildren = node.childrenLength();
         for (int i = 0; i < numChildren; i++) {
             Node_ child = node.children(i);
-            children.add(new NodeFlatBuffers<T, S>(child, context, deserializer));
+            children.add(new NonLeafFlatBuffers<T, S>(child, context, deserializer));
         }
         return children;
     }
@@ -171,13 +171,13 @@ final class NodeFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
     public Node<T, S> child(int i) {
         Node_ child = node.children(i);
         if (child.childrenLength() > 0)
-            return new NodeFlatBuffers<T, S>(child, context, deserializer);
+            return new NonLeafFlatBuffers<T, S>(child, context, deserializer);
         else
-            return new LeafDefault<T, S>(createEntries(), context);
+            return new LeafDefault<T, S>(createEntries(child), context);
     }
 
     @SuppressWarnings("unchecked")
-    private List<Entry<T, S>> createEntries() {
+    private List<Entry<T, S>> createEntries(Node_ node) {
         List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>();
         int numEntries = node.entriesLength();
         Preconditions.checkArgument(numEntries > 0);
