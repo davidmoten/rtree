@@ -13,10 +13,12 @@ import com.github.davidmoten.rtree.fbs.generated.Circle_;
 import com.github.davidmoten.rtree.fbs.generated.Entry_;
 import com.github.davidmoten.rtree.fbs.generated.GeometryType_;
 import com.github.davidmoten.rtree.fbs.generated.Geometry_;
+import com.github.davidmoten.rtree.fbs.generated.Line_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.fbs.generated.Point_;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Util;
@@ -49,6 +51,10 @@ final class FlatBuffersHelper {
                 Circle c = (Circle) g;
                 geom = Circle_.createCircle_(builder, c.x(), c.y(), c.radius());
                 geomType = GeometryType_.Circle;
+            } else if (g instanceof Line) {
+                Line c = (Line) g;
+                geom = Line_.createLine_(builder, c.x1(), c.y1(), c.x2(), c.y2());
+                geomType = GeometryType_.Line;
             } else
                 throw new RuntimeException("unexpected");
 
@@ -59,6 +65,8 @@ final class FlatBuffersHelper {
                 Geometry_.addPoint(builder, geom);
             } else if (geomType == GeometryType_.Circle) {
                 Geometry_.addCircle(builder, geom);
+            } else if (geomType == GeometryType_.Line) {
+                Geometry_.addLine(builder, geom);
             } else
                 throw new RuntimeException("unexpected");
 
@@ -124,6 +132,8 @@ final class FlatBuffersHelper {
         } else if (type == GeometryType_.Circle) {
             Circle_ c = g.circle();
             result = Circle.create(c.x(), c.y(), c.radius());
+        } else if (type == GeometryType_.Line) {
+            result = createBox(g.line());
         } else
             throw new UnsupportedOperationException();
         return (S) result;
