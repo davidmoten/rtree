@@ -6,9 +6,10 @@ import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Test;
 
+import com.github.davidmoten.junit.Asserts;
 import com.github.davidmoten.rtree.geometry.Geometries;
 
-public class EntryTest {
+public class EntriesTest {
 
     @Test
     public void testValue() {
@@ -35,6 +36,11 @@ public class EntryTest {
     @Test
     public void testInequalityWithNull() {
         assertFalse(Entries.entry(1, Geometries.point(0, 0)).equals(null));
+    }
+    
+    @Test
+    public void testIsUtilityClass() {
+        Asserts.assertIsUtilityClass(Entries.class);
     }
 
 }
