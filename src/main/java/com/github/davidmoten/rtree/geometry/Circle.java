@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree.geometry;
 
+import static com.github.davidmoten.rtree.geometry.Geometries.point;
+
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
@@ -39,7 +41,7 @@ public final class Circle implements Geometry {
 
     @Override
     public double distance(Rectangle r) {
-        return Math.max(0, new Point(x, y).distance(r) - radius);
+        return Math.max(0, point(x, y).distance(r) - radius);
     }
 
     @Override
@@ -49,7 +51,7 @@ public final class Circle implements Geometry {
 
     public boolean intersects(Circle c) {
         double total = radius + c.radius;
-        return new Point(x, y).distanceSquared(new Point(c.x, c.y)) <= total * total;
+        return point(x, y).distanceSquared(point(c.x, c.y)) <= total * total;
     }
 
     @Override

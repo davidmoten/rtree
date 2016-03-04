@@ -8,7 +8,7 @@ public final class Point implements Geometry {
 
     private final Rectangle mbr;
 
-    protected Point(float x, float y) {
+    private Point(float x, float y) {
         this.mbr = Rectangle.create(x, y, x, y);
     }
 

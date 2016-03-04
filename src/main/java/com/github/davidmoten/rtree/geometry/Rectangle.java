@@ -8,7 +8,7 @@ import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 public final class Rectangle implements Geometry, HasGeometry {
     private final float x1, y1, x2, y2;
 
-    protected Rectangle(float x1, float y1, float x2, float y2) {
+    private Rectangle(float x1, float y1, float x2, float y2) {
         Preconditions.checkArgument(x2 >= x1);
         Preconditions.checkArgument(y2 >= y1);
         this.x1 = x1;
