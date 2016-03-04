@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
@@ -77,18 +78,28 @@ final class FlatBuffersHelper {
 
     }
 
+    @SuppressWarnings("unchecked")
     static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node,
             Func1<byte[], T> deserializer) {
-        List<Entry<T, S>> list = new ArrayList<Entry<T, S>>(node.entriesLength());
-        for (int i = 0; i < node.entriesLength(); i++) {
-            Entry_ entry = node.entries(i);
-            Geometry_ g = entry.geometry();
-            final S geometry = toGeometry(g);
-            ByteBuffer bb = entry.objectAsByteBuffer();
-            byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
-            list.add(Entries.<T, S> entry(deserializer.call(bytes), geometry));
+        List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>();
+        int numEntries = node.entriesLength();
+        Preconditions.checkArgument(numEntries > 0);
+        Entry_ entry = new Entry_();
+        Geometry_ geom = new Geometry_();
+        for (int i = 0; i < numEntries; i++) {
+            node.entries(entry, i);
+            entry.geometry(geom);
+            final Geometry g = toGeometry(geom);
+            entries.add(Entries.entry(parseObject(deserializer, entry), (S) g));
         }
-        return list;
+        return entries;
+    }
+    
+    static <T> T parseObject(Func1<byte[], T> deserializer, Entry_ entry) {
+        ByteBuffer bb = entry.objectAsByteBuffer();
+        byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
+        T t = deserializer.call(bytes);
+        return t;
     }
 
     @SuppressWarnings("unchecked")
