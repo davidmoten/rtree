@@ -54,7 +54,9 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
     @Override
     public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T, S>> subscriber) {
-        //TODO optimize
+        //only called when the root of the tree is a Leaf
+        //normally the searchWithoutBackpressure is executed completely within the 
+        //NonLeafFlatBuffers class to reduce object creation
         LeafHelper.search(condition, subscriber, this);
     }
 

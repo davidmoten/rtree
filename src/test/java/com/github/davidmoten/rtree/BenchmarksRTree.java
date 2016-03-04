@@ -351,6 +351,6 @@ public class BenchmarksRTree {
         BenchmarksRTree b = new BenchmarksRTree();
         System.out.println("starting searches");
         while (true)
-            b.rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffersBackpressure();
+            b.rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers();
     }
 }

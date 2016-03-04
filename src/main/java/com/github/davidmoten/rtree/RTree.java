@@ -320,10 +320,11 @@ public final class RTree<T, S extends Geometry> {
                 node = context.factory().createNonLeaf(nodes, context);
             }
             return new RTree<T, S>(node, size + 1, context);
-        } else
-            return new RTree<T, S>(
-                    context.factory().createLeaf(Lists.newArrayList((Entry<T, S>) entry), context),
-                    size + 1, context);
+        } else {
+            Leaf<T, S> node = context.factory().createLeaf(Lists.newArrayList((Entry<T, S>) entry),
+                    context);
+            return new RTree<T, S>(node, size + 1, context);
+        }
     }
 
     /**
