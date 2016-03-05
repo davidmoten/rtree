@@ -12,8 +12,12 @@ public final class Point implements Geometry {
         this.mbr = Rectangle.create(x, y, x, y);
     }
 
-    public static Point create(double x, double y) {
+    static Point create(double x, double y) {
         return new Point((float) x, (float) y);
+    }
+
+    static Point create(float x, float y) {
+        return new Point(x, y);
     }
 
     @Override

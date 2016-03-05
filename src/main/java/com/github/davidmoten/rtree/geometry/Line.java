@@ -27,8 +27,12 @@ public final class Line implements Geometry {
         this.y2 = y2;
     }
 
-    public static Line create(float x1, float y1, float x2, float y2) {
+    static Line create(float x1, float y1, float x2, float y2) {
         return new Line(x1, y1, x2, y2);
+    }
+    
+    static Line create(double x1,double y1, double x2, double y2) {
+        return new Line((float) x1, (float) y1, (float) x2, (float) y2);
     }
 
     @Override

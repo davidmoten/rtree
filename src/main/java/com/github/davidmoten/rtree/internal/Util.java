@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Preconditions;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
@@ -56,7 +57,7 @@ public final class Util {
             if (r.y2() > maxY2)
                 maxY2 = r.y2();
         }
-        return Rectangle.create(minX1, minY1, maxX2, maxY2);
+        return Geometries.rectangle(minX1, minY1, maxX2, maxY2);
     }
 
     public static <T> List<T> add(List<T> list, T element) {

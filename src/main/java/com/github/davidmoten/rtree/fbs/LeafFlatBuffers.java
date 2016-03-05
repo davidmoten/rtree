@@ -8,8 +8,8 @@ import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.LeafHelper;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.google.flatbuffers.FlatBufferBuilder;
@@ -74,7 +74,7 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
     public Geometry geometry() {
         Box_ b = node.mbb();
         // create on demand to reduce memory use (though not gc pressure)
-        return Rectangle.create(b.minX(), b.minY(), b.maxX(), b.maxY());
+        return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
     @Override

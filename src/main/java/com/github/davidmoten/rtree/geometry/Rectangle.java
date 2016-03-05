@@ -17,6 +17,14 @@ public final class Rectangle implements Geometry, HasGeometry {
         this.y2 = y2;
     }
 
+    static Rectangle create(double x1, double y1, double x2, double y2) {
+        return new Rectangle((float) x1, (float) y1, (float) x2, (float) y2);
+    }
+
+    static Rectangle create(float x1, float y1, float x2, float y2) {
+        return new Rectangle(x1, y1, x2, y2);
+    }
+    
     public float x1() {
         return x1;
     }
@@ -39,14 +47,6 @@ public final class Rectangle implements Geometry, HasGeometry {
 
     public Rectangle add(Rectangle r) {
         return new Rectangle(min(x1, r.x1), min(y1, r.y1), max(x2, r.x2), max(y2, r.y2));
-    }
-
-    public static Rectangle create(double x1, double y1, double x2, double y2) {
-        return new Rectangle((float) x1, (float) y1, (float) x2, (float) y2);
-    }
-
-    public static Rectangle create(float x1, float y1, float x2, float y2) {
-        return new Rectangle(x1, y1, x2, y2);
     }
 
     public boolean contains(double x, double y) {

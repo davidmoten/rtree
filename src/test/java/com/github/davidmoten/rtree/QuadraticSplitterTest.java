@@ -9,9 +9,9 @@ import java.util.List;
 import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Sets;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
-import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Util;
 import com.github.davidmoten.rtree.internal.util.Pair;
 
@@ -125,7 +125,7 @@ public class QuadraticSplitterTest {
     }
 
     private static Mbr r(int n) {
-        return new Mbr(Rectangle.create(n, n, n + 1, n + 1));
+        return new Mbr(Geometries.rectangle(n, n, n + 1, n + 1));
     }
 
 }

@@ -17,6 +17,7 @@ import com.github.davidmoten.rtree.fbs.generated.Line_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.fbs.generated.Point_;
 import com.github.davidmoten.rtree.geometry.Circle;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
@@ -128,10 +129,10 @@ final class FlatBuffersHelper {
         if (type == GeometryType_.Box) {
             result = createBox(g.box());
         } else if (type == GeometryType_.Point) {
-            result = Point.create(g.point().x(), g.point().y());
+            result = Geometries.point(g.point().x(), g.point().y());
         } else if (type == GeometryType_.Circle) {
             Circle_ c = g.circle();
-            result = Circle.create(c.x(), c.y(), c.radius());
+            result = Geometries.circle(c.x(), c.y(), c.radius());
         } else if (type == GeometryType_.Line) {
             result = createBox(g.line());
         } else
@@ -140,7 +141,7 @@ final class FlatBuffersHelper {
     }
 
     static Geometry createBox(Box_ b) {
-        return Rectangle.create(b.minX(), b.minY(), b.maxX(), b.maxY());
+        return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
 }

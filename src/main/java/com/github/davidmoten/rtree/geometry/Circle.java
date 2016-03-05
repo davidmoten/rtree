@@ -18,8 +18,12 @@ public final class Circle implements Geometry {
         this.mbr = Rectangle.create(x - radius, y - radius, x + radius, y + radius);
     }
 
-    public static Circle create(double x, double y, double radius) {
+    static Circle create(double x, double y, double radius) {
         return new Circle((float) x, (float) y, (float) radius);
+    }
+
+    static Circle create(float x, float y, float radius) {
+        return new Circle(x, y, radius);
     }
 
     public float x() {

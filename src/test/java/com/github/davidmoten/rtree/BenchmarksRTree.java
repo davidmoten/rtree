@@ -310,7 +310,7 @@ public class BenchmarksRTree {
     }
 
     private void searchNearestGreek(RTree<Object, Point> tree) {
-        tree.nearest(Point.create(40.0, 27.0), 1, 300).subscribe();
+        tree.nearest(Geometries.point(40.0, 27.0), 1, 300).subscribe();
     }
 
     private void searchGreekWithBackpressure(RTree<Object, Point> tree) {

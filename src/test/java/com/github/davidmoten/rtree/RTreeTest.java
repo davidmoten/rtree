@@ -1023,7 +1023,7 @@ public class RTreeTest {
 
         double randomY = Math.round(Math.random() * 100);
 
-        return Point.create(randomX, randomY);
+        return Geometries.point(randomX, randomY);
 
     }
 

@@ -19,8 +19,10 @@ public interface Node<T, S extends Geometry> extends HasGeometry {
      * Run when a search requests Long.MAX_VALUE results. This is the
      * no-backpressure fast path.
      * 
-     * @param criterion function that returns true if the geometry is a search match
-     * @param subscriber the subscriber to report search findings to
+     * @param criterion
+     *            function that returns true if the geometry is a search match
+     * @param subscriber
+     *            the subscriber to report search findings to
      */
     void searchWithoutBackpressure(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber);

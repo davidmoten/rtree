@@ -8,7 +8,7 @@ import com.github.davidmoten.junit.Asserts;
 
 public class GeometriesTest {
 
-    private static final double PRECISION = 0.000001;
+    private static final double PRECISION = 0.0001;
 
     @Test
     public void testPrivateConstructorForCoverageOnly() {
