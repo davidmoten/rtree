@@ -15,7 +15,7 @@ import com.github.davidmoten.rtree.geometry.Point;
 public class SerializersTest {
 
     @Test
-    public void test() throws IOException {
+    public void testStringSerialization() throws IOException {
         Serializer<String, Point> serializer = Serializers.flatBuffers().utf8();
         RTree<String, Point> tree = RTree.create();
         tree = tree.add("hello", Geometries.point(1, 2));

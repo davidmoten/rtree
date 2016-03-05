@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import com.github.davidmoten.rtree.fbs.Serializer;
 import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rx.Functions;
 
 import rx.functions.Func1;
 
@@ -50,6 +51,12 @@ public final class Serializers {
 
         public <S extends Geometry> Serializer<String,S> utf8() {
             return string(Charset.forName("UTF-8"));
+        }
+        
+        public <S extends Geometry> Serializer<byte[], S> bytes() {
+            Func1<byte[], byte[]> serializer = Functions.identity();
+            Func1<byte[], byte[]> deserializer = Functions.identity();
+            return new SerializerFlatBuffersTypedBuilder<byte[]>(serializer, deserializer).create();
         }
 
     }
