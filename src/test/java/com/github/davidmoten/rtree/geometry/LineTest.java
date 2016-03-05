@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree.geometry;
 
+import static com.github.davidmoten.rtree.geometry.Geometries.point;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -183,12 +184,12 @@ public final class LineTest {
 
     @Test
     public void testLineDoesNotIntersectsPoint() {
-        assertFalse(Geometries.line(1.5, 1.5, 2.6, 2.5).intersects(new Point(2, 2)));
+        assertFalse(Geometries.line(1.5, 1.5, 2.6, 2.5).intersects(point(2, 2)));
     }
 
     @Test
     public void testLineDoesIntersectPoint() {
-        assertTrue(Geometries.line(1.5, 1.5, 2.5, 2.5).intersects(new Point(2, 2)));
+        assertTrue(Geometries.line(1.5, 1.5, 2.5, 2.5).intersects(point(2, 2)));
     }
 
 }
