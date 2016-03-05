@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 
 import com.github.davidmoten.rtree.fbs.Serializer;
@@ -34,10 +35,21 @@ public final class Serializers {
             return new SerializerFlatBuffersTypedBuilder<T>(null, deserializer);
         }
 
-        public SerializerFlatBuffersTypedBuilder<String> string(Charset charset) {
+        public <S extends Geometry> Serializer<String, S> string(Charset charset) {
             Func1<String, byte[]> serializer = createStringSerializer(charset);
             Func1<byte[], String> deserializer = createStringDeserializer(charset);
-            return new SerializerFlatBuffersTypedBuilder<String>(serializer, deserializer);
+            return new SerializerFlatBuffersTypedBuilder<String>(serializer, deserializer).create();
+        }
+        
+        @SuppressWarnings("unchecked")
+        public <T extends Serializable, S extends Geometry> Serializer<T, S> javaIo() {
+            Func1<T, byte[]> serializer = (Func1<T, byte[]>) javaIoSerializer();
+            Func1<byte[], T> deserializer = (Func1<byte[], T>) javaIoDeserializer();
+            return new SerializerFlatBuffersTypedBuilder<T>(serializer, deserializer).create();
+        }
+
+        public <S extends Geometry> Serializer<String,S> utf8() {
+            return string(Charset.forName("UTF-8"));
         }
 
     }
@@ -60,13 +72,6 @@ public final class Serializers {
 
         public SerializerFlatBuffersTypedBuilder<T> deserializer(Func1<byte[], T> deserializer) {
             this.deserializer = deserializer;
-            return this;
-        }
-
-        @SuppressWarnings("unchecked")
-        public SerializerFlatBuffersTypedBuilder<T> javaIo() {
-            serializer = (Func1<T, byte[]>) javaIoSerializer();
-            deserializer = (Func1<byte[], T>) javaIoDeserializer();
             return this;
         }
 
@@ -105,10 +110,10 @@ public final class Serializers {
         };
     }
 
-    private static Func1<Object, byte[]> javaIoSerializer() {
-        return new Func1<Object, byte[]>() {
+    private static Func1<Serializable, byte[]> javaIoSerializer() {
+        return new Func1<Serializable, byte[]>() {
             @Override
-            public byte[] call(Object o) {
+            public byte[] call(Serializable o) {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 ObjectOutputStream oos = null;
                 try {
@@ -130,15 +135,15 @@ public final class Serializers {
         };
     }
 
-    private static Func1<byte[], Object> javaIoDeserializer() {
-        return new Func1<byte[], Object>() {
+    private static Func1<byte[], Serializable> javaIoDeserializer() {
+        return new Func1<byte[], Serializable>() {
             @Override
-            public Object call(byte[] bytes) {
+            public Serializable call(byte[] bytes) {
                 ByteArrayInputStream is = new ByteArrayInputStream(bytes);
                 ObjectInputStream ois = null;
                 try {
                     ois = new ObjectInputStream(is);
-                    return ois.readObject();
+                    return (Serializable) ois.readObject();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (ClassNotFoundException e) {

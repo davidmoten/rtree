@@ -105,7 +105,7 @@ public class BenchmarksRTree {
             os.close();
             ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
             return fbSerializer.deserialize(os.size(), is,
-                    InternalStructure.FLATBUFFERS_SINGLE_ARRAY);
+                    InternalStructure.SINGLE_ARRAY);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

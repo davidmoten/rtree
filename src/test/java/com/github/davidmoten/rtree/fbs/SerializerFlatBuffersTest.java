@@ -26,7 +26,7 @@ public class SerializerFlatBuffersTest {
 
     @Test
     public void testSerializeRoundTripToFlatBuffersSingleArray() throws Exception {
-        roundTrip(InternalStructure.FLATBUFFERS_SINGLE_ARRAY, false);
+        roundTrip(InternalStructure.SINGLE_ARRAY, false);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class SerializerFlatBuffersTest {
 
     @Test
     public void testSerializeRoundTripToFlatBuffersSingleArrayBackpressure() throws Exception {
-        roundTrip(InternalStructure.FLATBUFFERS_SINGLE_ARRAY, true);
+        roundTrip(InternalStructure.SINGLE_ARRAY, true);
     }
 
     @Test

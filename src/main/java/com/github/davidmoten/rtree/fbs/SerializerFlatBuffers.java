@@ -98,7 +98,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
         Context<T, S> context = new Context<T, S>(t.context().minChildren(),
                 t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(), factory);
         final Node<T, S> root;
-        if (structure == InternalStructure.FLATBUFFERS_SINGLE_ARRAY) {
+        if (structure == InternalStructure.SINGLE_ARRAY) {
             root = new NonLeafFlatBuffers<T, S>(node, context, factory.deserializer());
         } else {
             root = toNodeDefault(node, context, factory.deserializer());
