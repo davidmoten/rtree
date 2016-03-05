@@ -50,14 +50,14 @@ public class SerializerFlatBuffersTest {
         long t = System.currentTimeMillis();
         File file = new File("target/file");
         FileOutputStream os = new FileOutputStream(file);
-        SerializerFlatBuffers<Object, Point> fbSerializer = createSerializer();
+        Serializer<Object, Point> fbSerializer = createSerializer();
 
         serialize(tree, t, file, os, fbSerializer);
 
         deserialize(structure, file, fbSerializer, backpressure);
     }
 
-    private static SerializerFlatBuffers<Object, Point> createSerializer() {
+    private static Serializer<Object, Point> createSerializer() {
         Func1<Object, byte[]> serializer = new Func1<Object, byte[]>() {
             @Override
             public byte[] call(Object o) {
@@ -70,13 +70,13 @@ public class SerializerFlatBuffersTest {
                 return null;
             }
         };
-        SerializerFlatBuffers<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
+        Serializer<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
                 deserializer);
         return fbSerializer;
     }
 
     private static void serialize(RTree<Object, Point> tree, long t, File file, FileOutputStream os,
-            SerializerFlatBuffers<Object, Point> fbSerializer) throws IOException {
+            Serializer<Object, Point> fbSerializer) throws IOException {
         fbSerializer.serialize(tree, os);
         os.close();
         System.out.println("written in " + (System.currentTimeMillis() - t) + "ms, " + "file size="
@@ -85,7 +85,7 @@ public class SerializerFlatBuffersTest {
     }
 
     private static void deserialize(InternalStructure structure, File file,
-            SerializerFlatBuffers<Object, Point> fbSerializer, boolean backpressure)
+            Serializer<Object, Point> fbSerializer, boolean backpressure)
                     throws Exception {
         long t = System.currentTimeMillis();
         InputStream is = new FileInputStream(file);

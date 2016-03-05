@@ -11,6 +11,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 
+import com.github.davidmoten.rtree.fbs.Serializer;
 import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
@@ -97,7 +98,7 @@ public class BenchmarksRTree {
                 return null;
             }
         };
-        SerializerFlatBuffers<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
+        Serializer<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
                 deserializer);
         try {
             fbSerializer.serialize(tree, os);

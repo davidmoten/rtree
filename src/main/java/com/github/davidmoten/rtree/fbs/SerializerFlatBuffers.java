@@ -30,7 +30,7 @@ import com.google.flatbuffers.FlatBufferBuilder;
 
 import rx.functions.Func1;
 
-public final class SerializerFlatBuffers<T, S extends Geometry> {
+public final class SerializerFlatBuffers<T, S extends Geometry> implements Serializer<T, S> {
 
     private final FactoryFlatBuffers<T, S> factory;
 
@@ -38,11 +38,15 @@ public final class SerializerFlatBuffers<T, S extends Geometry> {
         this.factory = new FactoryFlatBuffers<T, S>(serializer, deserializer);
     }
 
-    public static <T, S extends Geometry> SerializerFlatBuffers<T, S> create(
+    public static <T, S extends Geometry> Serializer<T, S> create(
             Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
         return new SerializerFlatBuffers<T, S>(serializer, deserializer);
     }
 
+    /* (non-Javadoc)
+     * @see com.github.davidmoten.rtree.fbs.Serializer#serialize(com.github.davidmoten.rtree.RTree, java.io.OutputStream)
+     */
+    @Override
     public void serialize(RTree<T, S> tree, OutputStream os) throws IOException {
         FlatBufferBuilder builder = new FlatBufferBuilder();
         int n = addNode(tree.root().get(), builder, factory.serializer());
@@ -82,6 +86,10 @@ public final class SerializerFlatBuffers<T, S extends Geometry> {
         }
     }
 
+    /* (non-Javadoc)
+     * @see com.github.davidmoten.rtree.fbs.Serializer#deserialize(long, java.io.InputStream, com.github.davidmoten.rtree.InternalStructure)
+     */
+    @Override
     public RTree<T, S> deserialize(long sizeBytes, InputStream is, InternalStructure structure)
             throws IOException {
         byte[] bytes = readFully(is, (int) sizeBytes);
@@ -119,5 +127,6 @@ public final class SerializerFlatBuffers<T, S extends Geometry> {
             throw new RuntimeException("unexpected");
         return b;
     }
+
 
 }
