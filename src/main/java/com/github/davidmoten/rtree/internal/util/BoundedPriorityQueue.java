@@ -73,10 +73,6 @@ public final class BoundedPriorityQueue<T> {
         queue.add(t);
     }
 
-    public T poll() {
-        return queue.poll();
-    }
-
     /**
      * @return Returns a view of the queue as a
      *         {@link Collections#unmodifiableList(java.util.List)}
