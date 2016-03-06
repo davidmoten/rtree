@@ -8,7 +8,7 @@ public class LeafHelperTest {
 
     @Test
     public void isUtilityClass() {
-        Asserts.assertIsUtilityClass(NonLeafHelper.class);
+        Asserts.assertIsUtilityClass(LeafHelper.class);
     }
 
 }

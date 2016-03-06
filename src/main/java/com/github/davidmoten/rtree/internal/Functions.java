@@ -56,17 +56,5 @@ public final class Functions {
             }
         };
     }
-
-    private static final Func1<Object, Object> IDENTITY = new Func1<Object, Object>() {
-        @Override
-        public Object call(Object o) {
-            return o;
-        }
-    };
-
-    @SuppressWarnings("unchecked")
-    public static <T> Func1<T, T> identity() {
-        return (Func1<T, T>) IDENTITY;
-    }
-
+    
 }

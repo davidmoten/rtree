@@ -136,7 +136,7 @@ final class FlatBuffersHelper {
         } else if (type == GeometryType_.Line) {
             result = createLine(g.line());
         } else
-            throw new UnsupportedOperationException();
+            throw new RuntimeException("unexpected");
         return (S) result;
     }
 

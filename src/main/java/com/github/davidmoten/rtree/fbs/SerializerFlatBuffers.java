@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.InternalStructure;
@@ -121,7 +122,8 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
         }
     }
 
-    private static byte[] readFully(InputStream is, int numBytes) throws IOException {
+    @VisibleForTesting
+    static byte[] readFully(InputStream is, int numBytes) throws IOException {
         byte[] b = new byte[numBytes];
         int n = is.read(b);
         if (n != numBytes)

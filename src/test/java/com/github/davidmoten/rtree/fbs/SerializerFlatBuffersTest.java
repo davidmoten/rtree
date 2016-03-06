@@ -2,6 +2,7 @@ package com.github.davidmoten.rtree.fbs;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -101,6 +102,11 @@ public class SerializerFlatBuffersTest {
         System.out.println("found=" + found);
         assertEquals(22, found);
         System.out.println(tr.size());
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void testInputStreamNotAsLongAsExpected() throws IOException {
+        SerializerFlatBuffers.readFully(new ByteArrayInputStream(new byte[10]), 12);
     }
 
     public static void main(String[] args) throws Exception {
