@@ -18,6 +18,10 @@ import rx.Subscriber;
 import rx.functions.Func1;
 
 public final class NonLeafHelper {
+    
+    private NonLeafHelper() {
+        //prevent instantiation
+    }
 
     public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> criterion,
             Subscriber<? super Entry<T, S>> subscriber, NonLeaf<T, S> node) {
