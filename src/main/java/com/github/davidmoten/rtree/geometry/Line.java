@@ -3,6 +3,9 @@ package com.github.davidmoten.rtree.geometry;
 import java.awt.geom.Line2D;
 import java.awt.geom.Line2D.Float;
 
+import com.github.davidmoten.guavamini.Objects;
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
@@ -138,6 +141,21 @@ public final class Line implements Geometry {
                         || c.minus(b).modulusSquared() <= radiusSquared;
             }
         }
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(x1, y1, x2, y2);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Optional<Line> other = ObjectsHelper.asClass(obj, Line.class);
+        if (other.isPresent()) {
+            return Objects.equal(x1, other.get().x1) && Objects.equal(x2, other.get().x2)
+                    && Objects.equal(y1, other.get().y1) && Objects.equal(y2, other.get().y2);
+        } else
+            return false;
     }
 
     private static final class Vector {

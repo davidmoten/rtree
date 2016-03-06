@@ -134,14 +134,18 @@ final class FlatBuffersHelper {
             Circle_ c = g.circle();
             result = Geometries.circle(c.x(), c.y(), c.radius());
         } else if (type == GeometryType_.Line) {
-            result = createBox(g.line());
+            result = createLine(g.line());
         } else
             throw new UnsupportedOperationException();
         return (S) result;
     }
 
-    static Geometry createBox(Box_ b) {
+    static Rectangle createBox(Box_ b) {
         return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+    }
+
+    static Line createLine(Box_ b) {
+        return Geometries.line(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
 }
