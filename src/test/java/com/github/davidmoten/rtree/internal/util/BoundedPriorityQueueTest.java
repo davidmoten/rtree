@@ -121,5 +121,21 @@ public class BoundedPriorityQueueTest {
         q.add(2);
         assertEquals(Sets.newHashSet(1, 2, 3), Sets.newHashSet(q.asList()));
     }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testInstantiateWithNegativeSizeThrowsIAE() {
+        BoundedPriorityQueue<Integer> q = create(-1, comparator);
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testInstantiateWithZeroSizeThrowsIAE() {
+        BoundedPriorityQueue<Integer> q = create(0, comparator);
+    }
 
+    @Test(expected=NullPointerException.class)
+    public void testAddNullThrowsNPE() {
+        BoundedPriorityQueue<Integer> q = create(10, comparator);
+        q.add(null);
+    }
+    
 }

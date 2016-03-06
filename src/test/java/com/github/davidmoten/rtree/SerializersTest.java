@@ -30,9 +30,9 @@ public class SerializersTest {
 
     @SuppressWarnings("unchecked")
     private static void checkRoundTrip(Serializer<String, Point> serializer) throws IOException {
-        RTree<String, Point> tree = RTree.create();
         Entry<String, Point> a = Entries.entry("hello", Geometries.point(1, 2));
         Entry<String, Point> b = Entries.entry("there", Geometries.point(3, 4));
+        RTree<String, Point> tree = RTree.create();
         tree = tree.add(a).add(b);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         serializer.serialize(tree, bytes);
