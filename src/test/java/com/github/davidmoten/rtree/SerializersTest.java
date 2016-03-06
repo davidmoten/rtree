@@ -9,6 +9,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Sets;
+import com.github.davidmoten.junit.Asserts;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -85,6 +86,11 @@ public class SerializersTest {
             assertEquals(Sets.newHashSet(a, b),
                     Sets.newHashSet(tree2.entries().toList().toBlocking().single()));
         }
+    }
+    
+    @Test
+    public void isUtilityClass() {
+        Asserts.assertIsUtilityClass(Serializers.class);
     }
 
 }

@@ -119,11 +119,7 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     @Override
     public int count() {
-        int childrenCount = node.childrenLength();
-        if (childrenCount > 0)
-            return childrenCount;
-        else
-            return node.entriesLength();
+        return node.childrenLength();
     }
 
     @Override
