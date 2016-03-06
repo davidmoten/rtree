@@ -124,12 +124,12 @@ public class BoundedPriorityQueueTest {
     
     @Test(expected=IllegalArgumentException.class)
     public void testInstantiateWithNegativeSizeThrowsIAE() {
-        BoundedPriorityQueue<Integer> q = create(-1, comparator);
+        create(-1, comparator);
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testInstantiateWithZeroSizeThrowsIAE() {
-        BoundedPriorityQueue<Integer> q = create(0, comparator);
+        create(0, comparator);
     }
 
     @Test(expected=NullPointerException.class)

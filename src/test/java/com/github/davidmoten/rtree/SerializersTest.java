@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Sets;
-import com.github.davidmoten.rtree.fbs.Serializer;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -68,11 +67,11 @@ public class SerializersTest {
         RTree<String, S> tree = RTree.create();
         tree = tree.add(a).add(b);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        serializer.serialize(tree, bytes);
+        serializer.write(tree, bytes);
         bytes.close();
         {
             ByteArrayInputStream input = new ByteArrayInputStream(bytes.toByteArray());
-            RTree<String, S> tree2 = serializer.deserialize(bytes.size(), input,
+            RTree<String, S> tree2 = serializer.read( input,bytes.size(),
                     InternalStructure.DEFAULT);
             assertEquals(2, tree2.size());
             assertEquals(Sets.newHashSet(a, b),
@@ -80,7 +79,7 @@ public class SerializersTest {
         }
         {
             ByteArrayInputStream input = new ByteArrayInputStream(bytes.toByteArray());
-            RTree<String, S> tree2 = serializer.deserialize(bytes.size(), input,
+            RTree<String, S> tree2 = serializer.read( input,bytes.size(),
                     InternalStructure.SINGLE_ARRAY);
             assertEquals(2, tree2.size());
             assertEquals(Sets.newHashSet(a, b),

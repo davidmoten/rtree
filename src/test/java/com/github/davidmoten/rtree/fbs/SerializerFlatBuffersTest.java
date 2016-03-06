@@ -14,6 +14,7 @@ import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.GreekEarthquakes;
 import com.github.davidmoten.rtree.InternalStructure;
 import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.Serializer;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
 
@@ -77,7 +78,7 @@ public class SerializerFlatBuffersTest {
 
     private static void serialize(RTree<Object, Point> tree, long t, File file, FileOutputStream os,
             Serializer<Object, Point> fbSerializer) throws IOException {
-        fbSerializer.serialize(tree, os);
+        fbSerializer.write(tree, os);
         os.close();
         System.out.println("written in " + (System.currentTimeMillis() - t) + "ms, " + "file size="
                 + file.length() / 1000000.0 + "MB");
@@ -85,12 +86,11 @@ public class SerializerFlatBuffersTest {
     }
 
     private static void deserialize(InternalStructure structure, File file,
-            Serializer<Object, Point> fbSerializer, boolean backpressure)
-                    throws Exception {
+            Serializer<Object, Point> fbSerializer, boolean backpressure) throws Exception {
         long t = System.currentTimeMillis();
         InputStream is = new FileInputStream(file);
         t = System.currentTimeMillis();
-        RTree<Object, Point> tr = fbSerializer.deserialize(file.length(), is, structure);
+        RTree<Object, Point> tr = fbSerializer.read(is, file.length(), structure);
         System.out.println(tr.root().get());
 
         System.out.println("read in " + (System.currentTimeMillis() - t) + "ms");

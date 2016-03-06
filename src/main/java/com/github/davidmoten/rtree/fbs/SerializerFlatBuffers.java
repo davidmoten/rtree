@@ -16,6 +16,7 @@ import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.SelectorRStar;
+import com.github.davidmoten.rtree.Serializer;
 import com.github.davidmoten.rtree.SerializerHelper;
 import com.github.davidmoten.rtree.SplitterRStar;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
@@ -47,7 +48,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
      * @see com.github.davidmoten.rtree.fbs.Serializer#serialize(com.github.davidmoten.rtree.RTree, java.io.OutputStream)
      */
     @Override
-    public void serialize(RTree<T, S> tree, OutputStream os) throws IOException {
+    public void write(RTree<T, S> tree, OutputStream os) throws IOException {
         FlatBufferBuilder builder = new FlatBufferBuilder();
         int n = addNode(tree.root().get(), builder, factory.serializer());
         Rectangle mbb = tree.root().get().geometry().mbr();
@@ -90,7 +91,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
      * @see com.github.davidmoten.rtree.fbs.Serializer#deserialize(long, java.io.InputStream, com.github.davidmoten.rtree.InternalStructure)
      */
     @Override
-    public RTree<T, S> deserialize(long sizeBytes, InputStream is, InternalStructure structure)
+    public RTree<T, S> read( InputStream is,long sizeBytes, InternalStructure structure)
             throws IOException {
         byte[] bytes = readFully(is, (int) sizeBytes);
         Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
