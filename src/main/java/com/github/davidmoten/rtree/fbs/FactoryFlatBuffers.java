@@ -7,11 +7,11 @@ import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Factory;
-import com.github.davidmoten.rtree.FactoryDefault;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.internal.FactoryDefault;
 import com.github.davidmoten.rtree.internal.NonLeafDefault;
 import com.github.davidmoten.util.Preconditions;
 
