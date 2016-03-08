@@ -8,7 +8,7 @@ public class FactoriesTest {
 
     @Test
     public void isUtilityClass() {
-        Asserts.assertIsUtilityClass(getClass());
+        Asserts.assertIsUtilityClass(Factories.class);
     }
 
 }
