@@ -38,6 +38,7 @@ Features
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 * visualizer included
+* serialization using [FlatBuffers](http://github.com/google/flatbuffers)
 * high unit test [code coverage](http://davidmoten.github.io/rtree/cobertura/index.html) 
 * R*-tree performs 830,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=10, minChildren=4). Insert at 100,000 entries per second.
 * requires java 1.6 or later
@@ -305,7 +306,7 @@ mbr=Rectangle [x1=10.0, y1=4.0, x2=62.0, y2=85.0]
 
 Serialization
 ------------------
-Upcoming release 0.8 includes [flatbuffers](https://github.com/google-code/flatbuffers) support as a serialization format and as a lower performance but lower memory consumption (approximately one third) option for an RTree. 
+Release 0.8 includes [flatbuffers](https://github.com/google/flatbuffers) support as a serialization format and as a lower performance but lower memory consumption (approximately one third) option for an RTree. 
 
 The greek earthquake data (38,377 entries) when placed in a default RTree with `maxChildren=10` takes up 4,548,133 bytes in memory. If that data is serialized then reloaded into memory using the `InternalStructure.FLATBUFFERS_SINGLE_ARRAY` option then the RTree takes up 1,431,772 bytes in memory (approximately one third the memory usage). Bear in mind though that searches are much more expensive (at the moment) with this data structure because of object creation and gc pressures (see benchmarks). Further work would be to enable direct searching of the underlying array without object creation expenses required to match the current search routines. 
 
@@ -314,6 +315,29 @@ As of 5 March 2016, indicative RTree metrics using flatbuffers data structure ar
 * one third the memory use with log(N) object creations per search
 * one third the speed with backpressure (e.g. if `flatMap` or `observeOn` is downstream)
 * one tenth the speed without backpressure 
+
+##Serialization example
+
+Write an `RTree` to an `OutputStream`:
+```java
+RTree<String, Point> tree = ...;
+OutputStream os = ...;
+Serializer<String, Point> serializer = 
+  Serializers.flatBuffers().utf8();
+serializer.write(tree, os); 
+```
+
+Read an `RTree` from an `InputStream` into a low-memory flatbuffers based structure:
+```java
+RTree<String, Point> tree = 
+  serializer.read(is, lengthBytes, InnerStructure.SINGLE_ARRAY);
+```
+
+Read an `RTree` from an `InputStream` into a default structure:
+```java
+RTree<String, Point> tree = 
+  serializer.read(is, lengthBytes, InnerStructure.DEFAULT);
+```
 
 Dependencies
 ---------------------
