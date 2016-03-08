@@ -316,6 +316,17 @@ As of 5 March 2016, indicative RTree metrics using flatbuffers data structure ar
 * one third the speed with backpressure (e.g. if `flatMap` or `observeOn` is downstream)
 * one tenth the speed without backpressure 
 
+Note that serialization uses an optional dependency on `flatbuffers`. Add the following to your pom dependencies:
+
+```xml
+<dependency>
+    <groupId>com.github.davidmoten</groupId>
+    <artifactId>flatbuffers-java</artifactId>
+    <version>1.3.0.1</version>
+    <optional>true</optional>
+</dependency>
+```
+
 ##Serialization example
 
 Write an `RTree` to an `OutputStream`:
