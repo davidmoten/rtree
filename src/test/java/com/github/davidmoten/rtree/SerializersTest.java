@@ -55,6 +55,26 @@ public class SerializersTest {
         check(serializer, a, b);
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testAddToFlatBuffers() throws IOException {
+        Entry<String, Point> a = Entries.entry("hello", Geometries.point(1, 2));
+        Entry<String, Point> b = Entries.entry("there", Geometries.point(3, 4));
+        Entry<String, Point> c = Entries.entry("you", Geometries.point(5, 6));
+        RTree<String, Point> tree = RTree.create();
+        tree = tree.add(a).add(b);
+        Serializer<String, Point> serializer = Serializers.flatBuffers().utf8();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        serializer.write(tree, bytes);
+        bytes.close();
+        byte[] array = bytes.toByteArray();
+        RTree<String, Point> tree2 = serializer.read(new ByteArrayInputStream(array), array.length,
+                InternalStructure.SINGLE_ARRAY);
+        tree2 = tree2.add(c);
+        assertEquals(Sets.newHashSet(a, b, c),
+                Sets.newHashSet(tree2.entries().toList().toBlocking().single()));
+    }
+
     private static void checkRoundTripPoint(Serializer<String, Point> serializer)
             throws IOException {
         Entry<String, Point> a = Entries.entry("hello", Geometries.point(1, 2));
@@ -72,7 +92,7 @@ public class SerializersTest {
         bytes.close();
         {
             ByteArrayInputStream input = new ByteArrayInputStream(bytes.toByteArray());
-            RTree<String, S> tree2 = serializer.read( input,bytes.size(),
+            RTree<String, S> tree2 = serializer.read(input, bytes.size(),
                     InternalStructure.DEFAULT);
             assertEquals(2, tree2.size());
             assertEquals(Sets.newHashSet(a, b),
@@ -80,14 +100,14 @@ public class SerializersTest {
         }
         {
             ByteArrayInputStream input = new ByteArrayInputStream(bytes.toByteArray());
-            RTree<String, S> tree2 = serializer.read( input,bytes.size(),
+            RTree<String, S> tree2 = serializer.read(input, bytes.size(),
                     InternalStructure.SINGLE_ARRAY);
             assertEquals(2, tree2.size());
             assertEquals(Sets.newHashSet(a, b),
                     Sets.newHashSet(tree2.entries().toList().toBlocking().single()));
         }
     }
-    
+
     @Test
     public void isUtilityClass() {
         Asserts.assertIsUtilityClass(Serializers.class);

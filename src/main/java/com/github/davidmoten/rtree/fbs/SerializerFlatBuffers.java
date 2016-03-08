@@ -40,13 +40,16 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
         this.factory = new FactoryFlatBuffers<T, S>(serializer, deserializer);
     }
 
-    public static <T, S extends Geometry> Serializer<T, S> create(
-            Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+    public static <T, S extends Geometry> Serializer<T, S> create(Func1<T, byte[]> serializer,
+            Func1<byte[], T> deserializer) {
         return new SerializerFlatBuffers<T, S>(serializer, deserializer);
     }
 
-    /* (non-Javadoc)
-     * @see com.github.davidmoten.rtree.fbs.Serializer#serialize(com.github.davidmoten.rtree.RTree, java.io.OutputStream)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.github.davidmoten.rtree.fbs.Serializer#serialize(com.github.
+     * davidmoten.rtree.RTree, java.io.OutputStream)
      */
     @Override
     public void write(RTree<T, S> tree, OutputStream os) throws IOException {
@@ -88,11 +91,14 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.github.davidmoten.rtree.fbs.Serializer#deserialize(long, java.io.InputStream, com.github.davidmoten.rtree.InternalStructure)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.github.davidmoten.rtree.fbs.Serializer#deserialize(long,
+     * java.io.InputStream, com.github.davidmoten.rtree.InternalStructure)
      */
     @Override
-    public RTree<T, S> read( InputStream is,long sizeBytes, InternalStructure structure)
+    public RTree<T, S> read(InputStream is, long sizeBytes, InternalStructure structure)
             throws IOException {
         byte[] bytes = readFully(is, (int) sizeBytes);
         Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
@@ -101,7 +107,11 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
                 t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(), factory);
         final Node<T, S> root;
         if (structure == InternalStructure.SINGLE_ARRAY) {
-            root = new NonLeafFlatBuffers<T, S>(node, context, factory.deserializer());
+            if (node.childrenLength() > 0) {
+                root = new NonLeafFlatBuffers<T, S>(node, context, factory.deserializer());
+            } else {
+                root = new LeafFlatBuffers<T, S>(node, context, factory.deserializer());
+            }
         } else {
             root = toNodeDefault(node, context, factory.deserializer());
         }
@@ -130,6 +140,5 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
             throw new RuntimeException("unexpected");
         return b;
     }
-
 
 }
