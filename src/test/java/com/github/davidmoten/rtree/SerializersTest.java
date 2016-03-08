@@ -75,6 +75,25 @@ public class SerializersTest {
                 Sets.newHashSet(tree2.entries().toList().toBlocking().single()));
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testDeleteFromFlatBuffers() throws IOException {
+        Entry<String, Point> a = Entries.entry("hello", Geometries.point(1, 2));
+        Entry<String, Point> b = Entries.entry("there", Geometries.point(3, 4));
+        RTree<String, Point> tree = RTree.create();
+        tree = tree.add(a).add(b);
+        Serializer<String, Point> serializer = Serializers.flatBuffers().utf8();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        serializer.write(tree, bytes);
+        bytes.close();
+        byte[] array = bytes.toByteArray();
+        RTree<String, Point> tree2 = serializer.read(new ByteArrayInputStream(array), array.length,
+                InternalStructure.SINGLE_ARRAY);
+        tree2 = tree2.delete(a);
+        assertEquals(Sets.newHashSet(b),
+                Sets.newHashSet(tree2.entries().toList().toBlocking().single()));
+    }
+
     private static void checkRoundTripPoint(Serializer<String, Point> serializer)
             throws IOException {
         Entry<String, Point> a = Entries.entry("hello", Geometries.point(1, 2));
