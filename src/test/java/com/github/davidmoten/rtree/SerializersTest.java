@@ -94,6 +94,50 @@ public class SerializersTest {
                 Sets.newHashSet(tree2.entries().toList().toBlocking().single()));
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testAddToFlatBuffersWhenRootNodeIsNonLeaf() throws IOException {
+        Entry<String, Point> a = Entries.entry("hello", Geometries.point(1, 2));
+        Entry<String, Point> b = Entries.entry("there", Geometries.point(3, 4));
+        Entry<String, Point> c = Entries.entry("you", Geometries.point(5, 6));
+        Entry<String, Point> d = Entries.entry("smart", Geometries.point(7, 8));
+        Entry<String, Point> e = Entries.entry("person", Geometries.point(9, 10));
+        RTree<String, Point> tree = RTree.create();
+        tree = tree.add(a).add(b).add(c).add(d).add(e);
+        Serializer<String, Point> serializer = Serializers.flatBuffers().utf8();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        serializer.write(tree, bytes);
+        bytes.close();
+        byte[] array = bytes.toByteArray();
+        RTree<String, Point> tree2 = serializer.read(new ByteArrayInputStream(array), array.length,
+                InternalStructure.SINGLE_ARRAY);
+        tree2 = tree2.add(c);
+        assertEquals(Sets.newHashSet(a, b, c, d, e),
+                Sets.newHashSet(tree2.entries().toList().toBlocking().single()));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testDeleteFromFlatBuffersWhenRootNodeIsNonLeaf() throws IOException {
+        Entry<String, Point> a = Entries.entry("hello", Geometries.point(1, 2));
+        Entry<String, Point> b = Entries.entry("there", Geometries.point(3, 4));
+        Entry<String, Point> c = Entries.entry("you", Geometries.point(5, 6));
+        Entry<String, Point> d = Entries.entry("smart", Geometries.point(7, 8));
+        Entry<String, Point> e = Entries.entry("person", Geometries.point(9, 10));
+        RTree<String, Point> tree = RTree.create();
+        tree = tree.add(a).add(b).add(c).add(d).add(e);
+        Serializer<String, Point> serializer = Serializers.flatBuffers().utf8();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        serializer.write(tree, bytes);
+        bytes.close();
+        byte[] array = bytes.toByteArray();
+        RTree<String, Point> tree2 = serializer.read(new ByteArrayInputStream(array), array.length,
+                InternalStructure.SINGLE_ARRAY);
+        tree2 = tree2.delete(b);
+        assertEquals(Sets.newHashSet(a, c, d, e),
+                Sets.newHashSet(tree2.entries().toList().toBlocking().single()));
+    }
+
     private static void checkRoundTripPoint(Serializer<String, Point> serializer)
             throws IOException {
         Entry<String, Point> a = Entries.entry("hello", Geometries.point(1, 2));

@@ -16,7 +16,6 @@ import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Comparators;
-import com.github.davidmoten.rtree.internal.FactoryDefault;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.github.davidmoten.rtree.internal.operators.OperatorBoundedPriorityQueue;
 
@@ -199,7 +198,7 @@ public final class RTree<T, S extends Geometry> {
         private Splitter splitter = new SplitterQuadratic();
         private Selector selector = new SelectorMinimalAreaIncrease();
         private boolean star = false;
-        private Factory<Object, Geometry> factory = FactoryDefault.instance();
+        private Factory<Object, Geometry> factory = Factories.defaultFactory();
 
         private Builder() {
         }

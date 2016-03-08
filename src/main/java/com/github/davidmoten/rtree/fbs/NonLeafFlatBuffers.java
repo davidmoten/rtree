@@ -33,7 +33,8 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     NonLeafFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
         Preconditions.checkNotNull(node);
-        Preconditions.checkArgument(node.childrenLength() > 0);
+        // remove precondition because reduces performance
+        // Preconditions.checkArgument(node.childrenLength() > 0);
         this.node = node;
         this.context = context;
         this.deserializer = deserializer;
