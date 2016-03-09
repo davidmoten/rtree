@@ -29,9 +29,9 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;
-    private final Func1<byte[], T> deserializer;
+    private final Func1<byte[], ? extends T> deserializer;
 
-    NonLeafFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
+    NonLeafFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], ? extends T> deserializer) {
         Preconditions.checkNotNull(node);
         // remove precondition because reduces performance
         // Preconditions.checkArgument(node.childrenLength() > 0);
@@ -63,7 +63,7 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
     @SuppressWarnings("unchecked")
     private static <T, S extends Geometry> void searchWithoutBackpressure(Node_ node,
             Func1<? super Geometry, Boolean> criterion, Subscriber<? super Entry<T, S>> subscriber,
-            Func1<byte[], T> deserializer, Entry_ entry, Geometry_ geometry, Box_ box) {
+            Func1<byte[], ? extends T> deserializer, Entry_ entry, Geometry_ geometry, Box_ box) {
         {
             node.mbb(box);
             if (!criterion

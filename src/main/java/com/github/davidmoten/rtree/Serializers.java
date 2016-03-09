@@ -17,21 +17,22 @@ import rx.functions.Func1;
 public final class Serializers {
 
     private Serializers() {
-        //prevent instantiation
+        // prevent instantiation
     }
-    
+
     public static class SerializerFlatBuffersBuilder {
 
         private SerializerFlatBuffersBuilder() {
 
         }
 
-        public <T> SerializerFlatBuffersTypedBuilder<T> serializer(Func1<T, byte[]> serializer) {
+        public <T> SerializerFlatBuffersTypedBuilder<T> serializer(
+                Func1<? super T, byte[]> serializer) {
             return new SerializerFlatBuffersTypedBuilder<T>(serializer, null);
         }
 
         public <T> SerializerFlatBuffersTypedBuilder<T> deserializer(
-                Func1<byte[], T> deserializer) {
+                Func1<byte[], ? extends T> deserializer) {
             return new SerializerFlatBuffersTypedBuilder<T>(null, deserializer);
         }
 
@@ -40,7 +41,7 @@ public final class Serializers {
             Func1<byte[], String> deserializer = createStringDeserializer(charset);
             return new SerializerFlatBuffersTypedBuilder<String>(serializer, deserializer).create();
         }
-        
+
         @SuppressWarnings("unchecked")
         public <T extends Serializable, S extends Geometry> Serializer<T, S> javaIo() {
             Func1<T, byte[]> serializer = (Func1<T, byte[]>) javaIoSerializer();
@@ -48,10 +49,10 @@ public final class Serializers {
             return new SerializerFlatBuffersTypedBuilder<T>(serializer, deserializer).create();
         }
 
-        public <S extends Geometry> Serializer<String,S> utf8() {
+        public <S extends Geometry> Serializer<String, S> utf8() {
             return string(Charset.forName("UTF-8"));
         }
-        
+
         public <S extends Geometry> Serializer<byte[], S> bytes() {
             Func1<byte[], byte[]> serializer = Functions.identity();
             Func1<byte[], byte[]> deserializer = Functions.identity();
@@ -62,21 +63,23 @@ public final class Serializers {
 
     public static final class SerializerFlatBuffersTypedBuilder<T> {
 
-        private Func1<T, byte[]> serializer;
-        private Func1<byte[], T> deserializer;
+        private Func1<? super T, byte[]> serializer;
+        private Func1<byte[], ? extends T> deserializer;
 
-        private SerializerFlatBuffersTypedBuilder(Func1<T, byte[]> serializer,
-                Func1<byte[], T> deserializer) {
+        private SerializerFlatBuffersTypedBuilder(Func1<? super T, byte[]> serializer,
+                Func1<byte[], ? extends T> deserializer) {
             this.serializer = serializer;
             this.deserializer = deserializer;
         }
 
-        public SerializerFlatBuffersTypedBuilder<T> serializer(Func1<T, byte[]> serializer) {
+        public SerializerFlatBuffersTypedBuilder<T> serializer(
+                Func1<? super T, byte[]> serializer) {
             this.serializer = serializer;
             return this;
         }
 
-        public SerializerFlatBuffersTypedBuilder<T> deserializer(Func1<byte[], T> deserializer) {
+        public SerializerFlatBuffersTypedBuilder<T> deserializer(
+                Func1<byte[], ? extends T> deserializer) {
             this.deserializer = deserializer;
             return this;
         }
@@ -87,7 +90,7 @@ public final class Serializers {
                 serializer = (Func1<T, byte[]>) javaIoSerializer();
             }
             if (deserializer == null) {
-                deserializer = (Func1<byte[], T>) javaIoDeserializer();
+                deserializer = (Func1<byte[],T>) javaIoDeserializer();
             }
             return SerializerFlatBuffers.create(serializer, deserializer);
         }
@@ -165,5 +168,5 @@ public final class Serializers {
             }
         };
     }
-    
+
 }

@@ -36,12 +36,12 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
 
     private final FactoryFlatBuffers<T, S> factory;
 
-    private SerializerFlatBuffers(Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+    private SerializerFlatBuffers(Func1<? super T, byte[]> serializer, Func1<byte[],? extends  T> deserializer) {
         this.factory = new FactoryFlatBuffers<T, S>(serializer, deserializer);
     }
 
-    public static <T, S extends Geometry> Serializer<T, S> create(Func1<T, byte[]> serializer,
-            Func1<byte[], T> deserializer) {
+    public static <T, S extends Geometry> Serializer<T, S> create(Func1<? super T, byte[]> serializer,
+            Func1<byte[], ? extends T> deserializer) {
         return new SerializerFlatBuffers<T, S>(serializer, deserializer);
     }
 
@@ -70,7 +70,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
     }
 
     private static <T, S extends Geometry> int addNode(Node<T, S> node, FlatBufferBuilder builder,
-            Func1<T, byte[]> serializer) {
+            Func1<? super T, byte[]> serializer) {
         if (node instanceof Leaf) {
             Leaf<T, S> leaf = (Leaf<T, S>) node;
             return FlatBuffersHelper.addEntries(leaf.entries(), builder, serializer);
@@ -119,7 +119,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
     }
 
     private static <T, S extends Geometry> Node<T, S> toNodeDefault(Node_ node,
-            Context<T, S> context, Func1<byte[], T> deserializer) {
+            Context<T, S> context, Func1<byte[], ? extends T> deserializer) {
         if (node.childrenLength() > 0) {
             List<Node<T, S>> children = new ArrayList<Node<T, S>>(node.childrenLength());
             for (int i = 0; i < node.childrenLength(); i++) {

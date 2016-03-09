@@ -21,21 +21,21 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;
-    private final Func1<byte[], T> deserializer;
+    private final Func1<byte[],? extends T> deserializer;
 
     LeafFlatBuffers(List<Entry<T, S>> entries, Context<T, S> context,
-            Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+            Func1<? super T, byte[]> serializer, Func1<byte[],? extends T> deserializer) {
         this(createNode(entries, serializer), context, deserializer);
     }
 
-    LeafFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], T> deserializer) {
+    LeafFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], ? extends T> deserializer) {
         this.context = context;
         this.deserializer = deserializer;
         this.node = node;
     }
 
     private static <T, S extends Geometry> Node_ createNode(List<Entry<T, S>> entries,
-            Func1<T, byte[]> serializer) {
+            Func1<? super T, byte[]> serializer) {
         FlatBufferBuilder builder = new FlatBufferBuilder(0);
         builder.finish(FlatBuffersHelper.addEntries(entries, builder, serializer));
         return Node_.getRootAsNode_(builder.dataBuffer());

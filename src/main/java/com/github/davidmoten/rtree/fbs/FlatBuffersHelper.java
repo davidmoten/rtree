@@ -34,7 +34,7 @@ final class FlatBuffersHelper {
     }
 
     static <T, S extends Geometry> int addEntries(List<Entry<T, S>> entries,
-            FlatBufferBuilder builder, Func1<T, byte[]> serializer) {
+            FlatBufferBuilder builder, Func1<? super T, byte[]> serializer) {
         int[] entries2 = new int[entries.size()];
         for (int i = 0; i < entries.size(); i++) {
             Geometry g = entries.get(i).geometry();
@@ -88,7 +88,7 @@ final class FlatBuffersHelper {
     }
 
     static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node,
-            Func1<byte[], T> deserializer) {
+            Func1<byte[], ? extends T> deserializer) {
         List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>();
         int numEntries = node.entriesLength();
         Preconditions.checkArgument(numEntries > 0);
@@ -103,7 +103,7 @@ final class FlatBuffersHelper {
 
     @SuppressWarnings("unchecked")
     private static <T, S extends Geometry> Entry<T, S> createEntry(Node_ node,
-            Func1<byte[], T> deserializer, Entry_ entry, Geometry_ geom, int i) {
+            Func1<byte[], ? extends T> deserializer, Entry_ entry, Geometry_ geom, int i) {
         node.entries(entry, i);
         entry.geometry(geom);
         final Geometry g = toGeometry(geom);
@@ -111,11 +111,11 @@ final class FlatBuffersHelper {
     }
 
     static <T, S extends Geometry> Entry<T, S> createEntry(Node_ node,
-            Func1<byte[], T> deserializer, int i) {
+            Func1<byte[], ? extends T> deserializer, int i) {
         return createEntry(node, deserializer, new Entry_(), new Geometry_(), i);
     }
 
-    static <T> T parseObject(Func1<byte[], T> deserializer, Entry_ entry) {
+    static <T> T parseObject(Func1<byte[], ? extends T> deserializer, Entry_ entry) {
         ByteBuffer bb = entry.objectAsByteBuffer();
         byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
         T t = deserializer.call(bytes);

@@ -28,10 +28,10 @@ import rx.functions.Func1;
  *            the geometry type
  */
 public final class FactoryFlatBuffers<T, S extends Geometry> implements Factory<T, S> {
-    private final Func1<T, byte[]> serializer;
-    private final Func1<byte[], T> deserializer;
+    private final Func1<? super T, byte[]> serializer;
+    private final Func1<byte[], ? extends T> deserializer;
 
-    public FactoryFlatBuffers(Func1<T, byte[]> serializer, Func1<byte[], T> deserializer) {
+    public FactoryFlatBuffers(Func1<? super T, byte[]> serializer, Func1<byte[], ? extends T> deserializer) {
         Preconditions.checkNotNull(serializer);
         Preconditions.checkNotNull(deserializer);
         this.serializer = serializer;
@@ -53,11 +53,11 @@ public final class FactoryFlatBuffers<T, S extends Geometry> implements Factory<
         return Entries.entry(value, geometry);
     }
 
-    public Func1<T, byte[]> serializer() {
+    public Func1<? super T, byte[]> serializer() {
         return serializer;
     }
 
-    public Func1<byte[], T> deserializer() {
+    public Func1<byte[], ? extends T> deserializer() {
         return deserializer;
     }
 
