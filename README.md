@@ -385,7 +385,7 @@ The *Greek* data referred to in the benchmarks is a collection of some 38,377 en
 
 ### Results
 
-These were run on i7-920@2.67GHz with *rtree* version 0.8-RC3:
+These were run on i7-920 @2.67GHz with *rtree* version 0.8-RC3:
 
 ```
 Benchmark                                                               Mode  Cnt        Score       Error  Units
