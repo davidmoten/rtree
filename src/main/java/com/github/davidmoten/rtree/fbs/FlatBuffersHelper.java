@@ -117,9 +117,13 @@ final class FlatBuffersHelper {
 
     static <T> T parseObject(Func1<byte[], ? extends T> deserializer, Entry_ entry) {
         ByteBuffer bb = entry.objectAsByteBuffer();
-        byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
-        T t = deserializer.call(bytes);
-        return t;
+        if (bb == null) {
+            return null;
+        } else {
+            byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
+            T t = deserializer.call(bytes);
+            return t;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -129,7 +133,8 @@ final class FlatBuffersHelper {
         if (type == GeometryType_.Box) {
             result = createBox(g.box());
         } else if (type == GeometryType_.Point) {
-            result = Geometries.point(g.point().x(), g.point().y());
+            Point_ p = g.point();
+            result = Geometries.point(p.x(), p.y());
         } else if (type == GeometryType_.Circle) {
             Circle_ c = g.circle();
             result = Geometries.circle(c.x(), c.y(), c.radius());
