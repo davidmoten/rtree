@@ -2,17 +2,22 @@ package com.github.davidmoten.rtree;
 
 import static com.github.davidmoten.rtree.Utilities.entries1000;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 
-import rx.Subscriber;
-
+import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+
+import rx.Subscriber;
+import rx.functions.Func1;
 
 @State(Scope.Benchmark)
 public class BenchmarksRTree {
@@ -21,8 +26,8 @@ public class BenchmarksRTree {
 
     private final List<Entry<Object, Rectangle>> some = entries1000();
 
-    private final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4)
-            .<Object, Point> create().add(entries);
+    private final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4).<Object, Point> create()
+            .add(entries);
 
     private final RTree<Object, Point> defaultTreeM10 = RTree.maxChildren(10)
             .<Object, Point> create().add(entries);
@@ -69,9 +74,40 @@ public class BenchmarksRTree {
     private final RTree<Object, Rectangle> smallStarTreeM128 = RTree.maxChildren(128).star()
             .<Object, Rectangle> create().add(some);
 
+    private final RTree<Object, Point> starTreeM10FlatBuffers = createFlatBuffersGreek();
+
     @Benchmark
     public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
         insertPoint(defaultTreeM4);
+    }
+
+    private RTree<Object, Point> createFlatBuffersGreek() {
+        RTree<Object, Point> tree = RTree.maxChildren(10).star().<Object, Point> create()
+                .add(entries);
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        Func1<Object, byte[]> serializer = new Func1<Object, byte[]>() {
+            @Override
+            public byte[] call(Object o) {
+                return new byte[0];
+            }
+        };
+        Func1<byte[], Object> deserializer = new Func1<byte[], Object>() {
+            @Override
+            public Object call(byte[] bytes) {
+                return null;
+            }
+        };
+        Serializer<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
+                deserializer);
+        try {
+            fbSerializer.write(tree, os);
+            os.close();
+            ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+            return fbSerializer.read( is,os.size(),
+                    InternalStructure.SINGLE_ARRAY);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Benchmark
@@ -107,6 +143,16 @@ public class BenchmarksRTree {
     @Benchmark
     public void rStarTreeSearchOfGreekDataPointsMaxChildren010() {
         searchGreek(starTreeM10);
+    }
+
+    @Benchmark
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers() {
+        searchGreek(starTreeM10FlatBuffers);
+    }
+    
+    @Benchmark
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffersBackpressure() {
+        searchGreekBackpressure(starTreeM10FlatBuffers);
     }
 
     @Benchmark
@@ -239,6 +285,11 @@ public class BenchmarksRTree {
         deleteAll(starTreeM10);
     }
 
+    @Benchmark
+    public void searchNearestGreek() {
+        searchNearestGreek(starTreeM4);
+    }
+
     private void deleteAll(RTree<Object, Point> tree) {
         tree.delete(entries.get(1000), true);
     }
@@ -251,6 +302,15 @@ public class BenchmarksRTree {
     private void searchGreek(RTree<Object, Point> tree) {
         // should return 22 results
         tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+    }
+
+    private void searchGreekBackpressure(RTree<Object, Point> tree) {
+        // should return 22 results
+        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).take(1000).subscribe();
+    }
+
+    private void searchNearestGreek(RTree<Object, Point> tree) {
+        tree.nearest(Geometries.point(40.0, 27.0), 1, 300).subscribe();
     }
 
     private void searchGreekWithBackpressure(RTree<Object, Point> tree) {
@@ -289,7 +349,8 @@ public class BenchmarksRTree {
 
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
+        System.out.println("starting searches");
         while (true)
-            b.searchGreek(b.starTreeM10);
+            b.rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers();
     }
 }

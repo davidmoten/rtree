@@ -1,14 +1,14 @@
 package com.github.davidmoten.rtree.geometry;
 
-import com.github.davidmoten.util.ObjectsHelper;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
+import com.github.davidmoten.guavamini.Objects;
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.guavamini.Preconditions;
+import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
 public final class Rectangle implements Geometry, HasGeometry {
     private final float x1, y1, x2, y2;
 
-    protected Rectangle(float x1, float y1, float x2, float y2) {
+    private Rectangle(float x1, float y1, float x2, float y2) {
         Preconditions.checkArgument(x2 >= x1);
         Preconditions.checkArgument(y2 >= y1);
         this.x1 = x1;
@@ -17,6 +17,14 @@ public final class Rectangle implements Geometry, HasGeometry {
         this.y2 = y2;
     }
 
+    static Rectangle create(double x1, double y1, double x2, double y2) {
+        return new Rectangle((float) x1, (float) y1, (float) x2, (float) y2);
+    }
+
+    static Rectangle create(float x1, float y1, float x2, float y2) {
+        return new Rectangle(x1, y1, x2, y2);
+    }
+    
     public float x1() {
         return x1;
     }
@@ -38,16 +46,7 @@ public final class Rectangle implements Geometry, HasGeometry {
     }
 
     public Rectangle add(Rectangle r) {
-        return new Rectangle(Math.min(x1, r.x1), Math.min(y1, r.y1), Math.max(x2, r.x2), Math.max(
-                y2, r.y2));
-    }
-
-    public static Rectangle create(double x1, double y1, double x2, double y2) {
-        return new Rectangle((float) x1, (float) y1, (float) x2, (float) y2);
-    }
-
-    public static Rectangle create(float x1, float y1, float x2, float y2) {
-        return new Rectangle(x1, y1, x2, y2);
+        return new Rectangle(min(x1, r.x1), min(y1, r.y1), max(x2, r.x2), max(y2, r.y2));
     }
 
     public boolean contains(double x, double y) {
@@ -56,15 +55,7 @@ public final class Rectangle implements Geometry, HasGeometry {
 
     @Override
     public boolean intersects(Rectangle r) {
-        float xMaxLeft = Math.max(x1(), r.x1());
-        float xMinRight = Math.min(x2(), r.x2());
-        if (xMinRight<xMaxLeft) 
-            return false;
-        else {
-            float yMaxBottom = Math.max(y1(), r.y1());
-            float yMinTop = Math.min(y2(), r.y2());
-            return yMinTop>=yMaxBottom;
-        }
+        return r.x2 >= x1 && r.x1 <= x2 && r.y2 >= y1 && r.y1 <= y2;
     }
 
     @Override
@@ -74,13 +65,13 @@ public final class Rectangle implements Geometry, HasGeometry {
         else {
             Rectangle mostLeft = x1 < r.x1 ? this : r;
             Rectangle mostRight = x1 > r.x1 ? this : r;
-            double xDifference = Math.max(0, mostLeft.x1 == mostRight.x1 ? 0 : mostRight.x1
-                    - mostLeft.x2);
+            double xDifference = max(0,
+                    mostLeft.x1 == mostRight.x1 ? 0 : mostRight.x1 - mostLeft.x2);
 
             Rectangle upper = y1 < r.y1 ? this : r;
             Rectangle lower = y1 > r.y1 ? this : r;
 
-            double yDifference = Math.max(0, upper.y1 == lower.y1 ? 0 : lower.y1 - upper.y2);
+            double yDifference = max(0, upper.y1 == lower.y1 ? 0 : lower.y1 - upper.y2);
 
             return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
         }
@@ -115,8 +106,7 @@ public final class Rectangle implements Geometry, HasGeometry {
         if (!intersects(r))
             return 0;
         else
-            return create(Math.max(x1, r.x1), Math.max(y1, r.y1), Math.min(x2, r.x2),
-                    Math.min(y2, r.y2)).area();
+            return create(max(x1, r.x1), max(y1, r.y1), min(x2, r.x2), min(y2, r.y2)).area();
     }
 
     public float perimeter() {
@@ -126,6 +116,20 @@ public final class Rectangle implements Geometry, HasGeometry {
     @Override
     public Geometry geometry() {
         return this;
+    }
+
+    private static float max(float a, float b) {
+        if (a < b)
+            return b;
+        else
+            return a;
+    }
+
+    private static float min(float a, float b) {
+        if (a < b)
+            return a;
+        else
+            return b;
     }
 
 }

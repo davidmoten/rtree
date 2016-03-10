@@ -14,20 +14,20 @@ import java.util.Set;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.github.davidmoten.junit.Asserts;
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.internal.util.ImmutableStack;
+
 import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Func1;
-
-import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.util.ImmutableStack;
-import com.github.davidmoten.util.TestingUtil;
 
 public class BackpressureTest {
 
     @Test
     public void testConstructorIsPrivate() {
-        TestingUtil.callConstructorAndCheckIsPrivate(Backpressure.class);
+        Asserts.assertIsUtilityClass(Backpressure.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -219,6 +219,34 @@ public class BackpressureTest {
         Set<Entry<Object, Rectangle>> expected = Collections.singleton(e3);
         final Set<Entry<Object, Rectangle>> found = new HashSet<Entry<Object, Rectangle>>();
         tree.search(e3.geometry()).subscribe(backpressureSubscriber(found));
+        assertEquals(expected, found);
+    }
+
+    @Test
+    public void testBackpressureFastPathNotInitiatedTwice() {
+        Entry<Object, Rectangle> e3 = e(3);
+        RTree<Object, Rectangle> tree = RTree.star().maxChildren(4).<Object, Rectangle> create()
+                .add(e(1)).add(e3);
+        Set<Entry<Object, Rectangle>> expected = Collections.singleton(e3);
+        final Set<Entry<Object, Rectangle>> found = new HashSet<Entry<Object, Rectangle>>();
+        tree.search(e3.geometry()).subscribe(new Subscriber<Entry<Object, Rectangle>>() {
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Entry<Object, Rectangle> t) {
+                found.add(t);
+                request(Long.MAX_VALUE);
+            }
+        });
         assertEquals(expected, found);
     }
 

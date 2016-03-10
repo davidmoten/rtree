@@ -12,6 +12,7 @@ import com.github.davidmoten.rtree.OnSubscribeSearch.SearchProducer;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
+import com.github.davidmoten.rtree.internal.LeafDefault;
 
 public class OnSubscribeSearchTest {
 
@@ -22,7 +23,7 @@ public class OnSubscribeSearchTest {
         Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);
         Subscriber<Entry<Integer, Geometry>> subscriber = Mockito.mock(Subscriber.class);
         RuntimeException error = new RuntimeException();
-        Mockito.doThrow(error).when(node).search(condition, subscriber);
+        Mockito.doThrow(error).when(node).searchWithoutBackpressure(condition, subscriber);
         SearchProducer<Integer, Geometry> p = new OnSubscribeSearch.SearchProducer<Integer, Geometry>(
                 node, condition, subscriber);
         p.request(Long.MAX_VALUE);
@@ -32,7 +33,7 @@ public class OnSubscribeSearchTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testSearchProducerThrowsExceptionFromRequestSome() {
-        Node<Integer, Point> node = new Leaf<Integer, Point>(Collections.singletonList(Entry.entry(
+        Node<Integer, Point> node = new LeafDefault<Integer, Point>(Collections.singletonList(Entries.entry(
                 1, Geometries.point(1, 1))), null);
 
         Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);

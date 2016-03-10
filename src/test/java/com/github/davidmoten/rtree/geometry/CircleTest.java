@@ -99,28 +99,28 @@ public class CircleTest {
     public void testIntersectsReturnsFalse() {
         assertFalse(circle(0, 0, 1).intersects(Geometries.rectangle(10, 10, 11, 11)));
     }
-    
+
     @Test
     public void testIntersects() {
-        Circle a = circle(0,0,1);
-        Circle b = circle(0.1,0.1, 1);
-        assertTrue(a.intersects(b));
+        Circle a = circle(0, 0, 1);
+        Circle b = circle(0.1, 0.1, 1);
+        assertTrue(Intersects.circleIntersectsCircle.call(a, b));
     }
-    
+
     @Test
     public void testDoNotIntersect() {
-        Circle a = circle(0,0,1);
-        Circle b = circle(100,100, 1);
-        assertFalse(a.intersects(b));
+        Circle a = circle(0, 0, 1);
+        Circle b = circle(100, 100, 1);
+        assertFalse(Intersects.circleIntersectsCircle.call(a, b));
     }
-    
+
     @Test
     public void testIntersectsPoint() {
-        assertTrue(circle(0,0,1).intersects(Geometries.point(0,0)));
+        assertTrue(circle(0, 0, 1).intersects(Geometries.point(0, 0)));
     }
-    
+
     @Test
     public void testDoesNotIntersectPoint() {
-        assertFalse(circle(0,0,1).intersects(Geometries.point(100,100)));
+        assertFalse(circle(0, 0, 1).intersects(Geometries.point(100, 100)));
     }
 }

@@ -2,13 +2,14 @@ package com.github.davidmoten.rtree;
 
 import org.junit.Test;
 
-import com.github.davidmoten.util.TestingUtil;
+import com.github.davidmoten.junit.Asserts;
+import com.github.davidmoten.rtree.internal.Comparators;
 
 public class ComparatorsTest {
 
     @Test
     public void testConstructorIsPrivate() {
-        TestingUtil.callConstructorAndCheckIsPrivate(Comparators.class);
+        Asserts.assertIsUtilityClass(Comparators.class);
     }
 
 }

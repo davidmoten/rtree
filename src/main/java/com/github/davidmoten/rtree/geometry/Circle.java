@@ -1,8 +1,10 @@
 package com.github.davidmoten.rtree.geometry;
 
-import com.github.davidmoten.util.ObjectsHelper;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import static com.github.davidmoten.rtree.geometry.Geometries.point;
+
+import com.github.davidmoten.guavamini.Objects;
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
 public final class Circle implements Geometry {
 
@@ -16,8 +18,12 @@ public final class Circle implements Geometry {
         this.mbr = Rectangle.create(x - radius, y - radius, x + radius, y + radius);
     }
 
-    public static Circle create(double x, double y, double radius) {
+    static Circle create(double x, double y, double radius) {
         return new Circle((float) x, (float) y, (float) radius);
+    }
+
+    static Circle create(float x, float y, float radius) {
+        return new Circle(x, y, radius);
     }
 
     public float x() {
@@ -28,6 +34,10 @@ public final class Circle implements Geometry {
         return y;
     }
 
+    public float radius() {
+        return radius;
+    }
+
     @Override
     public Rectangle mbr() {
         return mbr;
@@ -35,7 +45,7 @@ public final class Circle implements Geometry {
 
     @Override
     public double distance(Rectangle r) {
-        return Math.max(0, new Point(x, y).distance(r) - radius);
+        return Math.max(0, point(x, y).distance(r) - radius);
     }
 
     @Override
@@ -45,7 +55,7 @@ public final class Circle implements Geometry {
 
     public boolean intersects(Circle c) {
         double total = radius + c.radius;
-        return new Point(x, y).distanceSquared(new Point(c.x, c.y)) <= total * total;
+        return point(x, y).distanceSquared(point(c.x, c.y)) <= total * total;
     }
 
     @Override
@@ -69,5 +79,9 @@ public final class Circle implements Geometry {
 
     private float sqr(float x) {
         return x * x;
+    }
+
+    public boolean intersects(Line line) {
+        return line.intersects(this);
     }
 }

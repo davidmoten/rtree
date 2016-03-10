@@ -2,7 +2,7 @@ package com.github.davidmoten.rtree.geometry;
 
 import java.util.List;
 
-import com.github.davidmoten.rtree.Util;
+import com.github.davidmoten.rtree.internal.Util;
 
 public class Group<T extends HasGeometry> implements HasGeometry {
 

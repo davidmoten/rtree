@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import rx.functions.Func1;
-
+import com.github.davidmoten.guavamini.Preconditions;
+import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
-import com.google.common.base.Preconditions;
+import com.github.davidmoten.rtree.internal.Comparators;
+
+import rx.functions.Func1;
 
 public final class SplitterRStar implements Splitter {
 
@@ -49,8 +51,8 @@ public final class SplitterRStar implements Splitter {
         X_LOWER, X_UPPER, Y_LOWER, Y_UPPER;
     }
 
-    private static final List<SortType> sortTypes = Collections.unmodifiableList(Arrays
-            .asList(SortType.values()));
+    private static final List<SortType> sortTypes = Collections
+            .unmodifiableList(Arrays.asList(SortType.values()));
 
     private static <T extends HasGeometry> Comparator<SortType> marginSumComparator(
             final Map<SortType, List<ListPair<T>>> map) {
@@ -69,9 +71,10 @@ public final class SplitterRStar implements Splitter {
         return sum;
     }
 
-    private static <T extends HasGeometry> List<ListPair<T>> getPairs(int minSize, List<T> list) {
+    @VisibleForTesting
+    static <T extends HasGeometry> List<ListPair<T>> getPairs(int minSize, List<T> list) {
         List<ListPair<T>> pairs = new ArrayList<ListPair<T>>(list.size() - 2 * minSize + 1);
-        for (int i = minSize; i < list.size() - minSize; i++) {
+        for (int i = minSize; i < list.size() - minSize + 1; i++) {
             List<T> list1 = list.subList(0, i);
             List<T> list2 = list.subList(i, list.size());
             ListPair<T> pair = new ListPair<T>(list1, list2);

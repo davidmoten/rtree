@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree;
 
+import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
 
 final class NodePosition<T, S extends Geometry> {
@@ -8,6 +9,7 @@ final class NodePosition<T, S extends Geometry> {
     private final int position;
 
     NodePosition(Node<T, S> node, int position) {
+        Preconditions.checkNotNull(node);
         this.node = node;
         this.position = position;
     }
@@ -22,6 +24,17 @@ final class NodePosition<T, S extends Geometry> {
 
     NodePosition<T, S> nextPosition() {
         return new NodePosition<T, S>(node, position + 1);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("NodePosition [node=");
+        builder.append(node);
+        builder.append(", position=");
+        builder.append(position);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

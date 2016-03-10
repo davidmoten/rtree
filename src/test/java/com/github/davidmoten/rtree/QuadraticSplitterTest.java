@@ -8,11 +8,12 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.github.davidmoten.guavamini.Sets;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
-import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.util.Pair;
-import com.google.common.collect.Sets;
+import com.github.davidmoten.rtree.internal.Util;
+import com.github.davidmoten.rtree.internal.util.Pair;
 
 public class QuadraticSplitterTest {
 
@@ -119,12 +120,12 @@ public class QuadraticSplitterTest {
 
     @Test(expected = RuntimeException.class)
     public void testExceptionForSplitEmptyList() {
-        final SplitterQuadratic q = new SplitterQuadratic();    
-        q.split(Collections.<HasGeometry> emptyList(), 3);      
+        final SplitterQuadratic q = new SplitterQuadratic();
+        q.split(Collections.<HasGeometry> emptyList(), 3);
     }
-    
+
     private static Mbr r(int n) {
-        return new Mbr(Rectangle.create(n, n, n + 1, n + 1));
+        return new Mbr(Geometries.rectangle(n, n, n + 1, n + 1));
     }
 
 }

@@ -7,23 +7,25 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.github.davidmoten.util.TestingUtil;
+import com.github.davidmoten.junit.Asserts;
 
 public class IntersectsTest {
 
     @Test
     public void testConstructorIsPrivate() {
-        TestingUtil.callConstructorAndCheckIsPrivate(Intersects.class);
+        Asserts.assertIsUtilityClass(Intersects.class);
     }
-    
+
     @Test
     public void testRectangleIntersectsCircle() {
-        assertTrue(Intersects.rectangleIntersectsCircle.call(rectangle(0, 0, 0, 0), circle(0, 0, 1)));
+        assertTrue(
+                Intersects.rectangleIntersectsCircle.call(rectangle(0, 0, 0, 0), circle(0, 0, 1)));
     }
-    
+
     @Test
     public void testRectangleDoesNotIntersectCircle() {
-        assertFalse(Intersects.rectangleIntersectsCircle.call(rectangle(0, 0, 0, 0), circle(100, 100, 1)));
+        assertFalse(Intersects.rectangleIntersectsCircle.call(rectangle(0, 0, 0, 0),
+                circle(100, 100, 1)));
     }
-    
+
 }

@@ -1,10 +1,10 @@
 package com.github.davidmoten.rtree;
 
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.internal.util.ImmutableStack;
+
 import rx.Subscriber;
 import rx.functions.Func1;
-
-import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.util.ImmutableStack;
 
 /**
  * Utility methods for controlling backpressure of the tree search.
@@ -69,13 +69,25 @@ final class Backpressure {
             final Subscriber<? super Entry<T, S>> subscriber,
             StackAndRequest<NodePosition<T, S>> state, NodePosition<T, S> np) {
         final long nextRequest;
-        Entry<T, S> entry = ((Leaf<T, S>) np.node()).entries().get(np.position());
+        Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
         if (condition.call(entry.geometry())) {
             subscriber.onNext(entry);
             nextRequest = state.request - 1;
         } else
             nextRequest = state.request;
         return StackAndRequest.create(state.stack.pop().push(np.nextPosition()), nextRequest);
+    }
+
+    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
+            final Func1<? super Geometry, Boolean> condition,
+            ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
+        Node<T, S> child = ((NonLeaf<T, S>) np.node()).child(np.position());
+        if (condition.call(child.geometry())) {
+            stack = stack.push(new NodePosition<T, S>(child, 0));
+        } else {
+            stack = stack.pop().push(np.nextPosition());
+        }
+        return stack;
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAfterLastInNode(
@@ -86,18 +98,6 @@ final class Backpressure {
         else {
             NodePosition<T, S> previous = stack2.peek();
             stack = stack2.pop().push(previous.nextPosition());
-        }
-        return stack;
-    }
-
-    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
-            final Func1<? super Geometry, Boolean> condition,
-            ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
-        Node<T, S> child = ((NonLeaf<T, S>) np.node()).children().get(np.position());
-        if (condition.call(child.geometry())) {
-            stack = stack.push(new NodePosition<T, S>(child, 0));
-        } else {
-            stack = stack.pop().push(np.nextPosition());
         }
         return stack;
     }

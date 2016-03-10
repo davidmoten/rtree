@@ -6,15 +6,15 @@ rtree
 
 In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive processing of search results. 
 
-Status: *released to Maven Central, ensure you use at least 0.4 to get fix for* [#7](https://github.com/davidmoten/rtree/issues/7)
+Status: *released to Maven Central*
 
 An [R-tree](http://en.wikipedia.org/wiki/R-tree) is a commonly used spatial index.
 
-This was fun to make, has an elegant concise algorithm, is thread-safe and fast.
+This was fun to make, has an elegant concise algorithm, is thread-safe, fast, and reasonably memory efficient (uses structural sharing).
 
 The algorithm to achieve immutability is cute. For insertion/deletion it involves recursion down to the 
 required leaf node then recursion back up to replace the parent nodes up to the root. The guts of 
-it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/Leaf.java) and [NonLeaf.java](src/main/java/com/github/davidmoten/rtree/NonLeaf.java).
+it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/internal/LeafDefault.java) and [NonLeaf.java](src/main/java/com/github/davidmoten/rtree/internal/NonLeafDefault.java).
 
 [Backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure) support required some complexity because effectively a
 bookmark needed to be kept for a position in the tree and returned to later to continue traversal. An immutable stack containing
@@ -38,8 +38,9 @@ Features
 * supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 * visualizer included
-* 100% unit test [code coverage](http://davidmoten.github.io/rtree/cobertura/index.html) 
-* R*-tree performs 530,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=4, minChildren=4). Insert at 135,000 entries per second.
+* serialization using [FlatBuffers](http://github.com/google/flatbuffers)
+* high unit test [code coverage](http://davidmoten.github.io/rtree/cobertura/index.html) 
+* R*-tree performs 830,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=10, minChildren=4). Insert at 100,000 entries per second.
 * requires java 1.6 or later
 
 Number of points = 1000, max children per node 8: 
@@ -59,7 +60,7 @@ Add this maven dependency to your pom.xml:
 <dependency>
   <groupId>com.github.davidmoten</groupId>
   <artifactId>rtree</artifactId>
-  <version>0.6.1</version>
+  <version>0.7.5</version>
 </dependency>
 ```
 ###Instantiate an R-Tree
@@ -74,10 +75,17 @@ RTree<String, Geometry> tree = RTree.create();
 You can specify a few parameters to the builder, including *minChildren*, *maxChildren*, *splitter*, *selector*:
 
 ```java
-RTree<String, Geometry> tree = RTree.minChildren(3).maxChildren(6).create();
+RTree<String, Geometry> tree = RTree.minChildren(3).maxChildren(6).create();
 ```
-###Generic typing
+### Geometries
+The following geometries are supported for insertion in an RTree:
 
+* `Rectangle`
+* `Point`
+* `Circle`
+* `Line` (requires [JTS](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22jts-core%22) dependency, look at [pom.xml](pom.xml))
+
+###Generic typing
 If for instance you know that the entry geometry is always ```Point``` then create an ```RTree``` specifying that generic type to gain more type safety:
 
 ```java
@@ -100,6 +108,7 @@ extension of the item. The ``Geometries`` builder provides these factory methods
 * ```Geometries.rectangle```
 * ```Geometries.circle```
 * ```Geometries.point```
+* ```Geometries.line``` (requires *jts-core* dependency)
 
 To add an item to an R-tree:
 
@@ -128,6 +137,16 @@ tree = tree.delete(entry);
 
 *Important note:* being an immutable data structure, calling ```tree.delete(item, geometry)``` does nothing to ```tree```, 
 it returns a new ```RTree``` without the deleted item. Make sure you use the result of the ```delete```!
+
+###Geospatial geometries (lats and longs)
+To handle wraparounds of longitude values on the earth (180/-180 boundary trickiness) there are special factory methods in the `Geometries` class. If you want to do geospatial searches then you should use these methods to build `Point`s and `Rectangle`s:
+
+```java
+Point point = Geometries.pointGeographic(lon, lat);
+Rectangle rectangle = Geometries.rectangleGeographic(lon1, lat1, lon2, lat2);
+```
+
+Under the covers these methods normalize the longitude value to be in the interval [-180, 180) and for rectangles the rightmost longitude has 360 added to it if it is less than the leftmost longitude.
 
 ###Custom geometries
 You can also write your own implementation of [```Geometry```](src/main/java/com/github/davidmoten/rtree/geometry/Geometry.java). An implementation of ```Geometry``` needs to specify methods to:
@@ -221,19 +240,14 @@ import rx.Observable;
 import rx.functions.*;
 import rx.schedulers.Schedulers;
 
-Func1<Entry<String, Geometry>, Character> firstCharacter =
-    entry -> entry.value().charAt(0);
-Func2<Character,Character,Character> firstAlphabetically 
-    = (x,y) -> x <=y ? x : y;
-
 Character result = 
     tree.search(Geometries.rectangle(8, 15, 30, 35))
         // filter for names alphabetically less than M
         .filter(entry -> entry.value() < "M")
         // get the first character of the name
-        .map(entry -> firstCharacter(entry.value()))
+        .map(entry -> entry.value().charAt(0))
         // reduce to the first character alphabetically 
-        .reduce((x,y) -> firstAlphabetically(x,y))
+        .reduce((x,y) -> x <= y ? x : y)
         // subscribe to the stream and block for the result
         .toBlocking().single();
 System.out.println(list);
@@ -290,13 +304,55 @@ mbr=Rectangle [x1=10.0, y1=4.0, x2=62.0, y2=85.0]
     entry=Entry [value=3, geometry=Point [x=10.0, y=63.0]]
 ```
 
+Serialization
+------------------
+Release 0.8 includes [flatbuffers](https://github.com/google/flatbuffers) support as a serialization format and as a lower performance but lower memory consumption (approximately one third) option for an RTree. 
+
+The greek earthquake data (38,377 entries) when placed in a default RTree with `maxChildren=10` takes up 4,548,133 bytes in memory. If that data is serialized then reloaded into memory using the `InternalStructure.FLATBUFFERS_SINGLE_ARRAY` option then the RTree takes up 1,431,772 bytes in memory (approximately one third the memory usage). Bear in mind though that searches are much more expensive (at the moment) with this data structure because of object creation and gc pressures (see benchmarks). Further work would be to enable direct searching of the underlying array without object creation expenses required to match the current search routines. 
+
+As of 5 March 2016, indicative RTree metrics using flatbuffers data structure are:
+
+* one third the memory use with log(N) object creations per search
+* one third the speed with backpressure (e.g. if `flatMap` or `observeOn` is downstream)
+* one tenth the speed without backpressure 
+
+Note that serialization uses an optional dependency on `flatbuffers`. Add the following to your pom dependencies:
+
+```xml
+<dependency>
+    <groupId>com.github.davidmoten</groupId>
+    <artifactId>flatbuffers-java</artifactId>
+    <version>1.3.0.1</version>
+    <optional>true</optional>
+</dependency>
+```
+
+##Serialization example
+
+Write an `RTree` to an `OutputStream`:
+```java
+RTree<String, Point> tree = ...;
+OutputStream os = ...;
+Serializer<String, Point> serializer = 
+  Serializers.flatBuffers().utf8();
+serializer.write(tree, os); 
+```
+
+Read an `RTree` from an `InputStream` into a low-memory flatbuffers based structure:
+```java
+RTree<String, Point> tree = 
+  serializer.read(is, lengthBytes, InnerStructure.SINGLE_ARRAY);
+```
+
+Read an `RTree` from an `InputStream` into a default structure:
+```java
+RTree<String, Point> tree = 
+  serializer.read(is, lengthBytes, InnerStructure.DEFAULT);
+```
+
 Dependencies
 ---------------------
-This library has a dependency on *guava* 18.0 which is about 2.2M. If you are coding for Android you may want to use *ProGuard* to trim 
-the final application size. The dependency is driven by extensive use of ```Optional```,```Preconditions```,```Objects```, and the use of
-```MinMaxPriorityQueue``` for the *nearest-k* search. I'm open to the possibility of internalizing these dependencies if people care
-about the dependency size a lot. Let me know.
-
+As of 0.7.5 this library does not depend on *guava* (>2M) but rather depends on *guava-mini* (11K). The `nearest` search used to depend on `MinMaxPriorityQueue` from guava but now uses a backport of Java 8 `PriorityQueue` inside a custom `BoundedPriorityQueue` class that gives about 1.7x the throughput as the guava class.
 
 How to build
 ----------------
@@ -312,50 +368,64 @@ Benchmarks are provided by
 ```
 mvn clean install -Pbenchmark
 ```
+Coverity scan
+----------------
+This codebase is scanned by Coverity scan whenever the branch `coverity_scan` is updated. 
+
+For the project committers if a coverity scan is desired just do this:
+
+```bash
+git checkout coverity_scan
+git pull origin master
+git push origin coverity_scan
+```
 
 ### Notes
 The *Greek* data referred to in the benchmarks is a collection of some 38,377 entries corresponding to the epicentres of earthquakes in Greece between 1964 and 2000. This data set is used by multiple studies on R-trees as a test case.
 
 ### Results
 
-These were run on i7-920@2.67GHz with *rtree* version 0.6.1:
+These were run on i7-920 @2.67GHz with *rtree* version 0.8-RC3:
 
 ```
-Benchmark                                                                                  Mode  Samples       Score       Error  Units
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004           thrpt       10  170629.988 ±  1992.468  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010           thrpt       10  199225.527 ±  3687.661  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032           thrpt       10   92269.915 ±  1777.963  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128           thrpt       10  282006.364 ±  4718.936  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004      thrpt       10  178533.217 ±  1397.901  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010      thrpt       10  211693.060 ±  2160.555  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032      thrpt       10  147575.589 ±  1309.416  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128      thrpt       10   81962.980 ±  1114.323  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren004                      thrpt       10  841284.193 ± 12172.013  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren010                      thrpt       10  331521.896 ± 15179.039  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren032                      thrpt       10  339449.893 ±  1768.640  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOf1000PointsMaxChildren128                      thrpt       10  430664.624 ±  7939.214  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren004                 thrpt       10  332686.163 ±  7647.466  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren010                 thrpt       10  213191.627 ±  2998.905  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren032                 thrpt       10  122136.799 ±  3024.498  ops/s
-c.g.d.r.BenchmarksRTree.defaultRTreeSearchOfGreekDataPointsMaxChildren128                 thrpt       10   49765.765 ±   391.503  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeDeleteOneEveryOccurrenceFromGreekDataChildren010         thrpt       10  195698.148 ±  1650.701  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren004              thrpt       10  155788.206 ±  1976.180  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren010              thrpt       10  143670.205 ±  1525.071  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren032              thrpt       10   37517.491 ±   634.409  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryInto1000EntriesMaxChildren128              thrpt       10  116450.918 ±  1461.198  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004         thrpt       10  135777.256 ±  1003.535  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010         thrpt       10  108184.558 ±  1210.154  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032         thrpt       10   31833.529 ±   349.885  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128         thrpt       10    3884.568 ±    34.335  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren004                         thrpt       10  438527.764 ±  5882.232  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren010                         thrpt       10  707710.764 ± 13940.099  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren032                         thrpt       10  426923.809 ±  6349.023  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren128                         thrpt       10  698529.029 ±  9430.641  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren004                    thrpt       10  531461.541 ±  8004.566  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010                    thrpt       10  407222.646 ±  4319.595  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpressure    thrpt       10  109341.392 ±  1624.047  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032                    thrpt       10  359887.451 ±  2771.129  ops/s
-c.g.d.r.BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128                    thrpt       10  247366.614 ±  3056.753  ops/s
+Benchmark                                                               Mode  Cnt        Score       Error  Units
+defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004                thrpt   10   243840.950 ±  1454.629  ops/s
+defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010                thrpt   10   259345.505 ±  2148.300  ops/s
+defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032                thrpt   10   124070.872 ±  2286.381  ops/s
+defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128                thrpt   10   292239.978 ±  3190.375  ops/s
+defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004           thrpt   10   246115.424 ±  3129.512  ops/s
+defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010           thrpt   10   251289.132 ±  1513.981  ops/s
+defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032           thrpt   10   170485.396 ±   904.597  ops/s
+defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128           thrpt   10    89469.577 ±   640.203  ops/s
+defaultRTreeSearchOf1000PointsMaxChildren004                           thrpt   10  1113588.814 ±  9417.967  ops/s
+defaultRTreeSearchOf1000PointsMaxChildren010                           thrpt   10   502430.062 ±  5915.646  ops/s
+defaultRTreeSearchOf1000PointsMaxChildren032                           thrpt   10   225878.743 ±  5530.440  ops/s
+defaultRTreeSearchOf1000PointsMaxChildren128                           thrpt   10   667873.791 ± 17265.601  ops/s
+defaultRTreeSearchOfGreekDataPointsMaxChildren004                      thrpt   10   395641.899 ±  3420.867  ops/s
+defaultRTreeSearchOfGreekDataPointsMaxChildren010                      thrpt   10   294968.097 ±  4504.746  ops/s
+defaultRTreeSearchOfGreekDataPointsMaxChildren032                      thrpt   10   158096.094 ±  3786.606  ops/s
+defaultRTreeSearchOfGreekDataPointsMaxChildren128                      thrpt   10    66512.442 ±   608.095  ops/s
+rStarTreeDeleteOneEveryOccurrenceFromGreekDataChildren010              thrpt   10   200867.291 ±  2500.453  ops/s
+rStarTreeInsertOneEntryInto1000EntriesMaxChildren004                   thrpt   10   165269.839 ±  3841.124  ops/s
+rStarTreeInsertOneEntryInto1000EntriesMaxChildren010                   thrpt   10   156436.451 ±  2119.481  ops/s
+rStarTreeInsertOneEntryInto1000EntriesMaxChildren032                   thrpt   10    51938.795 ±   536.802  ops/s
+rStarTreeInsertOneEntryInto1000EntriesMaxChildren128                   thrpt   10   147009.150 ±  4392.019  ops/s
+rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004              thrpt   10   219660.024 ±  2269.386  ops/s
+rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010              thrpt   10   119207.095 ±  1698.888  ops/s
+rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032              thrpt   10    63685.021 ±   355.982  ops/s
+rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128              thrpt   10     6836.022 ±   114.830  ops/s
+rStarTreeSearchOf1000PointsMaxChildren004                              thrpt   10  1315153.201 ±  9536.803  ops/s
+rStarTreeSearchOf1000PointsMaxChildren010                              thrpt   10  1205465.210 ± 10657.502  ops/s
+rStarTreeSearchOf1000PointsMaxChildren032                              thrpt   10   678899.280 ±  9847.660  ops/s
+rStarTreeSearchOf1000PointsMaxChildren128                              thrpt   10  1069840.038 ± 18344.072  ops/s
+rStarTreeSearchOfGreekDataPointsMaxChildren004                         thrpt   10   683693.763 ± 25341.058  ops/s
+rStarTreeSearchOfGreekDataPointsMaxChildren010                         thrpt   10   785348.583 ± 27793.548  ops/s
+rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers              thrpt   10    88901.062 ±  2005.311  ops/s
+rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffersBackpressure  thrpt   10    40160.682 ±  1119.264  ops/s
+rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpressure         thrpt   10    95935.392 ±  1259.036  ops/s
+rStarTreeSearchOfGreekDataPointsMaxChildren032                         thrpt   10   704127.888 ± 19456.376  ops/s
+rStarTreeSearchOfGreekDataPointsMaxChildren128                         thrpt   10   338643.201 ±  6297.174  ops/s
+searchNearestGreek                                                     thrpt   10     3933.795 ±   147.489  ops/s
 
 ```
 
