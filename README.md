@@ -14,7 +14,7 @@ This was fun to make, has an elegant concise algorithm, is thread-safe, fast, an
 
 The algorithm to achieve immutability is cute. For insertion/deletion it involves recursion down to the 
 required leaf node then recursion back up to replace the parent nodes up to the root. The guts of 
-it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/Leaf.java) and [NonLeaf.java](src/main/java/com/github/davidmoten/rtree/NonLeaf.java).
+it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree/internal/LeafDefault.java) and [NonLeaf.java](src/main/java/com/github/davidmoten/rtree/internal/NonLeafDefault.java).
 
 [Backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure) support required some complexity because effectively a
 bookmark needed to be kept for a position in the tree and returned to later to continue traversal. An immutable stack containing
