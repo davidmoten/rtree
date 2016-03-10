@@ -511,13 +511,16 @@ public final class RTree<T, S extends Geometry> {
      * <p>
      * Returns an Observable sequence of {@link Entry} that satisfy the given
      * condition. Note that this method is well-behaved only if:
-     * </p>
-     * 
-     * <code>condition(g) is true for {@link Geometry} g implies condition(r) is true for the minimum bounding rectangles of the ancestor nodes</code>
+     *
      * 
      * <p>
-     * <code>distance(g) &lt; sD</code> is an example of such a condition.
-     * </p>
+     * {@code condition(g)} is true for {@link Geometry} g implies
+     * {@code condition(r)} is true for the minimum bounding rectangles of the
+     * ancestor nodes.
+     * 
+     * <p>
+     * {@code distance(g) < D} is an example of such a condition.
+     * 
      * 
      * @param condition
      *            return Entries whose geometry satisfies the given condition
