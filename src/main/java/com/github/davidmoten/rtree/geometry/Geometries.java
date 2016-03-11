@@ -27,7 +27,7 @@ public final class Geometries {
     public static Circle circle(double x, double y, double radius) {
         return Circle.create(x, y, radius);
     }
-    
+
     public static Circle circle(float x, float y, float radius) {
         return Circle.create(x, y, radius);
     }
@@ -40,14 +40,12 @@ public final class Geometries {
         return Line.create(x1, y1, x2, y2);
     }
 
-    
     public static Rectangle rectangleGeographic(double lon1, double lat1, double lon2,
             double lat2) {
-       return rectangleGeographic(lon1, lat1, lon2, lat2);
+        return rectangleGeographic((float) lon1, (float) lat1, (float) lon2, (float) lat2);
     }
-    
-    public static Rectangle rectangleGeographic(float lon1, float lat1, float lon2,
-            float lat2) {
+
+    public static Rectangle rectangleGeographic(float lon1, float lat1, float lon2, float lat2) {
         float x1 = normalizeLongitude(lon1);
         float x2 = normalizeLongitude(lon2);
         if (x2 < x1) {
@@ -64,14 +62,14 @@ public final class Geometries {
     static double normalizeLongitude(double d) {
         return normalizeLongitude((float) d);
     }
-    
+
     private static float normalizeLongitude(float d) {
         if (d == -180.0f)
             return -180.0f;
         else {
             float sign = Math.signum(d);
-            float  x = Math.abs(d) / 360;
-            float  x2 = (x - (float) Math.floor(x)) * 360;
+            float x = Math.abs(d) / 360;
+            float x2 = (x - (float) Math.floor(x)) * 360;
             if (x2 >= 180)
                 x2 -= 360;
             return x2 * sign;

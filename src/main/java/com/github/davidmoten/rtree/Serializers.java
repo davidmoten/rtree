@@ -90,7 +90,7 @@ public final class Serializers {
                 serializer = (Func1<T, byte[]>) javaIoSerializer();
             }
             if (deserializer == null) {
-                deserializer = (Func1<byte[],T>) javaIoDeserializer();
+                deserializer = (Func1<byte[], T>) javaIoDeserializer();
             }
             return SerializerFlatBuffers.create(serializer, deserializer);
         }
