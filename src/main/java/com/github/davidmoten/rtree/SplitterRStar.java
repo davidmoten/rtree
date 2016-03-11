@@ -94,7 +94,7 @@ public final class SplitterRStar implements Splitter {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
-            return ((Float) n1.geometry().mbr().x1()).compareTo(n2.geometry().mbr().x1());
+            return Float.compare(n1.geometry().mbr().x1(), n2.geometry().mbr().x1());
         }
     };
 
@@ -102,7 +102,7 @@ public final class SplitterRStar implements Splitter {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
-            return ((Float) n1.geometry().mbr().x2()).compareTo(n2.geometry().mbr().x2());
+            return Float.compare(n1.geometry().mbr().x2(), n2.geometry().mbr().x2());
         }
     };
 
@@ -110,7 +110,7 @@ public final class SplitterRStar implements Splitter {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
-            return ((Float) n1.geometry().mbr().y1()).compareTo(n2.geometry().mbr().y1());
+            return Float.compare(n1.geometry().mbr().y1(), n2.geometry().mbr().y1());
         }
     };
 
@@ -118,7 +118,7 @@ public final class SplitterRStar implements Splitter {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
-            return ((Float) n1.geometry().mbr().y2()).compareTo(n2.geometry().mbr().y2());
+            return Float.compare(n1.geometry().mbr().y2(), n2.geometry().mbr().y2());
         }
     };
 
