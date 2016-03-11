@@ -3,8 +3,6 @@ package com.github.davidmoten.rtree.internal;
 import java.util.Comparator;
 import java.util.List;
 
-import rx.functions.Func1;
-
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Selector;
 import com.github.davidmoten.rtree.Splitter;
@@ -12,6 +10,8 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+
+import rx.functions.Func1;
 
 /**
  * Utility functions asociated with {@link Comparator}s, especially for use with
@@ -24,7 +24,8 @@ public final class Comparators {
         // prevent instantiation
     }
 
-    public static final Comparator<ListPair<?>> overlapListPairComparator = toComparator(Functions.overlapListPair);
+    public static final Comparator<ListPair<?>> overlapListPairComparator = toComparator(
+            Functions.overlapListPair);
 
     /**
      * Compares the sum of the areas of two ListPairs.
@@ -33,7 +34,7 @@ public final class Comparators {
 
         @Override
         public int compare(ListPair<?> p1, ListPair<?> p2) {
-            return ((Float) p1.areaSum()).compareTo(p2.areaSum());
+            return Float.compare(p1.areaSum(), p2.areaSum());
         }
     };
 
@@ -66,13 +67,14 @@ public final class Comparators {
 
             @Override
             public int compare(HasGeometry g1, HasGeometry g2) {
-                return ((Float) g1.geometry().mbr().add(r).area()).compareTo(g2.geometry().mbr()
-                        .add(r).area());
+                return Float.compare(g1.geometry().mbr().add(r).area(),
+                        g2.geometry().mbr().add(r).area());
             }
         };
     }
 
-    public static <R, T extends Comparable<T>> Comparator<R> toComparator(final Func1<R, T> function) {
+    public static <R, T extends Comparable<T>> Comparator<R> toComparator(
+            final Func1<R, T> function) {
         return new Comparator<R>() {
 
             @Override
@@ -118,7 +120,7 @@ public final class Comparators {
         return new Comparator<Entry<T, S>>() {
             @Override
             public int compare(Entry<T, S> e1, Entry<T, S> e2) {
-                return ((Double) e1.geometry().distance(r)).compareTo(e2.geometry().distance(r));
+                return Double.compare(e1.geometry().distance(r), e2.geometry().distance(r));
             }
         };
     }
