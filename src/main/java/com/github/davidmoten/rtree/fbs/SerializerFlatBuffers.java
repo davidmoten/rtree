@@ -24,6 +24,7 @@ import com.github.davidmoten.rtree.fbs.generated.Box_;
 import com.github.davidmoten.rtree.fbs.generated.Context_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.fbs.generated.Tree_;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.LeafDefault;
@@ -36,12 +37,13 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
 
     private final FactoryFlatBuffers<T, S> factory;
 
-    private SerializerFlatBuffers(Func1<? super T, byte[]> serializer, Func1<byte[],? extends  T> deserializer) {
+    private SerializerFlatBuffers(Func1<? super T, byte[]> serializer,
+            Func1<byte[], ? extends T> deserializer) {
         this.factory = new FactoryFlatBuffers<T, S>(serializer, deserializer);
     }
 
-    public static <T, S extends Geometry> Serializer<T, S> create(Func1<? super T, byte[]> serializer,
-            Func1<byte[], ? extends T> deserializer) {
+    public static <T, S extends Geometry> Serializer<T, S> create(
+            Func1<? super T, byte[]> serializer, Func1<byte[], ? extends T> deserializer) {
         return new SerializerFlatBuffers<T, S>(serializer, deserializer);
     }
 
@@ -54,17 +56,35 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
     @Override
     public void write(RTree<T, S> tree, OutputStream os) throws IOException {
         FlatBufferBuilder builder = new FlatBufferBuilder();
-        int n = addNode(tree.root().get(), builder, factory.serializer());
-        Rectangle mbb = tree.root().get().geometry().mbr();
+        final Rectangle mbb;
+        if (tree.root().isPresent()) {
+            mbb = tree.root().get().geometry().mbr();
+        } else {
+            mbb = Geometries.rectangle(0, 0, 0, 0);
+        }
         int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
         Context_.startContext_(builder);
         Context_.addBounds(builder, b);
         Context_.addMinChildren(builder, tree.context().minChildren());
         Context_.addMaxChildren(builder, tree.context().maxChildren());
         int c = Context_.endContext_(builder);
-
-        int t = Tree_.createTree_(builder, c, n, tree.size());
+        final int n;
+        if (tree.root().isPresent()) {
+            n = addNode(tree.root().get(), builder, factory.serializer());
+        } else {
+            // won't be used
+            n = 0;
+        }
+        // int t = Tree_.createTree_(builder, c, n, tree.size());
+        Tree_.startTree_(builder);
+        Tree_.addContext(builder, c);
+        Tree_.addSize(builder, tree.size());
+        if (tree.size() > 0) {
+            Tree_.addRoot(builder, n);
+        }
+        int t = Tree_.endTree_(builder);
         Tree_.finishTree_Buffer(builder, t);
+
         ByteBuffer bb = builder.dataBuffer();
         os.write(bb.array(), bb.position(), bb.remaining());
     }
@@ -102,20 +122,24 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
             throws IOException {
         byte[] bytes = readFully(is, (int) sizeBytes);
         Tree_ t = Tree_.getRootAsTree_(ByteBuffer.wrap(bytes));
-        Node_ node = t.root();
         Context<T, S> context = new Context<T, S>(t.context().minChildren(),
                 t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(), factory);
-        final Node<T, S> root;
-        if (structure == InternalStructure.SINGLE_ARRAY) {
-            if (node.childrenLength() > 0) {
-                root = new NonLeafFlatBuffers<T, S>(node, context, factory.deserializer());
-            } else {
-                root = new LeafFlatBuffers<T, S>(node, context, factory.deserializer());
-            }
+        Node_ node = t.root();
+        if (node == null) {
+            return SerializerHelper.create(Optional.<Node<T, S>> absent(), 0, context);
         } else {
-            root = toNodeDefault(node, context, factory.deserializer());
+            final Node<T, S> root;
+            if (structure == InternalStructure.SINGLE_ARRAY) {
+                if (node.childrenLength() > 0) {
+                    root = new NonLeafFlatBuffers<T, S>(node, context, factory.deserializer());
+                } else {
+                    root = new LeafFlatBuffers<T, S>(node, context, factory.deserializer());
+                }
+            } else {
+                root = toNodeDefault(node, context, factory.deserializer());
+            }
+            return SerializerHelper.create(Optional.of(root), (int) t.size(), context);
         }
-        return SerializerHelper.create(Optional.of(root), (int) t.size(), context);
     }
 
     private static <T, S extends Geometry> Node<T, S> toNodeDefault(Node_ node,

@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -136,6 +137,19 @@ public class SerializersTest {
         tree2 = tree2.delete(b);
         assertEquals(Sets.newHashSet(a, c, d, e),
                 Sets.newHashSet(tree2.entries().toList().toBlocking().single()));
+    }
+
+    @Test
+    public void canRoundTripEmptyTree() throws IOException {
+        RTree<String, Point> tree = RTree.create();
+        Serializer<String, Point> serializer = Serializers.flatBuffers().utf8();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        serializer.write(tree, bytes);
+        bytes.close();
+        byte[] array = bytes.toByteArray();
+        RTree<String, Point> tree2 = serializer.read(new ByteArrayInputStream(array), array.length,
+                InternalStructure.SINGLE_ARRAY);
+        assertTrue(tree2.isEmpty());
     }
 
     private static void checkRoundTripPoint(Serializer<String, Point> serializer)
