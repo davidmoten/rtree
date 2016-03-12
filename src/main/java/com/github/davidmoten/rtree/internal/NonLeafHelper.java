@@ -18,9 +18,9 @@ import rx.Subscriber;
 import rx.functions.Func1;
 
 public final class NonLeafHelper {
-    
+
     private NonLeafHelper() {
-        //prevent instantiation
+        // prevent instantiation
     }
 
     public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> criterion,
@@ -28,12 +28,14 @@ public final class NonLeafHelper {
         if (!criterion.call(node.geometry().mbr()))
             return;
 
-        for (int i = 0; i < node.count(); i++) {
-            Node<T, S> child = node.child(i);
-            if (subscriber.isUnsubscribed())
+        int numChildren = node.count();
+        for (int i = 0; i < numChildren; i++) {
+            if (subscriber.isUnsubscribed()) {
                 return;
-            else
+            } else {
+                Node<T, S> child = node.child(i);
                 child.searchWithoutBackpressure(criterion, subscriber);
+            }
         }
     }
 
@@ -61,7 +63,6 @@ public final class NonLeafHelper {
         list.add(context.factory().createNonLeaf(pair.group2().list(), context));
         return list;
     }
-
 
     public static <T, S extends Geometry> NodeAndEntries<T, S> delete(
             Entry<? extends T, ? extends S> entry, boolean all, NonLeaf<T, S> node) {

@@ -18,9 +18,9 @@ import rx.Subscriber;
 import rx.functions.Func1;
 
 public final class LeafHelper {
-    
+
     private LeafHelper() {
-        //prevent instantiation
+        // prevent instantiation
     }
 
     public static <T, S extends Geometry> NodeAndEntries<T, S> delete(
@@ -73,14 +73,15 @@ public final class LeafHelper {
     public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T, S>> subscriber, Leaf<T, S> leaf) {
 
-        if (!condition.call(leaf.geometry().mbr()))
+        if (!condition.call(leaf.geometry().mbr())) {
             return;
+        }
 
         for (int i = 0; i < leaf.count(); i++) {
             Entry<T, S> entry = leaf.entry(i);
-            if (subscriber.isUnsubscribed())
+            if (subscriber.isUnsubscribed()) {
                 return;
-            else {
+            } else {
                 if (condition.call(entry.geometry()))
                     subscriber.onNext(entry);
             }
