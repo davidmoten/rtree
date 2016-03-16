@@ -64,7 +64,7 @@ public final class LeafHelper {
 
     private static <T, S extends Geometry> List<Node<T, S>> makeLeaves(ListPair<Entry<T, S>> pair,
             Context<T, S> context) {
-        List<Node<T, S>> list = new ArrayList<Node<T, S>>();
+        List<Node<T, S>> list = new ArrayList<Node<T, S>>(2);
         list.add(context.factory().createLeaf(pair.group1().list(), context));
         list.add(context.factory().createLeaf(pair.group2().list(), context));
         return list;

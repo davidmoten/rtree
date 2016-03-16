@@ -104,9 +104,10 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
     }
 
     private List<Node<T, S>> createChildren() {
-        List<Node<T, S>> children = new ArrayList<Node<T, S>>(node.childrenLength());
+
         // reduce allocations by resusing objects
         int numChildren = node.childrenLength();
+        List<Node<T, S>> children = new ArrayList<Node<T, S>>(numChildren);
         for (int i = 0; i < numChildren; i++) {
             Node_ child = node.children(i);
             if (child.childrenLength() > 0) {

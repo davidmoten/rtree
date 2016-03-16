@@ -89,8 +89,8 @@ final class FlatBuffersHelper {
 
     static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node,
             Func1<byte[], ? extends T> deserializer) {
-        List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>();
         int numEntries = node.entriesLength();
+        List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>(numEntries);
         Preconditions.checkArgument(numEntries > 0);
         Entry_ entry = new Entry_();
         Geometry_ geom = new Geometry_();

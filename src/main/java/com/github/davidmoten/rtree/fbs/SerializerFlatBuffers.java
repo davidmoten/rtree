@@ -144,9 +144,10 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
 
     private static <T, S extends Geometry> Node<T, S> toNodeDefault(Node_ node,
             Context<T, S> context, Func1<byte[], ? extends T> deserializer) {
-        if (node.childrenLength() > 0) {
-            List<Node<T, S>> children = new ArrayList<Node<T, S>>(node.childrenLength());
-            for (int i = 0; i < node.childrenLength(); i++) {
+        int numChildren = node.childrenLength();
+        if (numChildren > 0) {
+            List<Node<T, S>> children = new ArrayList<Node<T, S>>(numChildren);
+            for (int i = 0; i < numChildren; i++) {
                 children.add(toNodeDefault(node.children(i), context, deserializer));
             }
             return new NonLeafDefault<T, S>(children, context);
