@@ -90,7 +90,7 @@ public final class SplitterRStar implements Splitter {
         return list;
     }
 
-    private static Comparator<HasGeometry> INCREASING_X_LOWER = new Comparator<HasGeometry>() {
+    private static final Comparator<HasGeometry> INCREASING_X_LOWER = new Comparator<HasGeometry>() {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
@@ -98,7 +98,7 @@ public final class SplitterRStar implements Splitter {
         }
     };
 
-    private static Comparator<HasGeometry> INCREASING_X_UPPER = new Comparator<HasGeometry>() {
+    private static final Comparator<HasGeometry> INCREASING_X_UPPER = new Comparator<HasGeometry>() {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
@@ -106,7 +106,7 @@ public final class SplitterRStar implements Splitter {
         }
     };
 
-    private static Comparator<HasGeometry> INCREASING_Y_LOWER = new Comparator<HasGeometry>() {
+    private static final Comparator<HasGeometry> INCREASING_Y_LOWER = new Comparator<HasGeometry>() {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
@@ -114,7 +114,7 @@ public final class SplitterRStar implements Splitter {
         }
     };
 
-    private static Comparator<HasGeometry> INCREASING_Y_UPPER = new Comparator<HasGeometry>() {
+    private static final Comparator<HasGeometry> INCREASING_Y_UPPER = new Comparator<HasGeometry>() {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
