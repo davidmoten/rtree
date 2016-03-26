@@ -24,9 +24,6 @@ public final class Comparators {
         // prevent instantiation
     }
 
-    public static final Comparator<ListPair<?>> overlapListPairComparator = toComparator(
-            Functions.overlapListPair);
-
     /**
      * Compares the sum of the areas of two ListPairs.
      */

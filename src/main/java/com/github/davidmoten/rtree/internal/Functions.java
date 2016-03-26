@@ -2,13 +2,12 @@ package com.github.davidmoten.rtree.internal;
 
 import java.util.List;
 
-import rx.functions.Func1;
-
 import com.github.davidmoten.rtree.Selector;
 import com.github.davidmoten.rtree.Splitter;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
-import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+
+import rx.functions.Func1;
 
 /**
  * Utility functions for making {@link Selector}s and {@link Splitter}s.
@@ -20,15 +19,7 @@ public final class Functions {
         // prevent instantiation
     }
 
-    public static final Func1<ListPair<? extends HasGeometry>, Double> overlapListPair = new Func1<ListPair<? extends HasGeometry>, Double>() {
-
-        @Override
-        public Double call(ListPair<? extends HasGeometry> pair) {
-            return (double) pair.group1().geometry().mbr()
-                    .intersectionArea(pair.group2().geometry().mbr());
-        }
-    };
-
+    
     public static Func1<HasGeometry, Double> overlapArea(final Rectangle r,
             final List<? extends HasGeometry> list) {
         return new Func1<HasGeometry, Double>() {
@@ -56,5 +47,6 @@ public final class Functions {
             }
         };
     }
+
     
 }
