@@ -4,17 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.internal.Comparators;
-
-import rx.functions.Func1;
 
 public final class SplitterRStar implements Splitter {
 
@@ -32,36 +28,37 @@ public final class SplitterRStar implements Splitter {
         // sort nodes into increasing x, calculate min overlap where both groups
         // have more than minChildren
 
-        Map<SortType, List<ListPair<T>>> map = new HashMap<SortType, List<ListPair<T>>>(5, 1.0f);
-        map.put(SortType.X_LOWER, getPairs(minSize, sort(items, INCREASING_X_LOWER)));
-        map.put(SortType.X_UPPER, getPairs(minSize, sort(items, INCREASING_X_UPPER)));
-        map.put(SortType.Y_LOWER, getPairs(minSize, sort(items, INCREASING_Y_LOWER)));
-        map.put(SortType.Y_UPPER, getPairs(minSize, sort(items, INCREASING_Y_UPPER)));
-
         // compute S the sum of all margin-values of the lists above
         // the list with the least S is then used to find minimum overlap
 
-        SortType leastMarginSumSortType = Collections.min(sortTypes, marginSumComparator(map));
-        List<ListPair<T>> pairs = map.get(leastMarginSumSortType);
-
+        List<ListPair<T>> pairs = null;
+        float lowestMarginSum = Float.MAX_VALUE; 
+        for (SortType sortType: SortType.values()) {
+             List<ListPair<T>> p = getPairs(minSize, sort(items, comparator(sortType)));
+             float marginSum = marginValueSum(p);
+             if (marginSum < lowestMarginSum) {
+                 lowestMarginSum = marginSum;
+                 pairs = p;
+             }
+        }
         return Collections.min(pairs, comparator);
+    }
+
+    private static Comparator<HasGeometry> comparator(SortType sortType) {
+        if (sortType ==SortType.X_LOWER)
+            return INCREASING_X_LOWER;
+        else if(sortType == SortType.X_UPPER)
+            return INCREASING_X_UPPER;
+        else if (sortType == SortType.Y_LOWER)
+            return INCREASING_Y_LOWER;
+        else if (sortType == SortType.Y_UPPER)
+            return INCREASING_Y_UPPER;
+        else
+            throw new IllegalArgumentException("unknown sort type");
     }
 
     private static enum SortType {
         X_LOWER, X_UPPER, Y_LOWER, Y_UPPER;
-    }
-
-    private static final List<SortType> sortTypes = Collections
-            .unmodifiableList(Arrays.asList(SortType.values()));
-
-    private static <T extends HasGeometry> Comparator<SortType> marginSumComparator(
-            final Map<SortType, List<ListPair<T>>> map) {
-        return Comparators.toComparator(new Func1<SortType, Double>() {
-            @Override
-            public Double call(SortType sortType) {
-                return (double) marginValueSum(map.get(sortType));
-            }
-        });
     }
 
     private static <T extends HasGeometry> float marginValueSum(List<ListPair<T>> list) {
@@ -75,6 +72,8 @@ public final class SplitterRStar implements Splitter {
     static <T extends HasGeometry> List<ListPair<T>> getPairs(int minSize, List<T> list) {
         List<ListPair<T>> pairs = new ArrayList<ListPair<T>>(list.size() - 2 * minSize + 1);
         for (int i = minSize; i < list.size() - minSize + 1; i++) {
+            //Note that subList returns a view of list so creating list1 and list2 doesn't 
+            //necessarily incur array allocation costs.
             List<T> list1 = list.subList(0, i);
             List<T> list2 = list.subList(i, list.size());
             ListPair<T> pair = new ListPair<T>(list1, list2);
