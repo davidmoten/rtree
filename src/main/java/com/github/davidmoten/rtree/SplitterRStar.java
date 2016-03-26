@@ -32,29 +32,31 @@ public final class SplitterRStar implements Splitter {
         // the list with the least S is then used to find minimum overlap
 
         List<ListPair<T>> pairs = null;
-        float lowestMarginSum = Float.MAX_VALUE; 
-        for (SortType sortType: SortType.values()) {
-             List<ListPair<T>> p = getPairs(minSize, sort(items, comparator(sortType)));
-             float marginSum = marginValueSum(p);
-             if (marginSum < lowestMarginSum) {
-                 lowestMarginSum = marginSum;
-                 pairs = p;
-             }
+        float lowestMarginSum = Float.MAX_VALUE;
+        for (SortType sortType : SortType.values()) {
+            List<ListPair<T>> p = getPairs(minSize, sort(items, comparator(sortType)));
+            float marginSum = marginValueSum(p);
+            if (marginSum < lowestMarginSum) {
+                lowestMarginSum = marginSum;
+                pairs = p;
+            }
         }
         return Collections.min(pairs, comparator);
     }
 
     private static Comparator<HasGeometry> comparator(SortType sortType) {
-        if (sortType ==SortType.X_LOWER)
+        switch (sortType) {
+        case X_LOWER:
             return INCREASING_X_LOWER;
-        else if(sortType == SortType.X_UPPER)
+        case X_UPPER:
             return INCREASING_X_UPPER;
-        else if (sortType == SortType.Y_LOWER)
+        case Y_LOWER:
             return INCREASING_Y_LOWER;
-        else if (sortType == SortType.Y_UPPER)
+        case Y_UPPER:
             return INCREASING_Y_UPPER;
-        else
-            throw new IllegalArgumentException("unknown sort type");
+        default:
+            throw new IllegalArgumentException("unknown SortType " + sortType);
+        }
     }
 
     private static enum SortType {
@@ -72,8 +74,9 @@ public final class SplitterRStar implements Splitter {
     static <T extends HasGeometry> List<ListPair<T>> getPairs(int minSize, List<T> list) {
         List<ListPair<T>> pairs = new ArrayList<ListPair<T>>(list.size() - 2 * minSize + 1);
         for (int i = minSize; i < list.size() - minSize + 1; i++) {
-            //Note that subList returns a view of list so creating list1 and list2 doesn't 
-            //necessarily incur array allocation costs.
+            // Note that subList returns a view of list so creating list1 and
+            // list2 doesn't
+            // necessarily incur array allocation costs.
             List<T> list1 = list.subList(0, i);
             List<T> list2 = list.subList(i, list.size());
             ListPair<T> pair = new ListPair<T>(list1, list2);
