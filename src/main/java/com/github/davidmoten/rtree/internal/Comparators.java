@@ -8,10 +8,7 @@ import com.github.davidmoten.rtree.Selector;
 import com.github.davidmoten.rtree.Splitter;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
-import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-
-import rx.functions.Func1;
 
 /**
  * Utility functions asociated with {@link Comparator}s, especially for use with
@@ -24,75 +21,56 @@ public final class Comparators {
         // prevent instantiation
     }
 
-    /**
-     * Compares the sum of the areas of two ListPairs.
-     */
-    public static final Comparator<ListPair<?>> areaPairComparator = new Comparator<ListPair<?>>() {
-
-        @Override
-        public int compare(ListPair<?> p1, ListPair<?> p2) {
-            return Float.compare(p1.areaSum(), p2.areaSum());
-        }
-    };
-
-    /**
-     * Returns a {@link Comparator} that is a normal Double comparator for the
-     * total of the areas of overlap of the members of the list with the
-     * rectangle r.
-     * 
-     * @param <T>
-     *            type of geometry being compared
-     * @param r
-     *            rectangle
-     * @param list
-     *            geometries to compare with the rectangle
-     * @return the total of the areas of overlap of the geometries in the list
-     *         with the rectangle r
-     */
-    public static <T extends HasGeometry> Comparator<HasGeometry> overlapAreaComparator(
+    public static <T extends HasGeometry> Comparator<HasGeometry> overlapAreaThenAreaIncreaseThenAreaComparator(
             final Rectangle r, final List<T> list) {
-        return toComparator(Functions.overlapArea(r, list));
-    }
-
-    public static <T extends HasGeometry> Comparator<HasGeometry> areaIncreaseComparator(
-            final Rectangle r) {
-        return toComparator(Functions.areaIncrease(r));
-    }
-
-    public static Comparator<HasGeometry> areaComparator(final Rectangle r) {
         return new Comparator<HasGeometry>() {
 
             @Override
             public int compare(HasGeometry g1, HasGeometry g2) {
-                return Float.compare(g1.geometry().mbr().add(r).area(),
-                        g2.geometry().mbr().add(r).area());
-            }
-        };
-    }
-
-    public static <R, T extends Comparable<T>> Comparator<R> toComparator(
-            final Func1<R, T> function) {
-        return new Comparator<R>() {
-
-            @Override
-            public int compare(R g1, R g2) {
-                return function.call(g1).compareTo(function.call(g2));
-            }
-        };
-    }
-
-    public static <T> Comparator<T> compose(final Comparator<T>... comparators) {
-        return new Comparator<T>() {
-            @Override
-            public int compare(T t1, T t2) {
-                for (Comparator<T> comparator : comparators) {
-                    int value = comparator.compare(t1, t2);
-                    if (value != 0)
-                        return value;
+                int value = Float.compare(overlapArea(r, list, g1), overlapArea(r, list, g2));
+                if (value == 0) {
+                    value = Float.compare(areaIncrease(r, g1), areaIncrease(r, g2));
+                    if (value == 0) {
+                        value = Float.compare(area(r, g1), area(r, g2));
+                    }
                 }
-                return 0;
+                return value;
             }
         };
+    }
+
+    private static float area(final Rectangle r, HasGeometry g1) {
+        return g1.geometry().mbr().add(r).area();
+    }
+
+    public static <T extends HasGeometry> Comparator<HasGeometry> areaIncreaseThenAreaComparator(
+            final Rectangle r) {
+        return new Comparator<HasGeometry>() {
+            @Override
+            public int compare(HasGeometry g1, HasGeometry g2) {
+                int value = Float.compare(areaIncrease(r, g1), areaIncrease(r, g2));
+                if (value == 0) {
+                    value = Float.compare(area(r, g1), area(r, g2));
+                }
+                return value;
+            }
+        };
+    }
+
+    private static float overlapArea(Rectangle r, List<? extends HasGeometry> list, HasGeometry g) {
+        Rectangle gPlusR = g.geometry().mbr().add(r);
+        float m = 0;
+        for (HasGeometry other : list) {
+            if (other != g) {
+                m += gPlusR.intersectionArea(other.geometry().mbr());
+            }
+        }
+        return m;
+    }
+
+    private static float areaIncrease(Rectangle r, HasGeometry g) {
+        Rectangle gPlusR = g.geometry().mbr().add(r);
+        return gPlusR.area() - g.geometry().mbr().area();
     }
 
     /**

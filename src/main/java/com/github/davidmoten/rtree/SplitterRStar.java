@@ -1,7 +1,6 @@
 package com.github.davidmoten.rtree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -10,17 +9,27 @@ import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
-import com.github.davidmoten.rtree.internal.Comparators;
 
 public final class SplitterRStar implements Splitter {
 
     private final Comparator<ListPair<?>> comparator;
 
-    @SuppressWarnings("unchecked")
     public SplitterRStar() {
-        this.comparator = Comparators.compose(Comparators.overlapListPairComparator,
-                Comparators.areaPairComparator);
+        this.comparator = new Comparator<ListPair<?>>() {
+
+            @Override
+            public int compare(ListPair<?> p1, ListPair<?> p2) {
+                //check overlap first then areaSum
+                int value = Float.compare(overlap(p1), overlap(p2));
+                if (value == 0) {
+                    return Float.compare(p1.areaSum(), p2.areaSum());
+                } else {
+                    return value;
+                }
+            }}; 
     }
+    
+   
 
     @Override
     public <T extends HasGeometry> ListPair<T> split(List<T> items, int minSize) {
@@ -33,12 +42,20 @@ public final class SplitterRStar implements Splitter {
 
         List<ListPair<T>> pairs = null;
         float lowestMarginSum = Float.MAX_VALUE;
+        List<T> list = null;
         for (SortType sortType : SortType.values()) {
-            List<ListPair<T>> p = getPairs(minSize, sort(items, comparator(sortType)));
+            if (list == null) {
+                list = new ArrayList<T>(items);
+            }
+            Collections.sort(list, comparator(sortType));
+            List<ListPair<T>> p = getPairs(minSize, list);
             float marginSum = marginValueSum(p);
             if (marginSum < lowestMarginSum) {
                 lowestMarginSum = marginSum;
                 pairs = p;
+                // because p uses subViews of list we need to create a new one
+                // for further comparisons
+                list = null;
             }
         }
         return Collections.min(pairs, comparator);
@@ -85,13 +102,6 @@ public final class SplitterRStar implements Splitter {
         return pairs;
     }
 
-    private static <T extends HasGeometry> List<T> sort(List<T> items,
-            Comparator<HasGeometry> comparator) {
-        ArrayList<T> list = new ArrayList<T>(items);
-        Collections.sort(list, comparator);
-        return list;
-    }
-
     private static final Comparator<HasGeometry> INCREASING_X_LOWER = new Comparator<HasGeometry>() {
 
         @Override
@@ -124,4 +134,9 @@ public final class SplitterRStar implements Splitter {
         }
     };
 
+    private static float overlap(ListPair<? extends HasGeometry> pair) {
+        return pair.group1().geometry().mbr()
+                .intersectionArea(pair.group2().geometry().mbr());
+    }
+    
 }
