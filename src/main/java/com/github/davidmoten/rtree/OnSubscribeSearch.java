@@ -84,15 +84,19 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
                     long r = requested.get();
                     st = Backpressure.search(condition, subscriber, st, r);
                     if (st.isEmpty()) {
+                        // release some state for gc (although empty stack so not very significant)
+                        stack = null;
                         if (!subscriber.isUnsubscribed()) {
                             subscriber.onCompleted();
-                            break;
-                        } else
-                            break;
-                    } else if (requested.addAndGet(-r) == 0)
-                        break;
+                        }
+                        return;
+                    } else {
+                        stack = st;
+                        if (requested.addAndGet(-r) == 0)
+                            return;
+                    }
                 }
-                stack = st;
+
             }
         }
     }
