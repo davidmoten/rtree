@@ -40,7 +40,7 @@ Features
 * visualizer included
 * serialization using [FlatBuffers](http://github.com/google/flatbuffers)
 * high unit test [code coverage](http://davidmoten.github.io/rtree/cobertura/index.html) 
-* R*-tree performs 830,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=10, minChildren=4). Insert at 100,000 entries per second.
+* R*-tree performs 900,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=4, minChildren=1). Insert at 240,000 entries per second.
 * requires java 1.6 or later
 
 Number of points = 1000, max children per node 8: 
@@ -385,7 +385,7 @@ The *Greek* data referred to in the benchmarks is a collection of some 38,377 en
 
 ### Results
 
-These were run on i7-920 @2.67GHz with *rtree* version 0.8-RC4:
+These were run on i7-920 @2.67GHz with *rtree* version 0.8-RC7:
 
 ```
 Benchmark                                                               Mode  Cnt        Score       Error  Units
