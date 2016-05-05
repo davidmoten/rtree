@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -16,6 +17,7 @@ import com.github.davidmoten.rtree.geometry.Point;
 public class KryoSerializationTest {
 
     @Test
+    @Ignore
     public void testRTree() {
         Kryo kryo = new Kryo();
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
