@@ -67,6 +67,10 @@ public final class RTree<T, S extends Geometry> {
         this.context = context;
     }
 
+    private RTree() {
+        this(Optional.<Node<T, S>> absent(), 0, null);
+    }
+
     /**
      * Constructor.
      * 

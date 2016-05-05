@@ -43,6 +43,11 @@ public final class Context<T, S extends Geometry> {
         this.factory = factory;
     }
 
+    private Context() {
+        this(2, 4, new SelectorMinimalAreaIncrease(), new SplitterQuadratic(),
+                Factories.<T, S> defaultFactory());
+    }
+
     public int maxChildren() {
         return maxChildren;
     }
