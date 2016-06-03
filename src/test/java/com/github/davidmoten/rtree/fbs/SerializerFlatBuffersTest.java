@@ -108,6 +108,30 @@ public class SerializerFlatBuffersTest {
     public void testInputStreamNotAsLongAsExpected() throws IOException {
         SerializerFlatBuffers.readFully(new ByteArrayInputStream(new byte[10]), 12);
     }
+    
+    @Test
+    public void testInputStreamReturnsArrayInSmallChunks() throws IOException {
+        InputStream is = new InputStream() {
+
+            int i = 0;
+            @Override
+            public int read() throws IOException {
+                i +=1;
+                if (i == 1) {
+                    return 1;
+                } else if (i==2){
+                    throw new IOException();
+                } else {
+                    return 1;
+                }
+            }
+            
+        };
+        byte[] b = SerializerFlatBuffers.readFully(is, 2);
+        assertEquals(2, b.length);
+        assertEquals(1, b[0]);
+        assertEquals(1, b[0]);
+    }
 
     public static void main(String[] args) throws Exception {
         // use this with jvisualvm and heap dump, find biggest objects to check

@@ -160,9 +160,15 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
     @VisibleForTesting
     static byte[] readFully(InputStream is, int numBytes) throws IOException {
         byte[] b = new byte[numBytes];
-        int n = is.read(b);
-        if (n != numBytes)
-            throw new RuntimeException("unexpected");
+        int count = 0;
+        do {
+            int n = is.read(b, count, numBytes - count);
+            if (n > 0) {
+                count += n;
+            } else {
+                throw new RuntimeException("unexpected");
+            }
+        } while (count < numBytes);
         return b;
     }
 
