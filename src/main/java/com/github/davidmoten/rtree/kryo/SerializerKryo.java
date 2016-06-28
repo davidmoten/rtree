@@ -5,10 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.factories.SerializerFactory;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.InternalStructure;
 import com.github.davidmoten.rtree.Node;
@@ -41,7 +39,7 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
     public RTree<T, S> read(InputStream is, long sizeBytes, InternalStructure structure)
             throws IOException {
         Kryo k = kryoFactory.call();
-        k.register(RTree.class, RTreeSerializer.class)
+        // k.register(RTree.class, RTreeSerializer.class);
 
         return null;
     }
