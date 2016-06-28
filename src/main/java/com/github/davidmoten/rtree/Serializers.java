@@ -8,10 +8,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.kryo.SerializerKryo;
 import com.github.davidmoten.rx.Functions;
 
+import rx.functions.Func0;
 import rx.functions.Func1;
 
 public final class Serializers {
@@ -20,33 +23,33 @@ public final class Serializers {
         // prevent instantiation
     }
 
-    public static class SerializerFlatBuffersBuilder {
+    public static class SerializerBuilder {
 
-        private SerializerFlatBuffersBuilder() {
+        private Method method = Method.FLATBUFFERS;
+
+        private SerializerBuilder() {
 
         }
 
-        public <T> SerializerFlatBuffersTypedBuilder<T> serializer(
-                Func1<? super T, byte[]> serializer) {
-            return new SerializerFlatBuffersTypedBuilder<T>(serializer, null);
+        public <T> SerializerTypedBuilder<T> serializer(Func1<? super T, byte[]> serializer) {
+            return new SerializerTypedBuilder<T>(serializer, null, method);
         }
 
-        public <T> SerializerFlatBuffersTypedBuilder<T> deserializer(
-                Func1<byte[], ? extends T> deserializer) {
-            return new SerializerFlatBuffersTypedBuilder<T>(null, deserializer);
+        public <T> SerializerTypedBuilder<T> deserializer(Func1<byte[], ? extends T> deserializer) {
+            return new SerializerTypedBuilder<T>(null, deserializer, method);
         }
 
         public <S extends Geometry> Serializer<String, S> string(Charset charset) {
             Func1<String, byte[]> serializer = createStringSerializer(charset);
             Func1<byte[], String> deserializer = createStringDeserializer(charset);
-            return new SerializerFlatBuffersTypedBuilder<String>(serializer, deserializer).create();
+            return new SerializerTypedBuilder<String>(serializer, deserializer, method).create();
         }
 
         @SuppressWarnings("unchecked")
         public <T extends Serializable, S extends Geometry> Serializer<T, S> javaIo() {
             Func1<T, byte[]> serializer = (Func1<T, byte[]>) javaIoSerializer();
             Func1<byte[], T> deserializer = (Func1<byte[], T>) javaIoDeserializer();
-            return new SerializerFlatBuffersTypedBuilder<T>(serializer, deserializer).create();
+            return new SerializerTypedBuilder<T>(serializer, deserializer, method).create();
         }
 
         public <S extends Geometry> Serializer<String, S> utf8() {
@@ -56,49 +59,79 @@ public final class Serializers {
         public <S extends Geometry> Serializer<byte[], S> bytes() {
             Func1<byte[], byte[]> serializer = Functions.identity();
             Func1<byte[], byte[]> deserializer = Functions.identity();
-            return new SerializerFlatBuffersTypedBuilder<byte[]>(serializer, deserializer).create();
+            return new SerializerTypedBuilder<byte[]>(serializer, deserializer, method).create();
+        }
+
+        public SerializerBuilder method(Method method) {
+            this.method = method;
+            return this;
         }
 
     }
 
-    public static final class SerializerFlatBuffersTypedBuilder<T> {
+    public static final class SerializerTypedBuilder<T> {
 
         private Func1<? super T, byte[]> serializer;
         private Func1<byte[], ? extends T> deserializer;
+        private Method method;
+        private Func0<Kryo> kryoFactory = new Func0<Kryo>() {
+            @Override
+            public Kryo call() {
+                return new Kryo();
+            }
+        };
 
-        private SerializerFlatBuffersTypedBuilder(Func1<? super T, byte[]> serializer,
-                Func1<byte[], ? extends T> deserializer) {
+        private SerializerTypedBuilder(Func1<? super T, byte[]> serializer,
+                Func1<byte[], ? extends T> deserializer, Method method) {
             this.serializer = serializer;
             this.deserializer = deserializer;
+            this.method = method;
         }
 
-        public SerializerFlatBuffersTypedBuilder<T> serializer(
-                Func1<? super T, byte[]> serializer) {
+        public SerializerTypedBuilder<T> serializer(Func1<? super T, byte[]> serializer) {
             this.serializer = serializer;
             return this;
         }
 
-        public SerializerFlatBuffersTypedBuilder<T> deserializer(
-                Func1<byte[], ? extends T> deserializer) {
+        public SerializerTypedBuilder<T> deserializer(Func1<byte[], ? extends T> deserializer) {
             this.deserializer = deserializer;
+            return this;
+        }
+
+        public SerializerTypedBuilder<T> method(Method method) {
+            this.method = method;
+            return this;
+        }
+
+        public SerializerTypedBuilder<T> kryo(Func0<Kryo> kryoFactory) {
+            this.method = Method.KRYO;
+            this.kryoFactory = kryoFactory;
             return this;
         }
 
         @SuppressWarnings("unchecked")
         public <S extends Geometry> Serializer<T, S> create() {
-            if (serializer == null) {
-                serializer = (Func1<T, byte[]>) javaIoSerializer();
+            if (method == Method.FLATBUFFERS) {
+                if (serializer == null) {
+                    serializer = (Func1<T, byte[]>) javaIoSerializer();
+                }
+                if (deserializer == null) {
+                    deserializer = (Func1<byte[], T>) javaIoDeserializer();
+                }
+                return SerializerFlatBuffers.create(serializer, deserializer);
+            } else {
+                return SerializerKryo.create(serializer, deserializer, kryoFactory);
             }
-            if (deserializer == null) {
-                deserializer = (Func1<byte[], T>) javaIoDeserializer();
-            }
-            return SerializerFlatBuffers.create(serializer, deserializer);
         }
 
     }
 
-    public static <T, S extends Geometry> SerializerFlatBuffersBuilder flatBuffers() {
-        return new SerializerFlatBuffersBuilder();
+    public static <T, S extends Geometry> SerializerBuilder flatBuffers() {
+        return new SerializerBuilder().method(Method.FLATBUFFERS);
+    }
+
+    public static enum Method {
+        FLATBUFFERS, KRYO;
     }
 
     private static Func1<String, byte[]> createStringSerializer(final Charset charset) {
