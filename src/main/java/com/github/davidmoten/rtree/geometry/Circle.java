@@ -1,10 +1,10 @@
 package com.github.davidmoten.rtree.geometry;
 
-import static com.github.davidmoten.rtree.geometry.Geometries.point;
-
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
+
+import static com.github.davidmoten.rtree.geometry.Geometries.point;
 
 public final class Circle implements Geometry {
 
@@ -15,7 +15,7 @@ public final class Circle implements Geometry {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.mbr = Rectangle.create(x - radius, y - radius, x + radius, y + radius);
+        this.mbr = RectangleImpl.create(x - radius, y - radius, x + radius, y + radius);
     }
 
     static Circle create(double x, double y, double radius) {

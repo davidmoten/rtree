@@ -9,7 +9,7 @@ public final class Point implements Geometry {
     private final Rectangle mbr;
 
     private Point(float x, float y) {
-        this.mbr = Rectangle.create(x, y, x, y);
+        this.mbr = RectangleImpl.create(x, y, x, y);
     }
 
     static Point create(double x, double y) {
