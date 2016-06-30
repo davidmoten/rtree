@@ -28,13 +28,12 @@ final class NodePosition<T, S extends Geometry> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("NodePosition [node=");
-        builder.append(node);
-        builder.append(", position=");
-        builder.append(position);
-        builder.append("]");
-        return builder.toString();
+        String builder = "NodePosition [node=" +
+                node +
+                ", position=" +
+                position +
+                "]";
+        return builder;
     }
 
 }

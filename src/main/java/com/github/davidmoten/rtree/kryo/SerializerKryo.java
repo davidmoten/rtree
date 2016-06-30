@@ -7,13 +7,7 @@ import java.io.OutputStream;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.davidmoten.rtree.Context;
-import com.github.davidmoten.rtree.Entry;
-import com.github.davidmoten.rtree.InternalStructure;
-import com.github.davidmoten.rtree.Leaf;
-import com.github.davidmoten.rtree.Node;
-import com.github.davidmoten.rtree.RTree;
-import com.github.davidmoten.rtree.Serializer;
+import com.github.davidmoten.rtree.*;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
@@ -61,7 +55,8 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
                 writeGeometry(output, g);
             }
         } else {
-            
+
+            NonLeaf<T, S> nonLeaf = (NonLeaf<T, S>) node;
         }
         output.writeBoolean(hasParent);
     }

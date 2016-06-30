@@ -76,7 +76,7 @@ public final class SplitterRStar implements Splitter {
         }
     }
 
-    private static enum SortType {
+    private enum SortType {
         X_LOWER, X_UPPER, Y_LOWER, Y_UPPER;
     }
 

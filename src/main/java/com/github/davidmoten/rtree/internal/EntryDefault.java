@@ -65,13 +65,12 @@ public final class EntryDefault<T, S extends Geometry> implements Entry<T, S> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Entry [value=");
-        builder.append(value);
-        builder.append(", geometry=");
-        builder.append(geometry);
-        builder.append("]");
-        return builder.toString();
+        String builder = "Entry [value=" +
+                value +
+                ", geometry=" +
+                geometry +
+                "]";
+        return builder;
     }
 
     @Override

@@ -51,8 +51,8 @@ public class QuadraticSplitterTest {
     public void testGetBestCandidateForGroup1() {
         final Mbr r1 = r(1);
         final Mbr r2 = r(2);
-        final List<Mbr> list = Arrays.asList(r1);
-        final List<Mbr> group = Arrays.asList(r2);
+        final List<Mbr> list = Collections.singletonList(r1);
+        final List<Mbr> group = Collections.singletonList(r2);
         final Mbr r = SplitterQuadratic.getBestCandidateForGroup(list, group, Util.mbr(group));
         assertEquals(r1, r);
     }
@@ -62,7 +62,7 @@ public class QuadraticSplitterTest {
         final Mbr r1 = r(1);
         final Mbr r2 = r(2);
         final Mbr r3 = r(10);
-        final List<Mbr> list = Arrays.asList(r1);
+        final List<Mbr> list = Collections.singletonList(r1);
         final List<Mbr> group = Arrays.asList(r2, r3);
         final Mbr r = SplitterQuadratic.getBestCandidateForGroup(list, group, Util.mbr(group));
         assertEquals(r1, r);

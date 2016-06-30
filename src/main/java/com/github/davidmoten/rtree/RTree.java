@@ -273,7 +273,7 @@ public final class RTree<T, S extends Geometry> {
         }
 
         @SuppressWarnings("unchecked")
-        public Builder factory(Factory<? extends Object, ? extends Geometry> factory) {
+        public Builder factory(Factory<?, ? extends Geometry> factory) {
             // TODO could change the signature of Builder to have types to
             // support this method but would be breaking change for existing
             // clients

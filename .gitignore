@@ -3,3 +3,5 @@
 .classpath
 .settings
 /bin/
+.idea
+rtree.iml

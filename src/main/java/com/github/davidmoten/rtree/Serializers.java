@@ -130,7 +130,7 @@ public final class Serializers {
         return new SerializerBuilder().method(Method.FLATBUFFERS);
     }
 
-    public static enum Method {
+    public enum Method {
         FLATBUFFERS, KRYO;
     }
 
@@ -138,7 +138,7 @@ public final class Serializers {
         return new Func1<String, byte[]>() {
             @Override
             public byte[] call(String s) {
-                return s.toString().getBytes(charset);
+                return s.getBytes(charset);
             }
         };
     }

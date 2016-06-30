@@ -141,13 +141,13 @@ public final class Intersects {
         @Override
         public Boolean call(Geometry geometry, Rectangle r) {
             if (geometry instanceof Line)
-                return ((Line) geometry).intersects(r);
+                return geometry.intersects(r);
             else if (geometry instanceof Rectangle)
                 return r.intersects((Rectangle) geometry);
             else if (geometry instanceof Circle)
-                return ((Circle) geometry).intersects(r);
+                return geometry.intersects(r);
             else if (geometry instanceof Point)
-                return ((Point) geometry).intersects(r);
+                return geometry.intersects(r);
             else
                 throw new RuntimeException("unrecognized geometry: " + geometry);
         }
