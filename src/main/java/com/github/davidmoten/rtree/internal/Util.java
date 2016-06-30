@@ -1,13 +1,15 @@
 package com.github.davidmoten.rtree.internal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author dxm
@@ -46,8 +48,15 @@ public final class Util {
         float minY1 = Float.MAX_VALUE;
         float maxX2 = -Float.MAX_VALUE;
         float maxY2 = -Float.MAX_VALUE;
-        for (final HasGeometry item : items) {
+
+        Iterator<? extends HasGeometry> it = items.iterator();
+        while(it.hasNext()) {
+            HasGeometry item = it.next();
+            if(minX1 == Float.MAX_VALUE && !it.hasNext() && item instanceof Geometry)
+                return ((Geometry)item).mbr();
+
             Rectangle r = item.geometry().mbr();
+
             if (r.x1() < minX1)
                 minX1 = r.x1();
             if (r.y1() < minY1)

@@ -17,11 +17,11 @@ public final class Geometries {
     }
 
     public static Rectangle rectangle(double x1, double y1, double x2, double y2) {
-        return Rectangle.create(x1, y1, x2, y2);
+        return RectangleImpl.create(x1, y1, x2, y2);
     }
 
     public static Rectangle rectangle(float x1, float y1, float x2, float y2) {
-        return Rectangle.create(x1, y1, x2, y2);
+        return RectangleImpl.create(x1, y1, x2, y2);
     }
 
     public static Circle circle(double x, double y, double radius) {
@@ -41,7 +41,7 @@ public final class Geometries {
     }
 
     public static Rectangle rectangleGeographic(double lon1, double lat1, double lon2,
-            double lat2) {
+                                                double lat2) {
         return rectangleGeographic((float) lon1, (float) lat1, (float) lon2, (float) lat2);
     }
 
