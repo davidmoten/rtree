@@ -17,11 +17,11 @@ final class RectangleImpl implements Rectangle {
         this.y2 = y2;
     }
 
-    static RectangleImpl create(double x1, double y1, double x2, double y2) {
+    static Rectangle create(double x1, double y1, double x2, double y2) {
         return new RectangleImpl((float) x1, (float) y1, (float) x2, (float) y2);
     }
 
-    static RectangleImpl create(float x1, float y1, float x2, float y2) {
+    static Rectangle create(float x1, float y1, float x2, float y2) {
         return new RectangleImpl(x1, y1, x2, y2);
     }
 
@@ -83,8 +83,9 @@ final class RectangleImpl implements Rectangle {
      * .rtree.geometry.Rectangle)
      */
     @Override
-    public RectangleImpl add(Rectangle r) {
-        return new RectangleImpl(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()), max(y2, r.y2()));
+    public Rectangle add(Rectangle r) {
+        return new RectangleImpl(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()),
+                max(y2, r.y2()));
     }
 
     /*
@@ -100,30 +101,61 @@ final class RectangleImpl implements Rectangle {
 
     @Override
     public boolean intersects(Rectangle r) {
-        return r.x2() >= x1 && r.x1() <= x2 && r.y2() >= y1 && r.y1() <= y2;
+        return intersects(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
+        // return r.x2() >= x1 && r.x1() <= x2 && r.y2() >= y1 && r.y1() <= y2;
     }
 
     @Override
     public double distance(Rectangle r) {
-        if (intersects(r))
+        return distance(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
+        // if (intersects(r))
+        // return 0;
+        // else {
+        // Rectangle mostLeft = x1 < r.x1() ? this : r;
+        // Rectangle mostRight = x1 > r.x1() ? this : r;
+        // double xDifference = max(0,
+        // mostLeft.x1() == mostRight.x1() ? 0 : mostRight.x1() -
+        // mostLeft.x2());
+        //
+        // Rectangle upper = y1 < r.y1() ? this : r;
+        // Rectangle lower = y1 > r.y1() ? this : r;
+        //
+        // double yDifference = max(0, upper.y1() == lower.y1() ? 0 : lower.y1()
+        // - upper.y2());
+        //
+        // return Math.sqrt(xDifference * xDifference + yDifference *
+        // yDifference);
+        // }
+    }
+
+    public static double distance(float x1, float y1, float x2, float y2, float a1, float b1,
+            float a2, float b2) {
+        if (intersects(x1, y1, x2, y2, a1, b1, a2, b2)) {
             return 0;
-        else {
-            Rectangle mostLeft = x1 < r.x1() ? this : r;
-            Rectangle mostRight = x1 > r.x1() ? this : r;
-            double xDifference = max(0,
-                    mostLeft.x1() == mostRight.x1() ? 0 : mostRight.x1() - mostLeft.x2());
-
-            Rectangle upper = y1 < r.y1() ? this : r;
-            Rectangle lower = y1 > r.y1() ? this : r;
-
-            double yDifference = max(0, upper.y1() == lower.y1() ? 0 : lower.y1() - upper.y2());
-
-            return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
         }
+        boolean xyMostLeft = x1 < a1;
+        float mostLeftX1 = xyMostLeft ? x1 : a1;
+        float mostRightX1 = xyMostLeft ? a1 : x1;
+        float mostLeftX2 = xyMostLeft ? x2 : a2;
+        double xDifference = max(0, mostLeftX1 == mostRightX1 ? 0 : mostRightX1 - mostLeftX2);
+
+        boolean xyMostDown = y1 < b1;
+        float mostDownY1 = xyMostDown ? y1 : b1;
+        float mostUpY1 = xyMostDown ? b1 : y1;
+        float mostDownY2 = xyMostDown ? y2 : b2;
+
+        double yDifference = max(0, mostDownY1 == mostUpY1 ? 0 : mostUpY1 - mostDownY2);
+
+        return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
+    }
+
+    private static boolean intersects(float x1, float y1, float x2, float y2, float a1, float b1,
+            float a2, float b2) {
+        return x1 <= a2 && a1 <= x2 && y1 <= b2 && b1 <= y2;
     }
 
     @Override
-    public RectangleImpl mbr() {
+    public Rectangle mbr() {
         return this;
     }
 

@@ -40,14 +40,16 @@ final class FlatBuffersHelper {
             Geometry g = entries.get(i).geometry();
             final int geom;
             final byte geomType;
-            if (g instanceof Rectangle) {
-                Rectangle b = (Rectangle) g;
-                geom = Box_.createBox_(builder, b.x1(), b.y1(), b.x2(), b.y2());
-                geomType = GeometryType_.Box;
-            } else if (g instanceof Point) {
+            // Must check Point before Rectangle because Point is instance of
+            // Rectangle
+            if (g instanceof Point) {
                 Point p = (Point) g;
                 geom = Point_.createPoint_(builder, p.x(), p.y());
                 geomType = GeometryType_.Point;
+            } else if (g instanceof Rectangle) {
+                Rectangle b = (Rectangle) g;
+                geom = Box_.createBox_(builder, b.x1(), b.y1(), b.x2(), b.y2());
+                geomType = GeometryType_.Box;
             } else if (g instanceof Circle) {
                 Circle c = (Circle) g;
                 geom = Circle_.createCircle_(builder, c.x(), c.y(), c.radius());

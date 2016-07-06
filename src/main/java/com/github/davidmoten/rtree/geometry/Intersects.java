@@ -100,12 +100,12 @@ public final class Intersects {
         public Boolean call(Geometry geometry, Line line) {
             if (geometry instanceof Line)
                 return line.intersects((Line) geometry);
-            else if (geometry instanceof Rectangle)
-                return line.intersects((Rectangle) geometry);
             else if (geometry instanceof Circle)
                 return line.intersects((Circle) geometry);
             else if (geometry instanceof Point)
                 return line.intersects((Point) geometry);
+            else if (geometry instanceof Rectangle)
+                return line.intersects((Rectangle) geometry);
             else
                 throw new RuntimeException("unrecognized geometry: " + geometry);
         }
@@ -117,12 +117,12 @@ public final class Intersects {
         public Boolean call(Geometry geometry, Circle circle) {
             if (geometry instanceof Line)
                 return circle.intersects((Line) geometry);
-            else if (geometry instanceof Rectangle)
-                return circle.intersects((Rectangle) geometry);
             else if (geometry instanceof Circle)
                 return circle.intersects((Circle) geometry);
             else if (geometry instanceof Point)
                 return circle.intersects((Point) geometry);
+            else if (geometry instanceof Rectangle)
+                return circle.intersects((Rectangle) geometry);
             else
                 throw new RuntimeException("unrecognized geometry: " + geometry);
         }
@@ -142,12 +142,12 @@ public final class Intersects {
         public Boolean call(Geometry geometry, Rectangle r) {
             if (geometry instanceof Line)
                 return geometry.intersects(r);
-            else if (geometry instanceof Rectangle)
-                return r.intersects((Rectangle) geometry);
             else if (geometry instanceof Circle)
                 return geometry.intersects(r);
             else if (geometry instanceof Point)
                 return geometry.intersects(r);
+            else if (geometry instanceof Rectangle)
+                return r.intersects((Rectangle) geometry);
             else
                 throw new RuntimeException("unrecognized geometry: " + geometry);
         }

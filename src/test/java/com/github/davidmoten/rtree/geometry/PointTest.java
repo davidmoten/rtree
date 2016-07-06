@@ -34,8 +34,8 @@ public class PointTest {
     @Test
     public void testMbr() {
         Point p = Geometries.point(1, 2);
-        Rectangle r = Geometries.rectangle(1, 2, 1, 2);
-        assertEquals(r, p.mbr());
+        Point p2 = Geometries.point(1, 2);
+        assertEquals(p, p2);
     }
 
     @Test
@@ -74,6 +74,6 @@ public class PointTest {
     @Test
     public void testHashCode() {
         Point p = Geometries.point(1, 2);
-        assertEquals(-1056041056, p.hashCode());
+        assertEquals(-260045887, p.hashCode());
     }
 }

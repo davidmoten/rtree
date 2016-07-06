@@ -1,15 +1,13 @@
 package com.github.davidmoten.rtree.geometry;
 
-import com.github.davidmoten.guavamini.Objects;
-import com.github.davidmoten.guavamini.Optional;
-import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
+public final class Point implements Rectangle {
 
-public final class Point implements Geometry {
-
-    private final Rectangle mbr;
+    private final float x;
+    private final float y;
 
     private Point(float x, float y) {
-        this.mbr = RectangleImpl.create(x, y, x, y);
+        this.x = x;
+        this.y = y;
     }
 
     static Point create(double x, double y) {
@@ -22,12 +20,12 @@ public final class Point implements Geometry {
 
     @Override
     public Rectangle mbr() {
-        return mbr;
+        return this;
     }
 
     @Override
     public double distance(Rectangle r) {
-        return mbr.distance(r);
+        return RectangleImpl.distance(x, y, x, y, r.x1(), r.y1(), r.x2(), r.y2());
     }
 
     public double distance(Point p) {
@@ -35,41 +33,103 @@ public final class Point implements Geometry {
     }
 
     public double distanceSquared(Point p) {
-        float dx = mbr().x1() - p.mbr().x1();
-        float dy = mbr().y1() - p.mbr().y1();
+        float dx = x - p.x;
+        float dy = y - p.y;
         return dx * dx + dy * dy;
     }
 
     @Override
     public boolean intersects(Rectangle r) {
-        return mbr.intersects(r);
+        return r.x1() <= x && x <= r.x2() && r.y1() <= y && y <= r.y2();
     }
 
     public float x() {
-        return mbr.x1();
+        return x;
     }
 
     public float y() {
-        return mbr.y1();
+        return y;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mbr);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Float.floatToIntBits(x);
+        result = prime * result + Float.floatToIntBits(y);
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        Optional<Point> other = ObjectsHelper.asClass(obj, Point.class);
-        if (other.isPresent()) {
-            return Objects.equal(mbr, other.get().mbr());
-        } else
+        if (this == obj)
+            return true;
+        if (obj == null)
             return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Point other = (Point) obj;
+        if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x))
+            return false;
+        if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
         return "Point [x=" + x() + ", y=" + y() + "]";
+    }
+
+    @Override
+    public Geometry geometry() {
+        return this;
+    }
+
+    @Override
+    public float x1() {
+        return x;
+    }
+
+    @Override
+    public float y1() {
+        return y;
+    }
+
+    @Override
+    public float x2() {
+        return x;
+    }
+
+    @Override
+    public float y2() {
+        return y;
+    }
+
+    @Override
+    public float area() {
+        return 0;
+    }
+
+    @Override
+    public Rectangle add(Rectangle r) {
+        return RectangleImpl.create(Math.min(x, r.x1()), Math.min(y, r.y1()), Math.max(x, r.x2()),
+                Math.max(y, r.y2()));
+    }
+
+    @Override
+    public boolean contains(double x, double y) {
+        return x == x && y == y;
+    }
+
+    @Override
+    public float intersectionArea(Rectangle r) {
+        return 0;
+    }
+
+    @Override
+    public float perimeter() {
+        return 0;
     }
 
 }
