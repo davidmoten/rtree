@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.kryo.SerializerKryo;
@@ -99,11 +100,15 @@ public final class Serializers {
         }
 
         public SerializerTypedBuilder<T> method(Method method) {
+            // TODO remove this check when kryo ready
+            Preconditions.checkArgument(method != Method.KRYO,
+                    "kryo serialization not implemented yet");
             this.method = method;
             return this;
         }
 
-        public SerializerTypedBuilder<T> kryo(Func0<Kryo> kryoFactory) {
+        // TODO enable when ready
+        private SerializerTypedBuilder<T> kryo(Func0<Kryo> kryoFactory) {
             this.method = Method.KRYO;
             this.kryoFactory = kryoFactory;
             return this;
