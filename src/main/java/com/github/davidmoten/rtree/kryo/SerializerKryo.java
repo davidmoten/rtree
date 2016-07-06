@@ -5,9 +5,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.davidmoten.rtree.*;
+import com.github.davidmoten.rtree.Context;
+import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.InternalStructure;
+import com.github.davidmoten.rtree.Leaf;
+import com.github.davidmoten.rtree.Node;
+import com.github.davidmoten.rtree.NonLeaf;
+import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.Serializer;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
@@ -47,9 +53,9 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
         output.writeBoolean(isLeaf);
         if (isLeaf) {
             Leaf<T, S> leaf = (Leaf<T, S>) node;
-            writeBounds(output,leaf.geometry().mbr());
+            writeBounds(output, leaf.geometry().mbr());
             output.writeInt(leaf.count());
-            for (Entry<T, S> entry: leaf.entries()) {
+            for (Entry<T, S> entry : leaf.entries()) {
                 S g = entry.geometry();
                 writeValue(output, entry.value());
                 writeGeometry(output, g);
@@ -60,7 +66,6 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
         }
         output.writeBoolean(hasParent);
     }
-
 
     private void writeValue(Output output, T t) {
         byte[] bytes = serializer.call(t);
@@ -81,7 +86,7 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
             throw new RuntimeException("unexpected");
         }
     }
-    
+
     private void writeBounds(Output output, Rectangle mbr) {
         output.writeFloat(mbr.x1());
         output.writeFloat(mbr.y1());

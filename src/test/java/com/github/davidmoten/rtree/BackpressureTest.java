@@ -42,8 +42,8 @@ public class BackpressureTest {
 
     @Test
     public void testBackpressureSearchNodeWithConditionThatAlwaysReturnsFalse() {
-        RTree<Object, Rectangle> tree = RTree.maxChildren(3).<Object, Rectangle> create().add(e(1))
-                .add(e(3)).add(e(5)).add(e(7));
+        RTree<Object, Rectangle> tree = RTree.maxChildren(3).<Object, Rectangle> create()
+                .add(e(1)).add(e(3)).add(e(5)).add(e(7));
 
         Set<Entry<Object, Rectangle>> found = new HashSet<Entry<Object, Rectangle>>();
         tree.search(e(1).geometry()).subscribe(backpressureSubscriber(found));

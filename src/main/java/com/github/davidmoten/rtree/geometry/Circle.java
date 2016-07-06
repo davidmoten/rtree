@@ -15,7 +15,7 @@ public final class Circle implements Geometry {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.mbr = Rectangle.create(x - radius, y - radius, x + radius, y + radius);
+        this.mbr = RectangleImpl.create(x - radius, y - radius, x + radius, y + radius);
     }
 
     static Circle create(double x, double y, double radius) {

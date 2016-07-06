@@ -13,8 +13,8 @@ public class Utilities {
 
     static List<Entry<Object, Rectangle>> entries1000() {
         List<Entry<Object, Rectangle>> list = new ArrayList<Entry<Object, Rectangle>>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                BenchmarksRTree.class.getResourceAsStream("/1000.txt")));
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader(BenchmarksRTree.class.getResourceAsStream("/1000.txt")));
         String line;
         try {
             while ((line = br.readLine()) != null) {

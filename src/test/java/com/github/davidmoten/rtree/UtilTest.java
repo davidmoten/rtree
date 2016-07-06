@@ -17,12 +17,12 @@ public class UtilTest {
     public void coverPrivateConstructor() {
         Asserts.assertIsUtilityClass(Util.class);
     }
-    
+
     @Test
     public void testMbrWithNegativeValues() {
-        Rectangle r = Geometries.rectangle(-2,-2,-1,-1);
+        Rectangle r = Geometries.rectangle(-2, -2, -1, -1);
         Rectangle mbr = Util.mbr(Collections.singleton(r));
-        assertEquals(r,mbr);
+        assertEquals(r, mbr);
         System.out.println(r);
     }
 

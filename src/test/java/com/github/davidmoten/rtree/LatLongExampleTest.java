@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.junit.Test;
 
-import rx.Observable;
-import rx.functions.Func1;
-
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+
+import rx.Observable;
+import rx.functions.Func1;
 
 public class LatLongExampleTest {
 
@@ -36,7 +36,7 @@ public class LatLongExampleTest {
         // Now search for all locations within 300km of Canberra
         final double distanceKm = 300;
         List<Entry<String, Point>> list = search(tree, canberra, distanceKm)
-        // get the result
+                // get the result
                 .toList().toBlocking().single();
 
         // should have returned Sydney only
@@ -52,7 +52,7 @@ public class LatLongExampleTest {
         Rectangle bounds = createBounds(from, distanceKm);
 
         return tree
-        // do the first search using the bounds
+                // do the first search using the bounds
                 .search(bounds)
                 // refine using the exact distance
                 .filter(new Func1<Entry<T, Point>, Boolean>() {
@@ -83,7 +83,7 @@ public class LatLongExampleTest {
         // Canberra)
         final Point location = bungendore;
         String result = tree.search(location)
-        // filter on the exact distance from the centre of the GeoCircle
+                // filter on the exact distance from the centre of the GeoCircle
                 .filter(new Func1<Entry<GeoCircleValue<String>, Rectangle>, Boolean>() {
                     Position from = Position.create(location.y(), location.x());
 
@@ -112,7 +112,8 @@ public class LatLongExampleTest {
         return Geometries.rectangle(west.getLon(), south.getLat(), east.getLon(), north.getLat());
     }
 
-    private static <T> GeoCircleValue<T> createGeoCircleValue(Point point, double radiusKm, T value) {
+    private static <T> GeoCircleValue<T> createGeoCircleValue(Point point, double radiusKm,
+            T value) {
         return new GeoCircleValue<T>(point.y(), point.x(), radiusKm, value);
     }
 

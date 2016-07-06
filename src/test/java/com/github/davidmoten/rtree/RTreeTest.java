@@ -315,7 +315,8 @@ public class RTreeTest {
     @Test
     public void testSizeAfterDelete() {
         Entry<Object, Rectangle> entry = e(1);
-        RTree<Object, Rectangle> tree = create(3, 0).add(entry).add(entry).add(entry).delete(entry);
+        RTree<Object, Rectangle> tree = create(3, 0).add(entry).add(entry).add(entry)
+                .delete(entry);
         assertEquals(2, tree.size());
 
     }
@@ -437,8 +438,8 @@ public class RTreeTest {
 
     @Test
     public void testNearestSameDirection() {
-        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle> create().add(e(1))
-                .add(e(2)).add(e(3)).add(e(10)).add(e(11));
+        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle> create()
+                .add(e(1)).add(e(2)).add(e(3)).add(e(10)).add(e(11));
         List<Entry<Object, Rectangle>> list = tree.nearest(r(9), 10, 2).toList().toBlocking()
                 .single();
         assertEquals(2, list.size());
@@ -540,8 +541,8 @@ public class RTreeTest {
     public void testVisualizerWithGreekData() {
         List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
         int maxChildren = 8;
-        RTree<Object, Point> tree = RTree.maxChildren(maxChildren).factory(
-                new FactoryFlatBuffers<Object, Geometry>(new Func1<Object, byte[]>() {
+        RTree<Object, Point> tree = RTree.maxChildren(maxChildren)
+                .factory(new FactoryFlatBuffers<Object, Geometry>(new Func1<Object, byte[]>() {
                     @Override
                     public byte[] call(Object o) {
                         return "boo".getBytes();
@@ -736,8 +737,8 @@ public class RTreeTest {
 
     @Test
     public void testUnsubscribeWhileIteratingLeafNode() {
-        RTree<Object, Rectangle> tree = RTree.maxChildren(5).<Object, Rectangle> create().add(e(1))
-                .add(e(2));
+        RTree<Object, Rectangle> tree = RTree.maxChildren(5).<Object, Rectangle> create()
+                .add(e(1)).add(e(2));
         tree.entries().subscribe(new Subscriber<Object>() {
 
             @Override
@@ -759,8 +760,8 @@ public class RTreeTest {
     @Test
     public void testUnsubscribeWhileIteratingNonLeafNode() {
         final AtomicBoolean completed = new AtomicBoolean(false);
-        RTree<Object, Rectangle> tree = RTree.maxChildren(3).<Object, Rectangle> create().add(e(1))
-                .add(e(2)).add(e(3)).add(e(4));
+        RTree<Object, Rectangle> tree = RTree.maxChildren(3).<Object, Rectangle> create()
+                .add(e(1)).add(e(2)).add(e(3)).add(e(4));
         tree.entries().subscribe(new Subscriber<Object>() {
 
             @Override

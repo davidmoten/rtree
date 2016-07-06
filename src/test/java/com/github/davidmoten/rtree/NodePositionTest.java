@@ -12,8 +12,9 @@ public class NodePositionTest {
     @Test
     public void testToString() {
         @SuppressWarnings("unchecked")
-        Node<Object,Rectangle> node = Mockito.mock(Node.class);
-        assertTrue(new NodePosition<Object,Rectangle>(node, 1).toString().startsWith("NodePosition ["));
+        Node<Object, Rectangle> node = Mockito.mock(Node.class);
+        assertTrue(new NodePosition<Object, Rectangle>(node, 1).toString()
+                .startsWith("NodePosition ["));
     }
-    
+
 }

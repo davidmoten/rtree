@@ -103,8 +103,7 @@ public class BenchmarksRTree {
             fbSerializer.write(tree, os);
             os.close();
             ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-            return fbSerializer.read( is,os.size(),
-                    InternalStructure.SINGLE_ARRAY);
+            return fbSerializer.read(is, os.size(), InternalStructure.SINGLE_ARRAY);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -149,7 +148,7 @@ public class BenchmarksRTree {
     public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers() {
         searchGreek(starTreeM10FlatBuffers);
     }
-    
+
     @Benchmark
     public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffersBackpressure() {
         searchGreekBackpressure(starTreeM10FlatBuffers);

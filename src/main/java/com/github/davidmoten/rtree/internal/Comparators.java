@@ -57,7 +57,8 @@ public final class Comparators {
         };
     }
 
-    private static float overlapArea(Rectangle r, List<? extends HasGeometry> list, HasGeometry g) {
+    private static float overlapArea(Rectangle r, List<? extends HasGeometry> list,
+            HasGeometry g) {
         Rectangle gPlusR = g.geometry().mbr().add(r);
         float m = 0;
         for (HasGeometry other : list) {

@@ -33,8 +33,8 @@ public final class Line implements Geometry {
     static Line create(float x1, float y1, float x2, float y2) {
         return new Line(x1, y1, x2, y2);
     }
-    
-    static Line create(double x1,double y1, double x2, double y2) {
+
+    static Line create(double x1, double y1, double x2, double y2) {
         return new Line((float) x1, (float) y1, (float) x2, (float) y2);
     }
 
@@ -142,7 +142,7 @@ public final class Line implements Geometry {
             }
         }
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hashCode(x1, y1, x2, y2);
