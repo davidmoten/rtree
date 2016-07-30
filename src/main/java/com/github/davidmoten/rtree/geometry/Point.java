@@ -119,7 +119,7 @@ public final class Point implements Rectangle {
 
     @Override
     public boolean contains(double x, double y) {
-        return x == x && y == y;
+        return this.x == x && this.y == y;
     }
 
     @Override
