@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class PointTest {
 
-    private static final double PRECISION = 0.000001;
+	private static final double PRECISION = 0.000001;
 
     @Test
     public void testCoordinates() {
@@ -76,4 +76,16 @@ public class PointTest {
         Point p = Geometries.point(new float[]{1, 2});
         assertEquals(-260045887, p.hashCode());
     }
+
+	@Test
+	public void testDoesNotContain() {
+		Point p = Geometries.point(new float[]{1, 2});
+		assertFalse(p.contains(new float[]{1, 3}));
+	}
+	
+	@Test
+	public void testContains() {
+		Point p = Geometries.point(new float[]{1, 2});
+		assertTrue(p.contains(new float[]{1, 2}));
+	}
 }
