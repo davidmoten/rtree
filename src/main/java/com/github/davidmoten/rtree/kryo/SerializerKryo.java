@@ -98,10 +98,16 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
 	}
 
 	private void writeBounds(Output output, Rectangle mbr) {
-		output.writeFloat(mbr.x1());
+		for (int i = 0; i < mbr.low().length; i++) {
+			output.writeFloat(mbr.low(i));
+		}
+		for (int i = 0; i < mbr.high().length; i++) {
+			output.writeFloat(mbr.high(i));
+		}
+		/*output.writeFloat(mbr.x1());
 		output.writeFloat(mbr.y1());
 		output.writeFloat(mbr.y1());
-		output.writeFloat(mbr.y2());
+		output.writeFloat(mbr.y2());*/
 	}
 
 	private void writeContext(Context<T, S> context, Output output) {

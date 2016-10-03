@@ -23,8 +23,8 @@ public class KryoSerializationTest {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         Output output = new Output(bytes);
         RTree<String, Point> tree = RTree.<String, Point> create()
-                .add(Entries.entry("thing", Geometries.point(10, 20)))
-                .add(Entries.entry("monster", Geometries.point(23, 45)));
+                .add(Entries.entry("thing", Geometries.point(new float[]{10f, 20f})))
+                .add(Entries.entry("monster", Geometries.point(new float[]{23f, 45f})));
         kryo.writeObject(output, tree);
         output.close();
         Input input = new Input(new ByteArrayInputStream(bytes.toByteArray()));

@@ -1,28 +1,30 @@
 package com.github.davidmoten.rtree.geometry;
 
+import java.util.Arrays;
+
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
 final class RectangleImpl implements Rectangle {
-    private final float x1, y1, x2, y2;
+    private final float[] low;
+    private final float[] high;
 
-    private RectangleImpl(float x1, float y1, float x2, float y2) {
-        Preconditions.checkArgument(x2 >= x1);
-        Preconditions.checkArgument(y2 >= y1);
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+    private RectangleImpl(float[] low, float[] high) {
+    	for (int i = 0; i < low.length; i++) {
+    		Preconditions.checkArgument(high[i] >= low[i]);
+    	}
+        this.low = low;
+        this.high = high;
     }
 
-    static Rectangle create(double x1, double y1, double x2, double y2) {
+    /*static Rectangle create(double x1, double y1, double x2, double y2) {
         return new RectangleImpl((float) x1, (float) y1, (float) x2, (float) y2);
-    }
+    }*/
 
-    static Rectangle create(float x1, float y1, float x2, float y2) {
-        return new RectangleImpl(x1, y1, x2, y2);
+    static Rectangle create(float[] low, float[] high) {
+        return new RectangleImpl(low, high);
     }
 
     /*
@@ -31,8 +33,8 @@ final class RectangleImpl implements Rectangle {
      * @see com.github.davidmoten.rtree.geometry.RectangleI#x1()
      */
     @Override
-    public float x1() {
-        return x1;
+    public float low(int dimension) {
+        return low[dimension];
     }
 
     /*
@@ -41,8 +43,8 @@ final class RectangleImpl implements Rectangle {
      * @see com.github.davidmoten.rtree.geometry.RectangleI#y1()
      */
     @Override
-    public float y1() {
-        return y1;
+    public float high(int dimension) {
+        return high[dimension];
     }
 
     /*
@@ -51,8 +53,8 @@ final class RectangleImpl implements Rectangle {
      * @see com.github.davidmoten.rtree.geometry.RectangleI#x2()
      */
     @Override
-    public float x2() {
-        return x2;
+    public float[] low() {
+        return low;
     }
 
     /*
@@ -61,8 +63,8 @@ final class RectangleImpl implements Rectangle {
      * @see com.github.davidmoten.rtree.geometry.RectangleI#y2()
      */
     @Override
-    public float y2() {
-        return y2;
+    public float[] high() {
+        return high;
     }
 
     /*
@@ -72,7 +74,11 @@ final class RectangleImpl implements Rectangle {
      */
     @Override
     public float area() {
-        return (x2 - x1) * (y2 - y1);
+    	float result = 1f;
+    	for (int i = 0; i < low.length; i++) {
+    		result *= high[i] - low[i];
+    	}
+        return result;
     }
 
     /*
@@ -84,8 +90,18 @@ final class RectangleImpl implements Rectangle {
      */
     @Override
     public Rectangle add(Rectangle r) {
-        return new RectangleImpl(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()),
-                max(y2, r.y2()));
+    	float[] low = new float[this.low.length];
+    	float[] high = new float[this.high.length];
+    	
+    	for (int i = 0; i < low.length; i++) {
+    		low[i] = min(r.low(i), this.low(i));
+    	}
+    	
+    	for (int i = 0; i < high.length; i++) {
+    		high[i] = max(r.high(i), this.high(i));
+    	}
+    	
+        return new RectangleImpl(low, high);
     }
 
     /*
@@ -95,19 +111,24 @@ final class RectangleImpl implements Rectangle {
      * double)
      */
     @Override
-    public boolean contains(double x, double y) {
-        return x >= x1 && x <= x2 && y >= y1 && y <= y2;
+    public boolean contains(float[] values) {
+    	for (int i = 0; i < low.length; i++) {
+    		if ((high[i] < values[i]) || (low[i] > values[i])) {
+    			return false;
+    		}
+    	}
+        return true;
     }
 
     @Override
     public boolean intersects(Rectangle r) {
-        return intersects(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
+        return intersects(low, high, r.low(), r.high());
         // return r.x2() >= x1 && r.x1() <= x2 && r.y2() >= y1 && r.y1() <= y2;
     }
 
     @Override
     public double distance(Rectangle r) {
-        return distance(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
+        return distance(low, high, r.low(), r.high());
         // if (intersects(r))
         // return 0;
         // else {
@@ -128,30 +149,32 @@ final class RectangleImpl implements Rectangle {
         // }
     }
 
-    public static double distance(float x1, float y1, float x2, float y2, float a1, float b1,
-            float a2, float b2) {
-        if (intersects(x1, y1, x2, y2, a1, b1, a2, b2)) {
+    public static double distance(float[] low1, float[] high1, float[] low2, float[] high2) {
+        if (intersects(low1, high1, low2, high2)) {
             return 0;
         }
-        boolean xyMostLeft = x1 < a1;
-        float mostLeftX1 = xyMostLeft ? x1 : a1;
-        float mostRightX1 = xyMostLeft ? a1 : x1;
-        float mostLeftX2 = xyMostLeft ? x2 : a2;
-        double xDifference = max(0, mostLeftX1 == mostRightX1 ? 0 : mostRightX1 - mostLeftX2);
+        float sum = 0f;
+        
+        for (int i = 0; i < low1.length; i++) {
+        	boolean xyMostLeft = low1[i] < low2[i];
+        	float mostLeftX1 = xyMostLeft ? low1[i] : low2[i];
+        	float mostRightX1 = xyMostLeft ? low2[i] : low1[i];
+        	float mostLeftX2 = xyMostLeft ? high1[i] : high2[i];
+        	double xDifference = max(0, mostLeftX1 == mostRightX1 ? 0 : mostRightX1 - mostLeftX2);
+        	sum += xDifference * xDifference;
+        }
 
-        boolean xyMostDown = y1 < b1;
-        float mostDownY1 = xyMostDown ? y1 : b1;
-        float mostUpY1 = xyMostDown ? b1 : y1;
-        float mostDownY2 = xyMostDown ? y2 : b2;
-
-        double yDifference = max(0, mostDownY1 == mostUpY1 ? 0 : mostUpY1 - mostDownY2);
-
-        return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
+        return Math.sqrt(sum);
     }
 
-    private static boolean intersects(float x1, float y1, float x2, float y2, float a1, float b1,
-            float a2, float b2) {
-        return x1 <= a2 && a1 <= x2 && y1 <= b2 && b1 <= y2;
+    private static boolean intersects(float[] low1, float[] high1, float[] low2, float[] high2) {
+    	for (int i = 0; i < low1.length; i++) {
+    		if ((low1[i] > high2[i]) || (low2[i] > high1[i])) {
+    			return false;
+    		}
+    	}
+    	return true;
+        //return x1 <= a2 && a1 <= x2 && y1 <= b2 && b1 <= y2;
     }
 
     @Override
@@ -161,20 +184,44 @@ final class RectangleImpl implements Rectangle {
 
     @Override
     public String toString() {
-        return "Rectangle [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2 + "]";
+    	StringBuilder builder = new StringBuilder("[");
+    	for (int i = 0; i < low.length; i++) {
+    		builder.append(low[i]);
+    		builder.append("\t");
+    	}
+    	builder.append("-");
+    	for (int i = 0; i < high.length; i++) {
+    		builder.append(high[i]);
+    		if (i < high.length - 1) {
+    			builder.append("\t");
+    		}
+    	}
+    	builder.append("]");
+    	return builder.toString();
+    	
+        //return "Rectangle [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2 + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(x1, y1, x2, y2);
+    	float[] tmp = new float[low.length * 2];
+    	for (int i = 0; i < low.length; i++) {
+    		tmp[i] = low[i];
+    		tmp[i + low.length] = high[i];
+    	}
+    	return Arrays.hashCode(tmp);
+        //return Objects.hashCode(x1, y1, x2, y2);
     }
 
     @Override
     public boolean equals(Object obj) {
         Optional<RectangleImpl> other = ObjectsHelper.asClass(obj, RectangleImpl.class);
         if (other.isPresent()) {
-            return Objects.equal(x1, other.get().x1) && Objects.equal(x2, other.get().x2)
-                    && Objects.equal(y1, other.get().y1) && Objects.equal(y2, other.get().y2);
+        	for (int i = 0; i < low.length; i++) {
+        		if (!(Objects.equal(low(i), other.get().low(i)) && Objects.equal(high(i), other.get().high(i))))
+        			return false;
+        	}
+            return true;
         } else
             return false;
     }
@@ -190,9 +237,20 @@ final class RectangleImpl implements Rectangle {
     public float intersectionArea(Rectangle r) {
         if (!intersects(r))
             return 0;
-        else
-            return create(max(x1, r.x1()), max(y1, r.y1()), min(x2, r.x2()), min(y2, r.y2()))
-                    .area();
+        else {
+        	float[] low = new float[this.low.length];
+	    	float[] high = new float[this.high.length];
+	    	
+	    	for (int i = 0; i < low.length; i++) {
+	    		low[i] = max(r.low(i), this.low(i));
+	    	}
+	    	
+	    	for (int i = 0; i < high.length; i++) {
+	    		high[i] = min(r.high(i), this.high(i));
+	    	}
+        	
+            return create(low, high).area();
+        }
     }
 
     /*
@@ -202,7 +260,11 @@ final class RectangleImpl implements Rectangle {
      */
     @Override
     public float perimeter() {
-        return 2 * (x2 - x1) + 2 * (y2 - y1);
+    	float result = 0;
+    	for (int i = 0; i < low.length; i++) {
+    		result += 2 * (high[i] - low[i]);
+    	}
+        return result;
     }
 
     @Override

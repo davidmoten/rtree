@@ -24,8 +24,8 @@ public class LeafTest {
 
     @Test
     public void testMbr() {
-        Rectangle r1 = Geometries.rectangle(0, 1, 3, 5);
-        Rectangle r2 = Geometries.rectangle(1, 2, 4, 6);
+        Rectangle r1 = Geometries.rectangle(new float[]{0, 1}, new float[]{3, 5});
+        Rectangle r2 = Geometries.rectangle(new float[]{1, 2}, new float[]{4, 6});
         @SuppressWarnings("unchecked")
         Rectangle r = new LeafDefault<Object, Rectangle>(
                 Arrays.asList(Entries.entry(new Object(), r1), Entries.entry(new Object(), r2)),

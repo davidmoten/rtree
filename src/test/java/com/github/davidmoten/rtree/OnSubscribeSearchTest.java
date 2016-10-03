@@ -34,7 +34,7 @@ public class OnSubscribeSearchTest {
     @Test
     public void testSearchProducerThrowsExceptionFromRequestSome() {
         Node<Integer, Point> node = new LeafDefault<Integer, Point>(Collections.singletonList(Entries.entry(
-                1, Geometries.point(1, 1))), null);
+                1, Geometries.point(new float[]{1f, 1f}))), null);
 
         Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);
         Subscriber<Entry<Integer, Point>> subscriber = new Subscriber<Entry<Integer, Point>>() {

@@ -2,19 +2,19 @@ package com.github.davidmoten.rtree.geometry;
 
 public interface Rectangle extends Geometry, HasGeometry {
 
-    float x1();
+	float[] low();
+	
+	float[] high();
+	
+    float low(int dimension);
 
-    float y1();
-
-    float x2();
-
-    float y2();
+    float high(int dimension);
 
     float area();
 
     Rectangle add(Rectangle r);
 
-    boolean contains(double x, double y);
+    boolean contains(float[] values);
 
     float intersectionArea(Rectangle r);
 

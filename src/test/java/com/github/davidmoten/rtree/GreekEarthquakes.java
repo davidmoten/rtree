@@ -50,10 +50,10 @@ public class GreekEarthquakes {
                     public Observable<Entry<Object, Point>> call(String line) {
                         if (line.trim().length() > 0) {
                             String[] items = line.split(" ");
-                            double lat = Double.parseDouble(items[0]);
-                            double lon = Double.parseDouble(items[1]);
+                            float lat = Float.parseFloat(items[0]);
+                            float lon = Float.parseFloat(items[1]);
                             return Observable.just(
-                                    Entries.entry(new Object(), Geometries.point(lat, lon)));
+                                    Entries.entry(new Object(), Geometries.point(new float[]{lat, lon})));
                         } else
                             return Observable.empty();
                     }

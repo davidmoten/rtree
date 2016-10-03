@@ -9,17 +9,13 @@ import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.fbs.generated.Box_;
-import com.github.davidmoten.rtree.fbs.generated.Circle_;
 import com.github.davidmoten.rtree.fbs.generated.Entry_;
 import com.github.davidmoten.rtree.fbs.generated.GeometryType_;
 import com.github.davidmoten.rtree.fbs.generated.Geometry_;
-import com.github.davidmoten.rtree.fbs.generated.Line_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.fbs.generated.Point_;
-import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Util;
@@ -44,13 +40,13 @@ final class FlatBuffersHelper {
             // Rectangle
             if (g instanceof Point) {
                 Point p = (Point) g;
-                geom = Point_.createPoint_(builder, p.x(), p.y());
+                geom = Point_.createPoint_(builder, p.values());
                 geomType = GeometryType_.Point;
             } else if (g instanceof Rectangle) {
                 Rectangle b = (Rectangle) g;
-                geom = Box_.createBox_(builder, b.x1(), b.y1(), b.x2(), b.y2());
+                geom = Box_.createBox_(builder, b.low(), b.high());
                 geomType = GeometryType_.Box;
-            } else if (g instanceof Circle) {
+            } /*else if (g instanceof Circle) {
                 Circle c = (Circle) g;
                 geom = Circle_.createCircle_(builder, c.x(), c.y(), c.radius());
                 geomType = GeometryType_.Circle;
@@ -58,7 +54,7 @@ final class FlatBuffersHelper {
                 Line c = (Line) g;
                 geom = Line_.createLine_(builder, c.x1(), c.y1(), c.x2(), c.y2());
                 geomType = GeometryType_.Line;
-            } else
+            }*/ else
                 throw new RuntimeException("unexpected");
 
             Geometry_.startGeometry_(builder);
@@ -66,11 +62,11 @@ final class FlatBuffersHelper {
                 Geometry_.addBox(builder, geom);
             } else if (geomType == GeometryType_.Point) {
                 Geometry_.addPoint(builder, geom);
-            } else if (geomType == GeometryType_.Circle) {
+            } /*else if (geomType == GeometryType_.Circle) {
                 Geometry_.addCircle(builder, geom);
             } else if (geomType == GeometryType_.Line) {
                 Geometry_.addLine(builder, geom);
-            } else
+            }*/ else
                 throw new RuntimeException("unexpected");
 
             Geometry_.addType(builder, geomType);
@@ -81,7 +77,7 @@ final class FlatBuffersHelper {
 
         int ents = Node_.createEntriesVector(builder, entries2);
         Rectangle mbb = Util.mbr(entries);
-        int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
+        int b = Box_.createBox_(builder, mbb.low(), mbb.high());
         Node_.startNode_(builder);
         Node_.addMbb(builder, b);
         Node_.addEntries(builder, ents);
@@ -136,23 +132,23 @@ final class FlatBuffersHelper {
             result = createBox(g.box());
         } else if (type == GeometryType_.Point) {
             Point_ p = g.point();
-            result = Geometries.point(p.x(), p.y());
-        } else if (type == GeometryType_.Circle) {
+            result = Geometries.point(p.values());
+        } /*else if (type == GeometryType_.Circle) {
             Circle_ c = g.circle();
             result = Geometries.circle(c.x(), c.y(), c.radius());
         } else if (type == GeometryType_.Line) {
             result = createLine(g.line());
-        } else
+        } */else
             throw new RuntimeException("unexpected");
         return (S) result;
     }
 
     static Rectangle createBox(Box_ b) {
-        return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+        return Geometries.rectangle(b.min(), b.max());
     }
 
-    static Line createLine(Box_ b) {
+    /*static Line createLine(Box_ b) {
         return Geometries.line(b.minX(), b.minY(), b.maxX(), b.maxY());
-    }
+    }*/
 
 }

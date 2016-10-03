@@ -74,7 +74,7 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
     public Geometry geometry() {
         Box_ b = node.mbb();
         // create on demand to reduce memory use (though not gc pressure)
-        return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+        return Geometries.rectangle(b.min(), b.max());
     }
 
     @Override

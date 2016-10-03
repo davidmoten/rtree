@@ -19,9 +19,9 @@ public class Utilities {
         try {
             while ((line = br.readLine()) != null) {
                 String[] items = line.split(" ");
-                double x = Double.parseDouble(items[0]);
-                double y = Double.parseDouble(items[1]);
-                list.add(Entries.entry(new Object(), Geometries.rectangle(x, y, x + 1, y + 1)));
+                float x = Float.parseFloat(items[0]);
+                float y = Float.parseFloat(items[1]);
+                list.add(Entries.entry(new Object(), Geometries.rectangle(new float[]{x, y}, new float[]{x + 1, y + 1})));
             }
             br.close();
         } catch (IOException e) {

@@ -295,26 +295,26 @@ public class BenchmarksRTree {
 
     private void search(RTree<Object, Rectangle> tree) {
         // returns 10 results
-        tree.search(Geometries.rectangle(500, 500, 630, 630)).subscribe();
+        tree.search(Geometries.rectangle(new float[]{500f, 500f}, new float[]{630f, 630f})).subscribe();
     }
 
     private void searchGreek(RTree<Object, Point> tree) {
         // should return 22 results
-        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+        tree.search(Geometries.rectangle(new float[]{40f, 27.0f}, new float[]{40.5f, 27.5f})).subscribe();
     }
 
     private void searchGreekBackpressure(RTree<Object, Point> tree) {
         // should return 22 results
-        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).take(1000).subscribe();
+        tree.search(Geometries.rectangle(new float[]{40f, 27.0f}, new float[]{40.5f, 27.5f})).take(1000).subscribe();
     }
 
     private void searchNearestGreek(RTree<Object, Point> tree) {
-        tree.nearest(Geometries.point(40.0, 27.0), 1, 300).subscribe();
+        tree.nearest(Geometries.point(new float[]{40.0f, 27.0f}), 1, 300).subscribe();
     }
 
     private void searchGreekWithBackpressure(RTree<Object, Point> tree) {
         // should return 22 results
-        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe(new Subscriber<Object>() {
+        tree.search(Geometries.rectangle(new float[]{40f, 27.0f}, new float[]{40.5f, 27.5f})).subscribe(new Subscriber<Object>() {
 
             @Override
             public void onStart() {
@@ -343,7 +343,7 @@ public class BenchmarksRTree {
     }
 
     private void insertPoint(RTree<Object, Point> tree) {
-        tree.add(new Object(), Geometries.point(Math.random() * 1000, Math.random() * 1000));
+        tree.add(new Object(), Geometries.point(new float[]{(float) (Math.random() * 1000), (float) (Math.random() * 1000)}));
     }
 
     public static void main(String[] args) {

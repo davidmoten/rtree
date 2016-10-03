@@ -20,7 +20,8 @@ public final class Visualizer {
     private final RTree<?, Geometry> tree;
     private final int width;
     private final int height;
-    private final Rectangle view;
+    @SuppressWarnings("unused")
+	private final Rectangle view;
     private final int maxDepth;
 
     Visualizer(RTree<?, Geometry> tree, int width, int height, Rectangle view) {
@@ -102,14 +103,15 @@ public final class Visualizer {
     }
 
     private void drawRectangle(Graphics2D g, Rectangle r) {
-        final double x1 = (r.x1() - view.x1()) / (view.x2() - view.x1()) * width;
+        /*final double x1 = (r.x1() - view.x1()) / (view.x2() - view.x1()) * width;
         final double y1 = (r.y1() - view.y1()) / (view.y2() - view.y1()) * height;
         final double x2 = (r.x2() - view.x1()) / (view.x2() - view.x1()) * width;
         final double y2 = (r.y2() - view.y1()) / (view.y2() - view.y1()) * height;
-        g.drawRect(rnd(x1), rnd(y1), Math.max(rnd(x2 - x1), 1), Math.max(rnd(y2 - y1), 1));
+        g.drawRect(rnd(x1), rnd(y1), Math.max(rnd(x2 - x1), 1), Math.max(rnd(y2 - y1), 1));*/
     }
 
-    private static int rnd(double d) {
+    @SuppressWarnings("unused")
+	private static int rnd(double d) {
         return (int) Math.round(d);
     }
 

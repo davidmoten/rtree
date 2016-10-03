@@ -9,10 +9,7 @@ import java.util.List;
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
-import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.Intersects;
-import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Comparators;
@@ -591,13 +588,13 @@ public final class RTree<T, S extends Geometry> {
         return search(p.mbr());
     }
 
-    public Observable<Entry<T, S>> search(Circle circle) {
+    /*public Observable<Entry<T, S>> search(Circle circle) {
         return search(circle, Intersects.geometryIntersectsCircle);
     }
 
     public Observable<Entry<T, S>> search(Line line) {
         return search(line, Intersects.geometryIntersectsLine);
-    }
+    }*/
 
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the
@@ -780,7 +777,7 @@ public final class RTree<T, S extends Geometry> {
                         else
                             return of(entry.geometry().mbr());
                     }
-                }).toBlocking().single().or(rectangle(0, 0, 0, 0));
+                }).toBlocking().single().or(rectangle(new float[]{0f, 0f}, new float[]{0f, 0f}));
     }
 
     public Optional<? extends Node<T, S>> root() {

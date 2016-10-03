@@ -8,23 +8,23 @@ public final class Geometries {
         // prevent instantiation
     }
 
-    public static Point point(double x, double y) {
+    /*public static Point point(double x, double y) {
         return Point.create(x, y);
-    }
+    }*/
 
-    public static Point point(float x, float y) {
-        return Point.create(x, y);
+    public static Point point(float[] values) {
+        return Point.create(values);
     }
-
-    public static Rectangle rectangle(double x1, double y1, double x2, double y2) {
+    
+    /*public static Rectangle rectangle(double x1, double y1, double x2, double y2) {
         return RectangleImpl.create(x1, y1, x2, y2);
+    }*/
+    
+    public static Rectangle rectangle(float[] low, float[] high) {
+        return RectangleImpl.create(low, high);
     }
 
-    public static Rectangle rectangle(float x1, float y1, float x2, float y2) {
-        return RectangleImpl.create(x1, y1, x2, y2);
-    }
-
-    public static Circle circle(double x, double y, double radius) {
+    /*public static Circle circle(double x, double y, double radius) {
         return Circle.create(x, y, radius);
     }
 
@@ -38,7 +38,7 @@ public final class Geometries {
 
     public static Line line(float x1, float y1, float x2, float y2) {
         return Line.create(x1, y1, x2, y2);
-    }
+    }*/
 
     public static Rectangle rectangleGeographic(double lon1, double lat1, double lon2,
             double lat2) {
@@ -51,11 +51,11 @@ public final class Geometries {
         if (x2 < x1) {
             x2 += 360;
         }
-        return rectangle(x1, lat1, x2, lat2);
+        return rectangle(new float[]{x1, lat1}, new float[]{x2, lat2});
     }
 
     public static Point pointGeographic(double lon, double lat) {
-        return point(normalizeLongitude(lon), lat);
+        return point(new float[]{(float)normalizeLongitude(lon), (float)lat});
     }
 
     @VisibleForTesting

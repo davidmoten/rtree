@@ -43,42 +43,48 @@ public final class SplitterRStar implements Splitter {
         List<ListPair<T>> pairs = null;
         float lowestMarginSum = Float.MAX_VALUE;
         List<T> list = null;
-        for (SortType sortType : SortType.values()) {
-            if (list == null) {
-                list = new ArrayList<T>(items);
-            }
-            Collections.sort(list, comparator(sortType));
-            List<ListPair<T>> p = getPairs(minSize, list);
-            float marginSum = marginValueSum(p);
-            if (marginSum < lowestMarginSum) {
-                lowestMarginSum = marginSum;
-                pairs = p;
-                // because p uses subViews of list we need to create a new one
-                // for further comparisons
-                list = null;
-            }
+        for (int i = 0; i < items.get(0).geometry().mbr().low().length; i++) {
+        	for (int j = 0; j < 2; j++) {
+	            if (list == null) {
+	                list = new ArrayList<T>(items);
+	            }
+	            Collections.sort(list, comparator(i, j));
+	            List<ListPair<T>> p = getPairs(minSize, list);
+	            float marginSum = marginValueSum(p);
+	            if (marginSum < lowestMarginSum) {
+	                lowestMarginSum = marginSum;
+	                pairs = p;
+	                // because p uses subViews of list we need to create a new one
+	                // for further comparisons
+	                list = null;
+	            }
+        	}
         }
         return Collections.min(pairs, comparator);
     }
 
-    private static Comparator<HasGeometry> comparator(SortType sortType) {
-        switch (sortType) {
-        case X_LOWER:
-            return INCREASING_X_LOWER;
-        case X_UPPER:
-            return INCREASING_X_UPPER;
-        case Y_LOWER:
-            return INCREASING_Y_LOWER;
-        case Y_UPPER:
-            return INCREASING_Y_UPPER;
-        default:
-            throw new IllegalArgumentException("unknown SortType " + sortType);
+    private static Comparator<HasGeometry> comparator(final int dimension, int minmax) {
+        if (minmax == 0) {
+        	return new Comparator<HasGeometry>() {
+                @Override
+                public int compare(HasGeometry n1, HasGeometry n2) {
+                    return Float.compare(n1.geometry().mbr().low()[dimension], n2.geometry().mbr().low()[dimension]);
+                }
+            };
+        }
+        else {
+        	return new Comparator<HasGeometry>() {
+                @Override
+                public int compare(HasGeometry n1, HasGeometry n2) {
+                    return Float.compare(n1.geometry().mbr().high()[dimension], n2.geometry().mbr().high()[dimension]);
+                }
+            };
         }
     }
 
-    private enum SortType {
-        X_LOWER, X_UPPER, Y_LOWER, Y_UPPER;
-    }
+    //private enum SortType {
+    //    X_LOWER, X_UPPER, Y_LOWER, Y_UPPER;
+    //}
 
     private static <T extends HasGeometry> float marginValueSum(List<ListPair<T>> list) {
         float sum = 0;
@@ -102,7 +108,7 @@ public final class SplitterRStar implements Splitter {
         return pairs;
     }
 
-    private static final Comparator<HasGeometry> INCREASING_X_LOWER = new Comparator<HasGeometry>() {
+    /*private static final Comparator<HasGeometry> INCREASING_X_LOWER = new Comparator<HasGeometry>() {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
@@ -132,7 +138,7 @@ public final class SplitterRStar implements Splitter {
         public int compare(HasGeometry n1, HasGeometry n2) {
             return Float.compare(n1.geometry().mbr().y2(), n2.geometry().mbr().y2());
         }
-    };
+    };*/
 
     private static float overlap(ListPair<? extends HasGeometry> pair) {
         return pair.group1().geometry().mbr()

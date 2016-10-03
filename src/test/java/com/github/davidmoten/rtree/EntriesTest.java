@@ -13,29 +13,29 @@ public class EntriesTest {
 
     @Test
     public void testValue() {
-        assertEquals(1, (int) Entries.entry(1, Geometries.point(0, 0)).value());
+        assertEquals(1, (int) Entries.entry(1, Geometries.point(new float[]{0f, 0f})).value());
     }
 
     @Test
     public void testEquality() {
-        assertEquals(Entries.entry(1, Geometries.point(0, 0)), Entries.entry(1, Geometries.point(0, 0)));
+        assertEquals(Entries.entry(1, Geometries.point(new float[]{0f, 0f})), Entries.entry(1, Geometries.point(new float[]{0f, 0f})));
     }
 
     @Test
     public void testEqualityWithGeometry() {
-        assertNotEquals(Entries.entry(1, Geometries.point(0, 0)),
-                Entries.entry(1, Geometries.point(0, 1)));
+        assertNotEquals(Entries.entry(1, Geometries.point(new float[]{0f, 0f})),
+                Entries.entry(1, Geometries.point(new float[]{0f, 1f})));
     }
 
     @Test
     public void testInequality() {
-        assertNotEquals(Entries.entry(1, Geometries.point(0, 0)),
-                Entries.entry(2, Geometries.point(0, 0)));
+        assertNotEquals(Entries.entry(1, Geometries.point(new float[]{0f, 0f})),
+                Entries.entry(2, Geometries.point(new float[]{0f, 0f})));
     }
 
     @Test
     public void testInequalityWithNull() {
-        assertFalse(Entries.entry(1, Geometries.point(0, 0)).equals(null));
+        assertFalse(Entries.entry(1, Geometries.point(new float[]{0f, 0f})).equals(null));
     }
     
     @Test

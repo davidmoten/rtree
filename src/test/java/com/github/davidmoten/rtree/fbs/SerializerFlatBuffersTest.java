@@ -95,7 +95,7 @@ public class SerializerFlatBuffersTest {
         System.out.println(tr.root().get());
 
         System.out.println("read in " + (System.currentTimeMillis() - t) + "ms");
-        Observable<Entry<Object, Point>> o = tr.search(Geometries.rectangle(40, 27.0, 40.5, 27.5));
+        Observable<Entry<Object, Point>> o = tr.search(Geometries.rectangle(new float[]{40f, 27.0f}, new float[]{40.5f, 27.5f}));
         if (backpressure)
             o = o.take(10000);
         int found = o.count().toBlocking().single();

@@ -2,20 +2,18 @@ package com.github.davidmoten.rtree.geometry;
 
 public final class Point implements Rectangle {
 
-    private final float x;
-    private final float y;
+    private final float[] values;
 
-    private Point(float x, float y) {
-        this.x = x;
-        this.y = y;
+    private Point(float[] values) {
+        this.values = values;
     }
 
-    static Point create(double x, double y) {
+    /*static Point create(double x, double y) {
         return new Point((float) x, (float) y);
-    }
+    }*/
 
-    static Point create(float x, float y) {
-        return new Point(x, y);
+    static Point create(float[] values) {
+        return new Point(values);
     }
 
     @Override
@@ -25,7 +23,7 @@ public final class Point implements Rectangle {
 
     @Override
     public double distance(Rectangle r) {
-        return RectangleImpl.distance(x, y, x, y, r.x1(), r.y1(), r.x2(), r.y2());
+        return RectangleImpl.distance(values, values, r.low(), r.high());
     }
 
     public double distance(Point p) {
@@ -33,30 +31,35 @@ public final class Point implements Rectangle {
     }
 
     public double distanceSquared(Point p) {
-        float dx = x - p.x;
-        float dy = y - p.y;
-        return dx * dx + dy * dy;
+    	float result = 0;
+    	float dval;
+    	for (int i = 0; i < p.values.length; i++) {
+    		dval = this.values[i] - p.values[i];
+    		result += dval * dval;
+    	}
+        return result;
     }
 
     @Override
     public boolean intersects(Rectangle r) {
-        return r.x1() <= x && x <= r.x2() && r.y1() <= y && y <= r.y2();
+    	for (int i = 0; i < values.length; i++) {
+    		if ((r.low(i) > values[i]) || (values[i] > r.high(i)))
+    			return false;
+    	}
+        return true;
     }
 
-    public float x() {
-        return x;
-    }
-
-    public float y() {
-        return y;
+    public float[] values() {
+        return values;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Float.floatToIntBits(x);
-        result = prime * result + Float.floatToIntBits(y);
+        for (int i = 0; i < values.length; i++) {
+        	result = prime * result + Float.floatToIntBits(values[i]);
+        }
         return result;
     }
 
@@ -69,16 +72,25 @@ public final class Point implements Rectangle {
         if (getClass() != obj.getClass())
             return false;
         Point other = (Point) obj;
-        if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x))
-            return false;
-        if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))
-            return false;
+        for (int i = 0; i < values.length; i++) {
+        	if (Float.floatToIntBits(values[i]) != Float.floatToIntBits(other.values[i]))
+        		return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Point [x=" + x() + ", y=" + y() + "]";
+    	StringBuilder builder = new StringBuilder("[");
+    	for (int i = 0; i < values.length; i++) {
+    		builder.append(values[i]);
+    		if (i < values.length - 1) {
+    			builder.append("\t");
+    		}
+    	}
+    	builder.append("]");
+    	return builder.toString();
+        //return "Point [x=" + x() + ", y=" + y() + "]";
     }
 
     @Override
@@ -87,23 +99,23 @@ public final class Point implements Rectangle {
     }
 
     @Override
-    public float x1() {
-        return x;
+    public float low(int dimension) {
+        return values[dimension];
     }
 
     @Override
-    public float y1() {
-        return y;
+    public float high(int dimension) {
+    	return values[dimension];
+    }
+    
+    @Override
+    public float[] low() {
+        return values;
     }
 
     @Override
-    public float x2() {
-        return x;
-    }
-
-    @Override
-    public float y2() {
-        return y;
+    public float[] high() {
+    	return values;
     }
 
     @Override
@@ -113,13 +125,26 @@ public final class Point implements Rectangle {
 
     @Override
     public Rectangle add(Rectangle r) {
-        return RectangleImpl.create(Math.min(x, r.x1()), Math.min(y, r.y1()), Math.max(x, r.x2()),
-                Math.max(y, r.y2()));
+    	float[] low = new float[values.length];
+    	float[] high = new float[values.length];
+    	
+    	for (int i = 0; i < values.length; i++) {
+    		low[i] = Math.min(values[i], r.low(i));
+    		high[i] = Math.max(values[i], r.high(i));
+    	}
+    	
+        return RectangleImpl.create(low, high);
     }
 
     @Override
-    public boolean contains(double x, double y) {
-        return x == x && y == y;
+    public boolean contains(float[] values) {
+    	for (int i = 0; i < values.length; i++) {
+    		if (this.values[i] != values[i]) {
+    			return false;
+    		}
+    	}
+    	
+        return true;
     }
 
     @Override

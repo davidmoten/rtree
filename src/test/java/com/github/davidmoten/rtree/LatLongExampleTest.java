@@ -16,10 +16,10 @@ import rx.functions.Func1;
 
 public class LatLongExampleTest {
 
-    private static final Point sydney = Geometries.point(151.2094, -33.86);
-    private static final Point canberra = Geometries.point(149.1244, -35.3075);
-    private static final Point brisbane = Geometries.point(153.0278, -27.4679);
-    private static final Point bungendore = Geometries.point(149.4500, -35.2500);
+    private static final Point sydney = Geometries.point(new float[]{151.2094f, -33.86f});
+    private static final Point canberra = Geometries.point(new float[]{149.1244f, -35.3075f});
+    private static final Point brisbane = Geometries.point(new float[]{153.0278f, -27.4679f});
+    private static final Point bungendore = Geometries.point(new float[]{149.4500f, -35.2500f});
 
     @Test
     public void testLatLongExample() {
@@ -48,7 +48,7 @@ public class LatLongExampleTest {
             final double distanceKm) {
         // First we need to calculate an enclosing lat long rectangle for this
         // distance then we refine on the exact distance
-        final Position from = Position.create(lonLat.y(), lonLat.x());
+        final Position from = Position.create(lonLat.values()[1], lonLat.values()[0]);
         Rectangle bounds = createBounds(from, distanceKm);
 
         return tree
@@ -59,7 +59,7 @@ public class LatLongExampleTest {
                     @Override
                     public Boolean call(Entry<T, Point> entry) {
                         Point p = entry.geometry();
-                        Position position = Position.create(p.y(), p.x());
+                        Position position = Position.create(p.values()[1], p.values()[0]);
                         return from.getDistanceToKm(position) < distanceKm;
                     }
                 });
@@ -85,7 +85,7 @@ public class LatLongExampleTest {
         String result = tree.search(location)
                 // filter on the exact distance from the centre of the GeoCircle
                 .filter(new Func1<Entry<GeoCircleValue<String>, Rectangle>, Boolean>() {
-                    Position from = Position.create(location.y(), location.x());
+                    Position from = Position.create(location.values()[1], location.values()[0]);
 
                     @Override
                     public Boolean call(Entry<GeoCircleValue<String>, Rectangle> entry) {
@@ -109,12 +109,12 @@ public class LatLongExampleTest {
         Position east = from.predict(distanceKm, 90);
         Position west = from.predict(distanceKm, 270);
 
-        return Geometries.rectangle(west.getLon(), south.getLat(), east.getLon(), north.getLat());
+        return Geometries.rectangle(new float[]{(float) west.getLon(), (float) south.getLat()}, new float[]{(float) east.getLon(), (float) north.getLat()});
     }
 
     private static <T> GeoCircleValue<T> createGeoCircleValue(Point point, double radiusKm,
             T value) {
-        return new GeoCircleValue<T>(point.y(), point.x(), radiusKm, value);
+        return new GeoCircleValue<T>(point.values()[1], point.values()[0], radiusKm, value);
     }
 
     private static <T> RTree<GeoCircleValue<T>, Rectangle> add(

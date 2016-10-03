@@ -125,7 +125,7 @@ public class QuadraticSplitterTest {
     }
 
     private static Mbr r(int n) {
-        return new Mbr(Geometries.rectangle(n, n, n + 1, n + 1));
+        return new Mbr(Geometries.rectangle(new float[]{n, n}, new float[]{n + 1, n + 1}));
     }
 
 }

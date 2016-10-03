@@ -7,7 +7,7 @@ public final class Intersects {
     private Intersects() {
         // prevent instantiation
     }
-
+/*
     public static final Func2<Rectangle, Circle, Boolean> rectangleIntersectsCircle = new Func2<Rectangle, Circle, Boolean>() {
         @Override
         public Boolean call(Rectangle rectangle, Circle circle) {
@@ -134,17 +134,13 @@ public final class Intersects {
         public Boolean call(Circle circle, Geometry geometry) {
             return geometryIntersectsCircle.call(geometry, circle);
         }
-    };
+    };*/
 
     public static final Func2<Geometry, Rectangle, Boolean> geometryIntersectsRectangle = new Func2<Geometry, Rectangle, Boolean>() {
 
         @Override
         public Boolean call(Geometry geometry, Rectangle r) {
-            if (geometry instanceof Line)
-                return geometry.intersects(r);
-            else if (geometry instanceof Circle)
-                return geometry.intersects(r);
-            else if (geometry instanceof Point)
+            if (geometry instanceof Point)
                 return geometry.intersects(r);
             else if (geometry instanceof Rectangle)
                 return r.intersects((Rectangle) geometry);

@@ -60,9 +60,9 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
         if (tree.root().isPresent()) {
             mbb = tree.root().get().geometry().mbr();
         } else {
-            mbb = Geometries.rectangle(0, 0, 0, 0);
+            mbb = Geometries.rectangle(new float[]{0f, 0f}, new float[]{0f, 0f});
         }
-        int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
+        int b = Box_.createBox_(builder, mbb.low(), mbb.high());
         Context_.startContext_(builder);
         Context_.addBounds(builder, b);
         Context_.addMinChildren(builder, tree.context().minChildren());
@@ -105,7 +105,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
             Node_.startNode_(builder);
             Node_.addChildren(builder, ch);
             Rectangle mbb = nonLeaf.geometry().mbr();
-            int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
+            int b = Box_.createBox_(builder, mbb.low(), mbb.high());
             Node_.addMbb(builder, b);
             return Node_.endNode_(builder);
         }

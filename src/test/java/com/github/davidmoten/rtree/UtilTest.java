@@ -20,7 +20,7 @@ public class UtilTest {
 
     @Test
     public void testMbrWithNegativeValues() {
-        Rectangle r = Geometries.rectangle(-2, -2, -1, -1);
+        Rectangle r = Geometries.rectangle(new float[]{-2f, -2f}, new float[]{-1, -1});
         Rectangle mbr = Util.mbr(Collections.singleton(r));
         assertEquals(r, mbr);
         System.out.println(r);
