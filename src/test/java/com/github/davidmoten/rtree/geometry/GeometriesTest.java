@@ -85,7 +85,7 @@ public class GeometriesTest {
         Rectangle r = Geometries.rectangleGeographic(10, -10, 5, 10);
         assertEquals(10, r.low()[0], PRECISION);
         assertEquals(365, r.high()[0], PRECISION);
-        assertEquals(-10, r.low()[0], PRECISION);
+        assertEquals(-10, r.low()[1], PRECISION);
         assertEquals(10, r.high()[1], PRECISION);
     }
 
