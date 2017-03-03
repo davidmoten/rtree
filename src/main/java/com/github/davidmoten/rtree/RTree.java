@@ -4,12 +4,16 @@ import static com.github.davidmoten.guavamini.Optional.absent;
 import static com.github.davidmoten.guavamini.Optional.of;
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.Circle;
+import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Intersects;
 import com.github.davidmoten.rtree.geometry.Line;
@@ -100,6 +104,20 @@ public final class RTree<T, S extends Geometry> {
      */
     public static <T, S extends Geometry> RTree<T, S> create() {
         return new Builder().create();
+    }
+
+    /**
+     * Construct an Rtree through STR bulk loading. Default to
+     * maxChildren=128, minChildren=64 and fill nodes by a factor of 0.7
+     *
+     * @param <T>
+     *            the value type of the entries in the tree
+     * @param <S>
+     *            the geometry type of the entries in the tree
+     * @return a new RTree instance
+     */
+    public static <T, S extends Geometry> RTree<T, S> create(List<Entry<T, S>> entries) {
+        return new Builder().create(entries);
     }
 
     /**
@@ -197,14 +215,25 @@ public final class RTree<T, S extends Geometry> {
          * quadratic split and R*-tree split.
          */
         private static final double DEFAULT_FILLING_FACTOR = 0.4;
+        private static final double DEFAULT_LOADING_FACTOR = 0.7;
         private Optional<Integer> maxChildren = absent();
         private Optional<Integer> minChildren = absent();
         private Splitter splitter = new SplitterQuadratic();
         private Selector selector = new SelectorMinimalAreaIncrease();
+        private double loadingFactor;
         private boolean star = false;
         private Factory<Object, Geometry> factory = Factories.defaultFactory();
 
         private Builder() {
+            loadingFactor = DEFAULT_LOADING_FACTOR;
+        }
+
+        /**
+         * The factor is used as the fill ratio during bulk loading.
+         */
+        public Builder loadingFactor(int factor) {
+            this.loadingFactor = factor;
+            return this;
         }
 
         /**
@@ -292,6 +321,29 @@ public final class RTree<T, S extends Geometry> {
          */
         @SuppressWarnings("unchecked")
         public <T, S extends Geometry> RTree<T, S> create() {
+            setDefaultCapacity();
+
+            return new RTree<T, S>(Optional.<Node<T, S>> absent(), 0,
+                    new Context<T, S>(minChildren.get(), maxChildren.get(), selector, splitter,
+                            (Factory<T, S>) factory));
+        }
+
+        /**
+         * Create an RTree by bulk loading, using the STR method.
+         * STR: a simple and efficient algorithm for R-tree packing
+         * http://ieeexplore.ieee.org/abstract/document/582015/
+         *
+         */
+        @SuppressWarnings("unchecked")
+        public <T, S extends Geometry> RTree<T, S> create(List<Entry<T, S>> entries) {
+            setDefaultCapacity();
+
+            Context<T, S> context = new Context<T, S>(minChildren.get(), maxChildren.get(),
+                    selector, splitter, (Factory<T, S>) factory);
+            return packingSTR(entries, true, entries.size(), context);
+        }
+
+        private void setDefaultCapacity() {
             if (!maxChildren.isPresent())
                 if (star)
                     maxChildren = of(MAX_CHILDREN_DEFAULT_STAR);
@@ -299,9 +351,76 @@ public final class RTree<T, S extends Geometry> {
                     maxChildren = of(MAX_CHILDREN_DEFAULT_GUTTMAN);
             if (!minChildren.isPresent())
                 minChildren = of((int) Math.round(maxChildren.get() * DEFAULT_FILLING_FACTOR));
-            return new RTree<T, S>(Optional.<Node<T, S>> absent(), 0,
-                    new Context<T, S>(minChildren.get(), maxChildren.get(), selector, splitter,
-                            (Factory<T, S>) factory));
+        }
+
+        @SuppressWarnings("unchecked")
+        private <T, S extends Geometry> RTree<T, S> packingSTR(List<? extends HasGeometry> objects,
+                                                               boolean isLeaf, int size,
+                                                               Context<T, S> context) {
+            int capacity = (int) Math.round(maxChildren.get() * loadingFactor);
+            int nodeCount = (int) Math.ceil(1.0 * objects.size() / capacity);
+
+            if (nodeCount == 0) {
+                return create();
+            } else if (nodeCount == 1) {
+                Node<T, S> root;
+                if (isLeaf) {
+                    root = context.factory().createLeaf((List<Entry<T, S>>) objects, context);
+                } else {
+                    root = context.factory().createNonLeaf((List<Node<T, S>>) objects, context);
+                }
+                return new RTree<T, S>(of(root), size, context);
+            }
+
+            int nodePerSlice = (int) Math.ceil(Math.sqrt(nodeCount));
+            int sliceCapacity = nodePerSlice * capacity;
+            int sliceCount = (int) Math.ceil(1.0 * objects.size() / sliceCapacity);
+            Collections.sort(objects, new MidComparator((short)0));
+
+            List<Node<T, S>> nodes = new ArrayList<Node<T, S>>(nodeCount);
+            for (int s = 0; s < sliceCount; s++) {
+                List slice = objects.subList(s * sliceCapacity, Math.min((s + 1) * sliceCapacity, objects.size()));
+                Collections.sort(slice, new MidComparator((short)1));
+
+                for (int i = 0; i < slice.size(); i += capacity) {
+                    if (isLeaf) {
+                        List<Entry<T, S>> entries =
+                                slice.subList(i, Math.min(slice.size(), i + capacity));
+                        Node<T, S> leaf = context.factory().createLeaf(entries, context);
+                        nodes.add(leaf);
+                    } else {
+                        List<Node<T, S>> children =
+                                slice.subList(i, Math.min(slice.size(), i + capacity));
+                        Node<T, S> nonleaf = context.factory().createNonLeaf(children, context);
+                        nodes.add(nonleaf);
+                    }
+                }
+            }
+            return packingSTR(nodes, false, size, context);
+        }
+
+        private class MidComparator implements Comparator<HasGeometry> {
+            private short dimension; // leave space for multiple dimensions, 0 for x, 1 for y, ...
+
+            public MidComparator(short dim) {
+                dimension = dim;
+            }
+
+            @Override
+            public int compare(HasGeometry o1, HasGeometry o2) {
+                return Float.compare(mid(o1), mid(o2));
+            }
+
+            private float mid(HasGeometry o) {
+                Rectangle mbr = o.geometry().mbr();
+                if (dimension == 0) return (mbr.x1() + mbr.x2()) / 2;
+                else return (mbr.y1() + mbr.y2()) / 2;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return obj instanceof MidComparator && dimension == ((MidComparator) obj).dimension;
+            }
         }
 
     }
