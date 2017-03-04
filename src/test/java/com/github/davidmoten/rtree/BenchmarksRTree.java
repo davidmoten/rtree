@@ -155,6 +155,11 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
+    public void bulkLoadingFullRTreeCreation010() {
+        RTree.maxChildren(10).loadingFactor(1.0).<Object, Point> create(entries);
+    }
+
+    @Benchmark
     public void defaultRTreeSearchOfGreekDataPointsMaxChildren004() {
         searchGreek(defaultTreeM4);
     }

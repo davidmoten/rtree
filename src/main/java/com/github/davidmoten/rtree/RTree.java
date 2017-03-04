@@ -231,7 +231,7 @@ public final class RTree<T, S extends Geometry> {
         /**
          * The factor is used as the fill ratio during bulk loading.
          */
-        public Builder loadingFactor(int factor) {
+        public Builder loadingFactor(double factor) {
             this.loadingFactor = factor;
             return this;
         }
