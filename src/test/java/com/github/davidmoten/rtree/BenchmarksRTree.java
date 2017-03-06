@@ -74,14 +74,17 @@ public class BenchmarksRTree {
     private final RTree<Object, Rectangle> smallStarTreeM128 = RTree.maxChildren(128).star()
             .<Object, Rectangle> create().add(some);
 
+    private final byte[] byteArrayGreek = createFlatBuffersByteArrayGreek();
+
     private final RTree<Object, Point> starTreeM10FlatBuffers = createFlatBuffersGreek();
+
 
     @Benchmark
     public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
         insertPoint(defaultTreeM4);
     }
 
-    private RTree<Object, Point> createFlatBuffersGreek() {
+    private byte[] createFlatBuffersByteArrayGreek() {
         RTree<Object, Point> tree = RTree.maxChildren(10).star().<Object, Point> create()
                 .add(entries);
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -102,11 +105,58 @@ public class BenchmarksRTree {
         try {
             fbSerializer.write(tree, os);
             os.close();
-            ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-            return fbSerializer.read(is, os.size(), InternalStructure.SINGLE_ARRAY);
+            return os.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private RTree<Object, Point> createFlatBuffersGreek() {
+        Func1<Object, byte[]> serializer = new Func1<Object, byte[]>() {
+            @Override
+            public byte[] call(Object o) {
+                return new byte[0];
+            }
+        };
+        Func1<byte[], Object> deserializer = new Func1<byte[], Object>() {
+            @Override
+            public Object call(byte[] bytes) {
+                return null;
+            }
+        };
+        Serializer<Object, Point> fbSerializer = SerializerFlatBuffers.create(serializer,
+                deserializer);
+        try {
+            ByteArrayInputStream is = new ByteArrayInputStream(byteArrayGreek);
+            return fbSerializer.read(is, byteArrayGreek.length, InternalStructure.SINGLE_ARRAY);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Benchmark
+    public void defaultRTreeCreation010() {
+        RTree.maxChildren(10).<Object, Point> create().add(entries);
+    }
+
+    @Benchmark
+    public void starRTreeCreation010() {
+        RTree.maxChildren(10).star().<Object, Point> create().add(entries);
+    }
+
+    @Benchmark
+    public void flatBufferRTreeCreation010() {
+        createFlatBuffersGreek();
+    }
+
+    @Benchmark
+    public void bulkLoadingRTreeCreation010() {
+        RTree.maxChildren(10).<Object, Point> create(entries);
+    }
+
+    @Benchmark
+    public void bulkLoadingFullRTreeCreation010() {
+        RTree.maxChildren(10).loadingFactor(1.0).<Object, Point> create(entries);
     }
 
     @Benchmark

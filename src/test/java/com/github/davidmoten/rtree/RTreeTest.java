@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.github.davidmoten.rtree.internal.EntryDefault;
 import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Lists;
@@ -104,6 +105,40 @@ public class RTreeTest {
     public void testVisualizerWithEmptyTree() {
         RTree<Object, Geometry> tree = RTree.create();
         tree.visualize(600, 600).save("target/tree.png", "PNG");
+    }
+
+    @Test
+    public void testBulkLoadingEmpty() {
+        RTree<Object, Point> tree = RTree.create(new ArrayList<Entry<Object, Point>>());
+        assertTrue(tree.entries().isEmpty().toBlocking().single());
+    }
+
+    @Test
+    public void testBulkLoadingWithOneItemIsNotEmpty() {
+        RTree<Object, Rectangle> tree = RTree.create(Arrays.asList(e(1)));
+        assertFalse(tree.isEmpty());
+    }
+
+    @Test
+    public void testBulkLoadingEntryCount() {
+        List<Entry<Integer, Geometry>> entries = new ArrayList<Entry<Integer, Geometry>>(10000);
+        for (int i = 1; i <= 10000; i++) {
+            Point point = nextPoint();
+            // System.out.println("point(" + point.x() + "," + point.y() +
+            // "),");
+            entries.add(new EntryDefault<Integer, Geometry>(i, point));
+        }
+        RTree<Integer, Geometry> tree = RTree.create(entries);
+        int entrySize = tree.entries().count().toBlocking().single();
+        System.out.println("entry count: " + entrySize);
+        assertEquals(entrySize, entries.size());
+    }
+
+    @Test
+    public void testSearchOnOneItemOnBulkLoadingRTree() {
+        Entry<Object, Rectangle> entry = e(1);
+        RTree<Object, Rectangle> tree = RTree.create(Arrays.asList(entry));
+        assertEquals(Arrays.asList(entry), tree.search(r(1)).toList().toBlocking().single());
     }
 
     @Test
@@ -524,6 +559,9 @@ public class RTreeTest {
 
         RTree<Object, Geometry> tree2 = RTree.star().maxChildren(maxChildren).create().add(entries);
         tree2.visualize(600, 600).save("target/tree2.png");
+
+        RTree<Object, Geometry> tree3 = RTree.maxChildren(maxChildren).create(entries);
+        tree3.visualize(600, 600).save("target/tree3.png");
     }
 
     @Test(expected = RuntimeException.class)
@@ -564,6 +602,10 @@ public class RTreeTest {
         RTree<Object, Point> tree2 = RTree.maxChildren(maxChildren).star().<Object, Point> create()
                 .add(entries);
         tree2.visualize(2000, 2000).save("target/greek2.png");
+
+
+        RTree<Object, Point> tree3 = RTree.maxChildren(maxChildren).create(entries);
+        tree3.visualize(2000, 2000).save("target/greek3.png");
     }
 
     @Test
@@ -703,7 +745,7 @@ public class RTreeTest {
     }
 
     @Test
-    public void testStarTreeReturnsSameAsStandardRTree() {
+    public void testBulkLoadingTreeAndStarTreeReturnsSameAsStandardRTree() {
 
         RTree<Integer, Geometry> tree1 = RTree.create();
         RTree<Integer, Geometry> tree2 = RTree.star().create();
@@ -713,25 +755,33 @@ public class RTreeTest {
                 rectangle(1, 0.252, 50, 69.23), rectangle(13.12, 23.123, 50.45, 80.9),
                 rectangle(10, 10, 50, 50) };
 
+        List<Entry<Integer, Geometry>> entries = new ArrayList<Entry<Integer, Geometry>>(10000);
         for (int i = 1; i <= 10000; i++) {
             Point point = nextPoint();
             // System.out.println("point(" + point.x() + "," + point.y() +
             // "),");
             tree1 = tree1.add(i, point);
             tree2 = tree2.add(i, point);
+            entries.add(new EntryDefault<Integer, Geometry>(i, point));
         }
+        RTree<Integer, Geometry> tree3 = RTree.create(entries);
+
+        // tree2.visualize(2000, 2000).save("target/tree22.png");
+        // tree3.visualize(2000, 2000).save("target/tree33.png");
 
         for (Rectangle r : testRects) {
             Set<Integer> res1 = new HashSet<Integer>(tree1.search(r)
                     .map(RTreeTest.<Integer> toValue()).toList().toBlocking().single());
             Set<Integer> res2 = new HashSet<Integer>(tree2.search(r)
                     .map(RTreeTest.<Integer> toValue()).toList().toBlocking().single());
-            // System.out.println("searchRect= rectangle(" + r.x1() + "," +
-            // r.y1() + "," + r.x2() + "," + r.y2()+ ")");
-            // System.out.println("res1.size=" + res1.size() + ",res2.size=" +
-            // res2.size());
-            // System.out.println("res1=" + res1 + ",res2=" + res2);
+            Set<Integer> res3 = new HashSet<Integer>(tree3.search(r)
+                    .map(RTreeTest.<Integer> toValue()).toList().toBlocking().single());
+             System.out.println("searchRect= rectangle(" + r.x1() + "," +
+             r.y1() + "," + r.x2() + "," + r.y2()+ ")");
+             System.out.println("res1.size=" + res1.size() + ",res2.size=" + res2.size() + ",res3.size=" + res3.size());
+             // System.out.println("res1=" + res1 + ",res2=" + res2 + ",res3=" + res3);
             assertEquals(res1.size(), res2.size());
+            assertEquals(res1.size(), res3.size());
         }
     }
 
