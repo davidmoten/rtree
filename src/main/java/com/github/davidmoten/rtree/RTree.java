@@ -332,6 +332,9 @@ public final class RTree<T, S extends Geometry> {
          * Create an RTree by bulk loading, using the STR method.
          * STR: a simple and efficient algorithm for R-tree packing
          * http://ieeexplore.ieee.org/abstract/document/582015/
+         * <p>
+         * Note: this method mutates the input entries, the internal order of the List may be changed.
+         * </p>
          *
          */
         @SuppressWarnings("unchecked")
@@ -399,8 +402,8 @@ public final class RTree<T, S extends Geometry> {
             return packingSTR(nodes, false, size, context);
         }
 
-        private class MidComparator implements Comparator<HasGeometry> {
-            private short dimension; // leave space for multiple dimensions, 0 for x, 1 for y, ...
+        private static final class MidComparator implements Comparator<HasGeometry> {
+            private final short dimension; // leave space for multiple dimensions, 0 for x, 1 for y, ...
 
             public MidComparator(short dim) {
                 dimension = dim;
@@ -415,11 +418,6 @@ public final class RTree<T, S extends Geometry> {
                 Rectangle mbr = o.geometry().mbr();
                 if (dimension == 0) return (mbr.x1() + mbr.x2()) / 2;
                 else return (mbr.y1() + mbr.y2()) / 2;
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                return obj instanceof MidComparator && dimension == ((MidComparator) obj).dimension;
             }
         }
 

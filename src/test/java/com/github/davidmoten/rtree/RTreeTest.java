@@ -121,17 +121,17 @@ public class RTreeTest {
 
     @Test
     public void testBulkLoadingEntryCount() {
-        List<Entry<Integer, Geometry>> entris = new ArrayList<Entry<Integer, Geometry>>(10000);
+        List<Entry<Integer, Geometry>> entries = new ArrayList<Entry<Integer, Geometry>>(10000);
         for (int i = 1; i <= 10000; i++) {
             Point point = nextPoint();
             // System.out.println("point(" + point.x() + "," + point.y() +
             // "),");
-            entris.add(new EntryDefault<Integer, Geometry>(i, point));
+            entries.add(new EntryDefault<Integer, Geometry>(i, point));
         }
-        RTree<Integer, Geometry> tree = RTree.create(entris);
+        RTree<Integer, Geometry> tree = RTree.create(entries);
         int entrySize = tree.entries().count().toBlocking().single();
         System.out.println("entry count: " + entrySize);
-        assertEquals(entrySize, entris.size());
+        assertEquals(entrySize, entries.size());
     }
 
     @Test
@@ -755,16 +755,16 @@ public class RTreeTest {
                 rectangle(1, 0.252, 50, 69.23), rectangle(13.12, 23.123, 50.45, 80.9),
                 rectangle(10, 10, 50, 50) };
 
-        List<Entry<Integer, Geometry>> entris = new ArrayList<Entry<Integer, Geometry>>(10000);
+        List<Entry<Integer, Geometry>> entries = new ArrayList<Entry<Integer, Geometry>>(10000);
         for (int i = 1; i <= 10000; i++) {
             Point point = nextPoint();
             // System.out.println("point(" + point.x() + "," + point.y() +
             // "),");
             tree1 = tree1.add(i, point);
             tree2 = tree2.add(i, point);
-            entris.add(new EntryDefault<Integer, Geometry>(i, point));
+            entries.add(new EntryDefault<Integer, Geometry>(i, point));
         }
-        RTree<Integer, Geometry> tree3 = RTree.create(entris);
+        RTree<Integer, Geometry> tree3 = RTree.create(entries);
 
         // tree2.visualize(2000, 2000).save("target/tree22.png");
         // tree3.visualize(2000, 2000).save("target/tree33.png");
