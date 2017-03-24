@@ -56,6 +56,8 @@ Number of points = 1000, max children per node 8:
 Notice that there is little overlap in the R*-tree split compared to the 
 Quadratic split. This should provide better search performance (and in general benchmarks show this).
 
+STR bulk loaded R-tree has a bit more overlap than R*-tree, which affects the search performance at some extent.
+
 Getting started
 ----------------
 Add this maven dependency to your pom.xml:
