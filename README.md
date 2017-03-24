@@ -30,6 +30,7 @@ Features
 * Guttman's heuristics (Quadratic splitter) ([paper](https://www.google.com.au/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CB8QFjAA&url=http%3A%2F%2Fpostgis.org%2Fsupport%2Frtree.pdf&ei=ieEQVJuKGdK8uATpgoKQCg&usg=AFQjCNED9w2KjgiAa9UI-UO_0eWjcADTng&sig2=rZ_dzKHBHY62BlkBuw3oCw&bvm=bv.74894050,d.c2E))
 * R*-tree heuristics ([paper](http://dbs.mathematik.uni-marburg.de/publications/myPapers/1990/BKSS90.pdf))
 * Customizable [splitter](src/main/java/com/github/davidmoten/rtree/Splitter.java) and [selector](src/main/java/com/github/davidmoten/rtree/Selector.java)
+* 10x faster index creation with STR bulk loading ([paper](https://www.researchgate.net/profile/Scott_Leutenegger/publication/3686660_STR_A_Simple_and_Efficient_Algorithm_for_R-Tree_Packing/links/5563368008ae86c06b676a02.pdf)).
 * search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
 * search is cancelled by unsubscription
 * search is ```O(log(n))``` on average
@@ -47,9 +48,10 @@ Features
 
 Number of points = 1000, max children per node 8: 
 
-| Quadratic split | R*-tree split |
-| :-------------: | :-----------: |
-| <img src="src/docs/quad-1000-8.png?raw=true" /> | <img src="src/docs/star-1000-8.png?raw=true" /> |
+| Quadratic split | R*-tree split | STR bulk loaded |
+| :-------------: | :-----------: | :-----------: |
+| <img src="src/docs/quad-1000-8.png?raw=true" /> | <img src="src/docs/star-1000-8.png?raw=true" /> | <img src="src/docs/str-1000-8.png?raw=true" /> |
+
 
 Notice that there is little overlap in the R*-tree split compared to the 
 Quadratic split. This should provide better search performance (and in general benchmarks show this).
@@ -261,10 +263,11 @@ D
 
 How to configure the R-tree for best performance
 --------------------------------------------------
-Check out the benchmarks below, but I recommend you do your own benchmarks because every data set will behave differently. If you don't want to benchmark then use the defaults. General rules based on the benchmarks:
+Check out the benchmarks below and refer to [another benchmark results](https://github.com/ambling/rtree-benchmark#results), but I recommend you do your own benchmarks because every data set will behave differently. If you don't want to benchmark then use the defaults. General rules based on the benchmarks:
 
 * for data sets of <10,000 entries use the default R-tree (quadratic splitter with maxChildren=4)
 * for data sets of >=10,000 entries use the star R-tree (R*-tree heuristics with maxChildren=4 by default)
+* use STR bulk loaded R-tree (quadratic splitter or R*-tree heuristics) for large (where index creation time is important) or static (where insertion and deletion are not frequent) data sets
 
 Watch out though, the benchmark data sets had quite specific characteristics. The 1000 entry dataset was randomly generated (so is more or less uniformly distributed) and the *Greek* dataset was earthquake data with its own clustering characteristics. 
 
@@ -432,3 +435,4 @@ searchNearestGreek                                                     thrpt   1
 
 ```
 
+Related project [rtree-benchmark](https://github.com/ambling/rtree-benchmark): a more comprehensive benchmark with results and analysos on this rtree implementation.
