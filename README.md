@@ -65,7 +65,7 @@ Add this maven dependency to your pom.xml:
   <version>0.8-RC10</version>
 </dependency>
 ```
-###Instantiate an R-Tree
+### Instantiate an R-Tree
 Use the static builder methods on the ```RTree``` class:
 
 ```java
@@ -87,14 +87,14 @@ The following geometries are supported for insertion in an RTree:
 * `Circle`
 * `Line` (requires [JTS](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22jts-core%22) dependency, look at [pom.xml](pom.xml))
 
-###Generic typing
+### Generic typing
 If for instance you know that the entry geometry is always ```Point``` then create an ```RTree``` specifying that generic type to gain more type safety:
 
 ```java
 RTree<String, Point> tree = RTree.create();
 ```
 
-###R*-tree
+### R*-tree
 If you'd like an R*-tree (which uses a topological splitter on minimal margin, overlap area and area and a selector combination of minimal area increase, minimal overlap, and area):
 
 ```
@@ -103,7 +103,7 @@ RTree<String, Geometry> tree = RTree.star().maxChildren(6).create();
 
 See benchmarks below for some of the performance differences.
 
-###Add items to the R-tree
+### Add items to the R-tree
 When you add an item to the R-tree you need to provide a geometry that represents the 2D physical location or 
 extension of the item. The ``Geometries`` builder provides these factory methods:
 
@@ -126,7 +126,7 @@ tree = tree.add(Entry.entry(item, Geometries.point(10,20));
 *Important note:* being an immutable data structure, calling ```tree.add(item, geometry)``` does nothing to ```tree```, 
 it returns a new ```RTree``` containing the addition. Make sure you use the result of the ```add```!
 
-###Remove an item in the R-tree
+### Remove an item in the R-tree
 To remove an item from an R-tree, you need to match the item and its geometry:
 
 ```java
@@ -140,7 +140,7 @@ tree = tree.delete(entry);
 *Important note:* being an immutable data structure, calling ```tree.delete(item, geometry)``` does nothing to ```tree```, 
 it returns a new ```RTree``` without the deleted item. Make sure you use the result of the ```delete```!
 
-###Geospatial geometries (lats and longs)
+### Geospatial geometries (lats and longs)
 To handle wraparounds of longitude values on the earth (180/-180 boundary trickiness) there are special factory methods in the `Geometries` class. If you want to do geospatial searches then you should use these methods to build `Point`s and `Rectangle`s:
 
 ```java
@@ -150,7 +150,7 @@ Rectangle rectangle = Geometries.rectangleGeographic(lon1, lat1, lon2, lat2);
 
 Under the covers these methods normalize the longitude value to be in the interval [-180, 180) and for rectangles the rightmost longitude has 360 added to it if it is less than the leftmost longitude.
 
-###Custom geometries
+### Custom geometries
 You can also write your own implementation of [```Geometry```](src/main/java/com/github/davidmoten/rtree/geometry/Geometry.java). An implementation of ```Geometry``` needs to specify methods to:
 
 * check intersection with a rectangle (you can reuse the distance method here if you want but it might affect performance)
@@ -164,7 +164,7 @@ For the R-tree to be well-behaved, the distance function if implemented needs to
 * ```if rectangle r1 contains r2 then distance(r1)<=distance(r2)```
 * ```distance(r) = 0 if and only if the geometry intersects the rectangle r``` 
 
-###Searching
+### Searching
 The advantage of an R-tree is the ability to search for items in a region reasonably quickly. 
 On average search is ```O(log(n))``` but worst case is ```O(n)```.
 
@@ -329,7 +329,7 @@ Note that serialization uses an optional dependency on `flatbuffers`. Add the fo
 </dependency>
 ```
 
-##Serialization example
+## Serialization example
 
 Write an `RTree` to an `OutputStream`:
 ```java
