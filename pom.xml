@@ -92,7 +92,7 @@
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
-            <version>1.2.7</version>
+            <version>1.2.10</version>
         </dependency>
         <dependency>
             <groupId>com.vividsolutions</groupId>
@@ -119,14 +119,14 @@
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava-string</artifactId>
-            <version>0.22.0</version>
+            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.davidmoten</groupId>
             <artifactId>rxjava-extras</artifactId>
-            <version>0.7</version>
+            <version>0.8.0.7</version>
         </dependency>
 
         <dependency>
