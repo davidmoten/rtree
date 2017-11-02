@@ -12,8 +12,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.internal.Functions;
 import com.github.davidmoten.rtree.kryo.SerializerKryo;
-import com.github.davidmoten.rx.Functions;
 
 import rx.functions.Func0;
 import rx.functions.Func1;

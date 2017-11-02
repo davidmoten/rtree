@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree.fbs;
 
 import java.util.List;
 
+import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
@@ -13,7 +14,6 @@ import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.internal.FactoryDefault;
 import com.github.davidmoten.rtree.internal.NonLeafDefault;
-import com.github.davidmoten.util.Preconditions;
 
 import rx.functions.Func1;
 

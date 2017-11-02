@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.internal.util.ImmutableStack;
-import com.github.davidmoten.rx.util.BackpressureUtils;
 
 import rx.Observable.OnSubscribe;
 import rx.Producer;
@@ -73,7 +72,7 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
 
             // rxjava used AtomicLongFieldUpdater instead of AtomicLong
             // but benchmarks showed no benefit here so reverted to AtomicLong
-            long previousCount = BackpressureUtils.getAndAddRequest(requested, n);
+            long previousCount = getAndAddRequest(requested, n);
             if (previousCount == 0) {
                 // don't touch stack every time during the loop because
                 // is a volatile and every write forces a thread memory
@@ -97,6 +96,32 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
                     }
                 }
 
+            }
+        }
+    }
+    
+    /**
+     * Adds {@code n} to {@code requested} and returns the value prior to
+     * addition once the addition is successful (uses CAS semantics). If
+     * overflows then sets {@code requested} field to {@code Long.MAX_VALUE}.
+     * 
+     * @param requested
+     *            atomic field updater for a request count
+     * @param n
+     *            the number of requests to add to the requested count
+     * @return requested value just prior to successful addition
+     */
+    private static long getAndAddRequest(AtomicLong requested, long n) {
+        // add n to field but check for overflow
+        while (true) {
+            long current = requested.get();
+            long next = current + n;
+            // check for overflow
+            if (next < 0) {
+                next = Long.MAX_VALUE;
+            }
+            if (requested.compareAndSet(current, next)) {
+                return current;
             }
         }
     }

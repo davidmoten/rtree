@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.github.davidmoten.rtree.internal.EntryDefault;
 import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Lists;
@@ -41,6 +40,8 @@ import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Intersects;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.internal.EntryDefault;
+import com.github.davidmoten.rtree.internal.Functions;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -686,7 +687,7 @@ public class RTreeTest {
     public void testSearchConditionAlwaysFalse() {
         @SuppressWarnings("unchecked")
         RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?, ?>) create(3, 3);
-        assertEquals(0, (int) tree.search(com.github.davidmoten.rx.Functions.alwaysFalse()).count()
+        assertEquals(0, (int) tree.search(Functions.alwaysFalse()).count()
                 .toBlocking().single());
     }
 
