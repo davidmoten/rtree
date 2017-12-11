@@ -1,10 +1,8 @@
 package com.github.davidmoten.rtree.geometry;
 
-import java.awt.geom.Line2D;
-import java.awt.geom.Line2D.Float;
-
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.rtree.internal.Line2D;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -56,10 +54,10 @@ public final class Line implements Geometry {
     }
 
     private double distance(float x1, float y1, float x2, float y2) {
-        Float line = new Line2D.Float(x1, y1, x2, y2);
+        Line2D line = new Line2D(x1, y1, x2, y2);
         double d1 = line.ptSegDist(this.x1, this.y1);
         double d2 = line.ptSegDist(this.x2, this.y2);
-        Float line2 = new Line2D.Float(this.x1, this.y1, this.x2, this.y2);
+        Line2D line2 = new Line2D(this.x1, this.y1, this.x2, this.y2);
         double d3 = line2.ptSegDist(x1, y1);
         if (d3 == 0)
             return 0;
@@ -106,8 +104,8 @@ public final class Line implements Geometry {
     }
 
     public boolean intersects(Line b) {
-        Line2D line1 = new Line2D.Float(x1, y1, x2, y2);
-        Line2D line2 = new Line2D.Float(b.x1(), b.y1(), b.x2(), b.y2());
+        Line2D line1 = new Line2D(x1, y1, x2, y2);
+        Line2D line2 = new Line2D(b.x1(), b.y1(), b.x2(), b.y2());
         return line2.intersectsLine(line1);
     }
 
@@ -192,5 +190,5 @@ public final class Line implements Geometry {
         }
 
     }
-
+    
 }
