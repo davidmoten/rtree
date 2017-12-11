@@ -109,6 +109,8 @@ public final class RTree<T, S extends Geometry> {
     /**
      * Construct an Rtree through STR bulk loading. Default to
      * maxChildren=128, minChildren=64 and fill nodes by a factor of 0.7
+     * 
+     * @param entries entries to add to the R-tree
      *
      * @param <T>
      *            the value type of the entries in the tree
@@ -230,6 +232,9 @@ public final class RTree<T, S extends Geometry> {
 
         /**
          * The factor is used as the fill ratio during bulk loading.
+         * 
+         * @param factor loading factor
+         * @return this
          */
         public Builder loadingFactor(double factor) {
             this.loadingFactor = factor;
@@ -335,7 +340,9 @@ public final class RTree<T, S extends Geometry> {
          * <p>
          * Note: this method mutates the input entries, the internal order of the List may be changed.
          * </p>
-         *
+         * 
+         * @param entries entries to be added to the r-tree
+         * @return a loaded RTree
          */
         @SuppressWarnings("unchecked")
         public <T, S extends Geometry> RTree<T, S> create(List<Entry<T, S>> entries) {

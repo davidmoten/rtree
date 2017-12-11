@@ -45,7 +45,6 @@ public final class Line2D {
      *            this line segment
      * @return a double value that is the distance from the specified point to the
      *         current line segment.
-     * @see #ptLineDist(double, double)
      * @since 1.2
      */
     public double ptSegDist(double px, double py) {
@@ -74,7 +73,6 @@ public final class Line2D {
      *            specified line segment
      * @return a double value that is the distance from the specified point to the
      *         specified line segment.
-     * @see #ptLineDist(double, double, double, double, double, double)
      * @since 1.2
      */
     public static double ptSegDist(double x1, double y1, double x2, double y2, double px,
@@ -104,7 +102,6 @@ public final class Line2D {
      *            specified line segment
      * @return a double value that is the square of the distance from the specified
      *         point to the specified line segment.
-     * @see #ptLineDistSq(double, double, double, double, double, double)
      * @since 1.2
      */
     public static double ptSegDistSq(double x1, double y1, double x2, double y2, double px,
