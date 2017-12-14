@@ -389,6 +389,7 @@ public final class RTree<T, S extends Geometry> {
 
             List<Node<T, S>> nodes = new ArrayList<Node<T, S>>(nodeCount);
             for (int s = 0; s < sliceCount; s++) {
+                @SuppressWarnings("rawtypes")
                 List slice = objects.subList(s * sliceCapacity, Math.min((s + 1) * sliceCapacity, objects.size()));
                 Collections.sort(slice, new MidComparator((short)1));
 
