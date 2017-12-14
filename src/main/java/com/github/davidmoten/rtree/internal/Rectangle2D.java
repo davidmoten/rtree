@@ -1,0 +1,86 @@
+package com.github.davidmoten.rtree.internal;
+
+public class Rectangle2D {
+
+    /**
+     * The bitmask that indicates that a point lies to the left of this
+     * <code>Rectangle2D</code>.
+     * 
+     * @since 1.2
+     */
+    public static final int OUT_LEFT = 1;
+
+    /**
+     * The bitmask that indicates that a point lies above this
+     * <code>Rectangle2D</code>.
+     * 
+     * @since 1.2
+     */
+    public static final int OUT_TOP = 2;
+
+    /**
+     * The bitmask that indicates that a point lies to the right of this
+     * <code>Rectangle2D</code>.
+     * 
+     * @since 1.2
+     */
+    public static final int OUT_RIGHT = 4;
+
+    /**
+     * The bitmask that indicates that a point lies below this
+     * <code>Rectangle2D</code>.
+     * 
+     * @since 1.2
+     */
+    public static final int OUT_BOTTOM = 8;
+
+    public static boolean rectangleIntersectsLine(double rectX, double rectY, double rectWidth,
+            double rectHeight, double x1, double y1, double x2, double y2) {
+        int out1, out2;
+        if ((out2 = outcode(rectX, rectY, rectWidth, rectHeight, x2, y2)) == 0) {
+            return true;
+        }
+        while ((out1 = outcode(rectX, rectY, rectWidth, rectHeight, x1, y1)) != 0) {
+            if ((out1 & out2) != 0) {
+                return false;
+            }
+            if ((out1 & (OUT_LEFT | OUT_RIGHT)) != 0) {
+                double x = rectX;
+                if ((out1 & OUT_RIGHT) != 0) {
+                    x += rectWidth;
+                }
+                y1 = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+                x1 = x;
+            } else {
+                double y = rectY;
+                if ((out1 & OUT_BOTTOM) != 0) {
+                    y += rectHeight;
+                }
+                x1 = x1 + (y - y1) * (x2 - x1) / (y2 - y1);
+                y1 = y;
+            }
+        }
+        return true;
+    }
+
+    private static int outcode(double rectX, double rectY, double rectWidth, double rectHeight,
+            double x, double y) {
+        int out = 0;
+        if (rectWidth <= 0) {
+            out |= OUT_LEFT | OUT_RIGHT;
+        } else if (x < rectX) {
+            out |= OUT_LEFT;
+        } else if (x > rectX + rectWidth) {
+            out |= OUT_RIGHT;
+        }
+        if (rectHeight <= 0) {
+            out |= OUT_TOP | OUT_BOTTOM;
+        } else if (y < rectY) {
+            out |= OUT_TOP;
+        } else if (y > rectY + rectHeight) {
+            out |= OUT_BOTTOM;
+        }
+        return out;
+    }
+
+}

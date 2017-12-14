@@ -283,5 +283,4 @@ public final class Line2D {
         }
         return (ccw < 0.0) ? -1 : ((ccw > 0.0) ? 1 : 0);
     }
-
 }
