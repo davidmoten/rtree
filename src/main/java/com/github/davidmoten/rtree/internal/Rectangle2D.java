@@ -36,6 +36,9 @@ public class Rectangle2D {
 
     public static boolean rectangleIntersectsLine(double rectX, double rectY, double rectWidth,
             double rectHeight, double x1, double y1, double x2, double y2) {
+        if (rectangleCornerOnSegment(rectX, rectY, rectWidth, rectHeight, x1, y1, x2, y2)) {
+            return true;
+        }
         int out1, out2;
         if ((out2 = outcode(rectX, rectY, rectWidth, rectHeight, x2, y2)) == 0) {
             return true;
@@ -61,6 +64,34 @@ public class Rectangle2D {
             }
         }
         return true;
+    }
+
+    private static boolean rectangleCornerOnSegment(double rectX, double rectY, double rectWidth,
+            double rectHeight, double x1, double y1, double x2, double y2) {
+        if (pointOnSegment(rectX, rectY, x1, y1, x2, y2)) {
+            return true;
+        }
+        if (pointOnSegment(rectX + rectWidth, rectY, x1, y1, x2, y2)) {
+            return true;
+        }
+        if (pointOnSegment(rectX, rectY + rectHeight, x1, y1, x2, y2)) {
+            return true;
+        }
+        if (pointOnSegment(rectX + rectWidth, rectY + rectHeight, x1, y1, x2, y2)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static final double PRECISION = 0.00000001;
+
+    private static boolean pointOnSegment(double x, double y, double x1, double y1, double x2,
+            double y2) {
+        if (x < x1 || x > x2 || y < y1 || y > y2) {
+            return false;
+        }
+        double v = (y2 - y1) * (x - x1) - (x2 - x1) * (y - y1);
+        return Math.abs(v) < PRECISION;
     }
 
     private static int outcode(double rectX, double rectY, double rectWidth, double rectHeight,
