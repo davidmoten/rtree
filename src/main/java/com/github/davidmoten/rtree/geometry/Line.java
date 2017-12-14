@@ -3,7 +3,7 @@ package com.github.davidmoten.rtree.geometry;
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.internal.Line2D;
-import com.github.davidmoten.rtree.internal.Rectangle2D;
+import com.github.davidmoten.rtree.internal.RectangleUtil;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
 /**
@@ -72,7 +72,7 @@ public final class Line implements Geometry {
 
     @Override
     public boolean intersects(Rectangle r) {
-        return Rectangle2D.rectangleIntersectsLine(r.x1(), r.y1(), r.x2() - r.x1(), r.y2() - r.y1(),
+        return RectangleUtil.rectangleIntersectsLine(r.x1(), r.y1(), r.x2() - r.x1(), r.y2() - r.y1(),
                 x1, y1, x2, y2);
     }
 

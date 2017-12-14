@@ -1,6 +1,10 @@
 package com.github.davidmoten.rtree.internal;
 
-public class Rectangle2D {
+public final class RectangleUtil {
+
+    private RectangleUtil() {
+        // prevent instantiation
+    }
 
     /**
      * The bitmask that indicates that a point lies to the left of this
@@ -89,9 +93,10 @@ public class Rectangle2D {
             double y2) {
         if (x < x1 || x > x2 || y < y1 || y > y2) {
             return false;
+        } else {
+            double v = (y2 - y1) * (x - x1) - (x2 - x1) * (y - y1);
+            return Math.abs(v) < PRECISION;
         }
-        double v = (y2 - y1) * (x - x1) - (x2 - x1) * (y - y1);
-        return Math.abs(v) < PRECISION;
     }
 
     private static int outcode(double rectX, double rectY, double rectWidth, double rectHeight,
