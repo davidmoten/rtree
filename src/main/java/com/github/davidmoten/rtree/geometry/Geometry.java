@@ -9,8 +9,8 @@ public interface Geometry {
 
     /**
      * <p>
-     * Returns the distance to the given {@link RectangleImpl}. For a
-     * {@link RectangleImpl} this might be Euclidean distance but for an EPSG4326
+     * Returns the distance to the given {@link Rectangle}. For a
+     * {@link Rectangle} this might be Euclidean distance but for an EPSG4326
      * lat-long Rectangle might be great-circle distance. The distance function
      * should satisfy the following properties:
      * </p>
