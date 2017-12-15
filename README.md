@@ -219,7 +219,7 @@ tree = tree.add("DAVE", point(10, 20))
            .add("MARY", point(97, 125));
  
 Observable<Entry<String, Point>> entries =
-    tree.search(Rectangle.create(8, 15, 30, 35));
+    tree.search(Geometries.rectangle(8, 15, 30, 35));
 ```
 
 Searching by distance on lat longs
