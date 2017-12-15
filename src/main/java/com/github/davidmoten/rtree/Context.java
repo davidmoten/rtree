@@ -5,6 +5,8 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 
 /**
  * Configures an RTree prior to instantiation of an {@link RTree}.
+ * @param <T> value type
+ * @param <S> geometry type
  */
 public final class Context<T, S extends Geometry> {
 
@@ -41,11 +43,6 @@ public final class Context<T, S extends Geometry> {
         this.minChildren = minChildren;
         this.splitter = splitter;
         this.factory = factory;
-    }
-
-    private Context() {
-        this(2, 4, new SelectorMinimalAreaIncrease(), new SplitterQuadratic(),
-                Factories.<T, S> defaultFactory());
     }
 
     public int maxChildren() {

@@ -11,7 +11,8 @@ import com.github.davidmoten.rtree.geometry.Geometry;
  * Used for tracking deletions through recursive calls.
  * 
  * @param <T>
- *            entry type
+ *            value type
+ * @param <S> geometry type
  */
 public final class NodeAndEntries<T, S extends Geometry> {
 

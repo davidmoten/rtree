@@ -11,7 +11,9 @@ import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
  * An entry in the R-tree which has a spatial representation.
  * 
  * @param <T>
- *            the type of Entry
+ *            value type
+ * @param <S>
+ *            geometry type
  */
 public final class EntryDefault<T, S extends Geometry> implements Entry<T, S> {
     private final T value;
@@ -65,11 +67,7 @@ public final class EntryDefault<T, S extends Geometry> implements Entry<T, S> {
 
     @Override
     public String toString() {
-        String builder = "Entry [value=" +
-                value +
-                ", geometry=" +
-                geometry +
-                "]";
+        String builder = "Entry [value=" + value + ", geometry=" + geometry + "]";
         return builder;
     }
 

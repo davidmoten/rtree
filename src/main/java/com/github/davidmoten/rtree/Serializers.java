@@ -108,6 +108,7 @@ public final class Serializers {
         }
 
         // TODO enable when ready
+        @SuppressWarnings("unused")
         private SerializerTypedBuilder<T> kryo(Func0<Kryo> kryoFactory) {
             this.method = Method.KRYO;
             this.kryoFactory = kryoFactory;
