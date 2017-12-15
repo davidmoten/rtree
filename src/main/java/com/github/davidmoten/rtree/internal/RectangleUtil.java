@@ -74,17 +74,15 @@ public final class RectangleUtil {
             double rectHeight, double x1, double y1, double x2, double y2) {
         if (pointOnSegment(rectX, rectY, x1, y1, x2, y2)) {
             return true;
-        }
-        if (pointOnSegment(rectX + rectWidth, rectY, x1, y1, x2, y2)) {
+        } else if (pointOnSegment(rectX + rectWidth, rectY, x1, y1, x2, y2)) {
             return true;
-        }
-        if (pointOnSegment(rectX, rectY + rectHeight, x1, y1, x2, y2)) {
+        } else if (pointOnSegment(rectX, rectY + rectHeight, x1, y1, x2, y2)) {
             return true;
-        }
-        if (pointOnSegment(rectX + rectWidth, rectY + rectHeight, x1, y1, x2, y2)) {
+        } else if (pointOnSegment(rectX + rectWidth, rectY + rectHeight, x1, y1, x2, y2)) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     private static final double PRECISION = 0.00000001;
