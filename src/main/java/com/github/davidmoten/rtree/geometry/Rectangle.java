@@ -12,12 +12,12 @@ public interface Rectangle extends Geometry, HasGeometry {
 
     float area();
 
-    Rectangle add(Rectangle r);
-
-    boolean contains(double x, double y);
-
     float intersectionArea(Rectangle r);
 
     float perimeter();
+
+    Rectangle add(Rectangle r);
+
+    boolean contains(double x, double y);
 
 }

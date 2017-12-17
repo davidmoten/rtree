@@ -31,4 +31,5 @@ public class HighPrecisionTest {
     private static boolean gte(float a, long b) {
         return new BigDecimal(a).compareTo(new BigDecimal(b)) >=0;
     }
+    
 }
