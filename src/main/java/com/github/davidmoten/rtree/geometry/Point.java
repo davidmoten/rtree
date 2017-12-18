@@ -119,11 +119,16 @@ public final class Point implements Rectangle {
         if (r.isDoublePrecision()) {
             return RectangleDoubleImpl.create(Math.min(x, r.x1()), Math.min(y, r.y1()),
                     Math.max(x, r.x2()), Math.max(y, r.y2()));
-        } else {
+        } else if (r instanceof RectangleImpl) {
             RectangleImpl rf = (RectangleImpl) r;
-            return RectangleImpl.create(Math.min(x, rf.x1), Math.min(y, rf.y1),
-                    Math.max(x, rf.x2), Math.max(y, rf.y2));
+            return RectangleImpl.create(Math.min(x, rf.x1), Math.min(y, rf.y1), Math.max(x, rf.x2),
+                    Math.max(y, rf.y2));
+        } else {
+            Point p = (Point) r;
+            return RectangleImpl.create(Math.min(x, p.x), Math.min(y, p.y), Math.max(x, p.x),
+                    Math.max(y, p.y));
         }
+
     }
 
     @Override

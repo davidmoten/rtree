@@ -4,6 +4,7 @@ import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
@@ -53,11 +54,15 @@ public final class RectangleImpl implements Rectangle {
         if (r.isDoublePrecision()) {
             return RectangleDoubleImpl.create(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()),
                     max(y2, r.y2()));
+        } else if (r instanceof Point) {
+            Point p = (Point) r;
+            return RectangleImpl.create(min(x1, p.x()), min(y1, p.y()), max(x2, p.x()), max(y2, p.y()));
         } else {
             RectangleImpl rf = (RectangleImpl) r;
             return RectangleImpl.create(min(x1, rf.x1), min(y1, rf.y1), max(x2, rf.x2),
                     max(y2, rf.y2));
         }
+
     }
 
     @Override
