@@ -46,8 +46,12 @@ public final class Util {
         double minY1 = Double.MAX_VALUE;
         double maxX2 = -Double.MAX_VALUE;
         double maxY2 = -Double.MAX_VALUE;
+        boolean isDoublePrecision = false;
         for (final HasGeometry item : items) {
             Rectangle r = item.geometry().mbr();
+            if (r.isDoublePrecision()) {
+                isDoublePrecision = true;
+            }
             if (r.x1() < minX1)
                 minX1 = r.x1();
             if (r.y1() < minY1)
@@ -57,7 +61,11 @@ public final class Util {
             if (r.y2() > maxY2)
                 maxY2 = r.y2();
         }
-        return Geometries.rectangle(minX1, minY1, maxX2, maxY2);
+        if (isDoublePrecision) {
+            return Geometries.rectangle(minX1, minY1, maxX2, maxY2);
+        } else {
+            return Geometries.rectangle((float) minX1, (float) minY1, (float) maxX2, (float) maxY2);
+        }
     }
 
     public static <T> List<T> add(List<T> list, T element) {

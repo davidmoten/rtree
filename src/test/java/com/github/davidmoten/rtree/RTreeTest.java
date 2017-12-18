@@ -966,7 +966,7 @@ public class RTreeTest {
     public void testRTreeRootMbrWhenRTreeNonEmpty() {
         Optional<Rectangle> r = RTree.<Integer, Point> create().add(1, point(1, 1))
                 .add(2, point(2, 2)).mbr();
-        assertEquals(Geometries.rectangle(1d, 1, 2, 2), r.get());
+        assertEquals(Geometries.rectangle(1, 1, 2, 2), r.get());
     }
 
     @Test
