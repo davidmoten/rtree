@@ -3,9 +3,9 @@ package com.github.davidmoten.rtree;
 import java.util.Arrays;
 import java.util.List;
 
-import rx.Observable;
-
 import com.github.davidmoten.rtree.geometry.Point;
+
+import rx.Observable;
 
 public class GalleryMain {
 

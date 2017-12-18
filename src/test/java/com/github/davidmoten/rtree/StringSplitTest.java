@@ -2,6 +2,7 @@ package com.github.davidmoten.rtree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
 import rx.Observable;
 import rx.observables.StringObservable;
 

@@ -9,7 +9,6 @@ import java.util.Comparator;
 import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Sets;
-import com.github.davidmoten.rtree.internal.util.BoundedPriorityQueue;
 
 public class BoundedPriorityQueueTest {
 

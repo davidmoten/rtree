@@ -18,7 +18,6 @@ import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.Serializer;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
-import com.github.davidmoten.rtree.geometry.Point;
 
 import rx.Observable;
 import rx.functions.Func1;

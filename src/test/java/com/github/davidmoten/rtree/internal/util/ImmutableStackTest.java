@@ -8,8 +8,6 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import com.github.davidmoten.rtree.internal.util.ImmutableStack;
-
 public class ImmutableStackTest {
 
     private final Object a = new Object();
