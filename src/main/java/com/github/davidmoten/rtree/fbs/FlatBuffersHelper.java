@@ -44,7 +44,7 @@ final class FlatBuffersHelper {
             // Rectangle
             if (g instanceof Point) {
                 Point p = (Point) g;
-                geom = Point_.createPoint_(builder, p.x(), p.y());
+                geom = Point_.createPoint_(builder, (float) p.x(), (float) p.y());
                 geomType = GeometryType_.Point;
             } else if (g instanceof Rectangle) {
                 Rectangle b = (Rectangle) g;
@@ -82,7 +82,8 @@ final class FlatBuffersHelper {
 
         int ents = Node_.createEntriesVector(builder, entries2);
         Rectangle mbb = Util.mbr(entries);
-        int b = Box_.createBox_(builder, (float) mbb.x1(), (float) mbb.y1(),(float)  mbb.x2(),(float)  mbb.y2());
+        int b = Box_.createBox_(builder, (float) mbb.x1(), (float) mbb.y1(), (float) mbb.x2(),
+                (float) mbb.y2());
         Node_.startNode_(builder);
         Node_.addMbb(builder, b);
         Node_.addEntries(builder, ents);

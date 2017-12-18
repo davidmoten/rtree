@@ -114,7 +114,7 @@ public class LatLongExampleTest {
 
     private static <T> GeoCircleValue<T> createGeoCircleValue(Point point, double radiusKm,
             T value) {
-        return new GeoCircleValue<T>(point.y(), point.x(), radiusKm, value);
+        return new GeoCircleValue<T>((float) point.y(), (float) point.x(), radiusKm, value);
     }
 
     private static <T> RTree<GeoCircleValue<T>, Rectangle> add(

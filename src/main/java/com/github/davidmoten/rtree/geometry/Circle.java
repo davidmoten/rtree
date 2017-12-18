@@ -4,7 +4,7 @@ import static com.github.davidmoten.rtree.geometry.Geometries.point;
 
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
-import com.github.davidmoten.rtree.geometry.internal.RectangleImpl;
+import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
 public final class Circle implements Geometry {
@@ -16,7 +16,7 @@ public final class Circle implements Geometry {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.mbr = RectangleImpl.create(x - radius, y - radius, x + radius, y + radius);
+        this.mbr = RectangleFloat.create(x - radius, y - radius, x + radius, y + radius);
     }
 
     static Circle create(double x, double y, double radius) {
@@ -78,7 +78,7 @@ public final class Circle implements Geometry {
         return Math.sqrt(sqr(x - point.x()) + sqr(y - point.y())) <= radius;
     }
 
-    private float sqr(float x) {
+    private double sqr(double x) {
         return x * x;
     }
 

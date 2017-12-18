@@ -14,6 +14,7 @@ import org.openjdk.jmh.annotations.State;
 import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
+import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
 import rx.Subscriber;
@@ -26,58 +27,57 @@ public class BenchmarksRTree {
 
     private final List<Entry<Object, Rectangle>> some = entries1000();
 
-    private final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4).<Object, Point> create()
+    private final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4).<Object, Point>create()
             .add(entries);
 
     private final RTree<Object, Point> defaultTreeM10 = RTree.maxChildren(10)
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> starTreeM4 = RTree.maxChildren(4).star()
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> starTreeM10 = RTree.maxChildren(10).star()
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> defaultTreeM32 = RTree.maxChildren(32)
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> starTreeM32 = RTree.maxChildren(32).star()
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> defaultTreeM128 = RTree.maxChildren(128)
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> starTreeM128 = RTree.maxChildren(128).star()
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Rectangle> smallDefaultTreeM4 = RTree.maxChildren(4)
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallDefaultTreeM10 = RTree.maxChildren(10)
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallStarTreeM4 = RTree.maxChildren(4).star()
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallStarTreeM10 = RTree.maxChildren(10).star()
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallDefaultTreeM32 = RTree.maxChildren(32)
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallStarTreeM32 = RTree.maxChildren(32).star()
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallDefaultTreeM128 = RTree.maxChildren(128)
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallStarTreeM128 = RTree.maxChildren(128).star()
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final byte[] byteArrayGreek = createFlatBuffersByteArrayGreek();
 
     private final RTree<Object, Point> starTreeM10FlatBuffers = createFlatBuffersGreek();
-
 
     @Benchmark
     public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
@@ -85,7 +85,7 @@ public class BenchmarksRTree {
     }
 
     private byte[] createFlatBuffersByteArrayGreek() {
-        RTree<Object, Point> tree = RTree.maxChildren(10).star().<Object, Point> create()
+        RTree<Object, Point> tree = RTree.maxChildren(10).star().<Object, Point>create()
                 .add(entries);
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
         Func1<Object, byte[]> serializer = new Func1<Object, byte[]>() {
@@ -136,12 +136,12 @@ public class BenchmarksRTree {
 
     @Benchmark
     public void defaultRTreeCreation010() {
-        RTree.maxChildren(10).<Object, Point> create().add(entries);
+        RTree.maxChildren(10).<Object, Point>create().add(entries);
     }
 
     @Benchmark
     public void starRTreeCreation010() {
-        RTree.maxChildren(10).star().<Object, Point> create().add(entries);
+        RTree.maxChildren(10).star().<Object, Point>create().add(entries);
     }
 
     @Benchmark
@@ -151,12 +151,12 @@ public class BenchmarksRTree {
 
     @Benchmark
     public void bulkLoadingRTreeCreation010() {
-        RTree.maxChildren(10).<Object, Point> create(entries);
+        RTree.maxChildren(10).<Object, Point>create(entries);
     }
 
     @Benchmark
     public void bulkLoadingFullRTreeCreation010() {
-        RTree.maxChildren(10).loadingFactor(1.0).<Object, Point> create(entries);
+        RTree.maxChildren(10).loadingFactor(1.0).<Object, Point>create(entries);
     }
 
     @Benchmark
@@ -393,7 +393,8 @@ public class BenchmarksRTree {
     }
 
     private void insertPoint(RTree<Object, Point> tree) {
-        tree.add(new Object(), Geometries.point(Math.random() * 1000, Math.random() * 1000));
+        tree.add(new Object(),
+                Geometries.point((float) Math.random() * 1000, (float) Math.random() * 1000));
     }
 
     public static void main(String[] args) {

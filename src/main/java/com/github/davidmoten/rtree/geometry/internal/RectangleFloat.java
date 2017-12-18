@@ -4,13 +4,14 @@ import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.PointFloat;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
-public final class RectangleDoubleImpl implements Rectangle {
-    private final double x1, y1, x2, y2;
+public final class RectangleFloat implements Rectangle {
+    public final float x1, y1, x2, y2;
 
-    private RectangleDoubleImpl(double x1, double y1, double x2, double y2) {
+    private RectangleFloat(float x1, float y1, float x2, float y2) {
         Preconditions.checkArgument(x2 >= x1);
         Preconditions.checkArgument(y2 >= y1);
         this.x1 = x1;
@@ -19,38 +20,49 @@ public final class RectangleDoubleImpl implements Rectangle {
         this.y2 = y2;
     }
 
-    public static RectangleDoubleImpl create(double x1, double y1, double x2, double y2) {
-        return new RectangleDoubleImpl((double) x1, (double) y1, (double) x2, (double) y2);
-    }
-
-    public static RectangleDoubleImpl create(float x1, float y1, float x2, float y2) {
-        return new RectangleDoubleImpl(x1, y1, x2, y2);
+    public static Rectangle create(float x1, float y1, float x2, float y2) {
+        return new RectangleFloat(x1, y1, x2, y2);
     }
 
     @Override
     public double x1() {
-        return (float) x1;
+        return x1;
     }
 
     @Override
     public double y1() {
-        return (float) y1;
+        return y1;
     }
 
     @Override
     public double x2() {
-        return (float) x2;
+        return x2;
     }
 
     @Override
     public double y2() {
-        return (float) y2;
+        return y2;
+    }
+
+    @Override
+    public double area() {
+        return (x2 - x1) * (y2 - y1);
     }
 
     @Override
     public Rectangle add(Rectangle r) {
-        return new RectangleDoubleImpl(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()),
-                max(y2, r.y2()));
+        if (r.isDoublePrecision()) {
+            return RectangleDouble.create(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()),
+                    max(y2, r.y2()));
+        } else if (r instanceof RectangleFloat) {
+            RectangleFloat rf = (RectangleFloat) r;
+            return RectangleFloat.create(min(x1, rf.x1), min(y1, rf.y1), max(x2, rf.x2),
+                    max(y2, rf.y2));
+        } else {
+            PointFloat rf = (PointFloat) r;
+            return RectangleFloat.create(min(x1, rf.xFloat()), min(y1, rf.yFloat()),
+                    max(x2, rf.xFloat()), max(y2, rf.yFloat()));
+        }
     }
 
     @Override
@@ -60,21 +72,12 @@ public final class RectangleDoubleImpl implements Rectangle {
 
     @Override
     public boolean intersects(Rectangle r) {
-        if (r instanceof RectangleDoubleImpl) {
-            RectangleDoubleImpl rd = (RectangleDoubleImpl) r;
-            return intersects(rd);
-        } else {
-            return intersects(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
-        }
-    }
-
-    private boolean intersects(RectangleDoubleImpl rd) {
-        return intersects(x1, y1, x2, y2, rd.x1, rd.y1, rd.x2, rd.y2);
+        return intersects(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
     }
 
     @Override
     public double distance(Rectangle r) {
-            return distance(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
+        return distance(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
     }
 
     public static double distance(double x1, double y1, double x2, double y2, double a1, double b1,
@@ -109,18 +112,13 @@ public final class RectangleDoubleImpl implements Rectangle {
     }
 
     @Override
-    public String toString() {
-        return "Rectangle [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2 + "]";
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hashCode(x1, y1, x2, y2);
     }
 
     @Override
     public boolean equals(Object obj) {
-        Optional<RectangleDoubleImpl> other = ObjectsHelper.asClass(obj, RectangleDoubleImpl.class);
+        Optional<RectangleFloat> other = ObjectsHelper.asClass(obj, RectangleFloat.class);
         if (other.isPresent()) {
             return Objects.equal(x1, other.get().x1) && Objects.equal(x2, other.get().x2)
                     && Objects.equal(y1, other.get().y1) && Objects.equal(y2, other.get().y2);
@@ -132,10 +130,15 @@ public final class RectangleDoubleImpl implements Rectangle {
     public double intersectionArea(Rectangle r) {
         if (!intersects(r))
             return 0;
-        else {
-            return create(max(x1, r.x1()), max(y1, r.y1()), min(x2, r.x2()), min(y2, r.y2()))
+        else
+            return RectangleDouble
+                    .create(max(x1, r.x1()), max(y1, r.y1()), min(x2, r.x2()), min(y2, r.y2()))
                     .area();
-        }
+    }
+
+    @Override
+    public double perimeter() {
+        return 2 * (x2 - x1) + 2 * (y2 - y1);
     }
 
     @Override
@@ -150,6 +153,13 @@ public final class RectangleDoubleImpl implements Rectangle {
             return a;
     }
 
+    private static float max(float a, float b) {
+        if (a < b)
+            return b;
+        else
+            return a;
+    }
+
     private static double min(double a, double b) {
         if (a < b)
             return a;
@@ -157,19 +167,21 @@ public final class RectangleDoubleImpl implements Rectangle {
             return b;
     }
 
-    @Override
-    public double perimeter() {
-        return 2 * (x2 - x1) + 2 * (y2 - y1);
-    }
-
-    @Override
-    public double area() {
-        return (x2 - x1) * (y2 - y1);
+    private static float min(float a, float b) {
+        if (a < b)
+            return a;
+        else
+            return b;
     }
 
     @Override
     public boolean isDoublePrecision() {
-        return true;
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Rectangle [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2 + "]";
     }
 
 }

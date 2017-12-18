@@ -575,7 +575,7 @@ public class RTreeTest {
     public void testSearchOnGreekDataUsingFlatBuffersFactory() {
 
     }
-
+    
     @Test
     public void testVisualizerWithGreekData() {
         List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
@@ -1051,7 +1051,12 @@ public class RTreeTest {
         assertEquals(6, (int) tree.search(rectangle).count().toBlocking().single());
 
     }
-
+    
+    @Test
+    public void testDoublePrecisionRTree() {
+        RTree<Object, Geometry> tree = RTree.star().maxChildren(4).create();
+    }
+    
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
         @Override
         public Double call(Point point, Circle circle) {
@@ -1096,7 +1101,7 @@ public class RTreeTest {
     }
 
     static Rectangle random() {
-        return r(Math.random() * 1000, Math.random() * 1000);
+        return r((float) Math.random() * 1000, (float) Math.random() * 1000);
     }
 
     public static void main(String[] args) {

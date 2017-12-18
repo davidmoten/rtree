@@ -1,24 +1,20 @@
 package com.github.davidmoten.rtree.geometry;
 
-import com.github.davidmoten.rtree.geometry.internal.RectangleDoubleImpl;
-import com.github.davidmoten.rtree.geometry.internal.RectangleImpl;
+import com.github.davidmoten.rtree.geometry.internal.RectangleDouble;
+import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 
-public final class Point implements Rectangle {
+public final class PointFloat implements Point {
 
     private final float x;
     private final float y;
 
-    private Point(float x, float y) {
+    private PointFloat(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
-    static Point create(double x, double y) {
-        return new Point((float) x, (float) y);
-    }
-
-    static Point create(float x, float y) {
-        return new Point(x, y);
+    static PointFloat create(float x, float y) {
+        return new PointFloat(x, y);
     }
 
     @Override
@@ -28,16 +24,18 @@ public final class Point implements Rectangle {
 
     @Override
     public double distance(Rectangle r) {
-        return RectangleDoubleImpl.distance(x, y, x, y, r.x1(), r.y1(), r.x2(), r.y2());
+        return RectangleDouble.distance(x, y, x, y, r.x1(), r.y1(), r.x2(), r.y2());
     }
 
+    @Override
     public double distance(Point p) {
         return Math.sqrt(distanceSquared(p));
     }
 
+    @Override
     public double distanceSquared(Point p) {
-        float dx = x - p.x;
-        float dy = y - p.y;
+        double dx = x - p.x();
+        double dy = y - p.y();
         return dx * dx + dy * dy;
     }
 
@@ -46,11 +44,13 @@ public final class Point implements Rectangle {
         return r.x1() <= x && x <= r.x2() && r.y1() <= y && y <= r.y2();
     }
 
-    public float x() {
+    @Override
+    public double x() {
         return x;
     }
 
-    public float y() {
+    @Override
+    public double y() {
         return y;
     }
 
@@ -71,7 +71,7 @@ public final class Point implements Rectangle {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Point other = (Point) obj;
+        PointFloat other = (PointFloat) obj;
         if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x))
             return false;
         if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))
@@ -117,18 +117,21 @@ public final class Point implements Rectangle {
     @Override
     public Rectangle add(Rectangle r) {
         if (r.isDoublePrecision()) {
-            return RectangleDoubleImpl.create(Math.min(x, r.x1()), Math.min(y, r.y1()),
+            return RectangleDouble.create(Math.min(x, r.x1()), Math.min(y, r.y1()),
                     Math.max(x, r.x2()), Math.max(y, r.y2()));
-        } else if (r instanceof RectangleImpl) {
-            RectangleImpl rf = (RectangleImpl) r;
-            return RectangleImpl.create(Math.min(x, rf.x1), Math.min(y, rf.y1), Math.max(x, rf.x2),
+        } else if (r instanceof RectangleFloat) {
+            RectangleFloat rf = (RectangleFloat) r;
+            return RectangleFloat.create(Math.min(x, rf.x1), Math.min(y, rf.y1), Math.max(x, rf.x2),
                     Math.max(y, rf.y2));
-        } else {
-            Point p = (Point) r;
-            return RectangleImpl.create(Math.min(x, p.x), Math.min(y, p.y), Math.max(x, p.x),
+        } else if (r instanceof PointFloat) {
+            PointFloat p = (PointFloat) r;
+            return RectangleFloat.create(Math.min(x, p.x), Math.min(y, p.y), Math.max(x, p.x),
                     Math.max(y, p.y));
+        } else {
+            PointDouble p = (PointDouble) r;
+            return RectangleDouble.create(Math.min(x, p.x()), Math.min(y, p.y()),
+                    Math.max(x, p.x()), Math.max(y, p.y()));
         }
-
     }
 
     @Override
@@ -149,6 +152,14 @@ public final class Point implements Rectangle {
     @Override
     public boolean isDoublePrecision() {
         return false;
+    }
+
+    public float xFloat() {
+        return x;
+    }
+
+    public float yFloat() {
+        return y;
     }
 
 }
