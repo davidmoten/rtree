@@ -15,7 +15,7 @@ public class LeafTest {
 
     private static Context<Object, Rectangle> context = new Context<Object, Rectangle>(2, 4,
             new SelectorMinimalAreaIncrease(), new SplitterQuadratic(),
-            Factories.<Object, Rectangle> defaultFactory());
+            Factories.<Object, Rectangle>defaultFactory());
 
     @Test(expected = IllegalArgumentException.class)
     public void testCannotHaveZeroChildren() {
@@ -24,8 +24,8 @@ public class LeafTest {
 
     @Test
     public void testMbr() {
-        Rectangle r1 = Geometries.rectangle(0, 1, 3, 5);
-        Rectangle r2 = Geometries.rectangle(1, 2, 4, 6);
+        Rectangle r1 = Geometries.rectangle(0d, 1, 3, 5);
+        Rectangle r2 = Geometries.rectangle(1d, 2, 4, 6);
         @SuppressWarnings("unchecked")
         Rectangle r = new LeafDefault<Object, Rectangle>(
                 Arrays.asList(Entries.entry(new Object(), r1), Entries.entry(new Object(), r2)),
