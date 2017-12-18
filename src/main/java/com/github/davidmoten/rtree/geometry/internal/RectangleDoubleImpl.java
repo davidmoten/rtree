@@ -74,33 +74,7 @@ public final class RectangleDoubleImpl implements Rectangle {
 
     @Override
     public double distance(Rectangle r) {
-        if (r instanceof RectangleDoubleImpl) {
-            RectangleDoubleImpl rd = (RectangleDoubleImpl) r;
-            return distance(x1, y1, x2, y2, rd.x1, rd.y1, rd.x2, rd.y2);
-        } else {
             return distance(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
-        }
-    }
-
-    public static double distance(float x1, float y1, float x2, float y2, float a1, float b1,
-            float a2, float b2) {
-        if (intersects(x1, y1, x2, y2, a1, b1, a2, b2)) {
-            return 0;
-        }
-        boolean xyMostLeft = x1 < a1;
-        double mostLeftX1 = xyMostLeft ? x1 : a1;
-        float mostRightX1 = xyMostLeft ? a1 : x1;
-        float mostLeftX2 = xyMostLeft ? x2 : a2;
-        double xDifference = max(0, mostLeftX1 == mostRightX1 ? 0 : mostRightX1 - mostLeftX2);
-
-        boolean xyMostDown = y1 < b1;
-        float mostDownY1 = xyMostDown ? y1 : b1;
-        float mostUpY1 = xyMostDown ? b1 : y1;
-        float mostDownY2 = xyMostDown ? y2 : b2;
-
-        double yDifference = max(0, mostDownY1 == mostUpY1 ? 0 : mostUpY1 - mostDownY2);
-
-        return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
     }
 
     public static double distance(double x1, double y1, double x2, double y2, double a1, double b1,
@@ -122,11 +96,6 @@ public final class RectangleDoubleImpl implements Rectangle {
         double yDifference = max(0, mostDownY1 == mostUpY1 ? 0 : mostUpY1 - mostDownY2);
 
         return Math.sqrt(xDifference * xDifference + yDifference * yDifference);
-    }
-
-    private static boolean intersects(float x1, float y1, float x2, float y2, float a1, float b1,
-            float a2, float b2) {
-        return x1 <= a2 && a1 <= x2 && y1 <= b2 && b1 <= y2;
     }
 
     private static boolean intersects(double x1, double y1, double x2, double y2, double a1,
@@ -172,13 +141,6 @@ public final class RectangleDoubleImpl implements Rectangle {
     @Override
     public Geometry geometry() {
         return this;
-    }
-
-    private static float max(float a, float b) {
-        if (a < b)
-            return b;
-        else
-            return a;
     }
 
     private static double max(double a, double b) {

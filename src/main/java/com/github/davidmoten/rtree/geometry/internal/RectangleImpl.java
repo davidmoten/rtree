@@ -8,7 +8,7 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
 public final class RectangleImpl implements Rectangle {
-    private final float x1, y1, x2, y2;
+    public final float x1, y1, x2, y2;
 
     private RectangleImpl(float x1, float y1, float x2, float y2) {
         Preconditions.checkArgument(x2 >= x1);
@@ -17,10 +17,6 @@ public final class RectangleImpl implements Rectangle {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
-    }
-
-    public static Rectangle create(double x1, double y1, double x2, double y2) {
-        return new RectangleImpl((float) x1, (float) y1, (float) x2, (float) y2);
     }
 
     public static Rectangle create(float x1, float y1, float x2, float y2) {
@@ -58,8 +54,9 @@ public final class RectangleImpl implements Rectangle {
             return RectangleDoubleImpl.create(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()),
                     max(y2, r.y2()));
         } else {
-            return RectangleDoubleImpl.create(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()),
-                    max(y2, r.y2()));
+            RectangleImpl rf = (RectangleImpl) r;
+            return RectangleImpl.create(min(x1, rf.x1), min(y1, rf.y1), max(x2, rf.x2),
+                    max(y2, rf.y2));
         }
     }
 
@@ -71,7 +68,6 @@ public final class RectangleImpl implements Rectangle {
     @Override
     public boolean intersects(Rectangle r) {
         return intersects(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
-        // return r.x2() >= x1 && r.x1() <= x2 && r.y2() >= y1 && r.y1() <= y2;
     }
 
     @Override
@@ -111,11 +107,6 @@ public final class RectangleImpl implements Rectangle {
     }
 
     @Override
-    public String toString() {
-        return "Rectangle [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2 + "]";
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hashCode(x1, y1, x2, y2);
     }
@@ -135,7 +126,8 @@ public final class RectangleImpl implements Rectangle {
         if (!intersects(r))
             return 0;
         else
-            return create(max(x1, r.x1()), max(y1, r.y1()), min(x2, r.x2()), min(y2, r.y2()))
+            return RectangleDoubleImpl
+                    .create(max(x1, r.x1()), max(y1, r.y1()), min(x2, r.x2()), min(y2, r.y2()))
                     .area();
     }
 
@@ -156,7 +148,21 @@ public final class RectangleImpl implements Rectangle {
             return a;
     }
 
+    private static float max(float a, float b) {
+        if (a < b)
+            return b;
+        else
+            return a;
+    }
+
     private static double min(double a, double b) {
+        if (a < b)
+            return a;
+        else
+            return b;
+    }
+
+    private static float min(float a, float b) {
         if (a < b)
             return a;
         else
@@ -166,6 +172,11 @@ public final class RectangleImpl implements Rectangle {
     @Override
     public boolean isDoublePrecision() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Rectangle [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2 + "]";
     }
 
 }
