@@ -20,8 +20,8 @@ public final class Util {
     }
 
     /**
-     * Returns the minimum bounding rectangle of a number of items. Benchmarks
-     * below indicate that when the number of items is &gt;1 this method is more
+     * Returns the minimum bounding rectangle of a number of items. Benchmarks below
+     * indicate that when the number of items is &gt;1 this method is more
      * performant than one using {@link Rectangle#add(Rectangle)}.
      * 
      * <pre>
@@ -42,10 +42,10 @@ public final class Util {
      */
     public static Rectangle mbr(Collection<? extends HasGeometry> items) {
         Preconditions.checkArgument(!items.isEmpty());
-        float minX1 = Float.MAX_VALUE;
-        float minY1 = Float.MAX_VALUE;
-        float maxX2 = -Float.MAX_VALUE;
-        float maxY2 = -Float.MAX_VALUE;
+        double minX1 = Double.MAX_VALUE;
+        double minY1 = Double.MAX_VALUE;
+        double maxX2 = -Double.MAX_VALUE;
+        double maxY2 = -Double.MAX_VALUE;
         for (final HasGeometry item : items) {
             Rectangle r = item.geometry().mbr();
             if (r.x1() < minX1)

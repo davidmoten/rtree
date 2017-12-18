@@ -72,10 +72,11 @@ public final class SplitterQuadratic implements Splitter {
     @VisibleForTesting
     static <T extends HasGeometry> T getBestCandidateForGroup(List<T> list, List<T> group,
             Rectangle groupMbr) {
+        // TODO reduce allocations by not using Optional
         Optional<T> minEntry = absent();
-        Optional<Float> minArea = absent();
+        Optional<Double> minArea = absent();
         for (final T entry : list) {
-            final float area = groupMbr.add(entry.geometry().mbr()).area();
+            final double area = groupMbr.add(entry.geometry().mbr()).area();
             if (!minArea.isPresent() || area < minArea.get()) {
                 minArea = of(area);
                 minEntry = of(entry);
@@ -86,15 +87,16 @@ public final class SplitterQuadratic implements Splitter {
 
     @VisibleForTesting
     static <T extends HasGeometry> Pair<T> worstCombination(List<T> items) {
+        //TODO reduce allocations by not using Optional
         Optional<T> e1 = absent();
         Optional<T> e2 = absent();
         {
-            Optional<Float> maxArea = absent();
+            Optional<Double> maxArea = absent();
             for (int i = 0; i < items.size(); i++) {
                 for (int j = i + 1; j < items.size(); j++) {
                     T entry1 = items.get(i);
                     T entry2 = items.get(j);
-                    final float area = entry1.geometry().mbr().add(entry2.geometry().mbr()).area();
+                    final double area = entry1.geometry().mbr().add(entry2.geometry().mbr()).area();
                     if (!maxArea.isPresent() || area > maxArea.get()) {
                         e1 = of(entry1);
                         e2 = of(entry2);

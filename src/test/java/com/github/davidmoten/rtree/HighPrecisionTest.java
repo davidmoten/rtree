@@ -27,7 +27,7 @@ public class HighPrecisionTest {
         double x1 = 2.0000000001;
         System.out.println((float) x1);
         tree = tree.add(2, Geometries.rectangle(x1, 2, 3, 3));
-        tree.search(Geometries.rectangle((float) x1, 2.0, 2.0, 2.0)) //
+        tree.search(Geometries.rectangle((float) x1, 2.0, (float) x1, 2.0)) //
                 .test() //
                 .assertNoValues() //
                 .assertCompleted();

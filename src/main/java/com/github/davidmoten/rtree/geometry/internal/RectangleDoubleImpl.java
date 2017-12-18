@@ -28,40 +28,29 @@ public final class RectangleDoubleImpl implements Rectangle {
     }
 
     @Override
-    public float x1() {
+    public double x1() {
         return (float) x1;
     }
 
     @Override
-    public float y1() {
+    public double y1() {
         return (float) y1;
     }
 
     @Override
-    public float x2() {
+    public double x2() {
         return (float) x2;
     }
 
     @Override
-    public float y2() {
+    public double y2() {
         return (float) y2;
     }
 
     @Override
-    public float area() {
-        return (float) areaD();
-    }
-
-    @Override
     public Rectangle add(Rectangle r) {
-        if (r instanceof RectangleDoubleImpl) {
-            RectangleDoubleImpl rd = (RectangleDoubleImpl) r;
-            return new RectangleDoubleImpl(min(x1, rd.x1d()), min(y1, rd.y1d()), max(x2, rd.x2d()),
-                    max(y2, rd.y2d()));
-        } else {
-            return new RectangleDoubleImpl(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()),
-                    max(y2, r.y2()));
-        }
+        return new RectangleDoubleImpl(min(x1, r.x1()), min(y1, r.y1()), max(x2, r.x2()),
+                max(y2, r.y2()));
     }
 
     @Override
@@ -171,13 +160,13 @@ public final class RectangleDoubleImpl implements Rectangle {
     }
 
     @Override
-    public float intersectionArea(Rectangle r) {
-        return (float) intersectionAreaD(r);
-    }
-
-    @Override
-    public float perimeter() {
-        return (float) perimeterD();
+    public double intersectionArea(Rectangle r) {
+        if (!intersects(r))
+            return 0;
+        else {
+            return create(max(x1, r.x1()), max(y1, r.y1()), min(x2, r.x2()), min(y2, r.y2()))
+                    .area();
+        }
     }
 
     @Override
@@ -207,50 +196,18 @@ public final class RectangleDoubleImpl implements Rectangle {
     }
 
     @Override
-    public double intersectionAreaD(Rectangle r) {
-        if (!intersects(r))
-            return 0;
-        else {
-            if (r instanceof RectangleDoubleImpl) {
-                RectangleDoubleImpl rd = (RectangleDoubleImpl) r;
-                return create(max(x1, rd.x1), max(y1, rd.y1), min(x2, rd.x2), min(y2, rd.y2))
-                        .areaD();
-            } else {
-                return create(max(x1, r.x1()), max(y1, r.y1()), min(x2, r.x2()), min(y2, r.y2()))
-                        .areaD();
-            }
-        }
-
-    }
-
-    @Override
-    public double perimeterD() {
+    public double perimeter() {
         return 2 * (x2 - x1) + 2 * (y2 - y1);
     }
 
     @Override
-    public double x1d() {
-        return x1;
-    }
-
-    @Override
-    public double y1d() {
-        return y1;
-    }
-
-    @Override
-    public double x2d() {
-        return x2;
-    }
-
-    @Override
-    public double y2d() {
-        return y2;
-    }
-
-    @Override
-    public double areaD() {
+    public double area() {
         return (x2 - x1) * (y2 - y1);
+    }
+
+    @Override
+    public boolean isDoublePrecision() {
+        return true;
     }
 
 }

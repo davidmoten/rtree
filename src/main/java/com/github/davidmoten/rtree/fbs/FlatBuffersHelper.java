@@ -48,7 +48,8 @@ final class FlatBuffersHelper {
                 geomType = GeometryType_.Point;
             } else if (g instanceof Rectangle) {
                 Rectangle b = (Rectangle) g;
-                geom = Box_.createBox_(builder, b.x1(), b.y1(), b.x2(), b.y2());
+                geom = Box_.createBox_(builder, (float) b.x1(), (float) b.y1(), (float) b.x2(),
+                        (float) b.y2());
                 geomType = GeometryType_.Box;
             } else if (g instanceof Circle) {
                 Circle c = (Circle) g;
@@ -81,7 +82,7 @@ final class FlatBuffersHelper {
 
         int ents = Node_.createEntriesVector(builder, entries2);
         Rectangle mbb = Util.mbr(entries);
-        int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
+        int b = Box_.createBox_(builder, (float) mbb.x1(), (float) mbb.y1(),(float)  mbb.x2(),(float)  mbb.y2());
         Node_.startNode_(builder);
         Node_.addMbb(builder, b);
         Node_.addEntries(builder, ents);

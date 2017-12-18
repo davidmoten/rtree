@@ -62,7 +62,8 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
         } else {
             mbb = Geometries.rectangle(0, 0, 0, 0);
         }
-        int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
+        int b = Box_.createBox_(builder, (float) mbb.x1(), (float) mbb.y1(), (float) mbb.x2(),
+                (float) mbb.y2());
         Context_.startContext_(builder);
         Context_.addBounds(builder, b);
         Context_.addMinChildren(builder, tree.context().minChildren());
@@ -105,7 +106,8 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
             Node_.startNode_(builder);
             Node_.addChildren(builder, ch);
             Rectangle mbb = nonLeaf.geometry().mbr();
-            int b = Box_.createBox_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
+            int b = Box_.createBox_(builder, (float) mbb.x1(), (float) mbb.y1(), (float) mbb.x2(),
+                    (float) mbb.y2());
             Node_.addMbb(builder, b);
             return Node_.endNode_(builder);
         }
@@ -126,7 +128,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
                 t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(), factory);
         Node_ node = t.root();
         if (node == null) {
-            return SerializerHelper.create(Optional.<Node<T, S>> absent(), 0, context);
+            return SerializerHelper.create(Optional.<Node<T, S>>absent(), 0, context);
         } else {
             final Node<T, S> root;
             if (structure == InternalStructure.SINGLE_ARRAY) {

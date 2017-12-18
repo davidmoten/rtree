@@ -27,11 +27,11 @@ public final class Comparators {
 
             @Override
             public int compare(HasGeometry g1, HasGeometry g2) {
-                int value = Float.compare(overlapArea(r, list, g1), overlapArea(r, list, g2));
+                int value = Double.compare(overlapArea(r, list, g1), overlapArea(r, list, g2));
                 if (value == 0) {
-                    value = Float.compare(areaIncrease(r, g1), areaIncrease(r, g2));
+                    value = Double.compare(areaIncrease(r, g1), areaIncrease(r, g2));
                     if (value == 0) {
-                        value = Float.compare(area(r, g1), area(r, g2));
+                        value = Double.compare(area(r, g1), area(r, g2));
                     }
                 }
                 return value;
@@ -39,7 +39,7 @@ public final class Comparators {
         };
     }
 
-    private static float area(final Rectangle r, HasGeometry g1) {
+    private static double area(final Rectangle r, HasGeometry g1) {
         return g1.geometry().mbr().add(r).area();
     }
 
@@ -48,17 +48,16 @@ public final class Comparators {
         return new Comparator<HasGeometry>() {
             @Override
             public int compare(HasGeometry g1, HasGeometry g2) {
-                int value = Float.compare(areaIncrease(r, g1), areaIncrease(r, g2));
+                int value = Double.compare(areaIncrease(r, g1), areaIncrease(r, g2));
                 if (value == 0) {
-                    value = Float.compare(area(r, g1), area(r, g2));
+                    value = Double.compare(area(r, g1), area(r, g2));
                 }
                 return value;
             }
         };
     }
 
-    private static float overlapArea(Rectangle r, List<? extends HasGeometry> list,
-            HasGeometry g) {
+    private static float overlapArea(Rectangle r, List<? extends HasGeometry> list, HasGeometry g) {
         Rectangle gPlusR = g.geometry().mbr().add(r);
         float m = 0;
         for (HasGeometry other : list) {
@@ -69,7 +68,7 @@ public final class Comparators {
         return m;
     }
 
-    private static float areaIncrease(Rectangle r, HasGeometry g) {
+    private static double areaIncrease(Rectangle r, HasGeometry g) {
         Rectangle gPlusR = g.geometry().mbr().add(r);
         return gPlusR.area() - g.geometry().mbr().area();
     }

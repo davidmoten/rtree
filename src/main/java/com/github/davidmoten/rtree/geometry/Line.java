@@ -36,14 +36,14 @@ public final class Line implements Geometry {
         if (r.contains(x1, y1) || r.contains(x2, y2)) {
             return 0;
         } else {
-            double d1 = distance(r.x1(), r.y1(), r.x1(), r.y2());
+            double d1 = distance((float) r.x1(), (float) r.y1(), (float) r.x1(), (float) r.y2());
             if (d1 == 0)
                 return 0;
-            double d2 = distance(r.x1(), r.y2(), r.x2(), r.y2());
+            double d2 = distance((float) r.x1(), (float) r.y2(), (float) r.x2(), (float) r.y2());
             if (d2 == 0)
                 return 0;
-            double d3 = distance(r.x2(), r.y2(), r.x2(), r.y1());
-            double d4 = distance(r.x2(), r.y1(), r.x1(), r.y1());
+            double d3 = distance((float) r.x2(), (float) r.y2(), (float) r.x2(), (float) r.y1());
+            double d4 = distance((float) r.x2(), (float) r.y1(), (float) r.x1(), (float) r.y1());
             return Math.min(d1, Math.min(d2, Math.min(d3, d4)));
         }
     }
@@ -72,8 +72,8 @@ public final class Line implements Geometry {
 
     @Override
     public boolean intersects(Rectangle r) {
-        return RectangleUtil.rectangleIntersectsLine(r.x1(), r.y1(), r.x2() - r.x1(), r.y2() - r.y1(),
-                x1, y1, x2, y2);
+        return RectangleUtil.rectangleIntersectsLine(r.x1(), r.y1(), r.x2() - r.x1(),
+                r.y2() - r.y1(), x1, y1, x2, y2);
     }
 
     public float x1() {

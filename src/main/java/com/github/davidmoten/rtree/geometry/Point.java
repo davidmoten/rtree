@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree.geometry;
 
+import com.github.davidmoten.rtree.geometry.internal.RectangleDoubleImpl;
 import com.github.davidmoten.rtree.geometry.internal.RectangleImpl;
 
 public final class Point implements Rectangle {
@@ -27,7 +28,7 @@ public final class Point implements Rectangle {
 
     @Override
     public double distance(Rectangle r) {
-        return RectangleImpl.distance(x, y, x, y, r.x1(), r.y1(), r.x2(), r.y2());
+        return RectangleDoubleImpl.distance(x, y, x, y, r.x1(), r.y1(), r.x2(), r.y2());
     }
 
     public double distance(Point p) {
@@ -89,27 +90,27 @@ public final class Point implements Rectangle {
     }
 
     @Override
-    public float x1() {
+    public double x1() {
         return x;
     }
 
     @Override
-    public float y1() {
+    public double y1() {
         return y;
     }
 
     @Override
-    public float x2() {
+    public double x2() {
         return x;
     }
 
     @Override
-    public float y2() {
+    public double y2() {
         return y;
     }
 
     @Override
-    public float area() {
+    public double area() {
         return 0;
     }
 
@@ -125,48 +126,18 @@ public final class Point implements Rectangle {
     }
 
     @Override
-    public float intersectionArea(Rectangle r) {
+    public double intersectionArea(Rectangle r) {
         return 0;
     }
 
     @Override
-    public float perimeter() {
+    public double perimeter() {
         return 0;
     }
 
     @Override
-    public double x1d() {
-        return x;
-    }
-
-    @Override
-    public double y1d() {
-        return y;
-    }
-
-    @Override
-    public double x2d() {
-        return x;
-    }
-
-    @Override
-    public double y2d() {
-        return y;
-    }
-
-    @Override
-    public double intersectionAreaD(Rectangle r) {
-        return intersectionArea(r);
-    }
-
-    @Override
-    public double perimeterD() {
-        return perimeter();
-    }
-
-    @Override
-    public double areaD() {
-        return area();
+    public boolean isDoublePrecision() {
+        return false;
     }
 
 }
