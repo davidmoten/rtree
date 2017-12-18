@@ -1,11 +1,13 @@
-package com.github.davidmoten.rtree.geometry;
+package com.github.davidmoten.rtree.geometry.internal;
 
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
-final class RectangleDoubleImpl implements RectangleDouble {
+public final class RectangleDoubleImpl implements Rectangle {
     private final double x1, y1, x2, y2;
 
     private RectangleDoubleImpl(double x1, double y1, double x2, double y2) {
@@ -17,11 +19,11 @@ final class RectangleDoubleImpl implements RectangleDouble {
         this.y2 = y2;
     }
 
-    static RectangleDoubleImpl create(double x1, double y1, double x2, double y2) {
+    public static RectangleDoubleImpl create(double x1, double y1, double x2, double y2) {
         return new RectangleDoubleImpl((double) x1, (double) y1, (double) x2, (double) y2);
     }
 
-    static RectangleDoubleImpl create(float x1, float y1, float x2, float y2) {
+    public static RectangleDoubleImpl create(float x1, float y1, float x2, float y2) {
         return new RectangleDoubleImpl(x1, y1, x2, y2);
     }
 

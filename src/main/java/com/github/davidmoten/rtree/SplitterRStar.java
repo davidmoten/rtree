@@ -19,17 +19,16 @@ public final class SplitterRStar implements Splitter {
 
             @Override
             public int compare(ListPair<?> p1, ListPair<?> p2) {
-                //check overlap first then areaSum
+                // check overlap first then areaSum
                 int value = Float.compare(overlap(p1), overlap(p2));
                 if (value == 0) {
                     return Float.compare(p1.areaSum(), p2.areaSum());
                 } else {
                     return value;
                 }
-            }}; 
+            }
+        };
     }
-    
-   
 
     @Override
     public <T extends HasGeometry> ListPair<T> split(List<T> items, int minSize) {
@@ -106,7 +105,7 @@ public final class SplitterRStar implements Splitter {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
-            return Float.compare(n1.geometry().mbr().x1(), n2.geometry().mbr().x1());
+            return Double.compare(n1.geometry().mbr().x1d(), n2.geometry().mbr().x1d());
         }
     };
 
@@ -114,7 +113,7 @@ public final class SplitterRStar implements Splitter {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
-            return Float.compare(n1.geometry().mbr().x2(), n2.geometry().mbr().x2());
+            return Double.compare(n1.geometry().mbr().x2d(), n2.geometry().mbr().x2d());
         }
     };
 
@@ -122,7 +121,7 @@ public final class SplitterRStar implements Splitter {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
-            return Float.compare(n1.geometry().mbr().y1(), n2.geometry().mbr().y1());
+            return Double.compare(n1.geometry().mbr().y1d(), n2.geometry().mbr().y1d());
         }
     };
 
@@ -130,13 +129,12 @@ public final class SplitterRStar implements Splitter {
 
         @Override
         public int compare(HasGeometry n1, HasGeometry n2) {
-            return Float.compare(n1.geometry().mbr().y2(), n2.geometry().mbr().y2());
+            return Double.compare(n1.geometry().mbr().y2d(), n2.geometry().mbr().y2d());
         }
     };
 
     private static float overlap(ListPair<? extends HasGeometry> pair) {
-        return pair.group1().geometry().mbr()
-                .intersectionArea(pair.group2().geometry().mbr());
+        return pair.group1().geometry().mbr().intersectionArea(pair.group2().geometry().mbr());
     }
-    
+
 }

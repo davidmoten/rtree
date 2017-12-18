@@ -1,6 +1,8 @@
 package com.github.davidmoten.rtree.geometry;
 
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
+import com.github.davidmoten.rtree.geometry.internal.RectangleDoubleImpl;
+import com.github.davidmoten.rtree.geometry.internal.RectangleImpl;
 
 public final class Geometries {
 
@@ -17,7 +19,7 @@ public final class Geometries {
     }
 
     public static Rectangle rectangle(double x1, double y1, double x2, double y2) {
-        return RectangleImpl.create(x1, y1, x2, y2);
+        return rectangleDouble(x1, y1, x2, y2);
     }
 
     public static Rectangle rectangle(float x1, float y1, float x2, float y2) {
@@ -52,6 +54,10 @@ public final class Geometries {
             x2 += 360;
         }
         return rectangle(x1, lat1, x2, lat2);
+    }
+
+    public static Rectangle rectangleDouble(double x1, double y1, double x2, double y2) {
+        return RectangleDoubleImpl.create(x1, y1, x2, y2);
     }
 
     public static Point pointGeographic(double lon, double lat) {

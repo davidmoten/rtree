@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree.geometry;
 
+import com.github.davidmoten.rtree.geometry.internal.RectangleImpl;
+
 public final class Point implements Rectangle {
 
     private final float x;
@@ -130,6 +132,41 @@ public final class Point implements Rectangle {
     @Override
     public float perimeter() {
         return 0;
+    }
+
+    @Override
+    public double x1d() {
+        return x;
+    }
+
+    @Override
+    public double y1d() {
+        return y;
+    }
+
+    @Override
+    public double x2d() {
+        return x;
+    }
+
+    @Override
+    public double y2d() {
+        return y;
+    }
+
+    @Override
+    public double intersectionAreaD(Rectangle r) {
+        return intersectionArea(r);
+    }
+
+    @Override
+    public double perimeterD() {
+        return perimeter();
+    }
+
+    @Override
+    public double areaD() {
+        return area();
     }
 
 }

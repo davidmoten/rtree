@@ -20,4 +20,18 @@ public interface Rectangle extends Geometry, HasGeometry {
 
     boolean contains(double x, double y);
 
+    double x1d();
+
+    double y1d();
+
+    double x2d();
+
+    double y2d();
+
+    double intersectionAreaD(Rectangle r);
+
+    double perimeterD();
+
+    double areaD();
+
 }
