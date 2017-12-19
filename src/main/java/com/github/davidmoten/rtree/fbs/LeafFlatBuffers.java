@@ -6,7 +6,10 @@ import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
-import com.github.davidmoten.rtree.fbs.generated.Box_;
+import com.github.davidmoten.rtree.fbs.generated.BoundsType_;
+import com.github.davidmoten.rtree.fbs.generated.Bounds_;
+import com.github.davidmoten.rtree.fbs.generated.BoxDouble_;
+import com.github.davidmoten.rtree.fbs.generated.BoxFloat_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -21,10 +24,10 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;
-    private final Func1<byte[],? extends T> deserializer;
+    private final Func1<byte[], ? extends T> deserializer;
 
     LeafFlatBuffers(List<Entry<T, S>> entries, Context<T, S> context,
-            Func1<? super T, byte[]> serializer, Func1<byte[],? extends T> deserializer) {
+            Func1<? super T, byte[]> serializer, Func1<byte[], ? extends T> deserializer) {
         this(createNode(entries, serializer), context, deserializer);
     }
 
@@ -54,9 +57,9 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
     @Override
     public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> condition,
             Subscriber<? super Entry<T, S>> subscriber) {
-        //only called when the root of the tree is a Leaf
-        //normally the searchWithoutBackpressure is executed completely within the 
-        //NonLeafFlatBuffers class to reduce object creation
+        // only called when the root of the tree is a Leaf
+        // normally the searchWithoutBackpressure is executed completely within the
+        // NonLeafFlatBuffers class to reduce object creation
         LeafHelper.search(condition, subscriber, this);
     }
 
@@ -72,9 +75,15 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
 
     @Override
     public Geometry geometry() {
-        Box_ b = node.mbb();
+        Bounds_ b = node.mbb();
         // create on demand to reduce memory use (though not gc pressure)
-        return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+        if (b.type() == BoundsType_.BoundsDouble) {
+            BoxDouble_ r = b.boxDouble();
+            return Geometries.rectangle(r.minX(), r.minY(), r.maxX(), r.maxY());
+        } else {
+            BoxFloat_ r = b.boxFloat();
+            return Geometries.rectangle(r.minX(), r.minY(), r.maxX(), r.maxY());
+        }
     }
 
     @Override
@@ -84,7 +93,7 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
 
     @Override
     public Entry<T, S> entry(int i) {
-       return FlatBuffersHelper.createEntry(node, deserializer, i);
+        return FlatBuffersHelper.createEntry(node, deserializer, i);
     }
 
 }

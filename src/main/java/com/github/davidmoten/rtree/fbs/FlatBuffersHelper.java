@@ -8,14 +8,20 @@ import java.util.List;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
-import com.github.davidmoten.rtree.fbs.generated.Box_;
-import com.github.davidmoten.rtree.fbs.generated.Circle_;
+import com.github.davidmoten.rtree.fbs.generated.BoundsType_;
+import com.github.davidmoten.rtree.fbs.generated.Bounds_;
+import com.github.davidmoten.rtree.fbs.generated.BoxDouble_;
+import com.github.davidmoten.rtree.fbs.generated.BoxFloat_;
+import com.github.davidmoten.rtree.fbs.generated.CircleDouble_;
+import com.github.davidmoten.rtree.fbs.generated.CircleFloat_;
 import com.github.davidmoten.rtree.fbs.generated.Entry_;
 import com.github.davidmoten.rtree.fbs.generated.GeometryType_;
 import com.github.davidmoten.rtree.fbs.generated.Geometry_;
-import com.github.davidmoten.rtree.fbs.generated.Line_;
+import com.github.davidmoten.rtree.fbs.generated.LineDouble_;
+import com.github.davidmoten.rtree.fbs.generated.LineFloat_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
-import com.github.davidmoten.rtree.fbs.generated.Point_;
+import com.github.davidmoten.rtree.fbs.generated.PointDouble_;
+import com.github.davidmoten.rtree.fbs.generated.PointFloat_;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -44,35 +50,63 @@ final class FlatBuffersHelper {
             // Rectangle
             if (g instanceof Point) {
                 Point p = (Point) g;
-                geom = Point_.createPoint_(builder, (float) p.x(), (float) p.y());
-                geomType = GeometryType_.Point;
+                if (p.isDoublePrecision()) {
+                    geom = PointDouble_.createPointDouble_(builder, p.x(), p.y());
+                    geomType = GeometryType_.PointDouble;
+                } else {
+                    geom = PointFloat_.createPointFloat_(builder, (float) p.x(), (float) p.y());
+                    geomType = GeometryType_.PointFloat;
+                }
             } else if (g instanceof Rectangle) {
                 Rectangle b = (Rectangle) g;
-                geom = Box_.createBox_(builder, (float) b.x1(), (float) b.y1(), (float) b.x2(),
-                        (float) b.y2());
-                geomType = GeometryType_.Box;
+                if (b.isDoublePrecision()) {
+                    geom = BoxDouble_.createBoxDouble_(builder, b.x1(), b.y1(), b.x2(), b.y2());
+                    geomType = GeometryType_.BoxDouble;
+                } else {
+                    geom = BoxFloat_.createBoxFloat_(builder, (float) b.x1(), (float) b.y1(),
+                            (float) b.x2(), (float) b.y2());
+                    geomType = GeometryType_.BoxFloat;
+                }
             } else if (g instanceof Circle) {
                 Circle c = (Circle) g;
-                geom = Circle_.createCircle_(builder, (float) c.x(), (float) c.y(),
-                        (float) c.radius());
-                geomType = GeometryType_.Circle;
+                if (c.isDoublePrecision()) {
+                    geom = CircleDouble_.createCircleDouble_(builder, c.x(), c.y(), c.radius());
+                    geomType = GeometryType_.CircleDouble;
+                } else {
+                    geom = CircleFloat_.createCircleFloat_(builder, (float) c.x(), (float) c.y(),
+                            (float) c.radius());
+                    geomType = GeometryType_.CircleFloat;
+                }
             } else if (g instanceof Line) {
                 Line c = (Line) g;
-                geom = Line_.createLine_(builder, (float) c.x1(), (float) c.y1(), (float) c.x2(),
-                        (float) c.y2());
-                geomType = GeometryType_.Line;
+                if (c.isDoublePrecision()) {
+                    geom = LineDouble_.createLineDouble_(builder, c.x1(), c.y1(), c.x2(), c.y2());
+                    geomType = GeometryType_.LineDouble;
+                } else {
+                    geom = LineFloat_.createLineFloat_(builder, (float) c.x1(), (float) c.y1(),
+                            (float) c.x2(), (float) c.y2());
+                    geomType = GeometryType_.LineFloat;
+                }
             } else
                 throw new RuntimeException("unexpected");
 
             Geometry_.startGeometry_(builder);
-            if (geomType == GeometryType_.Box) {
-                Geometry_.addBox(builder, geom);
-            } else if (geomType == GeometryType_.Point) {
-                Geometry_.addPoint(builder, geom);
-            } else if (geomType == GeometryType_.Circle) {
-                Geometry_.addCircle(builder, geom);
-            } else if (geomType == GeometryType_.Line) {
-                Geometry_.addLine(builder, geom);
+            if (geomType == GeometryType_.BoxFloat) {
+                Geometry_.addBoxFloat(builder, geom);
+            } else if (geomType == GeometryType_.BoxDouble) {
+                Geometry_.addBoxDouble(builder, geom);
+            } else if (geomType == GeometryType_.PointFloat) {
+                Geometry_.addPointFloat(builder, geom);
+            } else if (geomType == GeometryType_.PointDouble) {
+                Geometry_.addPointDouble(builder, geom);
+            } else if (geomType == GeometryType_.CircleFloat) {
+                Geometry_.addCircleFloat(builder, geom);
+            } else if (geomType == GeometryType_.CircleDouble) {
+                Geometry_.addCircleDouble(builder, geom);
+            } else if (geomType == GeometryType_.LineFloat) {
+                Geometry_.addLineFloat(builder, geom);
+            } else if (geomType == GeometryType_.LineDouble) {
+                Geometry_.addLineDouble(builder, geom);
             } else
                 throw new RuntimeException("unexpected");
 
@@ -83,11 +117,23 @@ final class FlatBuffersHelper {
         }
 
         int ents = Node_.createEntriesVector(builder, entries2);
+
         Rectangle mbb = Util.mbr(entries);
-        int b = Box_.createBox_(builder, (float) mbb.x1(), (float) mbb.y1(), (float) mbb.x2(),
-                (float) mbb.y2());
+        Bounds_.startBounds_(builder);
+        if (mbb.isDoublePrecision()) {
+            int b = BoxDouble_.createBoxDouble_(builder, mbb.x1(), mbb.y1(), mbb.x2(), mbb.y2());
+            Bounds_.addBoxDouble(builder, b);
+            Bounds_.addType(builder, BoundsType_.BoundsDouble);
+        } else {
+            int b = BoxFloat_.createBoxFloat_(builder, (float) mbb.x1(), (float) mbb.y1(),
+                    (float) mbb.x2(), (float) mbb.y2());
+            Bounds_.addBoxFloat(builder, b);
+            Bounds_.addType(builder, BoundsType_.BoundsFloat);
+        }
+        int bounds = Bounds_.endBounds_(builder);
+
         Node_.startNode_(builder);
-        Node_.addMbb(builder, b);
+        Node_.addMbb(builder, bounds);
         Node_.addEntries(builder, ents);
         return Node_.endNode_(builder);
 
@@ -136,26 +182,56 @@ final class FlatBuffersHelper {
     static <S extends Geometry> S toGeometry(Geometry_ g) {
         final Geometry result;
         byte type = g.type();
-        if (type == GeometryType_.Box) {
-            result = createBox(g.box());
-        } else if (type == GeometryType_.Point) {
-            Point_ p = g.point();
+        if (type == GeometryType_.BoxFloat) {
+            result = createBox(g.boxFloat());
+        } else if (type == GeometryType_.BoxDouble) {
+            result = createBox(g.boxDouble());
+        } else if (type == GeometryType_.PointFloat) {
+            PointFloat_ p = g.pointFloat();
             result = Geometries.point(p.x(), p.y());
-        } else if (type == GeometryType_.Circle) {
-            Circle_ c = g.circle();
+        } else if (type == GeometryType_.PointDouble) {
+            PointDouble_ p = g.pointDouble();
+            result = Geometries.point(p.x(), p.y());
+        } else if (type == GeometryType_.CircleFloat) {
+            CircleFloat_ c = g.circleFloat();
             result = Geometries.circle(c.x(), c.y(), c.radius());
-        } else if (type == GeometryType_.Line) {
-            result = createLine(g.line());
+        } else if (type == GeometryType_.CircleDouble) {
+            CircleDouble_ c = g.circleDouble();
+            result = Geometries.circle(c.x(), c.y(), c.radius());
+        } else if (type == GeometryType_.LineFloat) {
+            result = createLine(g.lineFloat());
+        } else if (type == GeometryType_.LineDouble) {
+            result = createLine(g.lineDouble());
         } else
             throw new RuntimeException("unexpected");
         return (S) result;
     }
 
-    static Rectangle createBox(Box_ b) {
-        return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+    private static Geometry createBox(BoxDouble_ boxDouble) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    static Line createLine(Box_ b) {
+    private static Geometry createBox(BoxFloat_ boxFloat) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    static Rectangle createBox(Bounds_ b) {
+        if (b.type() == BoundsType_.BoundsDouble) {
+            BoxDouble_ r = b.boxDouble();
+            return Geometries.rectangle(r.minX(), r.minY(), r.maxX(), r.maxY());
+        } else {
+            BoxFloat_ r = b.boxFloat();
+            return Geometries.rectangle(r.minX(), r.minY(), r.maxX(), r.maxY());
+        }
+    }
+
+    static Line createLine(BoxFloat_ b) {
+        return Geometries.line(b.minX(), b.minY(), b.maxX(), b.maxY());
+    }
+
+    static Line createLine(BoxDouble_ b) {
         return Geometries.line(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 

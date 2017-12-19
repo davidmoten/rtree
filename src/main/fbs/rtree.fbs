@@ -7,34 +7,59 @@ table Tree_ {
 }
 
 table Node_ {
-  mbb: Box_;
+  mbb: Bounds_;
   children: [Node_];
   entries: [Entry_];
 }
 
-struct Box_ {
+struct BoxFloat_ {
   minX:float;
   minY:float;
   maxX:float;
   maxY:float;
 }
 
-struct Point_ {
+struct PointFloat_ {
   x: float;
   y: float;
 }
 
-struct Circle_ {
+struct CircleFloat_ {
   x: float;
   y: float;
   radius: float;
 }
 
-struct Line_ {
+struct LineFloat_ {
   minX:float;
   minY:float;
   maxX:float;
   maxY:float;
+}
+
+struct BoxDouble_ {
+  minX:double;
+  minY:double;
+  maxX:double;
+  maxY:double;
+}
+
+struct PointDouble_ {
+  x: double;
+  y: double;
+}
+
+struct CircleDouble_ {
+  x: double;
+  y: double;
+  radius: double;
+}
+
+struct LineDouble_ {
+  minX:double;
+  minY:double;
+  maxX:double;
+  maxY:double;
 }
 
 table Entry_ {
@@ -42,18 +67,30 @@ table Entry_ {
   object:[byte];
 }
 
-enum GeometryType_ : byte {Point, Box, Circle, Line}
+enum GeometryType_ : byte {PointFloat, BoxFloat, CircleFloat, LineFloat, PointDouble, BoxDouble, CircleDouble, LineDouble}
 
 table Geometry_ {
   type: GeometryType_;
-  box: Box_;
-  point: Point_;
-  circle: Circle_;
-  line: Box_;
+  boxFloat: BoxFloat_;
+  pointFloat: PointFloat_;
+  circleFloat: CircleFloat_;
+  lineFloat: BoxFloat_;
+  boxDouble: BoxDouble_;
+  pointDouble: PointDouble_;
+  circleDouble: CircleDouble_;
+  lineDouble: BoxDouble_;
+}
+
+enum BoundsType_ : byte {BoundsFloat, BoundsDouble}
+
+table Bounds_ {
+   type: BoundsType_;
+   boxFloat: BoxFloat_;
+   boxDouble: BoxDouble_;
 }
 
 table Context_ {
-  bounds: Box_;
+  bounds: Bounds_;
   minChildren: int;
   maxChildren: int;
 }
