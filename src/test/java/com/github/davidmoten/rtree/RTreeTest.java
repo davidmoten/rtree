@@ -147,7 +147,7 @@ public class RTreeTest {
         Entry<Object, Rectangle> e1 = e(1);
         Entry<Object, Rectangle> e2 = e2(1);
 
-        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle> create().add(e1)
+        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle>create().add(e1)
                 .add(e2).delete(e1);
         RTree<Object, Rectangle> emptyTree = RTree.maxChildren(4).create();
         rx.Observable<?> deletedtree = emptyTree.add(tree.entries());
@@ -351,8 +351,7 @@ public class RTreeTest {
     @Test
     public void testSizeAfterDelete() {
         Entry<Object, Rectangle> entry = e(1);
-        RTree<Object, Rectangle> tree = create(3, 0).add(entry).add(entry).add(entry)
-                .delete(entry);
+        RTree<Object, Rectangle> tree = create(3, 0).add(entry).add(entry).add(entry).delete(entry);
         assertEquals(2, tree.size());
 
     }
@@ -474,8 +473,8 @@ public class RTreeTest {
 
     @Test
     public void testNearestSameDirection() {
-        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle> create()
-                .add(e(1)).add(e(2)).add(e(3)).add(e(10)).add(e(11));
+        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle>create().add(e(1))
+                .add(e(2)).add(e(3)).add(e(10)).add(e(11));
         List<Entry<Object, Rectangle>> list = tree.nearest(r(9), 10, 2).toList().toBlocking()
                 .single();
         assertEquals(2, list.size());
@@ -568,14 +567,14 @@ public class RTreeTest {
     @Test(expected = RuntimeException.class)
     public void testSplitterRStarThrowsExceptionOnEmptyList() {
         SplitterRStar spl = new SplitterRStar();
-        spl.split(Collections.<HasGeometry> emptyList(), 4);
+        spl.split(Collections.<HasGeometry>emptyList(), 4);
     }
 
     @Test
     public void testSearchOnGreekDataUsingFlatBuffersFactory() {
 
     }
-    
+
     @Test
     public void testVisualizerWithGreekData() {
         List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
@@ -591,7 +590,7 @@ public class RTreeTest {
                     public Object call(byte[] t) {
                         return new String(t);
                     }
-                })).<Object, Point> create().add(entries);
+                })).<Object, Point>create().add(entries);
         tree.visualize(2000, 2000).save("target/greek.png");
 
         // do search
@@ -600,10 +599,9 @@ public class RTreeTest {
         System.out.println("found=" + found);
         assertEquals(22, found);
 
-        RTree<Object, Point> tree2 = RTree.maxChildren(maxChildren).star().<Object, Point> create()
+        RTree<Object, Point> tree2 = RTree.maxChildren(maxChildren).star().<Object, Point>create()
                 .add(entries);
         tree2.visualize(2000, 2000).save("target/greek2.png");
-
 
         RTree<Object, Point> tree3 = RTree.maxChildren(maxChildren).create(entries);
         tree3.visualize(2000, 2000).save("target/greek3.png");
@@ -612,7 +610,7 @@ public class RTreeTest {
     @Test
     public void testDeleteOneFromOne() {
         Entry<Object, Rectangle> e1 = e(1);
-        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle> create().add(e1)
+        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle>create().add(e1)
                 .delete(e1);
         assertEquals(0, (int) tree.entries().count().toBlocking().single());
     }
@@ -620,7 +618,7 @@ public class RTreeTest {
     @Test
     public void testDeleteOneFromTreeWithDepthGreaterThanOne() {
         Entry<Object, Rectangle> e1 = e(1);
-        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle> create().add(e1)
+        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle>create().add(e1)
                 .add(e(2)).add(e(3)).add(e(4)).add(e(5)).add(e(6)).add(e(7)).add(e(8)).add(e(9))
                 .add(e(10)).delete(e1);
         assertEquals(9, (int) tree.entries().count().toBlocking().single());
@@ -666,7 +664,7 @@ public class RTreeTest {
     public void testDeleteItemThatIsNotPresentDoesNothing() {
         Entry<Object, Rectangle> e1 = e(1);
         Entry<Object, Rectangle> e2 = e(2);
-        RTree<Object, Rectangle> tree = RTree.<Object, Rectangle> create().add(e1);
+        RTree<Object, Rectangle> tree = RTree.<Object, Rectangle>create().add(e1);
         assertTrue(tree == tree.delete(e2));
     }
 
@@ -687,8 +685,7 @@ public class RTreeTest {
     public void testSearchConditionAlwaysFalse() {
         @SuppressWarnings("unchecked")
         RTree<Object, Geometry> tree = (RTree<Object, Geometry>) (RTree<?, ?>) create(3, 3);
-        assertEquals(0, (int) tree.search(Functions.alwaysFalse()).count()
-                .toBlocking().single());
+        assertEquals(0, (int) tree.search(Functions.alwaysFalse()).count().toBlocking().single());
     }
 
     @Test
@@ -722,7 +719,7 @@ public class RTreeTest {
         System.out.println(tree.asString());
         System.out.println("searching " + r);
         Set<Integer> set = new HashSet<Integer>(
-                tree.search(r).map(RTreeTest.<Integer> toValue()).toList().toBlocking().single());
+                tree.search(r).map(RTreeTest.<Integer>toValue()).toList().toBlocking().single());
         assertEquals(new HashSet<Integer>(asList(3, 5)), set);
     }
 
@@ -741,7 +738,7 @@ public class RTreeTest {
         System.out.println(tree.asString());
         System.out.println("searching " + r);
         Set<Integer> set = new HashSet<Integer>(
-                tree.search(r).map(RTreeTest.<Integer> toValue()).toList().toBlocking().single());
+                tree.search(r).map(RTreeTest.<Integer>toValue()).toList().toBlocking().single());
         assertEquals(new HashSet<Integer>(asList(1)), set);
     }
 
@@ -772,15 +769,16 @@ public class RTreeTest {
 
         for (Rectangle r : testRects) {
             Set<Integer> res1 = new HashSet<Integer>(tree1.search(r)
-                    .map(RTreeTest.<Integer> toValue()).toList().toBlocking().single());
+                    .map(RTreeTest.<Integer>toValue()).toList().toBlocking().single());
             Set<Integer> res2 = new HashSet<Integer>(tree2.search(r)
-                    .map(RTreeTest.<Integer> toValue()).toList().toBlocking().single());
+                    .map(RTreeTest.<Integer>toValue()).toList().toBlocking().single());
             Set<Integer> res3 = new HashSet<Integer>(tree3.search(r)
-                    .map(RTreeTest.<Integer> toValue()).toList().toBlocking().single());
-             System.out.println("searchRect= rectangle(" + r.x1() + "," +
-             r.y1() + "," + r.x2() + "," + r.y2()+ ")");
-             System.out.println("res1.size=" + res1.size() + ",res2.size=" + res2.size() + ",res3.size=" + res3.size());
-             // System.out.println("res1=" + res1 + ",res2=" + res2 + ",res3=" + res3);
+                    .map(RTreeTest.<Integer>toValue()).toList().toBlocking().single());
+            System.out.println("searchRect= rectangle(" + r.x1() + "," + r.y1() + "," + r.x2() + ","
+                    + r.y2() + ")");
+            System.out.println("res1.size=" + res1.size() + ",res2.size=" + res2.size()
+                    + ",res3.size=" + res3.size());
+            // System.out.println("res1=" + res1 + ",res2=" + res2 + ",res3=" + res3);
             assertEquals(res1.size(), res2.size());
             assertEquals(res1.size(), res3.size());
         }
@@ -788,8 +786,8 @@ public class RTreeTest {
 
     @Test
     public void testUnsubscribeWhileIteratingLeafNode() {
-        RTree<Object, Rectangle> tree = RTree.maxChildren(5).<Object, Rectangle> create()
-                .add(e(1)).add(e(2));
+        RTree<Object, Rectangle> tree = RTree.maxChildren(5).<Object, Rectangle>create().add(e(1))
+                .add(e(2));
         tree.entries().subscribe(new Subscriber<Object>() {
 
             @Override
@@ -811,8 +809,8 @@ public class RTreeTest {
     @Test
     public void testUnsubscribeWhileIteratingNonLeafNode() {
         final AtomicBoolean completed = new AtomicBoolean(false);
-        RTree<Object, Rectangle> tree = RTree.maxChildren(3).<Object, Rectangle> create()
-                .add(e(1)).add(e(2)).add(e(3)).add(e(4));
+        RTree<Object, Rectangle> tree = RTree.maxChildren(3).<Object, Rectangle>create().add(e(1))
+                .add(e(2)).add(e(3)).add(e(4));
         tree.entries().subscribe(new Subscriber<Object>() {
 
             @Override
@@ -840,7 +838,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithIntersectsPointFunctionReturnsOne() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(0, 0));
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(0, 0));
         Observable<Entry<Integer, Point>> entries = tree.search(circle(0, 0, 1),
                 pointIntersectsCircle);
         assertEquals(1, (int) entries.count().toBlocking().single());
@@ -848,7 +846,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithIntersectsPointFunctionReturnsNone() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(10, 10));
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(10, 10));
         Observable<Entry<Integer, Point>> entries = tree.search(circle(0, 0, 1),
                 pointIntersectsCircle);
         assertEquals(0, (int) entries.count().toBlocking().single());
@@ -856,7 +854,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithDistanceFunctionIntersectsMbrButNotActualGeometry() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(0, 0)).add(2,
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(0, 0)).add(2,
                 point(1, 1));
 
         Observable<Entry<Integer, Point>> entries = tree.search(circle(0, 0, 1), 0.1,
@@ -866,7 +864,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithDistanceFunctionIntersectsMbrAndActualGeometry() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(0, 0)).add(2,
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(0, 0)).add(2,
                 point(1, 1));
 
         Observable<Entry<Integer, Point>> entries = tree.search(circle(0, 0, 1), 0.5,
@@ -876,7 +874,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithDistanceFunctionIntersectsNothing() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(0, 0)).add(2,
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(0, 0)).add(2,
                 point(1, 1));
 
         Observable<Entry<Integer, Point>> entries = tree.search(circle(10, 10, 1), 0.5,
@@ -900,7 +898,7 @@ public class RTreeTest {
     public void testForMeiZhao() {
         for (int minChildren = 1; minChildren <= 2; minChildren++) {
             RTree<Integer, Point> tree = RTree.maxChildren(3).minChildren(minChildren)
-                    .<Integer, Point> create().add(1, point(1, 9)).add(2, point(2, 10))
+                    .<Integer, Point>create().add(1, point(1, 9)).add(2, point(2, 10))
                     .add(3, point(4, 8)).add(4, point(6, 7)).add(5, point(9, 10))
                     .add(6, point(7, 5)).add(7, point(5, 6)).add(8, point(4, 3)).add(9, point(3, 2))
                     .add(10, point(9, 1)).add(11, point(10, 4)).add(12, point(6, 2))
@@ -911,7 +909,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithCircleFindsCentreOnly() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(1, 1))
                 .add(2, point(2, 2)).add(3, point(3, 3));
         List<Entry<Integer, Point>> list = tree.search(Geometries.circle(2, 2, 1)).toList()
                 .toBlocking().single();
@@ -921,7 +919,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithCircleFindsAll() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(1, 1))
                 .add(2, point(2, 2)).add(3, point(3, 3));
         List<Entry<Integer, Point>> list = tree.search(Geometries.circle(2, 2, 1.5)).toList()
                 .toBlocking().single();
@@ -930,7 +928,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithLineFindsAll() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(1, 1))
                 .add(2, point(2, 2)).add(3, point(3, 3));
         List<Entry<Integer, Point>> list = tree.search(Geometries.line(0, 0, 4, 4)).toList()
                 .toBlocking().single();
@@ -939,7 +937,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithLineFindsOne() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(1, 1))
                 .add(2, point(2, 2)).add(3, point(3, 3));
         List<Entry<Integer, Point>> list = tree.search(Geometries.line(1.5, 1.5, 2.5, 2.5)).toList()
                 .toBlocking().single();
@@ -949,7 +947,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchWithLineFindsNone() {
-        RTree<Integer, Point> tree = RTree.<Integer, Point> create().add(1, point(1, 1))
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(1, point(1, 1))
                 .add(2, point(2, 2)).add(3, point(3, 3));
         List<Entry<Integer, Point>> list = tree.search(Geometries.line(1.5, 1.5, 2.6, 2.5)).toList()
                 .toBlocking().single();
@@ -964,7 +962,7 @@ public class RTreeTest {
 
     @Test
     public void testRTreeRootMbrWhenRTreeNonEmpty() {
-        Optional<Rectangle> r = RTree.<Integer, Point> create().add(1, point(1, 1))
+        Optional<Rectangle> r = RTree.<Integer, Point>create().add(1, point(1, 1))
                 .add(2, point(2, 2)).mbr();
         assertEquals(Geometries.rectangle(1, 1, 2, 2), r.get());
     }
@@ -1051,12 +1049,12 @@ public class RTreeTest {
         assertEquals(6, (int) tree.search(rectangle).count().toBlocking().single());
 
     }
-    
+
     @Test
     public void testDoublePrecisionRTree() {
         RTree<Object, Geometry> tree = RTree.star().maxChildren(4).create();
     }
-    
+
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
         @Override
         public Double call(Point point, Circle circle) {
@@ -1085,11 +1083,11 @@ public class RTreeTest {
     }
 
     static Entry<Object, Rectangle> e(int n) {
-        return Entries.<Object, Rectangle> entry(n, r(n));
+        return Entries.<Object, Rectangle>entry(n, r(n));
     }
 
     static Entry<Object, Rectangle> e2(int n) {
-        return Entries.<Object, Rectangle> entry(n, r(n - 1));
+        return Entries.<Object, Rectangle>entry(n, r(n - 1));
     }
 
     private static Rectangle r(int n) {
@@ -1102,6 +1100,24 @@ public class RTreeTest {
 
     static Rectangle random() {
         return r((float) Math.random() * 1000, (float) Math.random() * 1000);
+    }
+
+    @Test
+    public void testSearchGreekEarthquakesDouble() {
+        Observable<Entry<Object, Point>> entriesDouble = GreekEarthquakes.entries()
+                .map(new Func1<Entry<Object, Point>, Entry<Object, Point>>() {
+                    @Override
+                    public Entry<Object, Point> call(Entry<Object, Point> entry) {
+                        return Entries.entry(entry.value(), Geometries.point(
+                                (double) entry.geometry().x(), (double) entry.geometry().y()));
+                    }
+                });
+        RTree<Object, Point> t = RTree.maxChildren(4).<Object, Point>create().add(entriesDouble)
+                .last().toBlocking().single(); //
+        t.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)) //
+                .test() //
+                .assertValueCount(22) //
+                .assertCompleted();
     }
 
     public static void main(String[] args) {
