@@ -1,7 +1,8 @@
-package com.github.davidmoten.rtree.geometry;
+package com.github.davidmoten.rtree.geometry.internal;
 
-import com.github.davidmoten.rtree.geometry.internal.RectangleDouble;
-import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Point;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public final class PointFloat implements Point {
 
@@ -13,7 +14,7 @@ public final class PointFloat implements Point {
         this.y = y;
     }
 
-    static PointFloat create(float x, float y) {
+    public static PointFloat create(float x, float y) {
         return new PointFloat(x, y);
     }
 

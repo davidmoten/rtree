@@ -1,6 +1,9 @@
-package com.github.davidmoten.rtree.geometry;
+package com.github.davidmoten.rtree.geometry.internal;
 
-import com.github.davidmoten.rtree.geometry.internal.RectangleDouble;
+import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Point;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public final class PointDouble implements Point {
 
@@ -12,11 +15,7 @@ public final class PointDouble implements Point {
         this.y = y;
     }
 
-    static PointDouble create(double x, double y) {
-        return new PointDouble(x, y);
-    }
-
-    static PointDouble create(float x, float y) {
+    public static PointDouble create(double x, double y) {
         return new PointDouble(x, y);
     }
 

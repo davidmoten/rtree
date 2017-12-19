@@ -4,7 +4,6 @@ import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.PointFloat;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 

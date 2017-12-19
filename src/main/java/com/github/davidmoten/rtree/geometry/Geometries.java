@@ -1,6 +1,8 @@
 package com.github.davidmoten.rtree.geometry;
 
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
+import com.github.davidmoten.rtree.geometry.internal.PointDouble;
+import com.github.davidmoten.rtree.geometry.internal.PointFloat;
 import com.github.davidmoten.rtree.geometry.internal.RectangleDouble;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 
@@ -18,28 +20,20 @@ public final class Geometries {
         return PointFloat.create(x, y);
     }
 
+    public static Point pointGeographic(double lon, double lat) {
+        return point(normalizeLongitudeDouble(lon), lat);
+    }
+
+    public static Point pointGeographic(float lon, float lat) {
+        return point(normalizeLongitude(lon), lat);
+    }
+
     public static Rectangle rectangle(double x1, double y1, double x2, double y2) {
         return rectangleDouble(x1, y1, x2, y2);
     }
 
     public static Rectangle rectangle(float x1, float y1, float x2, float y2) {
         return RectangleFloat.create(x1, y1, x2, y2);
-    }
-
-    public static Circle circle(double x, double y, double radius) {
-        return Circle.create(x, y, radius);
-    }
-
-    public static Circle circle(float x, float y, float radius) {
-        return Circle.create(x, y, radius);
-    }
-
-    public static Line line(double x1, double y1, double x2, double y2) {
-        return Line.create(x1, y1, x2, y2);
-    }
-
-    public static Line line(float x1, float y1, float x2, float y2) {
-        return Line.create(x1, y1, x2, y2);
     }
 
     public static Rectangle rectangleGeographic(double lon1, double lat1, double lon2,
@@ -60,12 +54,20 @@ public final class Geometries {
         return RectangleDouble.create(x1, y1, x2, y2);
     }
 
-    public static Point pointGeographic(double lon, double lat) {
-        return point(normalizeLongitudeDouble(lon), lat);
+    public static Circle circle(double x, double y, double radius) {
+        return Circle.create(x, y, radius);
     }
 
-    public static Point pointGeographic(float lon, float lat) {
-        return point(normalizeLongitude(lon), lat);
+    public static Circle circle(float x, float y, float radius) {
+        return Circle.create(x, y, radius);
+    }
+
+    public static Line line(double x1, double y1, double x2, double y2) {
+        return Line.create(x1, y1, x2, y2);
+    }
+
+    public static Line line(float x1, float y1, float x2, float y2) {
+        return Line.create(x1, y1, x2, y2);
     }
 
     @VisibleForTesting
