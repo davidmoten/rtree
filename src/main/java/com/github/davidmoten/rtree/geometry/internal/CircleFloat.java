@@ -1,11 +1,13 @@
-package com.github.davidmoten.rtree.geometry;
+package com.github.davidmoten.rtree.geometry.internal;
 
 import static com.github.davidmoten.rtree.geometry.Geometries.point;
 
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
-import com.github.davidmoten.rtree.geometry.internal.GeometryUtil;
-import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
+import com.github.davidmoten.rtree.geometry.Circle;
+import com.github.davidmoten.rtree.geometry.Line;
+import com.github.davidmoten.rtree.geometry.Point;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
 public final class CircleFloat implements Circle {
@@ -20,11 +22,11 @@ public final class CircleFloat implements Circle {
         this.mbr = RectangleFloat.create(x - radius, y - radius, x + radius, y + radius);
     }
 
-    static CircleFloat create(double x, double y, double radius) {
+    public static CircleFloat create(double x, double y, double radius) {
         return new CircleFloat((float) x, (float) y, (float) radius);
     }
 
-    static CircleFloat create(float x, float y, float radius) {
+    public static CircleFloat create(float x, float y, float radius) {
         return new CircleFloat(x, y, radius);
     }
 

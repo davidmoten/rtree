@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree.geometry;
 
+import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
+
 import rx.functions.Func2;
 
 public final class Intersects {

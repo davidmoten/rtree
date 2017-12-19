@@ -11,12 +11,12 @@ import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Sets;
 import com.github.davidmoten.junit.Asserts;
-import com.github.davidmoten.rtree.geometry.CircleFloat;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
 
 public class SerializersTest {
 

@@ -33,13 +33,13 @@ import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Sets;
 import com.github.davidmoten.rtree.fbs.FactoryFlatBuffers;
-import com.github.davidmoten.rtree.geometry.CircleFloat;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Intersects;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
 import com.github.davidmoten.rtree.internal.EntryDefault;
 import com.github.davidmoten.rtree.internal.Functions;
 

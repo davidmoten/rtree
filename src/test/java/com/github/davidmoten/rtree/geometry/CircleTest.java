@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
+
 public class CircleTest {
     private static final double PRECISION = 0.000001;
 

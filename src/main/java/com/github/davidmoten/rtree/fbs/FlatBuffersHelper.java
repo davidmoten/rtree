@@ -17,12 +17,12 @@ import com.github.davidmoten.rtree.fbs.generated.Line_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.fbs.generated.Point_;
 import com.github.davidmoten.rtree.geometry.Circle;
-import com.github.davidmoten.rtree.geometry.CircleFloat;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
 import com.github.davidmoten.rtree.internal.Util;
 import com.google.flatbuffers.FlatBufferBuilder;
 

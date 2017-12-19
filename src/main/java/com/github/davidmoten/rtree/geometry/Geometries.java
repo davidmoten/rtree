@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree.geometry;
 
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
+import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
 import com.github.davidmoten.rtree.geometry.internal.PointDouble;
 import com.github.davidmoten.rtree.geometry.internal.PointFloat;
 import com.github.davidmoten.rtree.geometry.internal.RectangleDouble;
