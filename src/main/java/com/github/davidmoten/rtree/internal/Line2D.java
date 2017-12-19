@@ -6,28 +6,28 @@ package com.github.davidmoten.rtree.internal;
  */
 public final class Line2D {
 
-    private final float x1, x2, y1, y2;
+    private final double x1, x2, y1, y2;
 
-    public Line2D(float x1, float y1, float x2, float y2) {
+    public Line2D(double x1, double y1, double x2, double y2) {
         this.x1 = x1;
         this.x2 = x2;
         this.y1 = y1;
         this.y2 = y2;
     }
 
-    public float getX1() {
+    public double getX1() {
         return x1;
     }
 
-    public float getX2() {
+    public double getX2() {
         return x2;
     }
 
-    public float getY1() {
+    public double getY1() {
         return y1;
     }
 
-    public float getY2() {
+    public double getY2() {
         return y2;
     }
 

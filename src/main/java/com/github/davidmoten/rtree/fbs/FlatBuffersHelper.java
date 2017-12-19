@@ -22,7 +22,6 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.rtree.geometry.internal.LineFloat;
 import com.github.davidmoten.rtree.internal.Util;
 import com.google.flatbuffers.FlatBufferBuilder;
 
@@ -156,7 +155,7 @@ final class FlatBuffersHelper {
         return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
-    static LineFloat createLine(Box_ b) {
+    static Line createLine(Box_ b) {
         return Geometries.line(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 

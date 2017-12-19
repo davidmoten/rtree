@@ -16,24 +16,20 @@ import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
  */
 public final class LineFloat implements Line {
 
-    private final float x1;
-    private final float y1;
-    private final float x2;
-    private final float y2;
+    private final double x1;
+    private final double y1;
+    private final double x2;
+    private final double y2;
 
-    private LineFloat(float x1, float y1, float x2, float y2) {
+    private LineFloat(double x1, double y1, double x2, double y2) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
     }
 
-    public static LineFloat create(float x1, float y1, float x2, float y2) {
-        return new LineFloat(x1, y1, x2, y2);
-    }
-
     public static LineFloat create(double x1, double y1, double x2, double y2) {
-        return new LineFloat((float) x1, (float) y1, (float) x2, (float) y2);
+        return new LineFloat(x1, y1, x2, y2);
     }
 
     @Override
@@ -41,19 +37,19 @@ public final class LineFloat implements Line {
         if (r.contains(x1, y1) || r.contains(x2, y2)) {
             return 0;
         } else {
-            double d1 = distance((float) r.x1(), (float) r.y1(), (float) r.x1(), (float) r.y2());
+            double d1 = distance( r.x1(),  r.y1(),  r.x1(),  r.y2());
             if (d1 == 0)
                 return 0;
-            double d2 = distance((float) r.x1(), (float) r.y2(), (float) r.x2(), (float) r.y2());
+            double d2 = distance( r.x1(),  r.y2(),  r.x2(),  r.y2());
             if (d2 == 0)
                 return 0;
-            double d3 = distance((float) r.x2(), (float) r.y2(), (float) r.x2(), (float) r.y1());
-            double d4 = distance((float) r.x2(), (float) r.y1(), (float) r.x1(), (float) r.y1());
+            double d3 = distance( r.x2(),  r.y2(),  r.x2(),  r.y1());
+            double d4 = distance( r.x2(),  r.y1(),  r.x1(),  r.y1());
             return Math.min(d1, Math.min(d2, Math.min(d3, d4)));
         }
     }
 
-    private double distance(float x1, float y1, float x2, float y2) {
+    private double distance(double x1, double y1, double x2, double y2) {
         Line2D line = new Line2D(x1, y1, x2, y2);
         double d1 = line.ptSegDist(this.x1, this.y1);
         double d2 = line.ptSegDist(this.x2, this.y2);
@@ -104,7 +100,7 @@ public final class LineFloat implements Line {
     @Override
     public boolean intersects(Line b) {
         Line2D line1 = new Line2D(x1, y1, x2, y2);
-        Line2D line2 = new Line2D((float) b.x1(), (float) b.y1(), (float) b.x2(), (float) b.y2());
+        Line2D line2 = new Line2D( b.x1(),  b.y1(),  b.x2(),  b.y2());
         return line2.intersectsLine(line1);
     }
 
@@ -155,6 +151,11 @@ public final class LineFloat implements Line {
                     && Objects.equal(y1, other.get().y1) && Objects.equal(y2, other.get().y2);
         } else
             return false;
+    }
+
+    @Override
+    public boolean isDoublePrecision() {
+        return false;
     }
 
 }

@@ -23,7 +23,7 @@ public final class CircleDouble implements Circle {
     }
 
     public static CircleDouble create(double x, double y, double radius) {
-        return new CircleDouble((float) x, (float) y, (float) radius);
+        return new CircleDouble( x,  y,  radius);
     }
 
     @Override
@@ -89,5 +89,10 @@ public final class CircleDouble implements Circle {
     @Override
     public boolean intersects(Line line) {
         return line.intersects(this);
+    }
+
+    @Override
+    public boolean isDoublePrecision() {
+        return true;
     }
 }

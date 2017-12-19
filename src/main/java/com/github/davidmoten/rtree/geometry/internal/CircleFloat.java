@@ -90,4 +90,9 @@ public final class CircleFloat implements Circle {
     public boolean intersects(Line line) {
         return line.intersects(this);
     }
+
+    @Override
+    public boolean isDoublePrecision() {
+        return false;
+    }
 }

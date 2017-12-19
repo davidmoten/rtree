@@ -11,12 +11,12 @@ import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Sets;
 import com.github.davidmoten.junit.Asserts;
+import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
-import com.github.davidmoten.rtree.geometry.internal.LineFloat;
 
 public class SerializersTest {
 
@@ -42,17 +42,17 @@ public class SerializersTest {
 
     @Test
     public void testStringCircleSerialization() throws IOException {
-        Serializer<String, CircleFloat> serializer = Serializers.flatBuffers().utf8();
-        Entry<String, CircleFloat> a = Entries.entry("hello", Geometries.circle(1, 2, 3));
-        Entry<String, CircleFloat> b = Entries.entry("there", Geometries.circle(3, 4, 5));
+        Serializer<String, Circle> serializer = Serializers.flatBuffers().utf8();
+        Entry<String, Circle> a = Entries.entry("hello", Geometries.circle(1, 2, 3));
+        Entry<String, Circle> b = Entries.entry("there", Geometries.circle(3, 4, 5));
         check(serializer, a, b);
     }
 
     @Test
     public void testStringLineSerialization() throws IOException {
-        Serializer<String, LineFloat> serializer = Serializers.flatBuffers().utf8();
-        Entry<String, LineFloat> a = Entries.entry("hello", Geometries.line(1, 2, 3, 4));
-        Entry<String, LineFloat> b = Entries.entry("there", Geometries.line(3, 4, 5, 6));
+        Serializer<String, Line> serializer = Serializers.flatBuffers().utf8();
+        Entry<String, Line> a = Entries.entry("hello", Geometries.line(1, 2, 3, 4));
+        Entry<String, Line> b = Entries.entry("there", Geometries.line(3, 4, 5, 6));
         check(serializer, a, b);
     }
 

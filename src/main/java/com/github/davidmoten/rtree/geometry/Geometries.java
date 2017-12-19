@@ -54,22 +54,22 @@ public final class Geometries {
     }
 
     private static Rectangle rectangleDouble(double x1, double y1, double x2, double y2) {
-        return RectangleDouble.create(x1, y1, x2, y2);
+        return  RectangleDouble.create(x1, y1, x2, y2);
     }
 
-    public static CircleDouble circle(double x, double y, double radius) {
+    public static Circle circle(double x, double y, double radius) {
         return CircleDouble.create(x, y, radius);
     }
 
-    public static CircleFloat circle(float x, float y, float radius) {
+    public static Circle circle(float x, float y, float radius) {
         return CircleFloat.create(x, y, radius);
     }
 
-    public static LineFloat line(double x1, double y1, double x2, double y2) {
+    public static Line line(double x1, double y1, double x2, double y2) {
         return LineFloat.create(x1, y1, x2, y2);
     }
 
-    public static LineFloat line(float x1, float y1, float x2, float y2) {
+    public static Line line(float x1, float y1, float x2, float y2) {
         return LineFloat.create(x1, y1, x2, y2);
     }
 
