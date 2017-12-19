@@ -22,10 +22,6 @@ public final class CircleFloat implements Circle {
         this.mbr = RectangleFloat.create(x - radius, y - radius, x + radius, y + radius);
     }
 
-    public static CircleFloat create(double x, double y, double radius) {
-        return new CircleFloat((float) x, (float) y, (float) radius);
-    }
-
     public static CircleFloat create(float x, float y, float radius) {
         return new CircleFloat(x, y, radius);
     }

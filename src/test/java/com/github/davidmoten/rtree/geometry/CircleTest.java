@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.geometry.internal.CircleDouble;
 import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
 
 public class CircleTest {
@@ -105,7 +106,7 @@ public class CircleTest {
     @Test
     public void testIntersects() {
         CircleFloat a = circle(0, 0, 1);
-        CircleFloat b = circle(0.1, 0.1, 1);
+        CircleDouble b = circle(0.1, 0.1, 1);
         assertTrue(Intersects.circleIntersectsCircle.call(a, b));
     }
 
