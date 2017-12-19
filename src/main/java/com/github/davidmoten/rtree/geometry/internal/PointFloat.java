@@ -29,18 +29,6 @@ public final class PointFloat implements Point {
     }
 
     @Override
-    public double distance(Point p) {
-        return Math.sqrt(distanceSquared(p));
-    }
-
-    @Override
-    public double distanceSquared(Point p) {
-        double dx = x - p.x();
-        double dy = y - p.y();
-        return dx * dx + dy * dy;
-    }
-
-    @Override
     public boolean intersects(Rectangle r) {
         return r.x1() <= x && x <= r.x2() && r.y1() <= y && y <= r.y2();
     }

@@ -6,7 +6,4 @@ public interface Point extends Rectangle {
 
     double y();
 
-    double distance(Point p);
-
-    double distanceSquared(Point p);
 }

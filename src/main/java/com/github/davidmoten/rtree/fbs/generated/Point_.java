@@ -2,10 +2,10 @@
 
 package com.github.davidmoten.rtree.fbs.generated;
 
-import java.nio.ByteBuffer;
-
-import com.google.flatbuffers.FlatBufferBuilder;
-import com.google.flatbuffers.Struct;
+import java.nio.*;
+import java.lang.*;
+import java.util.*;
+import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class Point_ extends Struct {

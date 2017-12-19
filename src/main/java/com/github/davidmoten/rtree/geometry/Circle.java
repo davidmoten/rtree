@@ -4,6 +4,7 @@ import static com.github.davidmoten.rtree.geometry.Geometries.point;
 
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.rtree.geometry.internal.GeometryUtil;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 
@@ -56,7 +57,7 @@ public final class Circle implements Geometry {
 
     public boolean intersects(Circle c) {
         double total = radius + c.radius;
-        return point(x, y).distanceSquared(point(c.x, c.y)) <= total * total;
+        return GeometryUtil.distanceSquared(point(x, y), point(c.x, c.y)) <= total * total;
     }
 
     @Override
