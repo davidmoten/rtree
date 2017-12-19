@@ -2,6 +2,7 @@ package com.github.davidmoten.rtree.geometry;
 
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
+import com.github.davidmoten.rtree.geometry.internal.LineFloat;
 import com.github.davidmoten.rtree.geometry.internal.PointDouble;
 import com.github.davidmoten.rtree.geometry.internal.PointFloat;
 import com.github.davidmoten.rtree.geometry.internal.RectangleDouble;
@@ -63,12 +64,12 @@ public final class Geometries {
         return CircleFloat.create(x, y, radius);
     }
 
-    public static Line line(double x1, double y1, double x2, double y2) {
-        return Line.create(x1, y1, x2, y2);
+    public static LineFloat line(double x1, double y1, double x2, double y2) {
+        return LineFloat.create(x1, y1, x2, y2);
     }
 
-    public static Line line(float x1, float y1, float x2, float y2) {
-        return Line.create(x1, y1, x2, y2);
+    public static LineFloat line(float x1, float y1, float x2, float y2) {
+        return LineFloat.create(x1, y1, x2, y2);
     }
 
     @VisibleForTesting

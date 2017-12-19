@@ -13,10 +13,10 @@ import com.github.davidmoten.guavamini.Sets;
 import com.github.davidmoten.junit.Asserts;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
+import com.github.davidmoten.rtree.geometry.internal.LineFloat;
 
 public class SerializersTest {
 
@@ -50,9 +50,9 @@ public class SerializersTest {
 
     @Test
     public void testStringLineSerialization() throws IOException {
-        Serializer<String, Line> serializer = Serializers.flatBuffers().utf8();
-        Entry<String, Line> a = Entries.entry("hello", Geometries.line(1, 2, 3, 4));
-        Entry<String, Line> b = Entries.entry("there", Geometries.line(3, 4, 5, 6));
+        Serializer<String, LineFloat> serializer = Serializers.flatBuffers().utf8();
+        Entry<String, LineFloat> a = Entries.entry("hello", Geometries.line(1, 2, 3, 4));
+        Entry<String, LineFloat> b = Entries.entry("there", Geometries.line(3, 4, 5, 6));
         check(serializer, a, b);
     }
 

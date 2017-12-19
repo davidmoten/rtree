@@ -22,7 +22,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
+import com.github.davidmoten.rtree.geometry.internal.LineFloat;
 import com.github.davidmoten.rtree.internal.Util;
 import com.google.flatbuffers.FlatBufferBuilder;
 
@@ -52,14 +52,15 @@ final class FlatBuffersHelper {
                 geom = Box_.createBox_(builder, (float) b.x1(), (float) b.y1(), (float) b.x2(),
                         (float) b.y2());
                 geomType = GeometryType_.Box;
-            } else if (g instanceof CircleFloat) {
+            } else if (g instanceof Circle) {
                 Circle c = (Circle) g;
                 geom = Circle_.createCircle_(builder, (float) c.x(), (float) c.y(),
                         (float) c.radius());
                 geomType = GeometryType_.Circle;
             } else if (g instanceof Line) {
                 Line c = (Line) g;
-                geom = Line_.createLine_(builder, c.x1(), c.y1(), c.x2(), c.y2());
+                geom = Line_.createLine_(builder, (float) c.x1(), (float) c.y1(), (float) c.x2(),
+                        (float) c.y2());
                 geomType = GeometryType_.Line;
             } else
                 throw new RuntimeException("unexpected");
@@ -155,7 +156,7 @@ final class FlatBuffersHelper {
         return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
-    static Line createLine(Box_ b) {
+    static LineFloat createLine(Box_ b) {
         return Geometries.line(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 

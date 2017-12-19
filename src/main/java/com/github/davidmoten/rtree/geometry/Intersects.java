@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree.geometry;
 
 import com.github.davidmoten.rtree.geometry.internal.CircleFloat;
+import com.github.davidmoten.rtree.geometry.internal.LineFloat;
 
 import rx.functions.Func2;
 
@@ -45,61 +46,61 @@ public final class Intersects {
         }
     };
 
-    public static final Func2<Line, Line, Boolean> lineIntersectsLine = new Func2<Line, Line, Boolean>() {
+    public static final Func2<LineFloat, LineFloat, Boolean> lineIntersectsLine = new Func2<LineFloat, LineFloat, Boolean>() {
         @Override
-        public Boolean call(Line a, Line b) {
+        public Boolean call(LineFloat a, LineFloat b) {
             return a.intersects(b);
         }
     };
 
-    public static final Func2<Line, Rectangle, Boolean> lineIntersectsRectangle = new Func2<Line, Rectangle, Boolean>() {
+    public static final Func2<LineFloat, Rectangle, Boolean> lineIntersectsRectangle = new Func2<LineFloat, Rectangle, Boolean>() {
         @Override
-        public Boolean call(Line a, Rectangle r) {
+        public Boolean call(LineFloat a, Rectangle r) {
             return rectangleIntersectsLine.call(r, a);
         }
     };
 
-    public static final Func2<Rectangle, Line, Boolean> rectangleIntersectsLine = new Func2<Rectangle, Line, Boolean>() {
+    public static final Func2<Rectangle, LineFloat, Boolean> rectangleIntersectsLine = new Func2<Rectangle, LineFloat, Boolean>() {
         @Override
-        public Boolean call(Rectangle r, Line a) {
+        public Boolean call(Rectangle r, LineFloat a) {
             return a.intersects(r);
         }
     };
 
-    public static final Func2<Line, CircleFloat, Boolean> lineIntersectsCircle = new Func2<Line, CircleFloat, Boolean>() {
+    public static final Func2<LineFloat, CircleFloat, Boolean> lineIntersectsCircle = new Func2<LineFloat, CircleFloat, Boolean>() {
         @Override
-        public Boolean call(Line a, CircleFloat c) {
+        public Boolean call(LineFloat a, CircleFloat c) {
             return circleIntersectsLine.call(c, a);
         }
     };
 
-    public static final Func2<CircleFloat, Line, Boolean> circleIntersectsLine = new Func2<CircleFloat, Line, Boolean>() {
+    public static final Func2<CircleFloat, LineFloat, Boolean> circleIntersectsLine = new Func2<CircleFloat, LineFloat, Boolean>() {
         @Override
-        public Boolean call(CircleFloat c, Line a) {
+        public Boolean call(CircleFloat c, LineFloat a) {
             return a.intersects(c);
         }
     };
 
-    public static final Func2<Line, Point, Boolean> lineIntersectsPoint = new Func2<Line, Point, Boolean>() {
+    public static final Func2<LineFloat, Point, Boolean> lineIntersectsPoint = new Func2<LineFloat, Point, Boolean>() {
 
         @Override
-        public Boolean call(Line line, Point point) {
+        public Boolean call(LineFloat line, Point point) {
             return pointIntersectsLine.call(point, line);
         }
     };
 
-    public static final Func2<Point, Line, Boolean> pointIntersectsLine = new Func2<Point, Line, Boolean>() {
+    public static final Func2<Point, LineFloat, Boolean> pointIntersectsLine = new Func2<Point, LineFloat, Boolean>() {
 
         @Override
-        public Boolean call(Point point, Line line) {
+        public Boolean call(Point point, LineFloat line) {
             return line.intersects(point);
         }
     };
 
-    public static final Func2<Geometry, Line, Boolean> geometryIntersectsLine = new Func2<Geometry, Line, Boolean>() {
+    public static final Func2<Geometry, LineFloat, Boolean> geometryIntersectsLine = new Func2<Geometry, LineFloat, Boolean>() {
 
         @Override
-        public Boolean call(Geometry geometry, Line line) {
+        public Boolean call(Geometry geometry, LineFloat line) {
             if (geometry instanceof Line)
                 return line.intersects((Line) geometry);
             else if (geometry instanceof CircleFloat)

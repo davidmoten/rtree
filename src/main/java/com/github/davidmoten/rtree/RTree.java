@@ -16,9 +16,9 @@ import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.Intersects;
-import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.internal.LineFloat;
 import com.github.davidmoten.rtree.internal.Comparators;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.github.davidmoten.rtree.internal.operators.OperatorBoundedPriorityQueue;
@@ -717,7 +717,7 @@ public final class RTree<T, S extends Geometry> {
         return search(circle, Intersects.geometryIntersectsCircle);
     }
 
-    public Observable<Entry<T, S>> search(Line line) {
+    public Observable<Entry<T, S>> search(LineFloat line) {
         return search(line, Intersects.geometryIntersectsLine);
     }
 
