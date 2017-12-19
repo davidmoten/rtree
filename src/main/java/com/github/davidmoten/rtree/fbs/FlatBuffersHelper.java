@@ -17,6 +17,7 @@ import com.github.davidmoten.rtree.fbs.generated.Line_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.fbs.generated.Point_;
 import com.github.davidmoten.rtree.geometry.Circle;
+import com.github.davidmoten.rtree.geometry.CircleFloat;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Line;
@@ -51,9 +52,10 @@ final class FlatBuffersHelper {
                 geom = Box_.createBox_(builder, (float) b.x1(), (float) b.y1(), (float) b.x2(),
                         (float) b.y2());
                 geomType = GeometryType_.Box;
-            } else if (g instanceof Circle) {
+            } else if (g instanceof CircleFloat) {
                 Circle c = (Circle) g;
-                geom = Circle_.createCircle_(builder, c.x(), c.y(), c.radius());
+                geom = Circle_.createCircle_(builder, (float) c.x(), (float) c.y(),
+                        (float) c.radius());
                 geomType = GeometryType_.Circle;
             } else if (g instanceof Line) {
                 Line c = (Line) g;

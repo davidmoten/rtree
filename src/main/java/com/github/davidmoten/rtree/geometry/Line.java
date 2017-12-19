@@ -108,14 +108,14 @@ public final class Line implements Geometry {
         Vector c = Vector.create(circle.x(), circle.y());
         Vector a = Vector.create(x1, y1);
         Vector cMinusA = c.minus(a);
-        float radiusSquared = circle.radius() * circle.radius();
+        double radiusSquared = circle.radius() * circle.radius();
         if (x1 == x2 && y1 == y2) {
             return cMinusA.modulusSquared() <= radiusSquared;
         } else {
             Vector b = Vector.create(x2, y2);
             Vector bMinusA = b.minus(a);
-            float bMinusAModulus = bMinusA.modulus();
-            float lambda = cMinusA.dot(bMinusA) / bMinusAModulus;
+            double bMinusAModulus = bMinusA.modulus();
+            double lambda = cMinusA.dot(bMinusA) / bMinusAModulus;
             // if projection is on the segment
             if (lambda >= 0 && lambda <= bMinusAModulus) {
                 Vector dMinusA = bMinusA.times(lambda / bMinusAModulus);
@@ -146,23 +146,23 @@ public final class Line implements Geometry {
     }
 
     private static final class Vector {
-        final float x;
-        final float y;
+        final double x;
+        final double y;
 
-        static Vector create(float x, float y) {
+        static Vector create(double x, double y) {
             return new Vector(x, y);
         }
 
-        Vector(float x, float y) {
+        Vector(double x, double y) {
             this.x = x;
             this.y = y;
         }
 
-        float dot(Vector v) {
+        double dot(Vector v) {
             return x * v.x + y * v.y;
         }
 
-        Vector times(float value) {
+        Vector times(double value) {
             return create(value * x, value * y);
         }
 
@@ -170,11 +170,11 @@ public final class Line implements Geometry {
             return create(x - v.x, y - v.y);
         }
 
-        float modulus() {
-            return (float) Math.sqrt(x * x + y * y);
+        double modulus() {
+            return Math.sqrt(modulusSquared());
         }
 
-        float modulusSquared() {
+        double modulusSquared() {
             return x * x + y * y;
         }
 

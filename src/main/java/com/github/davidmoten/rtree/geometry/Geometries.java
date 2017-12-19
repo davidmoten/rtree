@@ -54,12 +54,12 @@ public final class Geometries {
         return RectangleDouble.create(x1, y1, x2, y2);
     }
 
-    public static Circle circle(double x, double y, double radius) {
-        return Circle.create(x, y, radius);
+    public static CircleFloat circle(double x, double y, double radius) {
+        return CircleFloat.create(x, y, radius);
     }
 
-    public static Circle circle(float x, float y, float radius) {
-        return Circle.create(x, y, radius);
+    public static CircleFloat circle(float x, float y, float radius) {
+        return CircleFloat.create(x, y, radius);
     }
 
     public static Line line(double x1, double y1, double x2, double y2) {

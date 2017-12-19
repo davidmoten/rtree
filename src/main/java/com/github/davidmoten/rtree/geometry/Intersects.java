@@ -8,37 +8,37 @@ public final class Intersects {
         // prevent instantiation
     }
 
-    public static final Func2<Rectangle, Circle, Boolean> rectangleIntersectsCircle = new Func2<Rectangle, Circle, Boolean>() {
+    public static final Func2<Rectangle, CircleFloat, Boolean> rectangleIntersectsCircle = new Func2<Rectangle, CircleFloat, Boolean>() {
         @Override
-        public Boolean call(Rectangle rectangle, Circle circle) {
+        public Boolean call(Rectangle rectangle, CircleFloat circle) {
             return circleIntersectsRectangle.call(circle, rectangle);
         }
     };
 
-    public static final Func2<Circle, Rectangle, Boolean> circleIntersectsRectangle = new Func2<Circle, Rectangle, Boolean>() {
+    public static final Func2<CircleFloat, Rectangle, Boolean> circleIntersectsRectangle = new Func2<CircleFloat, Rectangle, Boolean>() {
         @Override
-        public Boolean call(Circle circle, Rectangle rectangle) {
+        public Boolean call(CircleFloat circle, Rectangle rectangle) {
             return circle.intersects(rectangle);
         }
     };
 
-    public static final Func2<Point, Circle, Boolean> pointIntersectsCircle = new Func2<Point, Circle, Boolean>() {
+    public static final Func2<Point, CircleFloat, Boolean> pointIntersectsCircle = new Func2<Point, CircleFloat, Boolean>() {
         @Override
-        public Boolean call(Point point, Circle circle) {
+        public Boolean call(Point point, CircleFloat circle) {
             return circleIntersectsPoint.call(circle, point);
         }
     };
 
-    public static final Func2<Circle, Point, Boolean> circleIntersectsPoint = new Func2<Circle, Point, Boolean>() {
+    public static final Func2<CircleFloat, Point, Boolean> circleIntersectsPoint = new Func2<CircleFloat, Point, Boolean>() {
         @Override
-        public Boolean call(Circle circle, Point point) {
+        public Boolean call(CircleFloat circle, Point point) {
             return circle.intersects(point);
         }
     };
 
-    public static final Func2<Circle, Circle, Boolean> circleIntersectsCircle = new Func2<Circle, Circle, Boolean>() {
+    public static final Func2<CircleFloat, CircleFloat, Boolean> circleIntersectsCircle = new Func2<CircleFloat, CircleFloat, Boolean>() {
         @Override
-        public Boolean call(Circle a, Circle b) {
+        public Boolean call(CircleFloat a, CircleFloat b) {
             return a.intersects(b);
         }
     };
@@ -64,16 +64,16 @@ public final class Intersects {
         }
     };
 
-    public static final Func2<Line, Circle, Boolean> lineIntersectsCircle = new Func2<Line, Circle, Boolean>() {
+    public static final Func2<Line, CircleFloat, Boolean> lineIntersectsCircle = new Func2<Line, CircleFloat, Boolean>() {
         @Override
-        public Boolean call(Line a, Circle c) {
+        public Boolean call(Line a, CircleFloat c) {
             return circleIntersectsLine.call(c, a);
         }
     };
 
-    public static final Func2<Circle, Line, Boolean> circleIntersectsLine = new Func2<Circle, Line, Boolean>() {
+    public static final Func2<CircleFloat, Line, Boolean> circleIntersectsLine = new Func2<CircleFloat, Line, Boolean>() {
         @Override
-        public Boolean call(Circle c, Line a) {
+        public Boolean call(CircleFloat c, Line a) {
             return a.intersects(c);
         }
     };
@@ -100,7 +100,7 @@ public final class Intersects {
         public Boolean call(Geometry geometry, Line line) {
             if (geometry instanceof Line)
                 return line.intersects((Line) geometry);
-            else if (geometry instanceof Circle)
+            else if (geometry instanceof CircleFloat)
                 return line.intersects((Circle) geometry);
             else if (geometry instanceof Point)
                 return line.intersects((Point) geometry);
@@ -142,7 +142,7 @@ public final class Intersects {
         public Boolean call(Geometry geometry, Rectangle r) {
             if (geometry instanceof Line)
                 return geometry.intersects(r);
-            else if (geometry instanceof Circle)
+            else if (geometry instanceof CircleFloat)
                 return geometry.intersects(r);
             else if (geometry instanceof Point)
                 return geometry.intersects(r);

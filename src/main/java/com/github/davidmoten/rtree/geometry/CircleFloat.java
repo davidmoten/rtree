@@ -1,0 +1,95 @@
+package com.github.davidmoten.rtree.geometry;
+
+import static com.github.davidmoten.rtree.geometry.Geometries.point;
+
+import com.github.davidmoten.guavamini.Objects;
+import com.github.davidmoten.guavamini.Optional;
+import com.github.davidmoten.rtree.geometry.internal.GeometryUtil;
+import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
+import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
+
+public final class CircleFloat implements Circle {
+
+    private final float x, y, radius;
+    private final Rectangle mbr;
+
+    protected CircleFloat(float x, float y, float radius) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.mbr = RectangleFloat.create(x - radius, y - radius, x + radius, y + radius);
+    }
+
+    static CircleFloat create(double x, double y, double radius) {
+        return new CircleFloat((float) x, (float) y, (float) radius);
+    }
+
+    static CircleFloat create(float x, float y, float radius) {
+        return new CircleFloat(x, y, radius);
+    }
+
+    @Override
+    public double x() {
+        return x;
+    }
+
+    @Override
+    public double y() {
+        return y;
+    }
+
+    @Override
+    public double radius() {
+        return radius;
+    }
+
+    @Override
+    public Rectangle mbr() {
+        return mbr;
+    }
+
+    @Override
+    public double distance(Rectangle r) {
+        return Math.max(0, point(x, y).distance(r) - radius);
+    }
+
+    @Override
+    public boolean intersects(Rectangle r) {
+        return distance(r) == 0;
+    }
+
+    @Override
+    public boolean intersects(Circle c) {
+        double total = radius + c.radius();
+        return GeometryUtil.distanceSquared(point(x, y), point(c.x(), c.y())) <= total * total;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(x, y, radius);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Optional<CircleFloat> other = ObjectsHelper.asClass(obj, CircleFloat.class);
+        if (other.isPresent()) {
+            return Objects.equal(x, other.get().x) && Objects.equal(y, other.get().y)
+                    && Objects.equal(radius, other.get().radius);
+        } else
+            return false;
+    }
+
+    @Override
+    public boolean intersects(Point point) {
+        return Math.sqrt(sqr(x - point.x()) + sqr(y - point.y())) <= radius;
+    }
+
+    private double sqr(double x) {
+        return x * x;
+    }
+
+    @Override
+    public boolean intersects(Line line) {
+        return line.intersects(this);
+    }
+}

@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Sets;
 import com.github.davidmoten.junit.Asserts;
-import com.github.davidmoten.rtree.geometry.Circle;
+import com.github.davidmoten.rtree.geometry.CircleFloat;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Line;
@@ -42,9 +42,9 @@ public class SerializersTest {
 
     @Test
     public void testStringCircleSerialization() throws IOException {
-        Serializer<String, Circle> serializer = Serializers.flatBuffers().utf8();
-        Entry<String, Circle> a = Entries.entry("hello", Geometries.circle(1, 2, 3));
-        Entry<String, Circle> b = Entries.entry("there", Geometries.circle(3, 4, 5));
+        Serializer<String, CircleFloat> serializer = Serializers.flatBuffers().utf8();
+        Entry<String, CircleFloat> a = Entries.entry("hello", Geometries.circle(1, 2, 3));
+        Entry<String, CircleFloat> b = Entries.entry("there", Geometries.circle(3, 4, 5));
         check(serializer, a, b);
     }
 

@@ -33,7 +33,7 @@ import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Sets;
 import com.github.davidmoten.rtree.fbs.FactoryFlatBuffers;
-import com.github.davidmoten.rtree.geometry.Circle;
+import com.github.davidmoten.rtree.geometry.CircleFloat;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
@@ -1057,9 +1057,9 @@ public class RTreeTest {
         RTree<Object, Geometry> tree = RTree.star().maxChildren(4).create();
     }
 
-    private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
+    private static Func2<Point, CircleFloat, Double> distanceCircleToPoint = new Func2<Point, CircleFloat, Double>() {
         @Override
-        public Double call(Point point, Circle circle) {
+        public Double call(Point point, CircleFloat circle) {
             return circle.distance(point.mbr());
         }
     };
