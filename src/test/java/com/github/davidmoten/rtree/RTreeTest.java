@@ -116,6 +116,7 @@ public class RTreeTest {
 
     @Test
     public void testBulkLoadingWithOneItemIsNotEmpty() {
+        @SuppressWarnings("unchecked")
         RTree<Object, Rectangle> tree = RTree.create(Arrays.asList(e(1)));
         assertFalse(tree.isEmpty());
     }
@@ -135,6 +136,7 @@ public class RTreeTest {
         assertEquals(entrySize, entries.size());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testSearchOnOneItemOnBulkLoadingRTree() {
         Entry<Object, Rectangle> entry = e(1);
@@ -1120,7 +1122,4 @@ public class RTreeTest {
                 .assertCompleted();
     }
 
-    public static void main(String[] args) {
-        System.out.println(Long.MAX_VALUE);
-    }
 }

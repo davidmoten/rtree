@@ -26,7 +26,7 @@ public final class PointDouble implements Point {
 
     @Override
     public double distance(Rectangle r) {
-        return RectangleDouble.distance(x, y, x, y, r.x1(), r.y1(), r.x2(), r.y2());
+        return GeometryUtil.distance(x, y, x, y, r.x1(), r.y1(), r.x2(), r.y2());
     }
 
     public double distance(PointDouble p) {
