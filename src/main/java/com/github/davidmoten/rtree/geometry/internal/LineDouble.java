@@ -14,26 +14,22 @@ import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
 /**
  * A line segment.
  */
-public final class LineFloat implements Line {
+public final class LineDouble implements Line {
 
-    private final float x1;
-    private final float y1;
-    private final float x2;
-    private final float y2;
+    private final double x1;
+    private final double y1;
+    private final double x2;
+    private final double y2;
 
-    private LineFloat(float x1, float y1, float x2, float y2) {
+    private LineDouble(double x1, double y1, double x2, double y2) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
     }
 
-    public static LineFloat create(float x1, float y1, float x2, float y2) {
-        return new LineFloat(x1, y1, x2, y2);
-    }
-
-    public static LineFloat create(double x1, double y1, double x2, double y2) {
-        return new LineFloat((float) x1, (float) y1, (float) x2, (float) y2);
+    public static LineDouble create(double x1, double y1, double x2, double y2) {
+        return new LineDouble(x1, y1, x2, y2);
     }
 
     @Override
@@ -57,7 +53,8 @@ public final class LineFloat implements Line {
         Line2D line = new Line2D(x1, y1, x2, y2);
         double d1 = line.ptSegDist(this.x1, this.y1);
         double d2 = line.ptSegDist(this.x2, this.y2);
-        Line2D line2 = new Line2D(this.x1, this.y1, this.x2, this.y2);
+        Line2D line2 = new Line2D((float) this.x1, (float) this.y1, (float) this.x2,
+                (float) this.y2);
         double d3 = line2.ptSegDist(x1, y1);
         if (d3 == 0)
             return 0;
@@ -103,7 +100,7 @@ public final class LineFloat implements Line {
 
     @Override
     public boolean intersects(Line b) {
-        Line2D line1 = new Line2D(x1, y1, x2, y2);
+        Line2D line1 = new Line2D((float)x1, (float)y1, (float)x2,(float) y2);
         Line2D line2 = new Line2D((float) b.x1(), (float) b.y1(), (float) b.x2(), (float) b.y2());
         return line2.intersectsLine(line1);
     }
@@ -149,7 +146,7 @@ public final class LineFloat implements Line {
 
     @Override
     public boolean equals(Object obj) {
-        Optional<LineFloat> other = ObjectsHelper.asClass(obj, LineFloat.class);
+        Optional<LineDouble> other = ObjectsHelper.asClass(obj, LineDouble.class);
         if (other.isPresent()) {
             return Objects.equal(x1, other.get().x1) && Objects.equal(x2, other.get().x2)
                     && Objects.equal(y1, other.get().y1) && Objects.equal(y2, other.get().y2);
