@@ -29,22 +29,22 @@ public final class RectangleDouble implements Rectangle {
 
     @Override
     public double x1() {
-        return (float) x1;
+        return x1;
     }
 
     @Override
     public double y1() {
-        return (float) y1;
+        return y1;
     }
 
     @Override
     public double x2() {
-        return (float) x2;
+        return x2;
     }
 
     @Override
     public double y2() {
-        return (float) y2;
+        return  y2;
     }
 
     @Override

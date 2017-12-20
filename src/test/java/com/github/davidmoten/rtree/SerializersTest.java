@@ -33,7 +33,7 @@ public class SerializersTest {
     }
 
     @Test
-    public void testStringRectangleSerialization() throws IOException {
+    public void testStringRectangleFloatSerialization() throws IOException {
         Serializer<String, Rectangle> serializer = Serializers.flatBuffers().utf8();
         Entry<String, Rectangle> a = Entries.entry("hello", Geometries.rectangle(1, 2, 3, 4));
         Entry<String, Rectangle> b = Entries.entry("there", Geometries.rectangle(3, 4, 5, 6));
@@ -41,7 +41,17 @@ public class SerializersTest {
     }
 
     @Test
-    public void testStringCircleSerialization() throws IOException {
+    public void testStringRectangleDoubleSerialization() throws IOException {
+        Serializer<String, Rectangle> serializer = Serializers.flatBuffers().utf8();
+        Entry<String, Rectangle> a = Entries.entry("hello",
+                Geometries.rectangle(1.0000000001, 2, 3, 4));
+        Entry<String, Rectangle> b = Entries.entry("there",
+                Geometries.rectangle(3.0000000001, 4, 5, 6));
+        check(serializer, a, b);
+    }
+
+    @Test
+    public void testStringCircleFloatSerialization() throws IOException {
         Serializer<String, Circle> serializer = Serializers.flatBuffers().utf8();
         Entry<String, Circle> a = Entries.entry("hello", Geometries.circle(1, 2, 3));
         Entry<String, Circle> b = Entries.entry("there", Geometries.circle(3, 4, 5));
@@ -49,10 +59,26 @@ public class SerializersTest {
     }
 
     @Test
-    public void testStringLineSerialization() throws IOException {
+    public void testStringCircleDoubleSerialization() throws IOException {
+        Serializer<String, Circle> serializer = Serializers.flatBuffers().utf8();
+        Entry<String, Circle> a = Entries.entry("hello", Geometries.circle(1.0000000001, 2, 3));
+        Entry<String, Circle> b = Entries.entry("there", Geometries.circle(3.0000000001, 4, 5));
+        check(serializer, a, b);
+    }
+
+    @Test
+    public void testStringLineFloatSerialization() throws IOException {
         Serializer<String, Line> serializer = Serializers.flatBuffers().utf8();
         Entry<String, Line> a = Entries.entry("hello", Geometries.line(1, 2, 3, 4));
         Entry<String, Line> b = Entries.entry("there", Geometries.line(3, 4, 5, 6));
+        check(serializer, a, b);
+    }
+
+    @Test
+    public void testStringLineDoubleSerialization() throws IOException {
+        Serializer<String, Line> serializer = Serializers.flatBuffers().utf8();
+        Entry<String, Line> a = Entries.entry("hello", Geometries.line(1.0000000001, 2, 3, 4));
+        Entry<String, Line> b = Entries.entry("there", Geometries.line(3.0000000001, 4, 5, 6));
         check(serializer, a, b);
     }
 
