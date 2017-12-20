@@ -13,12 +13,16 @@ import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
-import com.github.davidmoten.rtree.fbs.generated.Box_;
+import com.github.davidmoten.rtree.fbs.generated.BoundsType_;
+import com.github.davidmoten.rtree.fbs.generated.Bounds_;
+import com.github.davidmoten.rtree.fbs.generated.BoxDouble_;
+import com.github.davidmoten.rtree.fbs.generated.BoxFloat_;
 import com.github.davidmoten.rtree.fbs.generated.Entry_;
 import com.github.davidmoten.rtree.fbs.generated.Geometry_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.github.davidmoten.rtree.internal.NonLeafHelper;
 
@@ -57,18 +61,28 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
         // flatbuffers extraction this reduces allocation/gc costs (but of
         // course introduces some mutable ugliness into the codebase)
         searchWithoutBackpressure(node, criterion, subscriber, deserializer, new Entry_(),
-                new Geometry_(), new Box_());
+                new Geometry_(), new Bounds_());
     }
 
     @SuppressWarnings("unchecked")
     private static <T, S extends Geometry> void searchWithoutBackpressure(Node_ node,
             Func1<? super Geometry, Boolean> criterion, Subscriber<? super Entry<T, S>> subscriber,
-            Func1<byte[], ? extends T> deserializer, Entry_ entry, Geometry_ geometry, Box_ box) {
+            Func1<byte[], ? extends T> deserializer, Entry_ entry, Geometry_ geometry,
+            Bounds_ bounds) {
         {
-            node.mbb(box);
-            if (!criterion
-                    .call(Geometries.rectangle(box.minX(), box.minY(), box.maxX(), box.maxY())))
+            // write bounds from node to bounds variable
+            node.mbb(bounds);
+            final Rectangle rect;
+            if (bounds.type() == BoundsType_.BoundsDouble) {
+                BoxDouble_ b = bounds.boxDouble();
+                rect = Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+            } else {
+                BoxFloat_ b = bounds.boxFloat();
+                rect = Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+            }
+            if (!criterion.call(rect)) {
                 return;
+            }
         }
         int numChildren = node.childrenLength();
         // reduce allocations by reusing objects
@@ -79,7 +93,7 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
                     return;
                 node.children(child, i);
                 searchWithoutBackpressure(child, criterion, subscriber, deserializer, entry,
-                        geometry, box);
+                        geometry, bounds);
             }
         } else {
             int numEntries = node.entriesLength();

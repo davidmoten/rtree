@@ -20,7 +20,10 @@ import com.github.davidmoten.rtree.SelectorRStar;
 import com.github.davidmoten.rtree.Serializer;
 import com.github.davidmoten.rtree.SerializerHelper;
 import com.github.davidmoten.rtree.SplitterRStar;
-import com.github.davidmoten.rtree.fbs.generated.Box_;
+import com.github.davidmoten.rtree.fbs.generated.BoundsType_;
+import com.github.davidmoten.rtree.fbs.generated.Bounds_;
+import com.github.davidmoten.rtree.fbs.generated.BoxDouble_;
+import com.github.davidmoten.rtree.fbs.generated.BoxFloat_;
 import com.github.davidmoten.rtree.fbs.generated.Context_;
 import com.github.davidmoten.rtree.fbs.generated.Node_;
 import com.github.davidmoten.rtree.fbs.generated.Tree_;
@@ -47,12 +50,6 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
         return new SerializerFlatBuffers<T, S>(serializer, deserializer);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.github.davidmoten.rtree.fbs.Serializer#serialize(com.github.
-     * davidmoten.rtree.RTree, java.io.OutputStream)
-     */
     @Override
     public void write(RTree<T, S> tree, OutputStream os) throws IOException {
         FlatBufferBuilder builder = new FlatBufferBuilder();
@@ -62,8 +59,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
         } else {
             mbb = Geometries.rectangle(0, 0, 0, 0);
         }
-        int b = Box_.createBox_(builder, (float) mbb.x1(), (float) mbb.y1(), (float) mbb.x2(),
-                (float) mbb.y2());
+        int b = toBounds(builder, mbb);
         Context_.startContext_(builder);
         Context_.addBounds(builder, b);
         Context_.addMinChildren(builder, tree.context().minChildren());
@@ -90,6 +86,21 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
         os.write(bb.array(), bb.position(), bb.remaining());
     }
 
+    private static int toBounds(FlatBufferBuilder builder, final Rectangle r) {
+        Bounds_.startBounds_(builder);
+        if (r.isDoublePrecision()) {
+            Bounds_.addType(builder, BoundsType_.BoundsDouble);
+            int box = BoxDouble_.createBoxDouble_(builder, r.x1(), r.y1(), r.x2(), r.y2());
+            Bounds_.addBoxDouble(builder, box);
+        } else {
+            Bounds_.addType(builder, BoundsType_.BoundsFloat);
+            int box = BoxFloat_.createBoxFloat_(builder, (float) r.x1(), (float) r.y1(),
+                    (float) r.x2(), (float) r.y2());
+            Bounds_.addBoxFloat(builder, box);
+        }
+        return Bounds_.endBounds_(builder);
+    }
+
     private static <T, S extends Geometry> int addNode(Node<T, S> node, FlatBufferBuilder builder,
             Func1<? super T, byte[]> serializer) {
         if (node instanceof Leaf) {
@@ -103,22 +114,15 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
                 nodes[i] = addNode(child, builder, serializer);
             }
             int ch = Node_.createChildrenVector(builder, nodes);
+            Rectangle mbb = nonLeaf.geometry().mbr();
+            int b = toBounds(builder, mbb);
             Node_.startNode_(builder);
             Node_.addChildren(builder, ch);
-            Rectangle mbb = nonLeaf.geometry().mbr();
-            int b = Box_.createBox_(builder, (float) mbb.x1(), (float) mbb.y1(), (float) mbb.x2(),
-                    (float) mbb.y2());
             Node_.addMbb(builder, b);
             return Node_.endNode_(builder);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.github.davidmoten.rtree.fbs.Serializer#deserialize(long,
-     * java.io.InputStream, com.github.davidmoten.rtree.InternalStructure)
-     */
     @Override
     public RTree<T, S> read(InputStream is, long sizeBytes, InternalStructure structure)
             throws IOException {

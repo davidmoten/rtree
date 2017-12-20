@@ -207,14 +207,12 @@ final class FlatBuffersHelper {
         return (S) result;
     }
 
-    private static Geometry createBox(BoxDouble_ boxDouble) {
-        // TODO Auto-generated method stub
-        return null;
+    private static Geometry createBox(BoxDouble_ b) {
+        return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
-    private static Geometry createBox(BoxFloat_ boxFloat) {
-        // TODO Auto-generated method stub
-        return null;
+    private static Geometry createBox(BoxFloat_ b) {
+        return Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
     }
 
     static Rectangle createBox(Bounds_ b) {
