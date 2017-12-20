@@ -23,7 +23,7 @@ public final class CircleDouble implements Circle {
     }
 
     public static CircleDouble create(double x, double y, double radius) {
-        return new CircleDouble( x,  y,  radius);
+        return new CircleDouble(x, y, radius);
     }
 
     @Override
@@ -48,7 +48,7 @@ public final class CircleDouble implements Circle {
 
     @Override
     public double distance(Rectangle r) {
-        return Math.max(0, point(x, y).distance(r) - radius);
+        return Math.max(0, GeometryUtil.distance(x, y, r) - radius);
     }
 
     @Override
