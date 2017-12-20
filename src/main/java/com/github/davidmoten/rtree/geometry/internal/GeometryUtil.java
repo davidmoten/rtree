@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
 import com.github.davidmoten.rtree.geometry.Point;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public final class GeometryUtil {
 
@@ -44,6 +45,10 @@ public final class GeometryUtil {
             return a;
         else
             return b;
+    }
+
+    public static double distance(double x, double y, Rectangle r) {
+        return distance(x, y, r.x1(), r.y1(), r.x2(), r.y2());
     }
 
     public static double distance(double x, double y, double a1, double b1, double a2, double b2) {

@@ -25,7 +25,7 @@ public final class PointFloat implements Point {
 
     @Override
     public double distance(Rectangle r) {
-        return GeometryUtil.distance(x, y, r.x1(), r.y1(), r.x2(), r.y2());
+        return GeometryUtil.distance(x, y, r);
     }
 
     @Override

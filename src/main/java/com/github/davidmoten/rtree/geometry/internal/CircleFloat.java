@@ -48,7 +48,7 @@ public final class CircleFloat implements Circle {
 
     @Override
     public double distance(Rectangle r) {
-        return Math.max(0, point(x, y).distance(r) - radius);
+        return Math.max(0, GeometryUtil.distance(x, y, r) - radius);
     }
 
     @Override
