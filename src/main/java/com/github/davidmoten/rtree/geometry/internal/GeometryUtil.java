@@ -46,6 +46,10 @@ public final class GeometryUtil {
             return b;
     }
 
+    public static double distance(double x, double y, double a1, double b1, double a2, double b2) {
+        return distance(x, y, x, y, a1, b1, a2, b2);
+    }
+
     public static double distance(double x1, double y1, double x2, double y2, double a1, double b1,
             double a2, double b2) {
         if (intersects(x1, y1, x2, y2, a1, b1, a2, b2)) {
