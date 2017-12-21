@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
+import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public final class GeometryUtil {
@@ -75,5 +76,36 @@ public final class GeometryUtil {
             double b1, double a2, double b2) {
         return x1 <= a2 && a1 <= x2 && y1 <= b2 && b1 <= y2;
     }
+    
+    public static boolean lineIntersects(double x1, double y1, double x2, double y2, Circle circle) {
+
+        // using Vector Projection
+        // https://en.wikipedia.org/wiki/Vector_projection
+        Vector c = Vector.create(circle.x(), circle.y());
+        Vector a = Vector.create(x1, y1);
+        Vector cMinusA = c.minus(a);
+        double radiusSquared = circle.radius() * circle.radius();
+        if (x1 == x2 && y1 == y2) {
+            return cMinusA.modulusSquared() <= radiusSquared;
+        } else {
+            Vector b = Vector.create(x2, y2);
+            Vector bMinusA = b.minus(a);
+            double bMinusAModulus = bMinusA.modulus();
+            double lambda = cMinusA.dot(bMinusA) / bMinusAModulus;
+            // if projection is on the segment
+            if (lambda >= 0 && lambda <= bMinusAModulus) {
+                Vector dMinusA = bMinusA.times(lambda / bMinusAModulus);
+                // calculate distance to line from c using pythagoras' theorem
+                return cMinusA.modulusSquared() - dMinusA.modulusSquared() <= radiusSquared;
+            } else {
+                // return true if and only if an endpoint is within radius of
+                // centre
+                return cMinusA.modulusSquared() <= radiusSquared
+                        || c.minus(b).modulusSquared() <= radiusSquared;
+            }
+        }
+
+    }
+
 
 }

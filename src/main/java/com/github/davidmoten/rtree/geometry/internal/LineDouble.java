@@ -37,14 +37,14 @@ public final class LineDouble implements Line {
         if (r.contains(x1, y1) || r.contains(x2, y2)) {
             return 0;
         } else {
-            double d1 = distance( r.x1(),  r.y1(),  r.x1(),  r.y2());
+            double d1 = distance(r.x1(), r.y1(), r.x1(), r.y2());
             if (d1 == 0)
                 return 0;
-            double d2 = distance( r.x1(),  r.y2(),  r.x2(),  r.y2());
+            double d2 = distance(r.x1(), r.y2(), r.x2(), r.y2());
             if (d2 == 0)
                 return 0;
-            double d3 = distance( r.x2(),  r.y2(),  r.x2(),  r.y1());
-            double d4 = distance( r.x2(),  r.y1(),  r.x1(),  r.y1());
+            double d3 = distance(r.x2(), r.y2(), r.x2(), r.y1());
+            double d4 = distance(r.x2(), r.y1(), r.x1(), r.y1());
             return Math.min(d1, Math.min(d2, Math.min(d3, d4)));
         }
     }
@@ -53,8 +53,7 @@ public final class LineDouble implements Line {
         Line2D line = new Line2D(x1, y1, x2, y2);
         double d1 = line.ptSegDist(this.x1, this.y1);
         double d2 = line.ptSegDist(this.x2, this.y2);
-        Line2D line2 = new Line2D( this.x1,  this.y1,  this.x2,
-                 this.y2);
+        Line2D line2 = new Line2D(this.x1, this.y1, this.x2, this.y2);
         double d3 = line2.ptSegDist(x1, y1);
         if (d3 == 0)
             return 0;
@@ -101,7 +100,7 @@ public final class LineDouble implements Line {
     @Override
     public boolean intersects(Line b) {
         Line2D line1 = new Line2D(x1, y1, x2, y2);
-        Line2D line2 = new Line2D( b.x1(),  b.y1(),  b.x2(),  b.y2());
+        Line2D line2 = new Line2D(b.x1(), b.y1(), b.x2(), b.y2());
         return line2.intersectsLine(line1);
     }
 
@@ -112,31 +111,7 @@ public final class LineDouble implements Line {
 
     @Override
     public boolean intersects(Circle circle) {
-        // using Vector Projection
-        // https://en.wikipedia.org/wiki/Vector_projection
-        Vector c = Vector.create(circle.x(), circle.y());
-        Vector a = Vector.create(x1, y1);
-        Vector cMinusA = c.minus(a);
-        double radiusSquared = circle.radius() * circle.radius();
-        if (x1 == x2 && y1 == y2) {
-            return cMinusA.modulusSquared() <= radiusSquared;
-        } else {
-            Vector b = Vector.create(x2, y2);
-            Vector bMinusA = b.minus(a);
-            double bMinusAModulus = bMinusA.modulus();
-            double lambda = cMinusA.dot(bMinusA) / bMinusAModulus;
-            // if projection is on the segment
-            if (lambda >= 0 && lambda <= bMinusAModulus) {
-                Vector dMinusA = bMinusA.times(lambda / bMinusAModulus);
-                // calculate distance to line from c using pythagoras' theorem
-                return cMinusA.modulusSquared() - dMinusA.modulusSquared() <= radiusSquared;
-            } else {
-                // return true if and only if an endpoint is within radius of
-                // centre
-                return cMinusA.modulusSquared() <= radiusSquared
-                        || c.minus(b).modulusSquared() <= radiusSquared;
-            }
-        }
+        return GeometryUtil.lineIntersects(x1, y1, x2, y2, circle);
     }
 
     @Override
