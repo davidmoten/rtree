@@ -1,7 +1,5 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
-import static com.github.davidmoten.rtree.geometry.Geometries.point;
-
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.geometry.Circle;
