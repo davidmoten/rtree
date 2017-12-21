@@ -1,20 +1,11 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
-import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public final class GeometryUtil {
 
     private GeometryUtil() {
         // prevent instantiation
-    }
-
-    public static double distance(Point a, Point b) {
-        return Math.sqrt(distanceSquared(a, b));
-    }
-
-    public static double distanceSquared(Point a, Point b) {
-        return distanceSquared(a.x(), a.y(), b.x(), b.y());
     }
 
     public static double distanceSquared(double x1, double y1, double x2, double y2) {
