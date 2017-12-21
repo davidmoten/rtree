@@ -268,6 +268,19 @@ Check out the benchmarks below, but I recommend you do your own benchmarks becau
 
 Watch out though, the benchmark data sets had quite specific characteristics. The 1000 entry dataset was randomly generated (so is more or less uniformly distributed) and the *Greek* dataset was earthquake data with its own clustering characteristics. 
 
+What about memory use?
+------------------------
+To minimize memory use you can use geometries that store single precision decimal values (`float`) instead of double precision (`double`). Here are examples:
+
+```java
+// create geometry using double precision 
+Rectangle r = Geometries.rectangle(1.0, 2.0, 3.0, 4.0);
+
+// create geometry using single precision
+Rectangel r = Geometries.rectangle(1.0f, 2.0f, 3.0f, 4.0f);
+```
+
+The same creation methods exist for `Circle` and `Line`.
 
 How do I just get an Iterable back from a search?
 ---------------------------------------------------------
