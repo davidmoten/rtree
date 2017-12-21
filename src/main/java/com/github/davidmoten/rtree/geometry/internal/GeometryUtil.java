@@ -14,8 +14,12 @@ public final class GeometryUtil {
     }
 
     public static double distanceSquared(Point a, Point b) {
-        double dx = a.x() - b.x();
-        double dy = a.y() - b.y();
+        return distanceSquared(a.x(), a.y(), b.x(), b.y());
+    }
+
+    public static double distanceSquared(double x1, double y1, double x2, double y2) {
+        double dx = x2 - x1;
+        double dy = y2 - y1;
         return dx * dx + dy * dy;
     }
 

@@ -15,7 +15,7 @@ public final class CircleFloat implements Circle {
     private final float x, y, radius;
     private final Rectangle mbr;
 
-    protected CircleFloat(float x, float y, float radius) {
+    private CircleFloat(float x, float y, float radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -59,7 +59,7 @@ public final class CircleFloat implements Circle {
     @Override
     public boolean intersects(Circle c) {
         double total = radius + c.radius();
-        return GeometryUtil.distanceSquared(point(x, y), point(c.x(), c.y())) <= total * total;
+        return GeometryUtil.distanceSquared(x, y, c.x(), c.y()) <= total * total;
     }
 
     @Override

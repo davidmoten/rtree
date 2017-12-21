@@ -23,10 +23,6 @@ public final class RectangleDouble implements Rectangle {
         return new RectangleDouble((double) x1, (double) y1, (double) x2, (double) y2);
     }
 
-    public static RectangleDouble create(float x1, float y1, float x2, float y2) {
-        return new RectangleDouble(x1, y1, x2, y2);
-    }
-
     @Override
     public double x1() {
         return x1;

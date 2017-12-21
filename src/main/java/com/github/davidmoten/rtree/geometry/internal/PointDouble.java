@@ -29,16 +29,6 @@ public final class PointDouble implements Point {
         return GeometryUtil.distance(x, y, r);
     }
 
-    public double distance(PointDouble p) {
-        return Math.sqrt(distanceSquared(p));
-    }
-
-    public double distanceSquared(PointDouble p) {
-        double dx = x - p.x;
-        double dy = y - p.y;
-        return dx * dx + dy * dy;
-    }
-
     @Override
     public boolean intersects(Rectangle r) {
         return r.x1() <= x && x <= r.x2() && r.y1() <= y && y <= r.y2();

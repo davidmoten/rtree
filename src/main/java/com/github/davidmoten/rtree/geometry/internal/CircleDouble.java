@@ -1,7 +1,5 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
-import static com.github.davidmoten.rtree.geometry.Geometries.point;
-
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.geometry.Circle;
@@ -15,7 +13,7 @@ public final class CircleDouble implements Circle {
     private final double x, y, radius;
     private final Rectangle mbr;
 
-    protected CircleDouble(double x, double y, double radius) {
+    private CircleDouble(double x, double y, double radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -59,7 +57,7 @@ public final class CircleDouble implements Circle {
     @Override
     public boolean intersects(Circle c) {
         double total = radius + c.radius();
-        return GeometryUtil.distanceSquared(point(x, y), point(c.x(), c.y())) <= total * total;
+        return GeometryUtil.distanceSquared(x, y, c.x(), c.y()) <= total * total;
     }
 
     @Override
