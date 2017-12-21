@@ -265,6 +265,7 @@
                         <configuration>
                             <excludes>
                                 <exclude>**/PriorityQueue.*</exclude>
+                                <exclude>**/generated/**/*</exclude>
                             </excludes>
                         </configuration>
                     </execution>
