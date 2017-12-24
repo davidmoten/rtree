@@ -24,9 +24,11 @@ import rx.functions.Func1;
 @State(Scope.Benchmark)
 public class BenchmarksRTree {
 
-    private final List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
+    private final static Precision precision = Precision.DOUBLE;
 
-    private final List<Entry<Object, Rectangle>> some = entries1000();
+    private final List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList(precision);
+
+    private final List<Entry<Object, Rectangle>> some = entries1000(precision);
 
     private final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4).<Object, Point>create()
             .add(entries);
@@ -414,8 +416,7 @@ public class BenchmarksRTree {
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
         System.out.println("starting searches");
-        Blackhole bh = new Blackhole("hello");
         while (true)
-            b.rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers(bh);
+            b.starTreeM4.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
     }
 }

@@ -424,7 +424,7 @@ public class RTreeTest {
 
     @Test
     public void testBackpressureIterationForUpTo1000Entries() {
-        List<Entry<Object, Rectangle>> entries = Utilities.entries1000();
+        List<Entry<Object, Rectangle>> entries = Utilities.entries1000(Precision.SINGLE);
         RTree<Object, Rectangle> tree = RTree.star().create();
         for (int i = 1; i <= 1000; i++) {
             tree = tree.add(entries.get(i - 1));
@@ -579,7 +579,7 @@ public class RTreeTest {
 
     @Test
     public void testVisualizerWithGreekData() {
-        List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
+        List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList(Precision.DOUBLE);
         int maxChildren = 8;
         RTree<Object, Point> tree = RTree.maxChildren(maxChildren)
                 .factory(new FactoryFlatBuffers<Object, Geometry>(new Func1<Object, byte[]>() {
@@ -1052,11 +1052,6 @@ public class RTreeTest {
 
     }
 
-    @Test
-    public void testDoublePrecisionRTree() {
-        RTree<Object, Geometry> tree = RTree.star().maxChildren(4).create();
-    }
-
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
         @Override
         public Double call(Point point, Circle circle) {
@@ -1106,14 +1101,7 @@ public class RTreeTest {
 
     @Test
     public void testSearchGreekEarthquakesDouble() {
-        Observable<Entry<Object, Point>> entriesDouble = GreekEarthquakes.entries()
-                .map(new Func1<Entry<Object, Point>, Entry<Object, Point>>() {
-                    @Override
-                    public Entry<Object, Point> call(Entry<Object, Point> entry) {
-                        return Entries.entry(entry.value(), Geometries.point(
-                                (double) entry.geometry().x(), (double) entry.geometry().y()));
-                    }
-                });
+        Observable<Entry<Object, Point>> entriesDouble = GreekEarthquakes.entries(Precision.DOUBLE);
         RTree<Object, Point> t = RTree.maxChildren(4).<Object, Point>create().add(entriesDouble)
                 .last().toBlocking().single(); //
         t.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)) //

@@ -17,7 +17,7 @@ import rx.observables.StringObservable;
 
 public class GreekEarthquakes {
 
-    public static Observable<Entry<Object, Point>> entries() {
+    public static Observable<Entry<Object, Point>> entries(final Precision precision) {
         Observable<String> source = Observable.using(new Func0<InputStream>() {
             @Override
             public InputStream call() {
@@ -52,23 +52,28 @@ public class GreekEarthquakes {
                             String[] items = line.split(" ");
                             double lat = Double.parseDouble(items[0]);
                             double lon = Double.parseDouble(items[1]);
-                            return Observable.just(Entries.entry(new Object(),
-                                    Geometries.point((float) lat, (float) lon)));
+                            Entry<Object, Point> entry;
+                            if (precision == Precision.DOUBLE)
+                                entry = Entries.entry(new Object(), Geometries.point(lat, lon));
+                            else
+                                entry = Entries.entry(new Object(),
+                                        Geometries.point((float) lat, (float) lon));
+                            return Observable.just(entry);
                         } else
                             return Observable.empty();
                     }
                 });
     }
 
-    static List<Entry<Object, Point>> entriesList() {
-        List<Entry<Object, Point>> result = entries().toList().toBlocking().single();
+    static List<Entry<Object, Point>> entriesList(Precision precision) {
+        List<Entry<Object, Point>> result = entries(precision).toList().toBlocking().single();
         System.out.println("loaded greek earthquakes into list");
         return result;
     }
 
     public static void main(String[] args) throws InterruptedException {
         RTree<Object, Point> tree = RTree.star().create();
-        tree = tree.add(entries()).last().toBlocking().single();
+        tree = tree.add(entries(Precision.SINGLE)).last().toBlocking().single();
         System.gc();
         Thread.sleep(10000000);
         System.out.println(tree.size());

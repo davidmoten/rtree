@@ -14,6 +14,7 @@ import org.junit.Test;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.GreekEarthquakes;
 import com.github.davidmoten.rtree.InternalStructure;
+import com.github.davidmoten.rtree.Precision;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.Serializer;
 import com.github.davidmoten.rtree.geometry.Geometries;
@@ -48,7 +49,7 @@ public class SerializerFlatBuffersTest {
 
     private void roundTrip(InternalStructure structure, boolean backpressure) throws Exception {
         RTree<Object, Point> tree = RTree.star().maxChildren(10).create();
-        tree = tree.add(GreekEarthquakes.entries()).last().toBlocking().single();
+        tree = tree.add(GreekEarthquakes.entries(Precision.SINGLE)).last().toBlocking().single();
         long t = System.currentTimeMillis();
         File file = new File("target/file");
         FileOutputStream os = new FileOutputStream(file);
@@ -103,29 +104,30 @@ public class SerializerFlatBuffersTest {
         assertEquals(22, found);
         System.out.println(tr.size());
     }
-    
-    @Test(expected=RuntimeException.class)
+
+    @Test(expected = RuntimeException.class)
     public void testInputStreamNotAsLongAsExpected() throws IOException {
         SerializerFlatBuffers.readFully(new ByteArrayInputStream(new byte[10]), 12);
     }
-    
+
     @Test
     public void testInputStreamReturnsArrayInSmallChunks() throws IOException {
         InputStream is = new InputStream() {
 
             int i = 0;
+
             @Override
             public int read() throws IOException {
-                i +=1;
+                i += 1;
                 if (i == 1) {
                     return 1;
-                } else if (i==2){
+                } else if (i == 2) {
                     throw new IOException();
                 } else {
                     return 1;
                 }
             }
-            
+
         };
         byte[] b = SerializerFlatBuffers.readFully(is, 2);
         assertEquals(2, b.length);
