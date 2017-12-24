@@ -24,7 +24,7 @@ import rx.functions.Func1;
 @State(Scope.Benchmark)
 public class BenchmarksRTree {
 
-    private final static Precision precision = Precision.SINGLE;
+    private final static Precision precision = Precision.DOUBLE;
 
     private final List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList(precision);
 
@@ -369,17 +369,33 @@ public class BenchmarksRTree {
 
     private void searchGreekBackpressure(RTree<Object, Point> tree, Blackhole bh) {
         // should return 22 results
-        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).take(1000)
-                .subscribe(consumeWith(bh));
+        final Rectangle r = searchRectangle();
+        tree.search(r).take(1000).subscribe(consumeWith(bh));
+    }
+
+    private static Rectangle searchRectangle() {
+        final Rectangle r;
+        if (precision == Precision.DOUBLE) {
+            r = Geometries.rectangle(40, 27.0, 40.5, 27.5);
+        } else {
+            r = Geometries.rectangle(40f, 27.0f, 40.5f, 27.5f);
+        }
+        return r;
     }
 
     private void searchNearestGreek(RTree<Object, Point> tree, Blackhole bh) {
-        tree.nearest(Geometries.point(40.0, 27.0), 1, 300).subscribe(consumeWith(bh));
+        final Point p;
+        if (precision == Precision.DOUBLE) {
+            p = Geometries.point(40.0, 27.0);
+        } else {
+            p = Geometries.point(40.0f, 27.0f);
+        }
+        tree.nearest(p, 1, 300).subscribe(consumeWith(bh));
     }
 
     private void searchGreekWithBackpressure(RTree<Object, Point> tree, final Blackhole bh) {
         // should return 22 results
-        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe(new Subscriber<Object>() {
+        tree.search(searchRectangle()).subscribe(new Subscriber<Object>() {
 
             @Override
             public void onStart() {
@@ -422,6 +438,6 @@ public class BenchmarksRTree {
         BenchmarksRTree b = new BenchmarksRTree();
         System.out.println("starting searches");
         while (true)
-            b.starTreeM4.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+            b.starTreeM4.search(searchRectangle()).subscribe();
     }
 }
