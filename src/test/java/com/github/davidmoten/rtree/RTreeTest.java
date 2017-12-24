@@ -216,7 +216,7 @@ public class RTreeTest {
     }
 
     static Entry<Object, Geometry> randomEntry() {
-        return entry(new Object(), (Geometry) random());
+        return entry(new Object(), (Geometry) random(Precision.SINGLE));
     }
 
     @Test
@@ -1095,8 +1095,15 @@ public class RTreeTest {
         return rectangle(n, m, n + 1, m + 1);
     }
 
-    static Rectangle random() {
-        return r((float) Math.random() * 1000, (float) Math.random() * 1000);
+    private static Rectangle r(float n, float m) {
+        return rectangle(n, m, n + 1, m + 1);
+    }
+
+    static Rectangle random(Precision precision) {
+        if (precision == Precision.SINGLE)
+            return r((float) Math.random() * 1000, (float) Math.random() * 1000);
+        else
+            return r(Math.random() * 1000, Math.random() * 1000);
     }
 
     @Test

@@ -24,7 +24,7 @@ import rx.functions.Func1;
 @State(Scope.Benchmark)
 public class BenchmarksRTree {
 
-    private final static Precision precision = Precision.DOUBLE;
+    private final static Precision precision = Precision.SINGLE;
 
     private final List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList(precision);
 
@@ -405,12 +405,17 @@ public class BenchmarksRTree {
     }
 
     private RTree<Object, Rectangle> insertRectangle(RTree<Object, Rectangle> tree) {
-        return tree.add(new Object(), RTreeTest.random());
+        return tree.add(new Object(), RTreeTest.random(precision));
     }
 
     private RTree<Object, Point> insertPoint(RTree<Object, Point> tree) {
-        return tree.add(new Object(),
-                Geometries.point((float) Math.random() * 1000, (float) Math.random() * 1000));
+        if (precision == Precision.DOUBLE) {
+            return tree.add(new Object(),
+                    Geometries.point(Math.random() * 1000, Math.random() * 1000));
+        } else {
+            return tree.add(new Object(),
+                    Geometries.point((float) Math.random() * 1000, (float) Math.random() * 1000));
+        }
     }
 
     public static void main(String[] args) {
