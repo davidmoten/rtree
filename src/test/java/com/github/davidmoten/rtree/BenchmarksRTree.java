@@ -79,8 +79,8 @@ public class BenchmarksRTree {
     private final RTree<Object, Point> starTreeM10FlatBuffers = createFlatBuffersGreek();
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
-        insertPoint(defaultTreeM4);
+    public RTree<Object, Point> defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
+        return insertPoint(defaultTreeM4);
     }
 
     private byte[] createFlatBuffersByteArrayGreek() {
@@ -164,8 +164,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
-        insertPoint(defaultTreeM10);
+    public RTree<Object, Point> defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
+        return insertPoint(defaultTreeM10);
     }
 
     @Benchmark
@@ -174,13 +174,13 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
-        insertPoint(starTreeM4);
+    public RTree<Object, Point> rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
+        return insertPoint(starTreeM4);
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
-        insertPoint(starTreeM10);
+    public RTree<Object, Point> rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
+        return insertPoint(starTreeM10);
     }
 
     @Benchmark
@@ -209,8 +209,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
-        insertPoint(defaultTreeM32);
+    public RTree<Object, Point> defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
+        return insertPoint(defaultTreeM32);
     }
 
     @Benchmark
@@ -219,8 +219,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
-        insertPoint(starTreeM32);
+    public RTree<Object, Point> rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
+        return insertPoint(starTreeM32);
     }
 
     @Benchmark
@@ -229,8 +229,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
-        insertPoint(defaultTreeM128);
+    public RTree<Object, Point> defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
+        return insertPoint(defaultTreeM128);
     }
 
     @Benchmark
@@ -239,8 +239,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
-        insertPoint(starTreeM128);
+    public RTree<Object, Point> rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
+        return insertPoint(starTreeM128);
     }
 
     @Benchmark
@@ -249,8 +249,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004() {
-        insertRectangle(smallDefaultTreeM4);
+    public RTree<Object, Rectangle> defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004() {
+        return insertRectangle(smallDefaultTreeM4);
     }
 
     @Benchmark
@@ -259,8 +259,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010() {
-        insertRectangle(smallDefaultTreeM10);
+    public RTree<Object, Rectangle> defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010() {
+        return insertRectangle(smallDefaultTreeM10);
     }
 
     @Benchmark
@@ -289,8 +289,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032() {
-        insertRectangle(smallDefaultTreeM32);
+    public RTree<Object, Rectangle> defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032() {
+        return insertRectangle(smallDefaultTreeM32);
     }
 
     @Benchmark
@@ -299,8 +299,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren032() {
-        insertRectangle(smallStarTreeM32);
+    public RTree<Object, Rectangle> rStarTreeInsertOneEntryInto1000EntriesMaxChildren032() {
+        return insertRectangle(smallStarTreeM32);
     }
 
     @Benchmark
@@ -309,8 +309,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128() {
-        insertRectangle(smallDefaultTreeM128);
+    public RTree<Object, Rectangle> defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128() {
+        return insertRectangle(smallDefaultTreeM128);
     }
 
     @Benchmark
@@ -319,8 +319,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren128() {
-        insertRectangle(smallStarTreeM128);
+    public RTree<Object, Rectangle> rStarTreeInsertOneEntryInto1000EntriesMaxChildren128() {
+        return insertRectangle(smallStarTreeM128);
     }
 
     @Benchmark
@@ -338,8 +338,8 @@ public class BenchmarksRTree {
         searchNearestGreek(starTreeM4);
     }
 
-    private void deleteAll(RTree<Object, Point> tree) {
-        tree.delete(entries.get(1000), true);
+    private RTree<Object, Point> deleteAll(RTree<Object, Point> tree) {
+        return tree.delete(entries.get(1000), true);
     }
 
     private void search(RTree<Object, Rectangle> tree) {
@@ -387,12 +387,12 @@ public class BenchmarksRTree {
         });
     }
 
-    private void insertRectangle(RTree<Object, Rectangle> tree) {
-        tree.add(new Object(), RTreeTest.random());
+    private RTree<Object, Rectangle> insertRectangle(RTree<Object, Rectangle> tree) {
+        return tree.add(new Object(), RTreeTest.random());
     }
 
-    private void insertPoint(RTree<Object, Point> tree) {
-        tree.add(new Object(),
+    private RTree<Object, Point> insertPoint(RTree<Object, Point> tree) {
+        return tree.add(new Object(),
                 Geometries.point((float) Math.random() * 1000, (float) Math.random() * 1000));
     }
 
