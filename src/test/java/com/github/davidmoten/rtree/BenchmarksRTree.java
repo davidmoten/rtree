@@ -1,5 +1,6 @@
 package com.github.davidmoten.rtree;
 
+import static com.github.davidmoten.rtree.PackAlgo.STR;
 import static com.github.davidmoten.rtree.Utilities.entries1000;
 
 import java.io.ByteArrayInputStream;
@@ -154,12 +155,12 @@ public class BenchmarksRTree {
 
     @Benchmark
     public RTree<Object, Point> bulkLoadingRTreeCreation010() {
-        return RTree.maxChildren(10).<Object, Point> create(entries);
+        return RTree.maxChildren(10).<Object, Point>create(entries, STR);
     }
 
     @Benchmark
     public RTree<Object, Point> bulkLoadingFullRTreeCreation010() {
-        return RTree.maxChildren(10).loadingFactor(1.0).<Object, Point> create(entries);
+        return RTree.maxChildren(10).loadingFactor(1.0).<Object, Point>create(entries, STR);
     }
 
     @Benchmark
