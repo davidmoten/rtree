@@ -120,7 +120,7 @@ tree = tree.add(item, Geometries.point(10,20));
 ```
 or 
 ```java
-tree = tree.add(Entry.entry(item, Geometries.point(10,20));
+tree = tree.add(Entries.entry(item, Geometries.point(10,20));
 ```
 
 *Important note:* being an immutable data structure, calling ```tree.add(item, geometry)``` does nothing to ```tree```, 
@@ -224,7 +224,7 @@ Observable<Entry<String, Point>> entries =
 
 Searching by distance on lat longs
 ------------------------------------
-See [LatLongExampleTest.java](src/test/java/com/github/davidmoten/rtree/LatLongExampleTest.java) for an example. The example depends on [*grumpy-core*](https://github.com/davidmoten/grumpy) artifact which is also on Maven Central.
+See [LatLongExampleTest.java](src/test/java/com/github/davidmoten/rtree/LatLongExampleTest.java) for an example. The example depends on [*grumpy-ogc*](https://github.com/davidmoten/grumpy) artifact which is also on Maven Central.
 
 Another lat long example searching geo circles 
 ------------------------------------------------
