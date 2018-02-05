@@ -378,7 +378,7 @@ public final class RTree<T, S extends Geometry> {
 
         @SuppressWarnings("unchecked")
         private <T, S extends Geometry> RTree<T, S> packingSTR(List<? extends HasGeometry> objects,
-                boolean isLeaf, int size, Context<T, S> context) {
+                                                               boolean isLeaf, int size, Context<T, S> context) {
             int capacity = (int) Math.round(maxChildren.get() * loadingFactor);
             int nodeCount = (int) Math.ceil(1.0 * objects.size() / capacity);
 
@@ -425,10 +425,8 @@ public final class RTree<T, S extends Geometry> {
 
         @SuppressWarnings("unchecked")
         private <T, S extends Geometry> RTree<T, S> packingHilbert(List<? extends HasGeometry> objects,
-                                                                   boolean isLeaf, int size,
-                                                                   Context<T, S> context) {
+                                                                   boolean isLeaf, int size, Context<T, S> context) {
             int capacity = (int) Math.round(maxChildren.get() * loadingFactor);
-            //int capacity = maxChildren.get(); // apply loading factor for better balance?
             int nodeCount = (int) Math.ceil(1.0 * objects.size() / capacity);
 
             if (nodeCount == 0) {
@@ -444,7 +442,8 @@ public final class RTree<T, S extends Geometry> {
             }
 
             if (isLeaf) {
-                Collections.sort(objects, new HilbertComparator((short)2));
+                // 52 bit precision corresponds to ~1 feet.
+                Collections.sort(objects, new HilbertComparator((short)2, 52));
             }
 
             List<Node<T, S>> nodes = new ArrayList<Node<T, S>>(nodeCount);
@@ -489,23 +488,32 @@ public final class RTree<T, S extends Geometry> {
 
         private static final class HilbertComparator implements Comparator<HasGeometry> {
             private final short dimension; // supporting N dimensions.
+            private final int bitPrecision; // maps this precision in distance.
 
-            public HilbertComparator(short dim) {
-                dimension = dim;
+            public HilbertComparator(short dim, int bitPrecision) {
+                this.dimension = dim;
+                if (bitPrecision >= 0 && bitPrecision < 64) {
+                    this.bitPrecision = bitPrecision;
+                } else {
+                    this.bitPrecision = 24; // default to ~10000 meters
+                }
             }
 
             @Override
             public int compare(HasGeometry o1, HasGeometry o2) {
-                return Float.compare(twoDCHilbertIndex(o1), twoDCHilbertIndex(o2));
+                Long h1 = twoDCHilbertIndex(o1);
+                Long h2 = twoDCHilbertIndex(o2);
+                //System.out.println("h1: " + h1 + ", h2: " + h2);
+                return Long.compare(h1, h2);
             }
 
-            private float twoDCHilbertIndex(HasGeometry o) {
+            private Long twoDCHilbertIndex(HasGeometry o) {
                 Rectangle mbr = o.geometry().mbr();
-                HilbertCurve c = HilbertCurve.bits(31).dimensions(dimension); //31
+                HilbertCurve c = HilbertCurve.bits(bitPrecision).dimensions(dimension);
                 int centerX = (int) ((mbr.x1() + mbr.x2()) / 2);
                 int centerY = (int) ((mbr.y1() + mbr.y2()) / 2);
                 BigInteger index = c.index(centerX, centerY);
-                return index.floatValue();
+                return index.longValue();
             }
         }
 
