@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>rtree</artifactId>
-    <version>0.8.2beta-SNAPSHOT</version>
+    <version>0.8.4-SNAPSHOT</version>
 
     <name>${project.artifactId}</name>
     <description>Java implementation of an immutable in-memory R-Tree for spatial indexing</description>
@@ -93,7 +93,7 @@
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
-            <version>1.3.3</version>
+            <version>1.3.6</version>
         </dependency>
 
         <!-- Test Dependencies -->
