@@ -85,7 +85,7 @@ The following geometries are supported for insertion in an RTree:
 * `Rectangle`
 * `Point`
 * `Circle`
-* `Line` (requires [JTS](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22jts-core%22) dependency, look at [pom.xml](pom.xml))
+* `Line`
 
 ### Generic typing
 If for instance you know that the entry geometry is always ```Point``` then create an ```RTree``` specifying that generic type to gain more type safety:
