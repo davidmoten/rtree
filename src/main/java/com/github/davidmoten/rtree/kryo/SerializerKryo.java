@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree.kryo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.Callable;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -23,30 +24,29 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.FactoryDefault;
 
-import rx.functions.Func0;
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
 
 public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
 
-    private final Func1<? super T, byte[]> serializer;
-    private final Func1<byte[], ? extends T> deserializer;
-    private final Func0<Kryo> kryoFactory;
+    private final Function<? super T, byte[]> serializer;
+    private final Function<byte[], ? extends T> deserializer;
+    private final Callable<Kryo> kryoFactory;
 
-    public SerializerKryo(Func1<? super T, byte[]> serializer,
-            Func1<byte[], ? extends T> deserializer, Func0<Kryo> kryoFactory) {
+    public SerializerKryo(Function<? super T, byte[]> serializer,
+            Function<byte[], ? extends T> deserializer, Callable<Kryo> kryoFactory) {
         this.serializer = serializer;
         this.deserializer = deserializer;
         this.kryoFactory = kryoFactory;
     }
 
     @Override
-    public void write(RTree<T, S> tree, OutputStream os) throws IOException {
+    public void write(RTree<T, S> tree, OutputStream os) throws Exception {
         Output output = new Output(os);
         Kryo kryo = kryoFactory.call();
         write(kryo, output, tree);
     }
 
-    private void write(Kryo kryo, Output output, RTree<T, S> tree) {
+    private void write(Kryo kryo, Output output, RTree<T, S> tree) throws Exception {
         writeContext(tree.context(), output);
         output.writeBoolean(tree.root().isPresent());
         output.writeInt(tree.size());
@@ -55,7 +55,7 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
         }
     }
 
-    private void writeNode(Node<T, S> node, Output output) {
+    private void writeNode(Node<T, S> node, Output output) throws Exception {
         boolean isLeaf = node instanceof Leaf;
         output.writeBoolean(isLeaf);
         if (isLeaf) {
@@ -77,8 +77,8 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
         }
     }
 
-    private void writeValue(Output output, T t) {
-        byte[] bytes = serializer.call(t);
+    private void writeValue(Output output, T t) throws Exception {
+        byte[] bytes = serializer.apply(t);
         output.write(bytes.length);
         output.write(bytes);
     }
@@ -148,8 +148,8 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
     }
 
     public static <T, S extends Geometry> Serializer<T, S> create(
-            Func1<? super T, byte[]> serializer, Func1<byte[], ? extends T> deserializer,
-            Func0<Kryo> kryoFactory) {
+            Function<? super T, byte[]> serializer, Function<byte[], ? extends T> deserializer,
+            Callable<Kryo> kryoFactory) {
         return new SerializerKryo<T, S>(serializer, deserializer, kryoFactory);
     }
 

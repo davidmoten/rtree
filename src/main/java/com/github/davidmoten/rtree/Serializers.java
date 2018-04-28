@@ -7,16 +7,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.util.concurrent.Callable;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.internal.Functions;
 import com.github.davidmoten.rtree.kryo.SerializerKryo;
 
-import rx.functions.Func0;
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
 
 public final class Serializers {
 
@@ -32,24 +31,24 @@ public final class Serializers {
 
         }
 
-        public <T> SerializerTypedBuilder<T> serializer(Func1<? super T, byte[]> serializer) {
+        public <T> SerializerTypedBuilder<T> serializer(Function<? super T, byte[]> serializer) {
             return new SerializerTypedBuilder<T>(serializer, null, method);
         }
 
-        public <T> SerializerTypedBuilder<T> deserializer(Func1<byte[], ? extends T> deserializer) {
+        public <T> SerializerTypedBuilder<T> deserializer(Function<byte[], ? extends T> deserializer) {
             return new SerializerTypedBuilder<T>(null, deserializer, method);
         }
 
         public <S extends Geometry> Serializer<String, S> string(Charset charset) {
-            Func1<String, byte[]> serializer = createStringSerializer(charset);
-            Func1<byte[], String> deserializer = createStringDeserializer(charset);
+            Function<String, byte[]> serializer = createStringSerializer(charset);
+            Function<byte[], String> deserializer = createStringDeserializer(charset);
             return new SerializerTypedBuilder<String>(serializer, deserializer, method).create();
         }
 
         @SuppressWarnings("unchecked")
         public <T extends Serializable, S extends Geometry> Serializer<T, S> javaIo() {
-            Func1<T, byte[]> serializer = (Func1<T, byte[]>) javaIoSerializer();
-            Func1<byte[], T> deserializer = (Func1<byte[], T>) javaIoDeserializer();
+            Function<T, byte[]> serializer = (Function<T, byte[]>) javaIoSerializer();
+            Function<byte[], T> deserializer = (Function<byte[], T>) javaIoDeserializer();
             return new SerializerTypedBuilder<T>(serializer, deserializer, method).create();
         }
 
@@ -58,8 +57,8 @@ public final class Serializers {
         }
 
         public <S extends Geometry> Serializer<byte[], S> bytes() {
-            Func1<byte[], byte[]> serializer = Functions.identity();
-            Func1<byte[], byte[]> deserializer = Functions.identity();
+            Function<byte[], byte[]> serializer = io.reactivex.internal.functions.Functions.identity();
+            Function<byte[], byte[]> deserializer = io.reactivex.internal.functions.Functions.identity();
             return new SerializerTypedBuilder<byte[]>(serializer, deserializer, method).create();
         }
 
@@ -72,29 +71,29 @@ public final class Serializers {
 
     public static final class SerializerTypedBuilder<T> {
 
-        private Func1<? super T, byte[]> serializer;
-        private Func1<byte[], ? extends T> deserializer;
+        private Function<? super T, byte[]> serializer;
+        private Function<byte[], ? extends T> deserializer;
         private Method method;
-        private Func0<Kryo> kryoFactory = new Func0<Kryo>() {
+        private Callable<Kryo> kryoFactory = new Callable<Kryo>() {
             @Override
             public Kryo call() {
                 return new Kryo();
             }
         };
 
-        private SerializerTypedBuilder(Func1<? super T, byte[]> serializer,
-                Func1<byte[], ? extends T> deserializer, Method method) {
+        private SerializerTypedBuilder(Function<? super T, byte[]> serializer,
+                Function<byte[], ? extends T> deserializer, Method method) {
             this.serializer = serializer;
             this.deserializer = deserializer;
             this.method = method;
         }
 
-        public SerializerTypedBuilder<T> serializer(Func1<? super T, byte[]> serializer) {
+        public SerializerTypedBuilder<T> serializer(Function<? super T, byte[]> serializer) {
             this.serializer = serializer;
             return this;
         }
 
-        public SerializerTypedBuilder<T> deserializer(Func1<byte[], ? extends T> deserializer) {
+        public SerializerTypedBuilder<T> deserializer(Function<byte[], ? extends T> deserializer) {
             this.deserializer = deserializer;
             return this;
         }
@@ -109,7 +108,7 @@ public final class Serializers {
 
         // TODO enable when ready
         @SuppressWarnings("unused")
-        private SerializerTypedBuilder<T> kryo(Func0<Kryo> kryoFactory) {
+        private SerializerTypedBuilder<T> kryo(Callable<Kryo> kryoFactory) {
             this.method = Method.KRYO;
             this.kryoFactory = kryoFactory;
             return this;
@@ -119,10 +118,10 @@ public final class Serializers {
         public <S extends Geometry> Serializer<T, S> create() {
             if (method == Method.FLATBUFFERS) {
                 if (serializer == null) {
-                    serializer = (Func1<T, byte[]>) javaIoSerializer();
+                    serializer = (Function<T, byte[]>) javaIoSerializer();
                 }
                 if (deserializer == null) {
-                    deserializer = (Func1<byte[], T>) javaIoDeserializer();
+                    deserializer = (Function<byte[], T>) javaIoDeserializer();
                 }
                 return SerializerFlatBuffers.create(serializer, deserializer);
             } else {
@@ -140,28 +139,28 @@ public final class Serializers {
         FLATBUFFERS, KRYO;
     }
 
-    private static Func1<String, byte[]> createStringSerializer(final Charset charset) {
-        return new Func1<String, byte[]>() {
+    private static Function<String, byte[]> createStringSerializer(final Charset charset) {
+        return new Function<String, byte[]>() {
             @Override
-            public byte[] call(String s) {
+            public byte[] apply(String s) {
                 return s.getBytes(charset);
             }
         };
     }
 
-    private static <T> Func1<byte[], String> createStringDeserializer(final Charset charset) {
-        return new Func1<byte[], String>() {
+    private static <T> Function<byte[], String> createStringDeserializer(final Charset charset) {
+        return new Function<byte[], String>() {
             @Override
-            public String call(byte[] bytes) {
+            public String apply(byte[] bytes) {
                 return new String(bytes, charset);
             }
         };
     }
 
-    private static Func1<Serializable, byte[]> javaIoSerializer() {
-        return new Func1<Serializable, byte[]>() {
+    private static Function<Serializable, byte[]> javaIoSerializer() {
+        return new Function<Serializable, byte[]>() {
             @Override
-            public byte[] call(Serializable o) {
+            public byte[] apply(Serializable o) {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 ObjectOutputStream oos = null;
                 try {
@@ -183,10 +182,10 @@ public final class Serializers {
         };
     }
 
-    private static Func1<byte[], Serializable> javaIoDeserializer() {
-        return new Func1<byte[], Serializable>() {
+    private static Function<byte[], Serializable> javaIoDeserializer() {
+        return new Function<byte[], Serializable>() {
             @Override
-            public Serializable call(byte[] bytes) {
+            public Serializable apply(byte[] bytes) {
                 ByteArrayInputStream is = new ByteArrayInputStream(bytes);
                 ObjectInputStream ois = null;
                 try {

@@ -1,10 +1,12 @@
 package com.github.davidmoten.rtree;
 
+import org.reactivestreams.Subscriber;
+
+import com.github.davidmoten.rtree.FlowableSearch.SearchSubscription;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.functions.Predicate;
 
 /**
  * Utility methods for controlling backpressure of the tree search.
@@ -16,21 +18,22 @@ final class Backpressure {
     }
 
     static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> search(
-            final Func1<? super Geometry, Boolean> condition,
+            final Predicate<? super Geometry> condition,
             final Subscriber<? super Entry<T, S>> subscriber,
-            final ImmutableStack<NodePosition<T, S>> stack, final long request) {
+            final ImmutableStack<NodePosition<T, S>> stack, final long request, SearchSubscription<T, S> searchSubscription) throws Exception {
         StackAndRequest<NodePosition<T, S>> state = StackAndRequest.create(stack, request);
-        return searchAndReturnStack(condition, subscriber, state);
+        return searchAndReturnStack(condition, subscriber, state, searchSubscription);
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAndReturnStack(
-            final Func1<? super Geometry, Boolean> condition,
+            final Predicate<? super Geometry> condition,
             final Subscriber<? super Entry<T, S>> subscriber,
-            StackAndRequest<NodePosition<T, S>> state) {
+            StackAndRequest<NodePosition<T, S>> state, //
+            SearchSubscription<T, S> searchSubscription) throws Exception {
 
         while (!state.stack.isEmpty()) {
             NodePosition<T, S> np = state.stack.peek();
-            if (subscriber.isUnsubscribed())
+            if (searchSubscription.isCancelled())
                 return ImmutableStack.empty();
             else if (state.request <= 0)
                 return state.stack;
@@ -65,12 +68,12 @@ final class Backpressure {
     }
 
     private static <T, S extends Geometry> StackAndRequest<NodePosition<T, S>> searchLeaf(
-            final Func1<? super Geometry, Boolean> condition,
+            final Predicate<? super Geometry> condition,
             final Subscriber<? super Entry<T, S>> subscriber,
-            StackAndRequest<NodePosition<T, S>> state, NodePosition<T, S> np) {
+            StackAndRequest<NodePosition<T, S>> state, NodePosition<T, S> np) throws Exception {
         final long nextRequest;
         Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
-        if (condition.call(entry.geometry())) {
+        if (condition.test(entry.geometry())) {
             subscriber.onNext(entry);
             nextRequest = state.request - 1;
         } else
@@ -79,10 +82,10 @@ final class Backpressure {
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
-            final Func1<? super Geometry, Boolean> condition,
-            ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
+            final Predicate<? super Geometry> condition,
+            ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) throws Exception {
         Node<T, S> child = ((NonLeaf<T, S>) np.node()).child(np.position());
-        if (condition.call(child.geometry())) {
+        if (condition.test(child.geometry())) {
             stack = stack.push(new NodePosition<T, S>(child, 0));
         } else {
             stack = stack.pop().push(np.nextPosition());

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.reactivestreams.Subscriber;
+
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
@@ -14,8 +16,7 @@ import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.functions.Predicate;
 
 public final class LeafHelper {
 
@@ -70,10 +71,10 @@ public final class LeafHelper {
         return list;
     }
 
-    public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> condition,
+    public static <T, S extends Geometry> void search(Predicate<? super Geometry> condition,
             Subscriber<? super Entry<T, S>> subscriber, Leaf<T, S> leaf) {
 
-        if (!condition.call(leaf.geometry().mbr())) {
+        if (!condition.test(leaf.geometry().mbr())) {
             return;
         }
 
@@ -82,7 +83,7 @@ public final class LeafHelper {
             if (subscriber.isUnsubscribed()) {
                 return;
             } else {
-                if (condition.call(entry.geometry()))
+                if (condition.test(entry.geometry()))
                     subscriber.onNext(entry);
             }
         }

@@ -6,7 +6,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 
 public interface Leaf<T, S extends Geometry> extends Node<T, S> {
 
-    List<Entry<T, S>> entries();
+    List<Entry<T, S>> entries() throws Exception;
 
     /**
      * Returns the ith entry (0-based). This method should be preferred for
@@ -17,6 +17,6 @@ public interface Leaf<T, S extends Geometry> extends Node<T, S> {
      *            0-based index
      * @return ith entry
      */
-    Entry<T, S> entry(int i);
+    Entry<T, S> entry(int i) throws Exception;
 
 }

@@ -31,7 +31,7 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Util;
 import com.google.flatbuffers.FlatBufferBuilder;
 
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
 
 final class FlatBuffersHelper {
 
@@ -40,7 +40,7 @@ final class FlatBuffersHelper {
     }
 
     static <T, S extends Geometry> int addEntries(List<Entry<T, S>> entries,
-            FlatBufferBuilder builder, Func1<? super T, byte[]> serializer) {
+            FlatBufferBuilder builder, Function<? super T, byte[]> serializer) throws Exception {
         int[] entries2 = new int[entries.size()];
         for (int i = 0; i < entries.size(); i++) {
             Geometry g = entries.get(i).geometry();
@@ -112,7 +112,7 @@ final class FlatBuffersHelper {
 
             Geometry_.addType(builder, geomType);
             int geo = Geometry_.endGeometry_(builder);
-            int obj = Entry_.createObjectVector(builder, serializer.call(entries.get(i).value()));
+            int obj = Entry_.createObjectVector(builder, serializer.apply(entries.get(i).value()));
             entries2[i] = Entry_.createEntry_(builder, geo, obj);
         }
 
@@ -140,7 +140,7 @@ final class FlatBuffersHelper {
     }
 
     static <T, S extends Geometry> List<Entry<T, S>> createEntries(Node_ node,
-            Func1<byte[], ? extends T> deserializer) {
+            Function<byte[], ? extends T> deserializer) throws Exception {
         int numEntries = node.entriesLength();
         List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>(numEntries);
         Preconditions.checkArgument(numEntries > 0);
@@ -155,7 +155,7 @@ final class FlatBuffersHelper {
 
     @SuppressWarnings("unchecked")
     private static <T, S extends Geometry> Entry<T, S> createEntry(Node_ node,
-            Func1<byte[], ? extends T> deserializer, Entry_ entry, Geometry_ geom, int i) {
+            Function<byte[], ? extends T> deserializer, Entry_ entry, Geometry_ geom, int i) throws Exception {
         node.entries(entry, i);
         entry.geometry(geom);
         final Geometry g = toGeometry(geom);
@@ -163,17 +163,17 @@ final class FlatBuffersHelper {
     }
 
     static <T, S extends Geometry> Entry<T, S> createEntry(Node_ node,
-            Func1<byte[], ? extends T> deserializer, int i) {
+            Function<byte[], ? extends T> deserializer, int i) throws Exception {
         return createEntry(node, deserializer, new Entry_(), new Geometry_(), i);
     }
 
-    static <T> T parseObject(Func1<byte[], ? extends T> deserializer, Entry_ entry) {
+    static <T> T parseObject(Function<byte[], ? extends T> deserializer, Entry_ entry) throws Exception {
         ByteBuffer bb = entry.objectAsByteBuffer();
         if (bb == null) {
             return null;
         } else {
             byte[] bytes = Arrays.copyOfRange(bb.array(), bb.position(), bb.limit());
-            T t = deserializer.call(bytes);
+            T t = deserializer.apply(bytes);
             return t;
         }
     }

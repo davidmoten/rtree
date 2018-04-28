@@ -2,6 +2,8 @@ package com.github.davidmoten.rtree.internal;
 
 import java.util.List;
 
+import org.reactivestreams.Subscriber;
+
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Leaf;
@@ -9,8 +11,8 @@ import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.functions.Predicate;
+
 
 public final class LeafDefault<T, S extends Geometry> implements Leaf<T, S> {
 
@@ -35,7 +37,7 @@ public final class LeafDefault<T, S extends Geometry> implements Leaf<T, S> {
     }
 
     @Override
-    public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> condition,
+    public void searchWithoutBackpressure(Predicate<? super Geometry> condition,
             Subscriber<? super Entry<T, S>> subscriber) {
         LeafHelper.search(condition, subscriber, this);
     }

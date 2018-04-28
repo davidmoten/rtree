@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree.internal.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import com.github.davidmoten.guavamini.Preconditions;
@@ -72,7 +73,7 @@ public final class BoundedPriorityQueue<T> {
         }
         queue.add(t);
     }
-
+    
     /**
      * @return Returns a view of the queue as a
      *         {@link Collections#unmodifiableList(java.util.List)}

@@ -15,7 +15,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.internal.FactoryDefault;
 import com.github.davidmoten.rtree.internal.NonLeafDefault;
 
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
 
 /**
  * Conserves memory in comparison to {@link FactoryDefault} especially for
@@ -28,10 +28,10 @@ import rx.functions.Func1;
  *            the geometry type
  */
 public final class FactoryFlatBuffers<T, S extends Geometry> implements Factory<T, S> {
-    private final Func1<? super T, byte[]> serializer;
-    private final Func1<byte[], ? extends T> deserializer;
+    private final Function<? super T, byte[]> serializer;
+    private final Function<byte[], ? extends T> deserializer;
 
-    public FactoryFlatBuffers(Func1<? super T, byte[]> serializer, Func1<byte[], ? extends T> deserializer) {
+    public FactoryFlatBuffers(Function<? super T, byte[]> serializer, Function<byte[], ? extends T> deserializer) {
         Preconditions.checkNotNull(serializer);
         Preconditions.checkNotNull(deserializer);
         this.serializer = serializer;
@@ -53,11 +53,11 @@ public final class FactoryFlatBuffers<T, S extends Geometry> implements Factory<
         return Entries.entry(value, geometry);
     }
 
-    public Func1<? super T, byte[]> serializer() {
+    public Function<? super T, byte[]> serializer() {
         return serializer;
     }
 
-    public Func1<byte[], ? extends T> deserializer() {
+    public Function<byte[], ? extends T> deserializer() {
         return deserializer;
     }
 

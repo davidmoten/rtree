@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree.internal;
 
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 public final class Functions {
 
@@ -8,28 +9,28 @@ public final class Functions {
         // prevent instantiation
     }
     
-    public static <T> Func1<T, T> identity() {
-        return new Func1<T, T>() {
+    public static <T> Function<T, T> identity() {
+        return new Function<T, T>() {
             @Override
-            public T call(T t) {
+            public T apply(T t) {
                 return t;
             }
         };
     }
 
-    public static <T> Func1<T, Boolean> alwaysTrue() {
-        return new Func1<T, Boolean>() {
+    public static <T> Predicate<T> alwaysTrue() {
+        return new Predicate<T>() {
             @Override
-            public Boolean call(T t) {
+            public boolean test(T t) {
                 return true;
             }
         };
     }
 
-    public static <T> Func1<T, Boolean> alwaysFalse() {
-        return new Func1<T, Boolean>() {
+    public static <T> Predicate<T> alwaysFalse() {
+        return new Predicate<T>() {
             @Override
-            public Boolean call(T t) {
+            public boolean test(T t) {
                 return false;
             }
         };

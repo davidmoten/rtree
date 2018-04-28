@@ -8,7 +8,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 
 public interface Serializer<T, S extends Geometry> {
 
-    void write(RTree<T, S> tree, OutputStream os) throws IOException;
+    void write(RTree<T, S> tree, OutputStream os) throws Exception;
 
     RTree<T, S> read(InputStream is, long sizeBytes, InternalStructure structure)
             throws IOException;

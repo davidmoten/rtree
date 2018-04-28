@@ -2,12 +2,13 @@ package com.github.davidmoten.rtree;
 
 import java.util.List;
 
+import org.reactivestreams.Subscriber;
+
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.functions.Predicate;
 
 public interface Node<T, S extends Geometry> extends HasGeometry {
 
@@ -24,7 +25,7 @@ public interface Node<T, S extends Geometry> extends HasGeometry {
      * @param subscriber
      *            the subscriber to report search findings to
      */
-    void searchWithoutBackpressure(Func1<? super Geometry, Boolean> criterion,
+    void searchWithoutBackpressure(Predicate<? super Geometry> criterion,
             Subscriber<? super Entry<T, S>> subscriber);
 
     int count();

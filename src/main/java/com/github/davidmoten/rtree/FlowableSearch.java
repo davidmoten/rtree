@@ -2,40 +2,42 @@ package com.github.davidmoten.rtree;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
-import rx.Observable.OnSubscribe;
-import rx.Producer;
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Predicate;
 
-final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entry<T, S>> {
+public final class FlowableSearch<T, S extends Geometry>
+        extends Flowable<com.github.davidmoten.rtree.Entry<T, S>> {
 
     private final Node<T, S> node;
-    private final Func1<? super Geometry, Boolean> condition;
+    private final Predicate<? super Geometry> condition;
 
-    OnSubscribeSearch(Node<T, S> node, Func1<? super Geometry, Boolean> condition) {
+    public FlowableSearch(Node<T, S> node, Predicate<? super Geometry> condition) {
         this.node = node;
         this.condition = condition;
     }
 
     @Override
-    public void call(Subscriber<? super Entry<T, S>> subscriber) {
-        subscriber.setProducer(new SearchProducer<T, S>(node, condition, subscriber));
+    protected void subscribeActual(Subscriber<? super Entry<T, S>> s) {
+        SearchSubscription<T, S> subscription = new SearchSubscription<T, S>(node, condition, s);
+        s.onSubscribe(subscription);
     }
 
-    @VisibleForTesting
-    static class SearchProducer<T, S extends Geometry> implements Producer {
+    public static final class SearchSubscription<T, S extends Geometry> implements Subscription {
 
         private final Subscriber<? super Entry<T, S>> subscriber;
         private final Node<T, S> node;
-        private final Func1<? super Geometry, Boolean> condition;
+        private final Predicate<? super Geometry> condition;
         private volatile ImmutableStack<NodePosition<T, S>> stack;
         private final AtomicLong requested = new AtomicLong(0);
+        private volatile boolean cancelled;
 
-        SearchProducer(Node<T, S> node, Func1<? super Geometry, Boolean> condition,
+        public SearchSubscription(Node<T, S> node, Predicate<? super Geometry> condition,
                 Subscriber<? super Entry<T, S>> subscriber) {
             this.node = node;
             this.condition = condition;
@@ -57,12 +59,14 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
             } catch (RuntimeException e) {
                 subscriber.onError(e);
             }
+
         }
 
         private void requestAll() {
             node.searchWithoutBackpressure(condition, subscriber);
-            if (!subscriber.isUnsubscribed())
-                subscriber.onCompleted();
+            if (!cancelled) {
+                subscriber.onComplete();
+            }
         }
 
         private void requestSome(long n) {
@@ -81,12 +85,19 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
                 while (true) {
                     // minimize atomic reads by assigning to a variable here
                     long r = requested.get();
-                    st = Backpressure.search(condition, subscriber, st, r);
+                    try {
+                        st = Backpressure.search(condition, subscriber, st, r, this);
+                    } catch (Exception e) {
+                        if (!cancelled) {
+                            subscriber.onError(e);
+                            return;
+                        }
+                    }
                     if (st.isEmpty()) {
                         // release some state for gc (although empty stack so not very significant)
                         stack = null;
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onCompleted();
+                        if (!cancelled) {
+                            subscriber.onComplete();
                         }
                         return;
                     } else {
@@ -98,32 +109,42 @@ final class OnSubscribeSearch<T, S extends Geometry> implements OnSubscribe<Entr
 
             }
         }
-    }
-    
-    /**
-     * Adds {@code n} to {@code requested} and returns the value prior to
-     * addition once the addition is successful (uses CAS semantics). If
-     * overflows then sets {@code requested} field to {@code Long.MAX_VALUE}.
-     * 
-     * @param requested
-     *            atomic field updater for a request count
-     * @param n
-     *            the number of requests to add to the requested count
-     * @return requested value just prior to successful addition
-     */
-    private static long getAndAddRequest(AtomicLong requested, long n) {
-        // add n to field but check for overflow
-        while (true) {
-            long current = requested.get();
-            long next = current + n;
-            // check for overflow
-            if (next < 0) {
-                next = Long.MAX_VALUE;
-            }
-            if (requested.compareAndSet(current, next)) {
-                return current;
+
+        /**
+         * Adds {@code n} to {@code requested} and returns the value prior to addition
+         * once the addition is successful (uses CAS semantics). If overflows then sets
+         * {@code requested} field to {@code Long.MAX_VALUE}.
+         * 
+         * @param requested
+         *            atomic field updater for a request count
+         * @param n
+         *            the number of requests to add to the requested count
+         * @return requested value just prior to successful addition
+         */
+        private static long getAndAddRequest(AtomicLong requested, long n) {
+            // add n to field but check for overflow
+            while (true) {
+                long current = requested.get();
+                long next = current + n;
+                // check for overflow
+                if (next < 0) {
+                    next = Long.MAX_VALUE;
+                }
+                if (requested.compareAndSet(current, next)) {
+                    return current;
+                }
             }
         }
+
+        @Override
+        public void cancel() {
+             cancelled = true;
+        }
+
+        public boolean isCancelled() {
+            return cancelled;
+        }
+
     }
 
 }

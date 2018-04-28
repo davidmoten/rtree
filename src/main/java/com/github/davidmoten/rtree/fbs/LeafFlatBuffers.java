@@ -2,6 +2,8 @@ package com.github.davidmoten.rtree.fbs;
 
 import java.util.List;
 
+import org.reactivestreams.Subscriber;
+
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Leaf;
@@ -17,28 +19,28 @@ import com.github.davidmoten.rtree.internal.LeafHelper;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.google.flatbuffers.FlatBufferBuilder;
 
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;
-    private final Func1<byte[], ? extends T> deserializer;
+    private final Function<byte[], ? extends T> deserializer;
 
     LeafFlatBuffers(List<Entry<T, S>> entries, Context<T, S> context,
-            Func1<? super T, byte[]> serializer, Func1<byte[], ? extends T> deserializer) {
+            Function<? super T, byte[]> serializer, Function<byte[], ? extends T> deserializer) {
         this(createNode(entries, serializer), context, deserializer);
     }
 
-    LeafFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], ? extends T> deserializer) {
+    LeafFlatBuffers(Node_ node, Context<T, S> context, Function<byte[], ? extends T> deserializer) {
         this.context = context;
         this.deserializer = deserializer;
         this.node = node;
     }
 
     private static <T, S extends Geometry> Node_ createNode(List<Entry<T, S>> entries,
-            Func1<? super T, byte[]> serializer) {
+            Function<? super T, byte[]> serializer) {
         FlatBufferBuilder builder = new FlatBufferBuilder(0);
         builder.finish(FlatBuffersHelper.addEntries(entries, builder, serializer));
         return Node_.getRootAsNode_(builder.dataBuffer());
@@ -55,7 +57,7 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
     }
 
     @Override
-    public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> condition,
+    public void searchWithoutBackpressure(Predicate<? super Geometry> condition,
             Subscriber<? super Entry<T, S>> subscriber) {
         // only called when the root of the tree is a Leaf
         // normally the searchWithoutBackpressure is executed completely within the
@@ -87,12 +89,12 @@ final class LeafFlatBuffers<T, S extends Geometry> implements Leaf<T, S> {
     }
 
     @Override
-    public List<Entry<T, S>> entries() {
+    public List<Entry<T, S>> entries() throws Exception {
         return FlatBuffersHelper.createEntries(node, deserializer);
     }
 
     @Override
-    public Entry<T, S> entry(int i) {
+    public Entry<T, S> entry(int i) throws Exception {
         return FlatBuffersHelper.createEntry(node, deserializer, i);
     }
 

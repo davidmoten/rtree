@@ -34,24 +34,24 @@ import com.github.davidmoten.rtree.internal.LeafDefault;
 import com.github.davidmoten.rtree.internal.NonLeafDefault;
 import com.google.flatbuffers.FlatBufferBuilder;
 
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
 
 public final class SerializerFlatBuffers<T, S extends Geometry> implements Serializer<T, S> {
 
     private final FactoryFlatBuffers<T, S> factory;
 
-    private SerializerFlatBuffers(Func1<? super T, byte[]> serializer,
-            Func1<byte[], ? extends T> deserializer) {
+    private SerializerFlatBuffers(Function<? super T, byte[]> serializer,
+            Function<byte[], ? extends T> deserializer) {
         this.factory = new FactoryFlatBuffers<T, S>(serializer, deserializer);
     }
 
     public static <T, S extends Geometry> Serializer<T, S> create(
-            Func1<? super T, byte[]> serializer, Func1<byte[], ? extends T> deserializer) {
+            Function<? super T, byte[]> serializer, Function<byte[], ? extends T> deserializer) {
         return new SerializerFlatBuffers<T, S>(serializer, deserializer);
     }
 
     @Override
-    public void write(RTree<T, S> tree, OutputStream os) throws IOException {
+    public void write(RTree<T, S> tree, OutputStream os) throws Exception {
         FlatBufferBuilder builder = new FlatBufferBuilder();
         final Rectangle mbb;
         if (tree.root().isPresent()) {
@@ -102,7 +102,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
     }
 
     private static <T, S extends Geometry> int addNode(Node<T, S> node, FlatBufferBuilder builder,
-            Func1<? super T, byte[]> serializer) {
+            Function<? super T, byte[]> serializer) throws Exception {
         if (node instanceof Leaf) {
             Leaf<T, S> leaf = (Leaf<T, S>) node;
             return FlatBuffersHelper.addEntries(leaf.entries(), builder, serializer);
@@ -149,7 +149,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
     }
 
     private static <T, S extends Geometry> Node<T, S> toNodeDefault(Node_ node,
-            Context<T, S> context, Func1<byte[], ? extends T> deserializer) {
+            Context<T, S> context, Function<byte[], ? extends T> deserializer) {
         int numChildren = node.childrenLength();
         if (numChildren > 0) {
             List<Node<T, S>> children = new ArrayList<Node<T, S>>(numChildren);

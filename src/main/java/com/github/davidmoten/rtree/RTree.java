@@ -21,12 +21,10 @@ import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Comparators;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
-import com.github.davidmoten.rtree.internal.operators.OperatorBoundedPriorityQueue;
 import com.github.davidmoten.rtree.internal.util.BoundedPriorityQueue;
 
 import io.reactivex.Flowable;
 import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 /**
@@ -829,11 +827,12 @@ public final class RTree<T, S extends Geometry> {
      */
     public Flowable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
             int maxCount) {
-        //TODO use collectInto
         return search(r, maxDistance)//
-                .collectInto(
-                        new BoundedPriorityQueue<T>(maxCount, Comparators.<T, S>ascendingDistance(r)) //
-                        , (c, entry)-> c.offer(entry.value()));
+                .collect(
+                        () -> new BoundedPriorityQueue<Entry<T, S>>(maxCount, Comparators.<T, S>ascendingDistance(r)), //
+                        (BoundedPriorityQueue<Entry<T,S>> c, Entry<T, S> entry)-> c.add(entry))
+                .toFlowable() //
+                .flatMap(q -> Flowable.fromIterable(q.asOrderedList()));
     }
 
     /**
@@ -969,8 +968,9 @@ public final class RTree<T, S extends Geometry> {
      * </pre>
      * 
      * @return a string representation of the RTree
+     * @throws Exception 
      */
-    public String asString() {
+    public String asString() throws Exception {
         if (!root.isPresent())
             return "";
         else
@@ -979,7 +979,7 @@ public final class RTree<T, S extends Geometry> {
 
     private final static String marginIncrement = "  ";
 
-    private String asString(Node<T, S> node, String margin) {
+    private String asString(Node<T, S> node, String margin) throws Exception {
         StringBuilder s = new StringBuilder();
         s.append(margin);
         s.append("mbr=");
