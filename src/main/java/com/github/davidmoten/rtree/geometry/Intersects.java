@@ -1,6 +1,6 @@
 package com.github.davidmoten.rtree.geometry;
 
-import rx.functions.Func2;
+import io.reactivex.functions.BiFunction;
 
 public final class Intersects {
 
@@ -8,96 +8,96 @@ public final class Intersects {
         // prevent instantiation
     }
 
-    public static final Func2<Rectangle, Circle, Boolean> rectangleIntersectsCircle = new Func2<Rectangle, Circle, Boolean>() {
+    public static final BiFunction<Rectangle, Circle, Boolean> rectangleIntersectsCircle = new BiFunction<Rectangle, Circle, Boolean>() {
         @Override
-        public Boolean call(Rectangle rectangle, Circle circle) {
-            return circleIntersectsRectangle.call(circle, rectangle);
+        public Boolean apply(Rectangle rectangle, Circle circle) throws Exception {
+            return circleIntersectsRectangle.apply(circle, rectangle);
         }
     };
 
-    public static final Func2<Circle, Rectangle, Boolean> circleIntersectsRectangle = new Func2<Circle, Rectangle, Boolean>() {
+    public static final BiFunction<Circle, Rectangle, Boolean> circleIntersectsRectangle = new BiFunction<Circle, Rectangle, Boolean>() {
         @Override
-        public Boolean call(Circle circle, Rectangle rectangle) {
+        public Boolean apply(Circle circle, Rectangle rectangle) {
             return circle.intersects(rectangle);
         }
     };
 
-    public static final Func2<Point, Circle, Boolean> pointIntersectsCircle = new Func2<Point, Circle, Boolean>() {
+    public static final BiFunction<Point, Circle, Boolean> pointIntersectsCircle = new BiFunction<Point, Circle, Boolean>() {
         @Override
-        public Boolean call(Point point, Circle circle) {
-            return circleIntersectsPoint.call(circle, point);
+        public Boolean apply(Point point, Circle circle) throws Exception {
+            return circleIntersectsPoint.apply(circle, point);
         }
     };
 
-    public static final Func2<Circle, Point, Boolean> circleIntersectsPoint = new Func2<Circle, Point, Boolean>() {
+    public static final BiFunction<Circle, Point, Boolean> circleIntersectsPoint = new BiFunction<Circle, Point, Boolean>() {
         @Override
-        public Boolean call(Circle circle, Point point) {
+        public Boolean apply(Circle circle, Point point) {
             return circle.intersects(point);
         }
     };
 
-    public static final Func2<Circle, Circle, Boolean> circleIntersectsCircle = new Func2<Circle, Circle, Boolean>() {
+    public static final BiFunction<Circle, Circle, Boolean> circleIntersectsCircle = new BiFunction<Circle, Circle, Boolean>() {
         @Override
-        public Boolean call(Circle a, Circle b) {
+        public Boolean apply(Circle a, Circle b) {
             return a.intersects(b);
         }
     };
 
-    public static final Func2<Line, Line, Boolean> lineIntersectsLine = new Func2<Line, Line, Boolean>() {
+    public static final BiFunction<Line, Line, Boolean> lineIntersectsLine = new BiFunction<Line, Line, Boolean>() {
         @Override
-        public Boolean call(Line a, Line b) {
+        public Boolean apply(Line a, Line b) {
             return a.intersects(b);
         }
     };
 
-    public static final Func2<Line, Rectangle, Boolean> lineIntersectsRectangle = new Func2<Line, Rectangle, Boolean>() {
+    public static final BiFunction<Line, Rectangle, Boolean> lineIntersectsRectangle = new BiFunction<Line, Rectangle, Boolean>() {
         @Override
-        public Boolean call(Line a, Rectangle r) {
-            return rectangleIntersectsLine.call(r, a);
+        public Boolean apply(Line a, Rectangle r) throws Exception {
+            return rectangleIntersectsLine.apply(r, a);
         }
     };
 
-    public static final Func2<Rectangle, Line, Boolean> rectangleIntersectsLine = new Func2<Rectangle, Line, Boolean>() {
+    public static final BiFunction<Rectangle, Line, Boolean> rectangleIntersectsLine = new BiFunction<Rectangle, Line, Boolean>() {
         @Override
-        public Boolean call(Rectangle r, Line a) {
+        public Boolean apply(Rectangle r, Line a) {
             return a.intersects(r);
         }
     };
 
-    public static final Func2<Line, Circle, Boolean> lineIntersectsCircle = new Func2<Line, Circle, Boolean>() {
+    public static final BiFunction<Line, Circle, Boolean> lineIntersectsCircle = new BiFunction<Line, Circle, Boolean>() {
         @Override
-        public Boolean call(Line a, Circle c) {
-            return circleIntersectsLine.call(c, a);
+        public Boolean apply(Line a, Circle c) throws Exception {
+            return circleIntersectsLine.apply(c, a);
         }
     };
 
-    public static final Func2<Circle, Line, Boolean> circleIntersectsLine = new Func2<Circle, Line, Boolean>() {
+    public static final BiFunction<Circle, Line, Boolean> circleIntersectsLine = new BiFunction<Circle, Line, Boolean>() {
         @Override
-        public Boolean call(Circle c, Line a) {
+        public Boolean apply(Circle c, Line a) {
             return a.intersects(c);
         }
     };
 
-    public static final Func2<Line, Point, Boolean> lineIntersectsPoint = new Func2<Line, Point, Boolean>() {
+    public static final BiFunction<Line, Point, Boolean> lineIntersectsPoint = new BiFunction<Line, Point, Boolean>() {
 
         @Override
-        public Boolean call(Line line, Point point) {
-            return pointIntersectsLine.call(point, line);
+        public Boolean apply(Line line, Point point) throws Exception {
+            return pointIntersectsLine.apply(point, line);
         }
     };
 
-    public static final Func2<Point, Line, Boolean> pointIntersectsLine = new Func2<Point, Line, Boolean>() {
+    public static final BiFunction<Point, Line, Boolean> pointIntersectsLine = new BiFunction<Point, Line, Boolean>() {
 
         @Override
-        public Boolean call(Point point, Line line) {
+        public Boolean apply(Point point, Line line) {
             return line.intersects(point);
         }
     };
 
-    public static final Func2<Geometry, Line, Boolean> geometryIntersectsLine = new Func2<Geometry, Line, Boolean>() {
+    public static final BiFunction<Geometry, Line, Boolean> geometryIntersectsLine = new BiFunction<Geometry, Line, Boolean>() {
 
         @Override
-        public Boolean call(Geometry geometry, Line line) {
+        public Boolean apply(Geometry geometry, Line line) {
             if (geometry instanceof Line)
                 return line.intersects((Line) geometry);
             else if (geometry instanceof Circle)
@@ -111,10 +111,10 @@ public final class Intersects {
         }
     };
 
-    public static final Func2<Geometry, Circle, Boolean> geometryIntersectsCircle = new Func2<Geometry, Circle, Boolean>() {
+    public static final BiFunction<Geometry, Circle, Boolean> geometryIntersectsCircle = new BiFunction<Geometry, Circle, Boolean>() {
 
         @Override
-        public Boolean call(Geometry geometry, Circle circle) {
+        public Boolean apply(Geometry geometry, Circle circle) {
             if (geometry instanceof Line)
                 return circle.intersects((Line) geometry);
             else if (geometry instanceof Circle)
@@ -128,18 +128,18 @@ public final class Intersects {
         }
     };
 
-    public static final Func2<Circle, Geometry, Boolean> circleIntersectsGeometry = new Func2<Circle, Geometry, Boolean>() {
+    public static final BiFunction<Circle, Geometry, Boolean> circleIntersectsGeometry = new BiFunction<Circle, Geometry, Boolean>() {
 
         @Override
-        public Boolean call(Circle circle, Geometry geometry) {
-            return geometryIntersectsCircle.call(geometry, circle);
+        public Boolean apply(Circle circle, Geometry geometry) throws Exception {
+            return geometryIntersectsCircle.apply(geometry, circle);
         }
     };
 
-    public static final Func2<Geometry, Rectangle, Boolean> geometryIntersectsRectangle = new Func2<Geometry, Rectangle, Boolean>() {
+    public static final BiFunction<Geometry, Rectangle, Boolean> geometryIntersectsRectangle = new BiFunction<Geometry, Rectangle, Boolean>() {
 
         @Override
-        public Boolean call(Geometry geometry, Rectangle r) {
+        public Boolean apply(Geometry geometry, Rectangle r) {
             if (geometry instanceof Line)
                 return geometry.intersects(r);
             else if (geometry instanceof Circle)
@@ -153,27 +153,27 @@ public final class Intersects {
         }
     };
 
-    public static final Func2<Rectangle, Geometry, Boolean> rectangleIntersectsGeometry = new Func2<Rectangle, Geometry, Boolean>() {
+    public static final BiFunction<Rectangle, Geometry, Boolean> rectangleIntersectsGeometry = new BiFunction<Rectangle, Geometry, Boolean>() {
 
         @Override
-        public Boolean call(Rectangle r, Geometry geometry) {
-            return geometryIntersectsRectangle.call(geometry, r);
+        public Boolean apply(Rectangle r, Geometry geometry) throws Exception {
+            return geometryIntersectsRectangle.apply(geometry, r);
         }
     };
 
-    public static final Func2<Geometry, Point, Boolean> geometryIntersectsPoint = new Func2<Geometry, Point, Boolean>() {
+    public static final BiFunction<Geometry, Point, Boolean> geometryIntersectsPoint = new BiFunction<Geometry, Point, Boolean>() {
 
         @Override
-        public Boolean call(Geometry geometry, Point point) {
-            return geometryIntersectsRectangle.call(geometry, point.mbr());
+        public Boolean apply(Geometry geometry, Point point) throws Exception {
+            return geometryIntersectsRectangle.apply(geometry, point.mbr());
         }
     };
 
-    public static final Func2<Point, Geometry, Boolean> pointIntersectsGeometry = new Func2<Point, Geometry, Boolean>() {
+    public static final BiFunction<Point, Geometry, Boolean> pointIntersectsGeometry = new BiFunction<Point, Geometry, Boolean>() {
 
         @Override
-        public Boolean call(Point point, Geometry geometry) {
-            return geometryIntersectsPoint.call(geometry, point);
+        public Boolean apply(Point point, Geometry geometry) throws Exception {
+            return geometryIntersectsPoint.apply(geometry, point);
         }
     };
 

@@ -22,10 +22,12 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Comparators;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.github.davidmoten.rtree.internal.operators.OperatorBoundedPriorityQueue;
+import com.github.davidmoten.rtree.internal.util.BoundedPriorityQueue;
 
-import rx.Observable;
-import rx.functions.Func1;
-import rx.functions.Func2;
+import io.reactivex.Flowable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
@@ -490,25 +492,25 @@ public final class RTree<T, S extends Geometry> {
     }
 
     /**
-     * Returns the Observable sequence of trees created by progressively adding
+     * Returns the Flowable sequence of trees created by progressively adding
      * entries.
      * 
      * @param entries
      *            the entries to add
      * @return a sequence of trees
      */
-    public Observable<RTree<T, S>> add(Observable<Entry<T, S>> entries) {
-        return entries.scan(this, new Func2<RTree<T, S>, Entry<T, S>, RTree<T, S>>() {
+    public Flowable<RTree<T, S>> add(Flowable<Entry<T, S>> entries) {
+        return entries.scan(this, new BiFunction<RTree<T, S>, Entry<T, S>, RTree<T, S>>() {
 
             @Override
-            public RTree<T, S> call(RTree<T, S> tree, Entry<T, S> entry) {
+            public RTree<T, S> apply(RTree<T, S> tree, Entry<T, S> entry) {
                 return tree.add(entry);
             }
         });
     }
 
     /**
-     * Returns the Observable sequence of trees created by progressively deleting
+     * Returns the Flowable sequence of trees created by progressively deleting
      * entries.
      * 
      * @param entries
@@ -517,11 +519,11 @@ public final class RTree<T, S extends Geometry> {
      *            if true delete all matching otherwise just first matching
      * @return a sequence of trees
      */
-    public Observable<RTree<T, S>> delete(Observable<Entry<T, S>> entries, final boolean all) {
-        return entries.scan(this, new Func2<RTree<T, S>, Entry<T, S>, RTree<T, S>>() {
+    public Flowable<RTree<T, S>> delete(Flowable<Entry<T, S>> entries, final boolean all) {
+        return entries.scan(this, new BiFunction<RTree<T, S>, Entry<T, S>, RTree<T, S>>() {
 
             @Override
-            public RTree<T, S> call(RTree<T, S> tree, Entry<T, S> entry) {
+            public RTree<T, S> apply(RTree<T, S> tree, Entry<T, S> entry) {
                 return tree.delete(entry, all);
             }
         });
@@ -636,7 +638,7 @@ public final class RTree<T, S extends Geometry> {
 
     /**
      * <p>
-     * Returns an Observable sequence of {@link Entry} that satisfy the given
+     * Returns an Flowable sequence of {@link Entry} that satisfy the given
      * condition. Note that this method is well-behaved only if:
      *
      * 
@@ -654,11 +656,11 @@ public final class RTree<T, S extends Geometry> {
      * @return sequence of matching entries
      */
     @VisibleForTesting
-    Observable<Entry<T, S>> search(Func1<? super Geometry, Boolean> condition) {
+    Flowable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
         if (root.isPresent())
-            return Observable.unsafeCreate(new OnSubscribeSearch<T, S>(root.get(), condition));
+            return new FlowableSearch<T, S>(root.get(), condition);
         else
-            return Observable.empty();
+            return Flowable.empty();
     }
 
     /**
@@ -669,10 +671,10 @@ public final class RTree<T, S extends Geometry> {
      *            the rectangle to check intersection with
      * @return whether the geometry and the rectangle intersect
      */
-    public static Func1<Geometry, Boolean> intersects(final Rectangle r) {
-        return new Func1<Geometry, Boolean>() {
+    public static Predicate<Geometry> intersects(final Rectangle r) {
+        return new Predicate<Geometry>() {
             @Override
-            public Boolean call(Geometry g) {
+            public boolean test(Geometry g) {
                 return g.intersects(r);
             }
         };
@@ -682,47 +684,47 @@ public final class RTree<T, S extends Geometry> {
      * Returns the always true predicate. See {@link RTree#entries()} for example
      * use.
      */
-    private static final Func1<Geometry, Boolean> ALWAYS_TRUE = new Func1<Geometry, Boolean>() {
+    private static final Predicate<Geometry> ALWAYS_TRUE = new Predicate<Geometry>() {
         @Override
-        public Boolean call(Geometry rectangle) {
+        public boolean test(Geometry rectangle) {
             return true;
         }
     };
 
     /**
-     * Returns an {@link Observable} sequence of all {@link Entry}s in the R-tree
+     * Returns an {@link Flowable} sequence of all {@link Entry}s in the R-tree
      * whose minimum bounding rectangle intersects with the given rectangle.
      * 
      * @param r
      *            rectangle to check intersection with the entry mbr
      * @return entries that intersect with the rectangle r
      */
-    public Observable<Entry<T, S>> search(final Rectangle r) {
+    public Flowable<Entry<T, S>> search(final Rectangle r) {
         return search(intersects(r));
     }
 
     /**
-     * Returns an {@link Observable} sequence of all {@link Entry}s in the R-tree
+     * Returns an {@link Flowable} sequence of all {@link Entry}s in the R-tree
      * whose minimum bounding rectangle intersects with the given point.
      * 
      * @param p
      *            point to check intersection with the entry mbr
      * @return entries that intersect with the point p
      */
-    public Observable<Entry<T, S>> search(final Point p) {
+    public Flowable<Entry<T, S>> search(final Point p) {
         return search(p.mbr());
     }
 
-    public Observable<Entry<T, S>> search(Circle circle) {
+    public Flowable<Entry<T, S>> search(Circle circle) {
         return search(circle, Intersects.geometryIntersectsCircle);
     }
 
-    public Observable<Entry<T, S>> search(Line line) {
+    public Flowable<Entry<T, S>> search(Line line) {
         return search(line, Intersects.geometryIntersectsLine);
     }
 
     /**
-     * Returns an {@link Observable} sequence of all {@link Entry}s in the R-tree
+     * Returns an {@link Flowable} sequence of all {@link Entry}s in the R-tree
      * whose minimum bounding rectangles are strictly less than maxDistance from the
      * given rectangle.
      * 
@@ -732,10 +734,10 @@ public final class RTree<T, S extends Geometry> {
      *            entries returned must be within this distance from rectangle r
      * @return the sequence of matching entries
      */
-    public Observable<Entry<T, S>> search(final Rectangle r, final double maxDistance) {
-        return search(new Func1<Geometry, Boolean>() {
+    public Flowable<Entry<T, S>> search(final Rectangle r, final double maxDistance) {
+        return search(new Predicate<Geometry>() {
             @Override
-            public Boolean call(Geometry g) {
+            public boolean test(Geometry g) {
                 return g.distance(r) < maxDistance;
             }
         });
@@ -754,12 +756,12 @@ public final class RTree<T, S extends Geometry> {
      *            function to determine if the two geometries intersect
      * @return a sequence of entries that intersect with g
      */
-    public <R extends Geometry> Observable<Entry<T, S>> search(final R g,
-            final Func2<? super S, ? super R, Boolean> intersects) {
-        return search(g.mbr()).filter(new Func1<Entry<T, S>, Boolean>() {
+    public <R extends Geometry> Flowable<Entry<T, S>> search(final R g,
+            final BiFunction<? super S, ? super R, Boolean> intersects) {
+        return search(g.mbr()).filter(new Predicate<Entry<T, S>>() {
             @Override
-            public Boolean call(Entry<T, S> entry) {
-                return intersects.call(entry.geometry(), g);
+            public boolean test(Entry<T, S> entry) throws Exception {
+                return intersects.apply(entry.geometry(), g);
             }
         });
     }
@@ -780,26 +782,26 @@ public final class RTree<T, S extends Geometry> {
      *            and R.
      * @return entries strictly less than maxDistance from g
      */
-    public <R extends Geometry> Observable<Entry<T, S>> search(final R g, final double maxDistance,
-            final Func2<? super S, ? super R, Double> distance) {
-        return search(new Func1<Geometry, Boolean>() {
+    public <R extends Geometry> Flowable<Entry<T, S>> search(final R g, final double maxDistance,
+            final BiFunction<? super S, ? super R, Double> distance) {
+        return search(new Predicate<Geometry>() {
             @Override
-            public Boolean call(Geometry entry) {
+            public boolean test(Geometry entry) {
                 // just use the mbr initially
                 return entry.distance(g.mbr()) < maxDistance;
             }
         })
                 // refine with distance function
-                .filter(new Func1<Entry<T, S>, Boolean>() {
+                .filter(new Predicate<Entry<T, S>>() {
                     @Override
-                    public Boolean call(Entry<T, S> entry) {
-                        return distance.call(entry.geometry(), g) < maxDistance;
+                    public boolean test(Entry<T, S> entry) throws Exception {
+                        return distance.apply(entry.geometry(), g) < maxDistance;
                     }
                 });
     }
 
     /**
-     * Returns an {@link Observable} sequence of all {@link Entry}s in the R-tree
+     * Returns an {@link Flowable} sequence of all {@link Entry}s in the R-tree
      * whose minimum bounding rectangles are within maxDistance from the given
      * point.
      * 
@@ -809,7 +811,7 @@ public final class RTree<T, S extends Geometry> {
      *            entries returned must be within this distance from point p
      * @return the sequence of matching entries
      */
-    public Observable<Entry<T, S>> search(final Point p, final double maxDistance) {
+    public Flowable<Entry<T, S>> search(final Point p, final double maxDistance) {
         return search(p.mbr(), maxDistance);
     }
 
@@ -825,10 +827,13 @@ public final class RTree<T, S extends Geometry> {
      *            max number of entries to return
      * @return nearest entries to maxCount, in ascending order of distance
      */
-    public Observable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
+    public Flowable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
             int maxCount) {
-        return search(r, maxDistance).lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount,
-                Comparators.<T, S>ascendingDistance(r)));
+        //TODO use collectInto
+        return search(r, maxDistance)//
+                .collectInto(
+                        new BoundedPriorityQueue<T>(maxCount, Comparators.<T, S>ascendingDistance(r)) //
+                        , (c, entry)-> c.offer(entry.value()));
     }
 
     /**
@@ -843,16 +848,16 @@ public final class RTree<T, S extends Geometry> {
      *            max number of entries to return
      * @return nearest entries to maxCount, in ascending order of distance
      */
-    public Observable<Entry<T, S>> nearest(final Point p, final double maxDistance, int maxCount) {
+    public Flowable<Entry<T, S>> nearest(final Point p, final double maxDistance, int maxCount) {
         return nearest(p.mbr(), maxDistance, maxCount);
     }
 
     /**
-     * Returns all entries in the tree as an {@link Observable} sequence.
+     * Returns all entries in the tree as an {@link Flowable} sequence.
      * 
      * @return all entries in the R-tree
      */
-    public Observable<Entry<T, S>> entries() {
+    public Flowable<Entry<T, S>> entries() {
         return search(ALWAYS_TRUE);
     }
 
@@ -892,16 +897,16 @@ public final class RTree<T, S extends Geometry> {
 
     private Rectangle calculateMaxView(RTree<T, S> tree) {
         return tree.entries().reduce(Optional.<Rectangle>absent(),
-                new Func2<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>>() {
+                new BiFunction<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>>() {
 
                     @Override
-                    public Optional<Rectangle> call(Optional<Rectangle> r, Entry<T, S> entry) {
+                    public Optional<Rectangle> apply(Optional<Rectangle> r, Entry<T, S> entry) {
                         if (r.isPresent())
                             return of(r.get().add(entry.geometry().mbr()));
                         else
                             return of(entry.geometry().mbr());
                     }
-                }).toBlocking().single().or(rectangle(0, 0, 0, 0));
+                }).blockingGet().or(rectangle(0, 0, 0, 0));
     }
 
     public Optional<? extends Node<T, S>> root() {
