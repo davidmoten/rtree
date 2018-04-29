@@ -40,7 +40,11 @@ public final class FactoryFlatBuffers<T, S extends Geometry> implements Factory<
 
     @Override
     public Leaf<T, S> createLeaf(List<Entry<T, S>> entries, Context<T, S> context) {
-        return new LeafFlatBuffers<T, S>(entries, context, serializer, deserializer);
+        try {
+            return new LeafFlatBuffers<T, S>(entries, context, serializer, deserializer);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

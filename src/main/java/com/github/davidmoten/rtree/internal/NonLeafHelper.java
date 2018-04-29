@@ -6,16 +6,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.reactivestreams.Subscriber;
+
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.FlowableSearch.SearchSubscription;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.functions.Predicate;
 
 public final class NonLeafHelper {
 
@@ -23,24 +25,24 @@ public final class NonLeafHelper {
         // prevent instantiation
     }
 
-    public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> criterion,
-            Subscriber<? super Entry<T, S>> subscriber, NonLeaf<T, S> node) {
-        if (!criterion.call(node.geometry().mbr()))
+    public static <T, S extends Geometry> void search(Predicate<? super Geometry> criterion,
+            Subscriber<? super Entry<T, S>> subscriber, NonLeaf<T, S> node, SearchSubscription<T,S> searchSubscription) throws Exception {
+        if (!criterion.test(node.geometry().mbr()))
             return;
 
         int numChildren = node.count();
         for (int i = 0; i < numChildren; i++) {
-            if (subscriber.isUnsubscribed()) {
+            if (searchSubscription.isCancelled()) {
                 return;
             } else {
                 Node<T, S> child = node.child(i);
-                child.searchWithoutBackpressure(criterion, subscriber);
+                child.searchWithoutBackpressure(criterion, subscriber, searchSubscription);
             }
         }
     }
 
     public static <T, S extends Geometry> List<Node<T, S>> add(
-            Entry<? extends T, ? extends S> entry, NonLeaf<T, S> node) {
+            Entry<? extends T, ? extends S> entry, NonLeaf<T, S> node) throws Exception {
         Context<T, S> context = node.context();
         List<Node<T, S>> children = node.children();
         final Node<T, S> child = context.selector().select(entry.geometry().mbr(), children);
@@ -65,7 +67,7 @@ public final class NonLeafHelper {
     }
 
     public static <T, S extends Geometry> NodeAndEntries<T, S> delete(
-            Entry<? extends T, ? extends S> entry, boolean all, NonLeaf<T, S> node) {
+            Entry<? extends T, ? extends S> entry, boolean all, NonLeaf<T, S> node) throws Exception {
         // the result of performing a delete of the given entry from this node
         // will be that zero or more entries will be needed to be added back to
         // the root of the tree (because num entries of their node fell below

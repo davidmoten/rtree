@@ -142,14 +142,18 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
                     root = new LeafFlatBuffers<T, S>(node, context, factory.deserializer());
                 }
             } else {
-                root = toNodeDefault(node, context, factory.deserializer());
+                try {
+                    root = toNodeDefault(node, context, factory.deserializer());
+                } catch (Exception e) {
+                    throw new IOException(e);
+                }
             }
             return SerializerHelper.create(Optional.of(root), (int) t.size(), context);
         }
     }
 
     private static <T, S extends Geometry> Node<T, S> toNodeDefault(Node_ node,
-            Context<T, S> context, Function<byte[], ? extends T> deserializer) {
+            Context<T, S> context, Function<byte[], ? extends T> deserializer) throws Exception {
         int numChildren = node.childrenLength();
         if (numChildren > 0) {
             List<Node<T, S>> children = new ArrayList<Node<T, S>>(numChildren);

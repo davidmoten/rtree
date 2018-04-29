@@ -344,6 +344,7 @@ public final class RTree<T, S extends Geometry> {
          * @param entries
          *            entries to be added to the r-tree
          * @return a loaded RTree
+         * @throws Exception 
          */
         @SuppressWarnings("unchecked")
         public <T, S extends Geometry> RTree<T, S> create(List<Entry<T, S>> entries) {
@@ -445,7 +446,12 @@ public final class RTree<T, S extends Geometry> {
     @SuppressWarnings("unchecked")
     public RTree<T, S> add(Entry<? extends T, ? extends S> entry) {
         if (root.isPresent()) {
-            List<Node<T, S>> nodes = root.get().add(entry);
+            List<Node<T, S>> nodes;
+            try {
+                nodes = root.get().add(entry);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             Node<T, S> node;
             if (nodes.size() == 1)
                 node = nodes.get(0);
@@ -609,7 +615,12 @@ public final class RTree<T, S extends Geometry> {
      */
     public RTree<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all) {
         if (root.isPresent()) {
-            NodeAndEntries<T, S> nodeAndEntries = root.get().delete(entry, all);
+            NodeAndEntries<T, S> nodeAndEntries;
+            try {
+                nodeAndEntries = root.get().delete(entry, all);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             if (nodeAndEntries.node().isPresent() && nodeAndEntries.node().get() == root.get())
                 return this;
             else

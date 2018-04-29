@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.reactivestreams.Subscriber;
 
+import com.github.davidmoten.rtree.FlowableSearch.SearchSubscription;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
@@ -12,9 +13,9 @@ import io.reactivex.functions.Predicate;
 
 public interface Node<T, S extends Geometry> extends HasGeometry {
 
-    List<Node<T, S>> add(Entry<? extends T, ? extends S> entry);
+    List<Node<T, S>> add(Entry<? extends T, ? extends S> entry) throws Exception;
 
-    NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all);
+    NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all) throws Exception;
 
     /**
      * Run when a search requests Long.MAX_VALUE results. This is the
@@ -24,9 +25,10 @@ public interface Node<T, S extends Geometry> extends HasGeometry {
      *            function that returns true if the geometry is a search match
      * @param subscriber
      *            the subscriber to report search findings to
+     * @throws Exception 
      */
     void searchWithoutBackpressure(Predicate<? super Geometry> criterion,
-            Subscriber<? super Entry<T, S>> subscriber);
+            Subscriber<? super Entry<T, S>> subscriber, SearchSubscription<T, S> searchSubscription) throws Exception;
 
     int count();
 

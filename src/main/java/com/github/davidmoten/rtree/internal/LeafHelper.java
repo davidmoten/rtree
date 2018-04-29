@@ -11,6 +11,7 @@ import org.reactivestreams.Subscriber;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.FlowableSearch.SearchSubscription;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -25,7 +26,7 @@ public final class LeafHelper {
     }
 
     public static <T, S extends Geometry> NodeAndEntries<T, S> delete(
-            Entry<? extends T, ? extends S> entry, boolean all, Leaf<T, S> leaf) {
+            Entry<? extends T, ? extends S> entry, boolean all, Leaf<T, S> leaf) throws Exception {
         List<Entry<T, S>> entries = leaf.entries();
         if (!entries.contains(entry)) {
             return new NodeAndEntries<T, S>(of(leaf), Collections.<Entry<T, S>> emptyList(), 0);
@@ -49,7 +50,7 @@ public final class LeafHelper {
     }
 
     public static <T, S extends Geometry> List<Node<T, S>> add(
-            Entry<? extends T, ? extends S> entry, Leaf<T, S> leaf) {
+            Entry<? extends T, ? extends S> entry, Leaf<T, S> leaf) throws Exception {
         List<Entry<T, S>> entries = leaf.entries();
         Context<T, S> context = leaf.context();
         @SuppressWarnings("unchecked")
@@ -72,7 +73,7 @@ public final class LeafHelper {
     }
 
     public static <T, S extends Geometry> void search(Predicate<? super Geometry> condition,
-            Subscriber<? super Entry<T, S>> subscriber, Leaf<T, S> leaf) {
+            Subscriber<? super Entry<T, S>> subscriber, Leaf<T, S> leaf, SearchSubscription<T, S> searchSubscription) throws Exception {
 
         if (!condition.test(leaf.geometry().mbr())) {
             return;
@@ -80,7 +81,7 @@ public final class LeafHelper {
 
         for (int i = 0; i < leaf.count(); i++) {
             Entry<T, S> entry = leaf.entry(i);
-            if (subscriber.isUnsubscribed()) {
+            if (searchSubscription.isCancelled()) {
                 return;
             } else {
                 if (condition.test(entry.geometry()))

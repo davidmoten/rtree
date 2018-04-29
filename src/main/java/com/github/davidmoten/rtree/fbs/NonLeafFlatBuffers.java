@@ -7,10 +7,13 @@ import static com.github.davidmoten.rtree.fbs.FlatBuffersHelper.toGeometry;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.reactivestreams.Subscriber;
+
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entries;
 import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.FlowableSearch.SearchSubscription;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.fbs.generated.BoundsType_;
@@ -26,16 +29,17 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.github.davidmoten.rtree.internal.NonLeafHelper;
 
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
 
     private final Node_ node;
     private final Context<T, S> context;
-    private final Func1<byte[], ? extends T> deserializer;
+    private final Function<byte[], ? extends T> deserializer;
 
-    NonLeafFlatBuffers(Node_ node, Context<T, S> context, Func1<byte[], ? extends T> deserializer) {
+    NonLeafFlatBuffers(Node_ node, Context<T, S> context,
+            Function<byte[], ? extends T> deserializer) {
         Preconditions.checkNotNull(node);
         // remove precondition because reduces performance
         // Preconditions.checkArgument(node.childrenLength() > 0);
@@ -45,30 +49,32 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
     }
 
     @Override
-    public List<Node<T, S>> add(Entry<? extends T, ? extends S> entry) {
+    public List<Node<T, S>> add(Entry<? extends T, ? extends S> entry) throws Exception {
         return NonLeafHelper.add(entry, this);
     }
 
     @Override
-    public NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all) {
+    public NodeAndEntries<T, S> delete(Entry<? extends T, ? extends S> entry, boolean all) throws Exception {
         return NonLeafHelper.delete(entry, all, this);
     }
 
     @Override
-    public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> criterion,
-            Subscriber<? super Entry<T, S>> subscriber) {
+    public void searchWithoutBackpressure(Predicate<? super Geometry> criterion,
+            Subscriber<? super Entry<T, S>> subscriber,
+            SearchSubscription<T, S> searchSubscription) throws Exception {
         // pass through entry and geometry and box instances to be reused for
         // flatbuffers extraction this reduces allocation/gc costs (but of
         // course introduces some mutable ugliness into the codebase)
         searchWithoutBackpressure(node, criterion, subscriber, deserializer, new Entry_(),
-                new Geometry_(), new Bounds_());
+                new Geometry_(), new Bounds_(), searchSubscription);
     }
 
     @SuppressWarnings("unchecked")
     private static <T, S extends Geometry> void searchWithoutBackpressure(Node_ node,
-            Func1<? super Geometry, Boolean> criterion, Subscriber<? super Entry<T, S>> subscriber,
-            Func1<byte[], ? extends T> deserializer, Entry_ entry, Geometry_ geometry,
-            Bounds_ bounds) {
+            Predicate<? super Geometry> criterion,
+            Subscriber<? super Entry<T, S>> subscriber, Function<byte[], ? extends T> deserializer,
+            Entry_ entry, Geometry_ geometry, Bounds_ bounds, //
+            SearchSubscription<T, S> searchSubscription) throws Exception {
         {
             // write bounds from node to bounds variable
             node.mbb(bounds);
@@ -80,7 +86,7 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
                 BoxFloat_ b = bounds.boxFloat();
                 rect = Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
             }
-            if (!criterion.call(rect)) {
+            if (!criterion.test(rect)) {
                 return;
             }
         }
@@ -89,25 +95,25 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
         Node_ child = new Node_();
         if (numChildren > 0) {
             for (int i = 0; i < numChildren; i++) {
-                if (subscriber.isUnsubscribed())
+                if (searchSubscription.isCancelled())
                     return;
                 node.children(child, i);
                 searchWithoutBackpressure(child, criterion, subscriber, deserializer, entry,
-                        geometry, bounds);
+                        geometry, bounds, searchSubscription);
             }
         } else {
             int numEntries = node.entriesLength();
             // reduce allocations by reusing objects
             // check all entries
             for (int i = 0; i < numEntries; i++) {
-                if (subscriber.isUnsubscribed())
+                if (searchSubscription.isCancelled())
                     return;
                 // set entry
                 node.entries(entry, i);
                 // set geometry
                 entry.geometry(geometry);
                 final Geometry g = toGeometry(geometry);
-                if (criterion.call(g)) {
+                if (criterion.test(g)) {
                     T t = parseObject(deserializer, entry);
                     Entry<T, S> ent = Entries.entry(t, (S) g);
                     subscriber.onNext(ent);
