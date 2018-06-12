@@ -230,6 +230,14 @@ public class RTreeTest {
         List<Entry<Object, Rectangle>> entries = tree.entries().toList().toBlocking().single();
         assertTrue(entries.contains(entry2) && !entries.contains(entry));
     }
+    
+    @Test
+    public void testDeleteIssue81() {
+        RTree<Object, Point> t = RTree.create();
+        t = t.add(1, Geometries.pointGeographic(123, 23));
+        t = t.delete(1, Geometries.pointGeographic(123, 23));
+        assertEquals(0, t.size());
+    }
 
     @Test
     public void testDepthWith0() {
