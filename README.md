@@ -356,13 +356,13 @@ serializer.write(tree, os);
 Read an `RTree` from an `InputStream` into a low-memory flatbuffers based structure:
 ```java
 RTree<String, Point> tree = 
-  serializer.read(is, lengthBytes, InnerStructure.SINGLE_ARRAY);
+  serializer.read(is, lengthBytes, InternalStructure.SINGLE_ARRAY);
 ```
 
 Read an `RTree` from an `InputStream` into a default structure:
 ```java
 RTree<String, Point> tree = 
-  serializer.read(is, lengthBytes, InnerStructure.DEFAULT);
+  serializer.read(is, lengthBytes, InternalStructure.DEFAULT);
 ```
 
 Dependencies
