@@ -1059,6 +1059,22 @@ public class RTreeTest {
         assertEquals(6, (int) tree.search(rectangle).count().toBlocking().single());
 
     }
+    
+    @Test
+    public void testDeleteIssue81d() {
+         RTree<Object, Point> t = RTree.create();
+         t = t.add(1, Geometries.pointGeographic(123.4d, 23.3d));
+         t = t.delete(1, Geometries.pointGeographic(123.4d, 23.3d));
+         assertEquals(0, t.size());
+     }
+    
+     @Test
+     public void testDeleteIssue81f() {
+         RTree<Object, Point> t = RTree.create();
+         t = t.add(1, Geometries.pointGeographic(123.4f, 23.3f));
+         t = t.delete(1, Geometries.pointGeographic(123.4f, 23.3f));
+         assertEquals(0, t.size());
+     }
 
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
         @Override
