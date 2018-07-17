@@ -437,4 +437,4 @@ searchNearestGreek                                                     thrpt   1
 
 ```
 
-There is a related project [rtree-benchmark](https://github.com/ambling/rtree-benchmark) that presents a more comprehensive benchmark with results and analysos on this rtree implementation.
+There is a related project [rtree-benchmark](https://github.com/ambling/rtree-benchmark) that presents a more comprehensive benchmark with results and analysis on this rtree implementation.
