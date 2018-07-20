@@ -277,7 +277,7 @@ To minimize memory use you can use geometries that store single precision decima
 Rectangle r = Geometries.rectangle(1.0, 2.0, 3.0, 4.0);
 
 // create geometry using single precision
-Rectangel r = Geometries.rectangle(1.0f, 2.0f, 3.0f, 4.0f);
+Rectangle r = Geometries.rectangle(1.0f, 2.0f, 3.0f, 4.0f);
 ```
 
 The same creation methods exist for `Circle` and `Line`.
