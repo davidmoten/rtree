@@ -1140,5 +1140,5 @@ public class RTreeTest {
                 .assertValueCount(22) //
                 .assertCompleted();
     }
-
+    
 }

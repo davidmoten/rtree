@@ -1,10 +1,6 @@
 language: java
-dist: precise
 jdk:
-  - oraclejdk8
-  - oraclejdk7
-  - openjdk7
-  - openjdk6
+  - openjdk8
 
 # Workaround for buffer overflow with openjdk6
 # https://github.com/travis-ci/travis-ci/issues/5227

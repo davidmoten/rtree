@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree.internal;
 
+import java.awt.geom.Line2D;
+
 public final class RectangleUtil {
 
     private RectangleUtil() {
@@ -37,8 +39,14 @@ public final class RectangleUtil {
      * @since 1.2
      */
     public static final int OUT_BOTTOM = 8;
-
-    public static boolean rectangleIntersectsLine(double rectX, double rectY, double rectWidth,
+    
+    public static boolean rectangleIntersectsLine(double rectX, double rectY, double rectWidth, double rectHeight,
+            double x1, double y1, double x2, double y2) {
+        return _rectangleIntersectsLine(rectX, rectY, rectWidth, rectHeight, x1, y1, x2, y2)
+                || Line2D.Double.linesIntersect(rectX, rectY, rectX + rectWidth, rectY + rectHeight, x1, y1, x2, y2);
+    }
+    
+    private static boolean _rectangleIntersectsLine(double rectX, double rectY, double rectWidth,
             double rectHeight, double x1, double y1, double x2, double y2) {
         if (rectangleCornerOnSegment(rectX, rectY, rectWidth, rectHeight, x1, y1, x2, y2)) {
             return true;
