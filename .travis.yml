@@ -1,8 +1,6 @@
 language: java
 jdk:
   - openjdk8
-  - openjdk10
-  - openjdk11
 
 # Workaround for buffer overflow with openjdk6
 # https://github.com/travis-ci/travis-ci/issues/5227
