@@ -13,14 +13,15 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 import com.github.davidmoten.junit.Asserts;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
-import rx.Subscriber;
-import rx.Subscription;
+import io.reactivex.functions.Predicate;
 import rx.functions.Func1;
 
 public class BackpressureTest {
@@ -35,7 +36,7 @@ public class BackpressureTest {
     public void testBackpressureSearch() {
         Subscriber<Object> sub = Mockito.mock(Subscriber.class);
         ImmutableStack<NodePosition<Object, Geometry>> stack = ImmutableStack.empty();
-        Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);
+        Predicate<Geometry> condition = Mockito.mock(Predicate.class);
         Backpressure.search(condition, sub, stack, 1);
         Mockito.verify(sub, Mockito.never()).onNext(Mockito.any());
     }
@@ -56,7 +57,7 @@ public class BackpressureTest {
         Subscriber<Object> sub = new Subscriber<Object>() {
 
             @Override
-            public void onCompleted() {
+            public void onComplete() {
             }
 
             @Override
@@ -66,6 +67,12 @@ public class BackpressureTest {
             @Override
             public void onNext(Object t) {
 
+            }
+
+            @Override
+            public void onSubscribe(Subscription s) {
+                // TODO Auto-generated method stub
+                
             }
         };
         sub.add(new Subscription() {
@@ -85,7 +92,7 @@ public class BackpressureTest {
         NodePosition<Object, Geometry> np = new NodePosition<Object, Geometry>(node, 1);
         ImmutableStack<NodePosition<Object, Geometry>> stack = ImmutableStack
                 .<NodePosition<Object, Geometry>> empty().push(np);
-        Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);
+        Predicate<Geometry> condition = Mockito.mock(Func1.class);
         ImmutableStack<NodePosition<Object, Geometry>> stack2 = Backpressure.search(condition, sub,
                 stack, 0);
         assertTrue(stack2 == stack);
@@ -128,7 +135,7 @@ public class BackpressureTest {
         NodePosition<Object, Geometry> np = new NodePosition<Object, Geometry>(node, 1);
         ImmutableStack<NodePosition<Object, Geometry>> stack = ImmutableStack
                 .<NodePosition<Object, Geometry>> empty().push(np);
-        Func1<Geometry, Boolean> condition = Mockito.mock(Func1.class);
+        Predicate<Geometry> condition = Mockito.mock(Func1.class);
         ImmutableStack<NodePosition<Object, Geometry>> stack2 = Backpressure.search(condition, sub,
                 stack, 1);
         assertTrue(stack2.isEmpty());
