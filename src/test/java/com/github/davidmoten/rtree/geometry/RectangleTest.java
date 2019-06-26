@@ -139,6 +139,14 @@ public class RectangleTest {
     }
 
     @Test
+    public void testIntersectsOneRectangleReturnsTrueDespiteZeroArea() {
+        Rectangle a = rectangle(10, 50, 50, 50);
+        Rectangle b = rectangle(20, 20, 60, 60);
+        assertTrue(a.intersects(b));
+        assertTrue(b.intersects(a));
+    }
+    
+    @Test
     public void testContains() {
         Rectangle r = rectangle(10, 20, 30, 40);
         assertTrue(r.contains(20, 30));
