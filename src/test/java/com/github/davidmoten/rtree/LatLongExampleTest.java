@@ -11,8 +11,8 @@ import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Predicate;
 
 public class LatLongExampleTest {
 
@@ -37,14 +37,14 @@ public class LatLongExampleTest {
         final double distanceKm = 300;
         List<Entry<String, Point>> list = search(tree, canberra, distanceKm)
                 // get the result
-                .toList().toBlocking().single();
+                .toList().blockingGet();
 
         // should have returned Sydney only
         assertEquals(1, list.size());
         assertEquals("Sydney", list.get(0).value());
     }
 
-    public static <T> Observable<Entry<T, Point>> search(RTree<T, Point> tree, Point lonLat,
+    public static <T> Flowable<Entry<T, Point>> search(RTree<T, Point> tree, Point lonLat,
             final double distanceKm) {
         // First we need to calculate an enclosing lat long rectangle for this
         // distance then we refine on the exact distance
@@ -55,13 +55,10 @@ public class LatLongExampleTest {
                 // do the first search using the bounds
                 .search(bounds)
                 // refine using the exact distance
-                .filter(new Func1<Entry<T, Point>, Boolean>() {
-                    @Override
-                    public Boolean call(Entry<T, Point> entry) {
+                .filter(entry -> {
                         Point p = entry.geometry();
                         Position position = Position.create(p.y(), p.x());
                         return from.getDistanceToKm(position) < distanceKm;
-                    }
                 });
     }
 
@@ -84,17 +81,17 @@ public class LatLongExampleTest {
         final Point location = bungendore;
         String result = tree.search(location)
                 // filter on the exact distance from the centre of the GeoCircle
-                .filter(new Func1<Entry<GeoCircleValue<String>, Rectangle>, Boolean>() {
+                .filter(new Predicate<Entry<GeoCircleValue<String>, Rectangle>>() {
                     Position from = Position.create(location.y(), location.x());
 
                     @Override
-                    public Boolean call(Entry<GeoCircleValue<String>, Rectangle> entry) {
+                    public boolean test(Entry<GeoCircleValue<String>, Rectangle> entry) {
                         Position centre = Position.create(entry.value().lat, entry.value().lon);
                         return from.getDistanceToKm(centre) < entry.value().radiusKm;
                     }
                 })
                 // do the search (only expect one value)
-                .toBlocking().single()
+                .blockingSingle()
                 // get the name of the GoeCircleValue returned
                 .value().value;
         assertEquals("Canberra", result);

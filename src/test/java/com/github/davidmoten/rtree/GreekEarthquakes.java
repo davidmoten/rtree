@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.zip.GZIPInputStream;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
 
+import io.reactivex.Flowable;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func0;
@@ -17,8 +19,8 @@ import rx.observables.StringObservable;
 
 public class GreekEarthquakes {
 
-    public static Observable<Entry<Object, Point>> entries(final Precision precision) {
-        Observable<String> source = Observable.using(new Func0<InputStream>() {
+    public static Flowable<Entry<Object, Point>> entries(final Precision precision) {
+        Flowable<String> source = Flowable.using(new Callable<InputStream>() {
             @Override
             public InputStream call() {
                 try {
@@ -28,9 +30,9 @@ public class GreekEarthquakes {
                     throw new RuntimeException(e);
                 }
             }
-        }, new Func1<InputStream, Observable<String>>() {
+        }, new Function<InputStream, Flowable<String>>() {
             @Override
-            public Observable<String> call(InputStream is) {
+            public Flowable<String> call(InputStream is) {
                 return StringObservable.from(new InputStreamReader(is));
             }
         }, new Action1<InputStream>() {

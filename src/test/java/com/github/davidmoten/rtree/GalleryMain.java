@@ -10,7 +10,7 @@ import rx.Observable;
 public class GalleryMain {
 
     public static void main(String[] args) {
-        Observable<Entry<Object, Point>> entries = GreekEarthquakes.entries(Precision.DOUBLE)
+        Flowable<Entry<Object, Point>> entries = GreekEarthquakes.entries(Precision.DOUBLE)
                 .cache();
 
         List<Integer> sizes = Arrays.asList(100, 1000, 10000, 1000000);

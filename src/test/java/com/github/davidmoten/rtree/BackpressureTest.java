@@ -105,7 +105,7 @@ public class BackpressureTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testRequestZeroWhenUnsubscribed() {
+    public void testRequestZeroWhenUnsubscribed() throws Exception {
         Subscriber<Object> sub = new Subscriber<Object>() {
 
             @Override
@@ -126,7 +126,7 @@ public class BackpressureTest {
                 
             }
         };
-        sub.onSubscribe(new Subscription() {
+        Subscription subscription = new Subscription() {
 
             @Override
             public void request(long n) {
@@ -139,22 +139,23 @@ public class BackpressureTest {
                 // TODO Auto-generated method stub
                 
             }
-        });
-        sub.cancel();
+        };
+        sub.onSubscribe(subscription);
+        subscription.cancel();
         Node<Object, Geometry> node = Mockito.mock(Node.class);
         NodePosition<Object, Geometry> np = new NodePosition<Object, Geometry>(node, 1);
         ImmutableStack<NodePosition<Object, Geometry>> stack = ImmutableStack
                 .<NodePosition<Object, Geometry>> empty().push(np);
-        Predicate<Geometry> condition = Mockito.mock(Func1.class);
+        Predicate<Geometry> condition = Mockito.mock(Predicate.class);
+        SearchSubscription<Object, Geometry> ss = new SearchSubscription<>(node,condition, sub);
         ImmutableStack<NodePosition<Object, Geometry>> stack2 = Backpressure.search(condition, sub,
-                stack, 1);
+                stack, 1, ss);
         assertTrue(stack2.isEmpty());
     }
 
     @Test
     public void testBackpressureIterateWhenNodeHasMaxChildrenAndIsRoot() {
         Entry<Object, Rectangle> e1 = RTreeTest.e(1);
-        @SuppressWarnings("unchecked")
         List<Entry<Object, Rectangle>> list = Arrays.asList(e1, e1, e1, e1);
         RTree<Object, Rectangle> tree = RTree.star().maxChildren(4).<Object, Rectangle> create()
                 .add(list);
@@ -167,7 +168,6 @@ public class BackpressureTest {
     @Test
     public void testBackpressureRequestZero() {
         Entry<Object, Rectangle> e1 = RTreeTest.e(1);
-        @SuppressWarnings("unchecked")
         List<Entry<Object, Rectangle>> list = Arrays.asList(e1, e1, e1, e1);
         RTree<Object, Rectangle> tree = RTree.star().maxChildren(4).<Object, Rectangle> create()
                 .add(list);
@@ -175,13 +175,16 @@ public class BackpressureTest {
         final HashSet<Entry<Object, Rectangle>> found = new HashSet<Entry<Object, Rectangle>>();
         tree.entries().subscribe(new Subscriber<Entry<Object, Rectangle>>() {
 
+            private Subscription upstream;
+
             @Override
-            public void onStart() {
-                request(1);
+            public void onSubscribe(Subscription upstream) {
+                this.upstream = upstream;
+                upstream.request(1);
             }
 
             @Override
-            public void onCompleted() {
+            public void onComplete() {
 
             }
 
@@ -193,7 +196,7 @@ public class BackpressureTest {
             @Override
             public void onNext(Entry<Object, Rectangle> t) {
                 found.add(t);
-                request(0);
+                upstream.request(0);
             }
         });
         assertEquals(expected, found);
@@ -248,8 +251,10 @@ public class BackpressureTest {
         final Set<Entry<Object, Rectangle>> found = new HashSet<Entry<Object, Rectangle>>();
         tree.search(e3.geometry()).subscribe(new Subscriber<Entry<Object, Rectangle>>() {
 
+            private Subscription upstream;
+
             @Override
-            public void onCompleted() {
+            public void onComplete() {
 
             }
 
@@ -261,7 +266,12 @@ public class BackpressureTest {
             @Override
             public void onNext(Entry<Object, Rectangle> t) {
                 found.add(t);
-                request(Long.MAX_VALUE);
+                upstream.request(Long.MAX_VALUE);
+            }
+
+            @Override
+            public void onSubscribe(Subscription upstream) {
+                this.upstream = upstream;
             }
         });
         assertEquals(expected, found);
@@ -271,15 +281,7 @@ public class BackpressureTest {
             final Set<Entry<Object, Rectangle>> found) {
         return new Subscriber<Entry<Object, Rectangle>>() {
 
-            @Override
-            public void onStart() {
-                request(1);
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
+            private Subscription upstream;
 
             @Override
             public void onError(Throwable e) {
@@ -289,7 +291,19 @@ public class BackpressureTest {
             @Override
             public void onNext(Entry<Object, Rectangle> t) {
                 found.add(t);
-                request(1);
+                upstream.request(1);
+            }
+
+            @Override
+            public void onSubscribe(Subscription upstream) {
+                this.upstream = upstream;
+                upstream.request(1);;
+            }
+
+            @Override
+            public void onComplete() {
+                // TODO Auto-generated method stub
+                
             }
         };
     }
