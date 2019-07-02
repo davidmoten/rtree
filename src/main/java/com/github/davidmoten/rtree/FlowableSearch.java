@@ -9,6 +9,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
 import io.reactivex.Flowable;
+import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.Predicate;
 
 public final class FlowableSearch<T, S extends Geometry>
@@ -56,14 +57,15 @@ public final class FlowableSearch<T, S extends Geometry>
                     requestAll();
                 } else
                     requestSome(n);
-            } catch (RuntimeException e) {
+            } catch (Throwable e) {
+                Exceptions.throwIfFatal(e);
                 subscriber.onError(e);
             }
 
         }
 
-        private void requestAll() {
-            node.searchWithoutBackpressure(condition, subscriber);
+        private void requestAll() throws Exception {
+            node.searchWithoutBackpressure(condition, subscriber, this);
             if (!cancelled) {
                 subscriber.onComplete();
             }

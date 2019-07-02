@@ -17,12 +17,12 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import com.github.davidmoten.junit.Asserts;
+import com.github.davidmoten.rtree.FlowableSearch.SearchSubscription;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
 import io.reactivex.functions.Predicate;
-import rx.functions.Func1;
 
 public class BackpressureTest {
 
@@ -33,11 +33,13 @@ public class BackpressureTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testBackpressureSearch() {
+    public void testBackpressureSearch() throws Exception {
         Subscriber<Object> sub = Mockito.mock(Subscriber.class);
         ImmutableStack<NodePosition<Object, Geometry>> stack = ImmutableStack.empty();
         Predicate<Geometry> condition = Mockito.mock(Predicate.class);
-        Backpressure.search(condition, sub, stack, 1);
+        Node<Object, Geometry> node = Mockito.mock(Node.class);
+        SearchSubscription<Object, Geometry> ss = new SearchSubscription<>(node, condition,sub);
+        Backpressure.search(condition, sub, stack, 1, ss);
         Mockito.verify(sub, Mockito.never()).onNext(Mockito.any());
     }
 
@@ -53,7 +55,7 @@ public class BackpressureTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testRequestZero() {
+    public void testRequestZero() throws Exception {
         Subscriber<Object> sub = new Subscriber<Object>() {
 
             @Override
@@ -75,26 +77,29 @@ public class BackpressureTest {
                 
             }
         };
-        sub.add(new Subscription() {
-            volatile boolean subscribed = true;
+        sub.onSubscribe(new Subscription() {
+            
+            @Override
+            public void request(long n) {
+                // TODO Auto-generated method stub
+                
+            }
+            
 
             @Override
-            public void unsubscribe() {
-                subscribed = false;
+            public void cancel() {
             }
 
-            @Override
-            public boolean isUnsubscribed() {
-                return !subscribed;
-            }
+            
         });
         Node<Object, Geometry> node = Mockito.mock(Node.class);
         NodePosition<Object, Geometry> np = new NodePosition<Object, Geometry>(node, 1);
         ImmutableStack<NodePosition<Object, Geometry>> stack = ImmutableStack
                 .<NodePosition<Object, Geometry>> empty().push(np);
-        Predicate<Geometry> condition = Mockito.mock(Func1.class);
+        Predicate<Geometry> condition = Mockito.mock(Predicate.class);
+        SearchSubscription<Object, Geometry> ss = new SearchSubscription<>(node, condition,sub);
         ImmutableStack<NodePosition<Object, Geometry>> stack2 = Backpressure.search(condition, sub,
-                stack, 0);
+                stack, 0, ss);
         assertTrue(stack2 == stack);
     }
 
@@ -104,7 +109,7 @@ public class BackpressureTest {
         Subscriber<Object> sub = new Subscriber<Object>() {
 
             @Override
-            public void onCompleted() {
+            public void onComplete() {
             }
 
             @Override
@@ -115,22 +120,27 @@ public class BackpressureTest {
             public void onNext(Object t) {
 
             }
-        };
-        sub.add(new Subscription() {
-
-            volatile boolean subscribed = true;
 
             @Override
-            public void unsubscribe() {
-                subscribed = false;
+            public void onSubscribe(Subscription s) {
+                
+            }
+        };
+        sub.onSubscribe(new Subscription() {
+
+            @Override
+            public void request(long n) {
+                // TODO Auto-generated method stub
+                
             }
 
             @Override
-            public boolean isUnsubscribed() {
-                return !subscribed;
+            public void cancel() {
+                // TODO Auto-generated method stub
+                
             }
         });
-        sub.unsubscribe();
+        sub.cancel();
         Node<Object, Geometry> node = Mockito.mock(Node.class);
         NodePosition<Object, Geometry> np = new NodePosition<Object, Geometry>(node, 1);
         ImmutableStack<NodePosition<Object, Geometry>> stack = ImmutableStack
