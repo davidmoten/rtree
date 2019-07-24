@@ -10,7 +10,7 @@ In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementat
 
 Status: *released to Maven Central*
 
-Note that the next version (without a reactive API and without serialization) is at https://github.com/davidmoten/rtree2.
+Note that the **next version** (without a reactive API and without serialization) is at [rtree2](https://github.com/davidmoten/rtree2).
 
 An [R-tree](http://en.wikipedia.org/wiki/R-tree) is a commonly used spatial index.
 
