@@ -122,7 +122,7 @@ tree = tree.add(item, Geometries.point(10,20));
 ```
 or 
 ```java
-tree = tree.add(Entry.entry(item, Geometries.point(10,20));
+tree = tree.add(Entries.entry(item, Geometries.point(10,20));
 ```
 
 *Important note:* being an immutable data structure, calling ```tree.add(item, geometry)``` does nothing to ```tree```, 
