@@ -16,7 +16,7 @@
 
     <name>${project.artifactId}</name>
     <description>Java implementation of an immutable in-memory R-Tree for spatial indexing</description>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
 
     <url>http://github.com/davidmoten/rtree</url>
 
@@ -362,6 +362,27 @@
                 <configuration>
                     <source>${maven.compiler.target}</source>
                     <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>4.2.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <i-Package>com.github.davidmoten.rtree.*</i-Package>
+                        <Import-Package>
+                            !com.esotericsoftware.*;
+                            !com.google.flatbuffers;
+                            !android.os;
+                            *
+                        </Import-Package>
+                        <Embed-Dependency>
+                            guava-mini;scope=compile|runtime;inline=true;
+                            rxjava;scope=compile|runtime;inline=true;
+                        </Embed-Dependency>
+                    </instructions>
                 </configuration>
             </plugin>
             <plugin>
