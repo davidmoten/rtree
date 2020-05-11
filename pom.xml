@@ -371,7 +371,11 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <i-Package>com.github.davidmoten.rtree.*</i-Package>
+                        <Export-Package>
+                            com.github.davidmoten.rtree;
+                            com.github.davidmoten.rtree.geometry;
+                            com.github.davidmoten.rtree.internal;
+                        </Export-Package>
                         <Import-Package>
                             !com.esotericsoftware.*;
                             !com.google.flatbuffers;
