@@ -372,9 +372,8 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            com.github.davidmoten.rtree;
-                            com.github.davidmoten.rtree.geometry;
-                            com.github.davidmoten.rtree.internal;
+                            !com.github.davidmoten.rtree.internal.*;
+                            com.github.davidmoten.rtree.*;
                         </Export-Package>
                         <Import-Package>
                             !com.esotericsoftware.*;
