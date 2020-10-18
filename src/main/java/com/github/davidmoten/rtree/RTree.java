@@ -4,6 +4,7 @@ import static com.github.davidmoten.guavamini.Optional.absent;
 import static com.github.davidmoten.guavamini.Optional.of;
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,6 +24,7 @@ import com.github.davidmoten.rtree.internal.Comparators;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.github.davidmoten.rtree.internal.operators.OperatorBoundedPriorityQueue;
 
+import org.davidmoten.hilbert.HilbertCurve;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
@@ -119,8 +121,8 @@ public final class RTree<T, S extends Geometry> {
      *            the geometry type of the entries in the tree
      * @return a new RTree instance
      */
-    public static <T, S extends Geometry> RTree<T, S> create(List<Entry<T, S>> entries) {
-        return new Builder().create(entries);
+    public static <T, S extends Geometry> RTree<T, S> create(List<Entry<T, S>> entries, PackAlgo packAlgo) {
+        return new Builder().create(entries, packAlgo);
     }
 
     /**
@@ -333,25 +335,35 @@ public final class RTree<T, S extends Geometry> {
         }
 
         /**
-         * Create an RTree by bulk loading, using the STR method. STR: a simple and
-         * efficient algorithm for R-tree packing
+         * Create an RTree by bulk loading, using {@link PackAlgo}. Supported pack methods.
+         * 1. STR method. STR: a simple and efficient algorithm for R-tree packing
          * http://ieeexplore.ieee.org/abstract/document/582015/
+         * 2. Hilbert method.
+         * http://repository.cmu.edu/cgi/viewcontent.cgi?article=1586&context=compsci
+         *
          * <p>
          * Note: this method mutates the input entries, the internal order of the List
          * may be changed.
          * </p>
          * 
-         * @param entries
-         *            entries to be added to the r-tree
+         * @param entries entries to be added to the r-tree
          * @return a loaded RTree
          */
         @SuppressWarnings("unchecked")
-        public <T, S extends Geometry> RTree<T, S> create(List<Entry<T, S>> entries) {
+        public <T, S extends Geometry> RTree<T, S> create(List<Entry<T, S>> entries, PackAlgo packAlgo) {
             setDefaultCapacity();
 
             Context<T, S> context = new Context<T, S>(minChildren.get(), maxChildren.get(),
                     selector, splitter, (Factory<T, S>) factory);
-            return packingSTR(entries, true, entries.size(), context);
+
+            switch (packAlgo) {
+                case STR:
+                    return packingSTR(entries, true, entries.size(), context);
+                case HILBERT:
+                    return packingHilbert(entries, true, entries.size(), context);
+                default:
+                    return packingSTR(entries, true, entries.size(), context);
+            }
         }
 
         private void setDefaultCapacity() {
@@ -366,7 +378,7 @@ public final class RTree<T, S extends Geometry> {
 
         @SuppressWarnings("unchecked")
         private <T, S extends Geometry> RTree<T, S> packingSTR(List<? extends HasGeometry> objects,
-                boolean isLeaf, int size, Context<T, S> context) {
+                                                               boolean isLeaf, int size, Context<T, S> context) {
             int capacity = (int) Math.round(maxChildren.get() * loadingFactor);
             int nodeCount = (int) Math.ceil(1.0 * objects.size() / capacity);
 
@@ -411,6 +423,47 @@ public final class RTree<T, S extends Geometry> {
             return packingSTR(nodes, false, size, context);
         }
 
+        @SuppressWarnings("unchecked")
+        private <T, S extends Geometry> RTree<T, S> packingHilbert(List<? extends HasGeometry> objects,
+                                                                   boolean isLeaf, int size, Context<T, S> context) {
+            int capacity = (int) Math.round(maxChildren.get() * loadingFactor);
+            int nodeCount = (int) Math.ceil(1.0 * objects.size() / capacity);
+
+            if (nodeCount == 0) {
+                return create();
+            } else if (nodeCount == 1) {
+                Node<T, S> root;
+                if (isLeaf) {
+                    root = context.factory().createLeaf((List<Entry<T, S>>) objects, context);
+                } else {
+                    root = context.factory().createNonLeaf((List<Node<T, S>>) objects, context);
+                }
+                return new RTree<T, S>(of(root), size, context);
+            }
+
+            if (isLeaf) {
+                // 52 bit precision corresponds to ~1 feet.
+                Collections.sort(objects, new HilbertComparator((short)2, 52));
+            }
+
+            List<Node<T, S>> nodes = new ArrayList<Node<T, S>>(nodeCount);
+            for (int i = 0; i < objects.size(); i += capacity) {
+                if (isLeaf) {
+                    List<Entry<T, S>> entries = (List<Entry<T, S>>) objects.subList(i, Math.min(objects.size(), i + capacity));
+                    Node<T, S> leaf = context.factory().createLeaf(entries, context);
+                    nodes.add(leaf);
+                } else {
+                    List<Node<T, S>> children = (List<Node<T, S>>) objects.subList(i, Math.min(objects.size(), i + capacity));
+                    Node<T, S> nonleaf = context.factory().createNonLeaf(children, context);
+                    nodes.add(nonleaf);
+                }
+            }
+
+            return packingHilbert(nodes, false, size, context);
+        }
+
+
+
         private static final class MidComparator implements Comparator<HasGeometry> {
             private final short dimension; // leave space for multiple dimensions, 0 for x, 1 for y,
                                            // ...
@@ -430,6 +483,37 @@ public final class RTree<T, S extends Geometry> {
                     return (mbr.x1() + mbr.x2()) / 2;
                 else
                     return (mbr.y1() + mbr.y2()) / 2;
+            }
+        }
+
+        private static final class HilbertComparator implements Comparator<HasGeometry> {
+            private final short dimension; // supporting N dimensions.
+            private final int bitPrecision; // maps this precision in distance.
+
+            public HilbertComparator(short dim, int bitPrecision) {
+                this.dimension = dim;
+                if (bitPrecision >= 0 && bitPrecision < 64) {
+                    this.bitPrecision = bitPrecision;
+                } else {
+                    this.bitPrecision = 24; // default to ~10000 meters
+                }
+            }
+
+            @Override
+            public int compare(HasGeometry o1, HasGeometry o2) {
+                Long h1 = twoDCHilbertIndex(o1);
+                Long h2 = twoDCHilbertIndex(o2);
+                //System.out.println("h1: " + h1 + ", h2: " + h2);
+                return Long.compare(h1, h2);
+            }
+
+            private Long twoDCHilbertIndex(HasGeometry o) {
+                Rectangle mbr = o.geometry().mbr();
+                HilbertCurve c = HilbertCurve.bits(bitPrecision).dimensions(dimension);
+                int centerX = (int) ((mbr.x1() + mbr.x2()) / 2);
+                int centerY = (int) ((mbr.y1() + mbr.y2()) / 2);
+                BigInteger index = c.index(centerX, centerY);
+                return index.longValue();
             }
         }
 
