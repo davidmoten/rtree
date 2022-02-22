@@ -56,7 +56,7 @@ public final class RTree<T, S extends Geometry> {
      * Current size in Entries of the RTree.
      */
     private final int size;
-    private final Func2<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>> rectangleAccumulator =
+    private static final Func2<Optional<Rectangle>, Entry<Object, Geometry>, Optional<Rectangle>> RECTANGLE_ACCUMULATOR =
             (rectangle, entry) ->
                     rectangle.map(value -> Optional.of(value.add(entry.geometry().mbr())))
                             .orElseGet(() -> Optional.of(entry.geometry().mbr()));
@@ -861,8 +861,13 @@ public final class RTree<T, S extends Geometry> {
     }
 
     private Rectangle calculateMaxView(RTree<T, S> tree) {
+        @SuppressWarnings("unchecked")
+        Func2<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>> ra = //
+                (Func2<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>>) //
+                (Func2<?,?,?>) //
+                RECTANGLE_ACCUMULATOR;
         return tree.entries()
-                .reduce(Optional.empty(), rectangleAccumulator)
+                .reduce(Optional.empty(), ra)
                 .toBlocking().single()
                 .orElse(ZERO_RECTANGLE);
     }
