@@ -39,6 +39,7 @@ public class KryoSerializationTest {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         Output output = new Output(bytes);
         Boo b = new Boo("hello");
+        kryo.register(Boo.class);
         kryo.writeObject(output, b);
         output.close();
         Input input = new Input(new ByteArrayInputStream(bytes.toByteArray()));
