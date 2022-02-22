@@ -14,7 +14,7 @@ import com.github.davidmoten.rtree.geometry.Geometry;
 public final class FactoryDefault<T, S extends Geometry> implements Factory<T, S> {
 
     private static class Holder {
-        private static final Factory<Object, Geometry> INSTANCE = new FactoryDefault<Object, Geometry>();
+        private static final Factory<Object, Geometry> INSTANCE = new FactoryDefault<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -24,12 +24,12 @@ public final class FactoryDefault<T, S extends Geometry> implements Factory<T, S
 
     @Override
     public Leaf<T, S> createLeaf(List<Entry<T, S>> entries, Context<T, S> context) {
-        return new LeafDefault<T, S>(entries, context);
+        return new LeafDefault<>(entries, context);
     }
 
     @Override
     public NonLeaf<T, S> createNonLeaf(List<? extends Node<T, S>> children, Context<T, S> context) {
-        return new NonLeafDefault<T, S>(children, context);
+        return new NonLeafDefault<>(children, context);
     }
 
     @Override

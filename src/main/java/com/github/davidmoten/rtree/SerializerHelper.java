@@ -1,7 +1,8 @@
 package com.github.davidmoten.rtree;
 
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.geometry.Geometry;
+
+import java.util.Optional;
 
 public final class SerializerHelper {
     

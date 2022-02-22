@@ -6,8 +6,8 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
@@ -132,7 +132,7 @@ public final class SerializerFlatBuffers<T, S extends Geometry> implements Seria
                 t.context().maxChildren(), new SelectorRStar(), new SplitterRStar(), factory);
         Node_ node = t.root();
         if (node == null) {
-            return SerializerHelper.create(Optional.<Node<T, S>>absent(), 0, context);
+            return SerializerHelper.create(Optional.empty(), 0, context);
         } else {
             final Node<T, S> root;
             if (structure == InternalStructure.SINGLE_ARRAY) {

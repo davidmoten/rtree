@@ -1,12 +1,10 @@
 package com.github.davidmoten.rtree.internal;
 
-import static com.github.davidmoten.guavamini.Optional.of;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Node;
@@ -16,6 +14,8 @@ import com.github.davidmoten.rtree.geometry.ListPair;
 
 import rx.Subscriber;
 import rx.functions.Func1;
+
+import static java.util.Optional.of;
 
 public final class NonLeafHelper {
 
@@ -106,16 +106,16 @@ public final class NonLeafHelper {
             }
         }
         if (removeTheseNodes.isEmpty())
-            return new NodeAndEntries<T, S>(of(node), Collections.<Entry<T, S>> emptyList(), 0);
+            return new NodeAndEntries<>(of(node), Collections.emptyList(), 0);
         else {
             List<Node<T, S>> nodes = Util.remove(children, removeTheseNodes);
             nodes.addAll(addTheseNodes);
-            if (nodes.size() == 0)
-                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> absent(), addTheseEntries,
+            if (nodes.isEmpty())
+                return new NodeAndEntries<>(Optional.empty(), addTheseEntries,
                         countDeleted);
             else {
                 NonLeaf<T, S> nd = node.context().factory().createNonLeaf(nodes, node.context());
-                return new NodeAndEntries<T, S>(of(nd), addTheseEntries, countDeleted);
+                return new NodeAndEntries<>(of(nd), addTheseEntries, countDeleted);
             }
         }
     }
