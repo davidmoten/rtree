@@ -43,6 +43,7 @@
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
         <!-- keep jmh at 1.11.3 to support java 6 -->
         <jmh.version>1.34</jmh.version>
+        <jacoco.version>0.8.7</jacoco.version>
 
     </properties>
 
@@ -265,7 +266,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.7</version>
+                        <version>${jacoco.version}</version>
                         <executions>
                             <execution>
                                 <goals>
@@ -404,7 +405,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.4</version>
+                <version>${jacoco.version}</version>
                 <executions>
                     <execution>
                         <goals>
