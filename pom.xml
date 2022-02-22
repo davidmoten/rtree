@@ -31,7 +31,7 @@
         <checkstyle.version>2.13</checkstyle.version>
         <findbugs.version>3.0.1</findbugs.version>
         <javadoc.version>3.3.2</javadoc.version>
-        <pmd.version>3.4</pmd.version>
+        <pmd.version>3.16.0</pmd.version>
         <jdepend.version>2.0</jdepend.version>
         <javancss.version>2.1</javancss.version>
         <project.info.version>2.7</project.info.version>
