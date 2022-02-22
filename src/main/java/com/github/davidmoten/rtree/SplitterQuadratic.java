@@ -1,13 +1,10 @@
 package com.github.davidmoten.rtree;
 
-import static com.github.davidmoten.guavamini.Optional.absent;
-import static com.github.davidmoten.guavamini.Optional.of;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.github.davidmoten.guavamini.Lists;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
@@ -15,6 +12,8 @@ import com.github.davidmoten.rtree.geometry.ListPair;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Util;
 import com.github.davidmoten.rtree.internal.util.Pair;
+
+import static java.util.Optional.of;
 
 public final class SplitterQuadratic implements Splitter {
 
@@ -73,10 +72,10 @@ public final class SplitterQuadratic implements Splitter {
     static <T extends HasGeometry> T getBestCandidateForGroup(List<T> list, List<T> group,
             Rectangle groupMbr) {
         // TODO reduce allocations by not using Optional
-        Optional<T> minEntry = absent();
-        Optional<Double> minArea = absent();
+        Optional<T> minEntry = Optional.empty();
+        Optional<Double> minArea = Optional.empty();
         for (final T entry : list) {
-            final double area = groupMbr.add(entry.geometry().mbr()).area();
+            double area = groupMbr.add(entry.geometry().mbr()).area();
             if (!minArea.isPresent() || area < minArea.get()) {
                 minArea = of(area);
                 minEntry = of(entry);
@@ -88,10 +87,10 @@ public final class SplitterQuadratic implements Splitter {
     @VisibleForTesting
     static <T extends HasGeometry> Pair<T> worstCombination(List<T> items) {
         //TODO reduce allocations by not using Optional
-        Optional<T> e1 = absent();
-        Optional<T> e2 = absent();
+        Optional<T> e1 = Optional.empty();
+        Optional<T> e2 = Optional.empty();
         {
-            Optional<Double> maxArea = absent();
+            Optional<Double> maxArea = Optional.empty();
             for (int i = 0; i < items.size(); i++) {
                 for (int j = i + 1; j < items.size(); j++) {
                     T entry1 = items.get(i);
@@ -105,10 +104,11 @@ public final class SplitterQuadratic implements Splitter {
                 }
             }
         }
-        if (e1.isPresent())
-            return new Pair<T>(e1.get(), e2.get());
-        else
+        if (e1.isPresent()) {
+            return new Pair<>(e1.get(), e2.get());
+        } else {
             // all items are the same item
-            return new Pair<T>(items.get(0), items.get(1));
+            return new Pair<>(items.get(0), items.get(1));
+        }
     }
 }

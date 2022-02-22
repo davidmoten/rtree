@@ -1,12 +1,13 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
-import com.github.davidmoten.guavamini.Objects;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
+
+import java.util.Objects;
+import java.util.Optional;
 
 public final class CircleDouble implements Circle {
 
@@ -62,15 +63,15 @@ public final class CircleDouble implements Circle {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(x, y, radius);
+        return Objects.hash(x, y, radius);
     }
 
     @Override
     public boolean equals(Object obj) {
         Optional<CircleDouble> other = ObjectsHelper.asClass(obj, CircleDouble.class);
         if (other.isPresent()) {
-            return Objects.equal(x, other.get().x) && Objects.equal(y, other.get().y)
-                    && Objects.equal(radius, other.get().radius);
+            return Objects.equals(x, other.get().x) && Objects.equals(y, other.get().y)
+                    && Objects.equals(radius, other.get().radius);
         } else
             return false;
     }

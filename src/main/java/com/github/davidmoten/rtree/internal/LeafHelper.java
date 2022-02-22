@@ -1,12 +1,11 @@
 package com.github.davidmoten.rtree.internal;
 
-import static com.github.davidmoten.guavamini.Optional.of;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Leaf;
@@ -16,6 +15,8 @@ import com.github.davidmoten.rtree.geometry.ListPair;
 
 import rx.Subscriber;
 import rx.functions.Func1;
+
+import static java.util.Optional.of;
 
 public final class LeafHelper {
 
@@ -27,9 +28,9 @@ public final class LeafHelper {
             Entry<? extends T, ? extends S> entry, boolean all, Leaf<T, S> leaf) {
         List<Entry<T, S>> entries = leaf.entries();
         if (!entries.contains(entry)) {
-            return new NodeAndEntries<T, S>(of(leaf), Collections.<Entry<T, S>> emptyList(), 0);
+            return new NodeAndEntries<>(of(leaf), Collections.emptyList(), 0);
         } else {
-            final List<Entry<T, S>> entries2 = new ArrayList<Entry<T, S>>(entries);
+            final List<Entry<T, S>> entries2 = new ArrayList<>(entries);
             entries2.remove(entry);
             int numDeleted = 1;
             // keep deleting if all specified
@@ -38,10 +39,10 @@ public final class LeafHelper {
 
             if (entries2.size() >= leaf.context().minChildren()) {
                 Leaf<T, S> node = leaf.context().factory().createLeaf(entries2, leaf.context());
-                return new NodeAndEntries<T, S>(of(node), Collections.<Entry<T, S>> emptyList(),
+                return new NodeAndEntries<>(of(node), Collections.emptyList(),
                         numDeleted);
             } else {
-                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> absent(), entries2,
+                return new NodeAndEntries<T, S>(Optional.empty(), entries2,
                         numDeleted);
             }
         }
@@ -82,8 +83,9 @@ public final class LeafHelper {
             if (subscriber.isUnsubscribed()) {
                 return;
             } else {
-                if (condition.call(entry.geometry()))
+                if (condition.call(entry.geometry())) {
                     subscriber.onNext(entry);
+                }
             }
         }
     }

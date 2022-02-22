@@ -3,11 +3,11 @@ package com.github.davidmoten.rtree.kryo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Optional;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.InternalStructure;
@@ -128,11 +128,11 @@ public class SerializerKryo<T, S extends Geometry> implements Serializer<T, S> {
         Context<T, S> context = readContext(input);
         boolean hasRoot = input.readBoolean();
         int size = input.readInt();
-        final Optional<Node<T, S>> root;
+        Optional<Node<T, S>> root;
         if (hasRoot) {
-            root = Optional.of(SerializerKryo.<T, S>readNode(input));
+            root = Optional.of(SerializerKryo.readNode(input));
         } else {
-            root = Optional.absent();
+            root = Optional.empty();
         }
         return SerializerHelper.create(root, size, context);
     }

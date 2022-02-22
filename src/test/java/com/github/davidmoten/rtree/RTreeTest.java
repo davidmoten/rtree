@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,7 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Lists;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Sets;
 import com.github.davidmoten.rtree.fbs.FactoryFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Circle;

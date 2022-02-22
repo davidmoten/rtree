@@ -1,8 +1,8 @@
 package com.github.davidmoten.rtree.internal;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.geometry.Geometry;

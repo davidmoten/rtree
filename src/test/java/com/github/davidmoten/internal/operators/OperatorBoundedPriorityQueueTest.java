@@ -22,13 +22,7 @@ import rx.Subscriber;
 
 public class OperatorBoundedPriorityQueueTest {
 
-    private static Comparator<Integer> integerComparator = new Comparator<Integer>() {
-
-        @Override
-        public int compare(Integer i1, Integer i2) {
-            return i1.compareTo(i2);
-        }
-    };
+    private static Comparator<Integer> integerComparator = (i1, i2) -> i1.compareTo(i2);
 
     @Test
     public void testPriority() {

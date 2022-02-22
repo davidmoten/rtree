@@ -1,7 +1,5 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
-import com.github.davidmoten.guavamini.Objects;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Line;
@@ -10,6 +8,9 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Line2D;
 import com.github.davidmoten.rtree.internal.RectangleUtil;
 import com.github.davidmoten.rtree.internal.util.ObjectsHelper;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A line segment.
@@ -116,15 +117,15 @@ public final class LineFloat implements Line {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(x1, y1, x2, y2);
+        return Objects.hash(x1, y1, x2, y2);
     }
 
     @Override
     public boolean equals(Object obj) {
         Optional<LineFloat> other = ObjectsHelper.asClass(obj, LineFloat.class);
         if (other.isPresent()) {
-            return Objects.equal(x1, other.get().x1) && Objects.equal(x2, other.get().x2)
-                    && Objects.equal(y1, other.get().y1) && Objects.equal(y2, other.get().y2);
+            return Objects.equals(x1, other.get().x1) && Objects.equals(x2, other.get().x2)
+                    && Objects.equals(y1, other.get().y1) && Objects.equals(y2, other.get().y2);
         } else
             return false;
     }

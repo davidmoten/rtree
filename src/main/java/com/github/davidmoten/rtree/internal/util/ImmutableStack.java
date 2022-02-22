@@ -1,16 +1,17 @@
 package com.github.davidmoten.rtree.internal.util;
 
-import static com.github.davidmoten.guavamini.Optional.of;
 
 import java.util.Iterator;
+import java.util.Optional;
 
-import com.github.davidmoten.guavamini.Optional;
+import static java.util.Optional.of;
+
 
 public final class ImmutableStack<T> implements Iterable<T> {
     private final Optional<T> head;
     private final Optional<ImmutableStack<T>> tail;
 
-    private static ImmutableStack<?> EMPTY = new ImmutableStack<Object>();
+    private static ImmutableStack<?> EMPTY = new ImmutableStack<>();
 
     public ImmutableStack(final T head, final ImmutableStack<T> tail) {
         this(of(head), of(tail));
@@ -22,11 +23,11 @@ public final class ImmutableStack<T> implements Iterable<T> {
     }
 
     public static <T> ImmutableStack<T> create(T t) {
-        return new ImmutableStack<T>(of(t), of(ImmutableStack.<T> empty()));
+        return new ImmutableStack<>(of(t), of(ImmutableStack.empty()));
     }
 
     public ImmutableStack() {
-        this(Optional.<T> absent(), Optional.<ImmutableStack<T>> absent());
+        this(Optional.empty(), Optional.empty());
     }
 
     @SuppressWarnings("unchecked")

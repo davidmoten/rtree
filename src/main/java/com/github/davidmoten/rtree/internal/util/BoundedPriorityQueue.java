@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import com.github.davidmoten.guavamini.Preconditions;
 
@@ -33,13 +34,7 @@ public final class BoundedPriorityQueue<T> {
     }
 
     private static <T> Comparator<T> reverse(final Comparator<T> comparator) {
-        return new Comparator<T>() {
-
-            @Override
-            public int compare(T o1, T o2) {
-                return comparator.compare(o2, o1);
-            }
-        };
+        return (o1, o2) -> comparator.compare(o2, o1);
     }
 
     public static <T> BoundedPriorityQueue<T> create(final int maxSize,
@@ -79,12 +74,12 @@ public final class BoundedPriorityQueue<T> {
      *         unmodifiableList sorted in reverse order.
      */
     public List<T> asList() {
-        return Collections.unmodifiableList(new ArrayList<T>(queue));
+        return Collections.unmodifiableList(new ArrayList<>(queue));
     }
 
     public List<T> asOrderedList() {
-        List<T> list = new ArrayList<T>(queue);
-        Collections.sort(list, comparator);
+        List<T> list = new ArrayList<>(queue);
+        list.sort(comparator);
         return list;
     }
 
