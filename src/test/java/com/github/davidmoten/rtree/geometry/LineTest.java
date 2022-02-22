@@ -6,7 +6,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 
 import org.junit.Test;
 
@@ -193,7 +192,6 @@ public final class LineTest {
     @Test
     public void testLineDoesIntersectPoint() {
         assertTrue(Geometries.line(1.5, 1.5, 2.5, 2.5).intersects(point(2, 2)));
-        Rectangle2D d;
     }
     
     @Test

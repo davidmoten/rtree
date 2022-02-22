@@ -437,7 +437,6 @@ public class BenchmarksRTree {
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
         System.out.println("starting searches");
-        Blackhole bh = new Blackhole();
         while (true)
             b.starTreeM4.search(searchRectangle()).subscribe();
     }

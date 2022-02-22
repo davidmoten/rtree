@@ -137,7 +137,6 @@ public class BackpressureTest {
     @Test
     public void testBackpressureIterateWhenNodeHasMaxChildrenAndIsRoot() {
         Entry<Object, Rectangle> e1 = RTreeTest.e(1);
-        @SuppressWarnings("unchecked")
         List<Entry<Object, Rectangle>> list = Arrays.asList(e1, e1, e1, e1);
         RTree<Object, Rectangle> tree = RTree.star().maxChildren(4).<Object, Rectangle> create()
                 .add(list);
@@ -150,7 +149,6 @@ public class BackpressureTest {
     @Test
     public void testBackpressureRequestZero() {
         Entry<Object, Rectangle> e1 = RTreeTest.e(1);
-        @SuppressWarnings("unchecked")
         List<Entry<Object, Rectangle>> list = Arrays.asList(e1, e1, e1, e1);
         RTree<Object, Rectangle> tree = RTree.star().maxChildren(4).<Object, Rectangle> create()
                 .add(list);

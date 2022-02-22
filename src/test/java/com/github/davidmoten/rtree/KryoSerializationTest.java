@@ -28,6 +28,7 @@ public class KryoSerializationTest {
         kryo.writeObject(output, tree);
         output.close();
         Input input = new Input(new ByteArrayInputStream(bytes.toByteArray()));
+        @SuppressWarnings("unchecked")
         RTree<String, Point> tree2 = kryo.readObject(input, RTree.class);
         assertEquals(2, (int) tree2.entries().count().toBlocking().single());
     }
@@ -49,6 +50,7 @@ public class KryoSerializationTest {
 
         public final String name;
 
+        @SuppressWarnings("unused")
         private Boo() {
             this("boo");
         }

@@ -40,16 +40,4 @@ public class HighPrecisionTest {
     private static final MathContext FLOOR = new MathContext(7, RoundingMode.FLOOR);
     private static final MathContext CEILING = new MathContext(7, RoundingMode.CEILING);
 
-    private static float floor(long x) {
-        return new BigDecimal(x).round(FLOOR).floatValue();
-    }
-
-    private static float ceil(long x) {
-        return new BigDecimal(x).round(CEILING).floatValue();
-    }
-
-    private static boolean gte(float a, long b) {
-        return new BigDecimal(a).compareTo(new BigDecimal(b)) >= 0;
-    }
-
 }
