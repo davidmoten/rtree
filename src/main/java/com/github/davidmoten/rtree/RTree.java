@@ -139,7 +139,7 @@ public final class RTree<T, S extends Geometry> {
     }
 
     private static <T, S extends Geometry> int calculateDepth(Optional<? extends Node<T, S>> root) {
-        return root.map(tsNode -> calculateDepth(tsNode, 0)).orElse(0);
+        return root.map(node -> calculateDepth(node, 0)).orElse(0);
     }
 
     private static <T, S extends Geometry> int calculateDepth(Node<T, S> node, int depth) {
@@ -655,7 +655,7 @@ public final class RTree<T, S extends Geometry> {
     @VisibleForTesting
     Observable<Entry<T, S>> search(Func1<? super Geometry, Boolean> condition) {
         return root
-                .map(tsNode -> Observable.unsafeCreate(new OnSubscribeSearch<>(tsNode, condition)))
+                .map(node -> Observable.unsafeCreate(new OnSubscribeSearch<>(node, condition)))
                 .orElseGet(Observable::empty);
     }
 
@@ -759,11 +759,9 @@ public final class RTree<T, S extends Geometry> {
      * @return entries strictly less than maxDistance from g
      */
     public <R extends Geometry> Observable<Entry<T, S>> search(final R g, final double maxDistance,
-                                                               final Func2<? super S, ? super R, Double> distance) {
-        return search(entry -> {
-            // just use the mbr initially
-            return entry.distance(g.mbr()) < maxDistance;
-        })
+        final Func2<? super S, ? super R, Double> distance) {
+        // just use the mbr initially
+        return search(entry -> entry.distance(g.mbr()) < maxDistance)
                 // refine with distance function
                 .filter(entry -> distance.call(entry.geometry(), g) < maxDistance);
     }
