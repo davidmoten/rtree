@@ -36,7 +36,7 @@
         <javancss.version>2.1</javancss.version>
         <project.info.version>2.7</project.info.version>
         <jxr.version>3.1.1</jxr.version>
-        <taglist.version>2.4</taglist.version>
+        <taglist.version>3.0.0</taglist.version>
         <m3.site.version>3.4</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
