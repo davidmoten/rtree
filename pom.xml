@@ -29,16 +29,14 @@
         <scm.url>scm:git:https://github.com/davidmoten/rtree.git</scm.url>
         <slf4j.version>1.7.12</slf4j.version>
 
-        <checkstyle.version>2.13</checkstyle.version>
-        <findbugs.version>3.0.1</findbugs.version>
+        <checkstyle.version>3.1.1</checkstyle.version>
         <javadoc.version>3.3.2</javadoc.version>
         <pmd.version>3.16.0</pmd.version>
         <jdepend.version>2.0</jdepend.version>
-        <javancss.version>2.1</javancss.version>
-        <project.info.version>2.7</project.info.version>
+        <project.info.version>3.1.1</project.info.version>
         <jxr.version>3.1.1</jxr.version>
         <taglist.version>3.0.0</taglist.version>
-        <m3.site.version>3.4</m3.site.version>
+        <m3.site.version>3.9.1</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
         <!-- keep jmh at 1.11.3 to support java 6 -->
@@ -185,7 +183,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
-                        <version>2.10</version>
+                        <version>3.1.2</version>
                         <executions>
                             <execution>
                                 <id>unpack</id>
@@ -386,22 +384,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- <plugin> -->
-            <!-- <groupId>org.codehaus.mojo</groupId> -->
-            <!-- <artifactId>cobertura-maven-plugin</artifactId> -->
-            <!-- <version>${cobertura.version}</version> -->
-            <!-- <configuration> -->
-            <!-- <aggregate>false</aggregate> -->
-            <!-- <instrumentation> -->
-            <!-- <excludes> -->
-            <!-- <exclude>com/github/davidmoten/rtree/ImageSaver.class</exclude> -->
-            <!-- <exclude>com/github/davidmoten/rtree/fbs/generated/*.class</exclude> -->
-            <!-- <exclude>com/github/davidmoten/rtree/internal/util/PriorityQueue.class</exclude> -->
-            <!-- </excludes> -->
-            <!-- </instrumentation> -->
-            <!-- </configuration> -->
-            <!-- </plugin> -->
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -461,23 +443,8 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs.version}</version>
-                <configuration>
-                    <xmlOutput>true</xmlOutput>
-                    <effort>Max</effort>
-                    <!--<excludeFilterFile>findbugs-exclude-filter-amsa.xml</excludeFilterFile> -->
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
                 <version>${jdepend.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javancss-maven-plugin</artifactId>
-                <version>${javancss.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
