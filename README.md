@@ -342,9 +342,9 @@ Note that serialization uses an optional dependency on `flatbuffers`. Add the fo
 
 ```xml
 <dependency>
-    <groupId>com.github.davidmoten</groupId>
+    <groupId>com.google.flatbuffers</groupId>
     <artifactId>flatbuffers-java</artifactId>
-    <version>1.3.0.1</version>
+    <version>2.0.3</version>
     <optional>true</optional>
 </dependency>
 ```
