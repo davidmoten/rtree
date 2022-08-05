@@ -34,7 +34,7 @@
         <project.info.version>3.1.1</project.info.version>
         <jxr.version>3.2.0</jxr.version>
         <taglist.version>3.0.0</taglist.version>
-        <m3.site.version>3.12.0</m3.site.version>
+        <m3.site.version>3.12.1</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
         <!-- keep jmh at 1.11.3 to support java 6 -->
