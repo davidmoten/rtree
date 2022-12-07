@@ -106,7 +106,7 @@
         <dependency>
             <groupId>com.google.flatbuffers</groupId>
             <artifactId>flatbuffers-java</artifactId>
-            <version>2.0.8</version>
+            <version>22.12.06</version>
             <optional>true</optional>
         </dependency>
 
