@@ -39,7 +39,7 @@
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
         <!-- keep jmh at 1.11.3 to support java 6 -->
         <jmh.version>1.36</jmh.version>
-        <jacoco.version>0.8.9</jacoco.version>
+        <jacoco.version>0.8.10</jacoco.version>
 
     </properties>
 
