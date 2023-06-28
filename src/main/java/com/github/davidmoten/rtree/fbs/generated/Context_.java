@@ -9,7 +9,7 @@ import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class Context_ extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_2_0_0(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_2_0_8(); }
   public static Context_ getRootAsContext_(ByteBuffer _bb) { return getRootAsContext_(_bb, new Context_()); }
   public static Context_ getRootAsContext_(ByteBuffer _bb, Context_ obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }

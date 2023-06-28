@@ -9,7 +9,7 @@ import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class Geometry_ extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_2_0_0(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_2_0_8(); }
   public static Geometry_ getRootAsGeometry_(ByteBuffer _bb) { return getRootAsGeometry_(_bb, new Geometry_()); }
   public static Geometry_ getRootAsGeometry_(ByteBuffer _bb, Geometry_ obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }

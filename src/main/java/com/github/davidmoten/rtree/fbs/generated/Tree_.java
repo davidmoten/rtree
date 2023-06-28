@@ -9,7 +9,7 @@ import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class Tree_ extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_2_0_0(); }
+  public static void ValidateVersion() { Constants.FLATBUFFERS_2_0_8(); }
   public static Tree_ getRootAsTree_(ByteBuffer _bb) { return getRootAsTree_(_bb, new Tree_()); }
   public static Tree_ getRootAsTree_(ByteBuffer _bb, Tree_ obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
