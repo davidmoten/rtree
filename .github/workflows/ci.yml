@@ -37,7 +37,7 @@ jobs:
     permissions:
       pull-requests: write
       contents: write
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
     steps:
       - name: Dependabot metadata
         id: metadata
@@ -50,3 +50,4 @@ jobs:
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
