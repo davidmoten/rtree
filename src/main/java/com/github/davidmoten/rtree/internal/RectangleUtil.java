@@ -60,22 +60,24 @@ public final class RectangleUtil {
                 return false;
             }
             if ((out1 & (OUT_LEFT | OUT_RIGHT)) != 0) {
-                double x = rectX;
-                if ((out1 & OUT_RIGHT) != 0) {
-                    x += rectWidth;
-                }
+                double x=getX(rectX, rectWidth, out1, OUT_RIGHT);
                 y1 = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
                 x1 = x;
             } else {
-                double y = rectY;
-                if ((out1 & OUT_BOTTOM) != 0) {
-                    y += rectHeight;
-                }
+                double y=getX(rectY, rectHeight, out1, OUT_BOTTOM);
                 x1 = x1 + (y - y1) * (x2 - x1) / (y2 - y1);
                 y1 = y;
             }
         }
         return true;
+    }
+
+    private static double getX(double rectX, double rectWidth, int out1, int outRight) {
+        double x=rectX;
+        if ((out1 & outRight) != 0) {
+            x+=rectWidth;
+        }
+        return x;
     }
 
     private static boolean rectangleCornerOnSegment(double rectX, double rectY, double rectWidth,

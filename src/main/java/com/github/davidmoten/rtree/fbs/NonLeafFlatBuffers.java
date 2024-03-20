@@ -72,14 +72,7 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
         {
             // write bounds from node to bounds variable
             node.mbb(bounds);
-            final Rectangle rect;
-            if (bounds.type() == BoundsType_.BoundsDouble) {
-                BoxDouble_ b = bounds.boxDouble();
-                rect = Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
-            } else {
-                BoxFloat_ b = bounds.boxFloat();
-                rect = Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
-            }
+            final Rectangle rect=getRectangle(bounds);
             if (!criterion.call(rect)) {
                 return;
             }
@@ -115,6 +108,18 @@ final class NonLeafFlatBuffers<T, S extends Geometry> implements NonLeaf<T, S> {
             }
         }
 
+    }
+
+    private static Rectangle getRectangle(Bounds_ bounds) {
+        final Rectangle rect;
+        if (bounds.type() == BoundsType_.BoundsDouble) {
+            BoxDouble_ b = bounds.boxDouble();
+            rect = Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+        } else {
+            BoxFloat_ b = bounds.boxFloat();
+            rect = Geometries.rectangle(b.minX(), b.minY(), b.maxX(), b.maxY());
+        }
+        return rect;
     }
 
     private List<Node<T, S>> createChildren() {

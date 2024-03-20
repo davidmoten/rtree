@@ -39,14 +39,24 @@ public final class SplitterRStar implements Splitter {
         // compute S the sum of all margin-values of the lists above
         // the list with the least S is then used to find minimum overlap
 
+        List<ListPair<T>> pairs=getListPairs(items, minSize);
+        return Collections.min(pairs, comparator);
+    }
+
+    private <T extends HasGeometry> List<ListPair<T>> getListPairs(List<T> items, int minSize) {
         List<ListPair<T>> pairs = null;
         double lowestMarginSum = Double.POSITIVE_INFINITY;
         List<T> list = null;
+        pairs=getListPairs(items, minSize, pairs, lowestMarginSum, list);
+        return pairs;
+    }
+
+    private <T extends HasGeometry> List<ListPair<T>> getListPairs(List<T> items, int minSize, List<ListPair<T>> pairs, double lowestMarginSum, List<T> list) {
         for (SortType sortType : SortType.values()) {
             if (list == null) {
                 list = new ArrayList<T>(items);
             }
-            Collections.sort(list, comparator(sortType));
+            list.sort(comparator(sortType));
             List<ListPair<T>> p = getPairs(minSize, list);
             double marginSum = marginValueSum(p);
             if (marginSum <= lowestMarginSum) {
@@ -57,7 +67,7 @@ public final class SplitterRStar implements Splitter {
                 list = null;
             }
         }
-        return Collections.min(pairs, comparator);
+        return pairs;
     }
 
     private static Comparator<HasGeometry> comparator(SortType sortType) {
