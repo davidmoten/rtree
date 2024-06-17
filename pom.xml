@@ -31,7 +31,7 @@
         <javadoc.version>3.7.0</javadoc.version>
         <pmd.version>3.23.0</pmd.version>
         <jdepend.version>2.0</jdepend.version>
-        <project.info.version>3.5.0</project.info.version>
+        <project.info.version>3.6.0</project.info.version>
         <jxr.version>3.4.0</jxr.version>
         <taglist.version>3.0.0</taglist.version>
         <m3.site.version>3.12.1</m3.site.version>
