@@ -378,12 +378,7 @@ public final class RTree<T, S extends Geometry> {
             if (nodeCount == 0) {
                 return create();
             } else if (nodeCount == 1) {
-                Node<T, S> root;
-                if (isLeaf) {
-                    root = context.factory().createLeaf((List<Entry<T, S>>) objects, context);
-                } else {
-                    root = context.factory().createNonLeaf((List<Node<T, S>>) objects, context);
-                }
+                Node<T, S> root=getTsNode(objects, isLeaf, context);
                 return new RTree<T, S>(of(root), size, context);
             }
 
@@ -414,6 +409,16 @@ public final class RTree<T, S extends Geometry> {
                 }
             }
             return packingSTR(nodes, false, size, context);
+        }
+
+        private <T, S extends Geometry> Node<T, S> getTsNode(List<? extends HasGeometry> objects, boolean isLeaf, Context<T, S> context) {
+            Node<T, S> root;
+            if (isLeaf) {
+                root = context.factory().createLeaf((List<Entry<T, S>>) objects, context);
+            } else {
+                root = context.factory().createNonLeaf((List<Node<T, S>>) objects, context);
+            }
+            return root;
         }
 
         private static final class MidComparator implements Comparator<HasGeometry> {
@@ -450,19 +455,24 @@ public final class RTree<T, S extends Geometry> {
     @SuppressWarnings("unchecked")
     public RTree<T, S> add(Entry<? extends T, ? extends S> entry) {
         if (root.isPresent()) {
-            List<Node<T, S>> nodes = root.get().add(entry);
-            Node<T, S> node;
-            if (nodes.size() == 1)
-                node = nodes.get(0);
-            else {
-                node = context.factory().createNonLeaf(nodes, context);
-            }
+            Node<T, S> node=getTsNode(entry);
             return new RTree<T, S>(node, size + 1, context);
         } else {
             Leaf<T, S> node = context.factory().createLeaf(Lists.newArrayList((Entry<T, S>) entry),
                     context);
             return new RTree<T, S>(node, size + 1, context);
         }
+    }
+
+    private Node<T, S> getTsNode(Entry<? extends T, ? extends S> entry) {
+        List<Node<T, S>> nodes = root.get().add(entry);
+        Node<T, S> node;
+        if (nodes.size() == 1)
+            node = nodes.get(0);
+        else {
+            node = context.factory().createNonLeaf(nodes, context);
+        }
+        return node;
     }
 
     /**

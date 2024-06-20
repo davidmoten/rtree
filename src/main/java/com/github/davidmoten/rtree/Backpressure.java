@@ -68,6 +68,11 @@ final class Backpressure {
             final Func1<? super Geometry, Boolean> condition,
             final Subscriber<? super Entry<T, S>> subscriber,
             StackAndRequest<NodePosition<T, S>> state, NodePosition<T, S> np) {
+        final long nextRequest=getNextRequest(condition, subscriber, state, np);
+        return StackAndRequest.create(state.stack.pop().push(np.nextPosition()), nextRequest);
+    }
+
+    private static <T, S extends Geometry> long getNextRequest(Func1<? super Geometry, Boolean> condition, Subscriber<? super Entry<T, S>> subscriber, StackAndRequest<NodePosition<T, S>> state, NodePosition<T, S> np) {
         final long nextRequest;
         Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
         if (condition.call(entry.geometry())) {
@@ -75,7 +80,7 @@ final class Backpressure {
             nextRequest = state.request - 1;
         } else
             nextRequest = state.request;
-        return StackAndRequest.create(state.stack.pop().push(np.nextPosition()), nextRequest);
+        return nextRequest;
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
