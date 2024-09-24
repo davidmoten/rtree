@@ -30,7 +30,7 @@
         <checkstyle.version>3.5.0</checkstyle.version>
         <javadoc.version>3.10.0</javadoc.version>
         <pmd.version>3.25.0</pmd.version>
-        <jdepend.version>2.0</jdepend.version>
+        <jdepend.version>2.1</jdepend.version>
         <project.info.version>3.7.0</project.info.version>
         <jxr.version>3.5.0</jxr.version>
         <taglist.version>3.1.0</taglist.version>
