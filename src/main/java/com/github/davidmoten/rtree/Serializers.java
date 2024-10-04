@@ -163,22 +163,14 @@ public final class Serializers {
             @Override
             public byte[] call(Serializable o) {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                ObjectOutputStream oos = null;
-                try {
-                    oos = new ObjectOutputStream(bytes);
+                try (ObjectOutputStream oos=new ObjectOutputStream(bytes)) {
                     oos.writeObject(o);
                     oos.close();
                     return bytes.toByteArray();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                } finally {
-                    try {
-                        if (oos != null)
-                            oos.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
                 }
+                // ignore
             }
         };
     }
@@ -192,9 +184,7 @@ public final class Serializers {
                 try {
                     ois = new ObjectInputStream(is);
                     return (Serializable) ois.readObject();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (ClassNotFoundException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 } finally {
                     if (ois != null)
