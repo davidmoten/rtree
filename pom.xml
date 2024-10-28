@@ -32,7 +32,7 @@
         <pmd.version>3.25.0</pmd.version>
         <jdepend.version>2.1</jdepend.version>
         <project.info.version>3.8.0</project.info.version>
-        <jxr.version>3.5.0</jxr.version>
+        <jxr.version>3.6.0</jxr.version>
         <taglist.version>3.2.1</taglist.version>
         <m3.site.version>3.21.0</m3.site.version>
         <changelog.version>2.2</changelog.version>
