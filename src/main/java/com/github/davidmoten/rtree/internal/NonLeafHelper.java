@@ -79,6 +79,23 @@ public final class NonLeafHelper {
         List<Node<T, S>> addTheseNodes = new ArrayList<Node<T, S>>();
         int countDeleted = 0;
         List<? extends Node<T, S>> children = node.children();
+        countDeleted=getCountDeleted(entry, all, addTheseEntries, removeTheseNodes, addTheseNodes, countDeleted, children);
+        if (removeTheseNodes.isEmpty())
+            return new NodeAndEntries<>(of(node), Collections.emptyList(), 0);
+        else {
+            List<Node<T, S>> nodes = Util.remove(children, removeTheseNodes);
+            nodes.addAll(addTheseNodes);
+            if (nodes.isEmpty())
+                return new NodeAndEntries<>(Optional.empty(), addTheseEntries,
+                        countDeleted);
+            else {
+                NonLeaf<T, S> nd = node.context().factory().createNonLeaf(nodes, node.context());
+                return new NodeAndEntries<>(of(nd), addTheseEntries, countDeleted);
+            }
+        }
+    }
+
+    private static <T, S extends Geometry> int getCountDeleted(Entry<? extends T, ? extends S> entry, boolean all, List<Entry<T, S>> addTheseEntries, List<Node<T, S>> removeTheseNodes, List<Node<T, S>> addTheseNodes, int countDeleted, List<? extends Node<T, S>> children) {
         for (final Node<T, S> child : children) {
             if (entry.geometry().intersects(child.geometry().mbr())) {
                 final NodeAndEntries<T, S> result = child.delete(entry, all);
@@ -105,19 +122,7 @@ public final class NonLeafHelper {
                 }
             }
         }
-        if (removeTheseNodes.isEmpty())
-            return new NodeAndEntries<>(of(node), Collections.emptyList(), 0);
-        else {
-            List<Node<T, S>> nodes = Util.remove(children, removeTheseNodes);
-            nodes.addAll(addTheseNodes);
-            if (nodes.isEmpty())
-                return new NodeAndEntries<>(Optional.empty(), addTheseEntries,
-                        countDeleted);
-            else {
-                NonLeaf<T, S> nd = node.context().factory().createNonLeaf(nodes, node.context());
-                return new NodeAndEntries<>(of(nd), addTheseEntries, countDeleted);
-            }
-        }
+        return countDeleted;
     }
 
 }
