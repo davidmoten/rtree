@@ -28,7 +28,7 @@
         <slf4j.version>1.7.12</slf4j.version>
 
         <checkstyle.version>3.6.0</checkstyle.version>
-        <javadoc.version>3.11.2</javadoc.version>
+        <javadoc.version>3.11.3</javadoc.version>
         <pmd.version>3.27.0</pmd.version>
         <jdepend.version>2.1</jdepend.version>
         <project.info.version>3.9.0</project.info.version>
