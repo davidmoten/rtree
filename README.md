@@ -2,7 +2,7 @@ rtree
 =========
 <a href="https://github.com/davidmoten/rtree/actions/workflows/ci.yml"><img src="https://github.com/davidmoten/rtree/actions/workflows/ci.yml/badge.svg"/></a><br/>
 [![Coverity Scan](https://scan.coverity.com/projects/4762/badge.svg?flat=1)](https://scan.coverity.com/projects/4762?tab=overview)<br/>
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree)<br/>
+[![Maven Central](https://maven-badges.sml.io/sonatype-central/com.github.davidmoten/rtree/badge.svg?style=flat)](https://maven-badges.sml.io/sonatype-central/com.github.davidmoten/rtree)<br/>
 [![codecov](https://codecov.io/gh/davidmoten/rtree/branch/master/graph/badge.svg)](https://codecov.io/gh/davidmoten/rtree)
 
 
