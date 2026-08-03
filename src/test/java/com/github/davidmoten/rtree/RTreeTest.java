@@ -1073,6 +1073,51 @@ public class RTreeTest {
          assertEquals(0, t.size());
      }
 
+    @Test
+    public void testDeleteIssue196() {
+        // non-leaf nodes must dissolve (not just be kept as-is) once their
+        // child count falls below minChildren, cascading up through the tree
+        int maxChildren = 3;
+        int minChildren = 2;
+        RTree<Object, Rectangle> tree = RTree.maxChildren(maxChildren).minChildren(minChildren)
+                .<Object, Rectangle>create();
+        List<Entry<Object, Rectangle>> entries = new ArrayList<Entry<Object, Rectangle>>();
+        for (int i = 1; i <= 30; i++) {
+            entries.add(e(i));
+        }
+        for (Entry<Object, Rectangle> entry : entries) {
+            tree = tree.add(entry);
+        }
+        assertTrue(tree.calculateDepth() > 2);
+        for (int i = 0; i < entries.size() - 1; i++) {
+            tree = tree.delete(entries.get(i));
+            assertFalse(tree.entries().contains(entries.get(i)).toBlocking().single());
+            assertMinChildrenRespected(tree.root(), minChildren);
+        }
+        assertEquals(1, tree.size());
+    }
+
+    private static void assertMinChildrenRespected(Optional<? extends Node<Object, Rectangle>> root,
+            int minChildren) {
+        if (root.isPresent()) {
+            assertMinChildrenRespected(root.get(), minChildren, true);
+        }
+    }
+
+    private static void assertMinChildrenRespected(Node<Object, Rectangle> node, int minChildren,
+            boolean isRoot) {
+        if (node instanceof NonLeaf) {
+            NonLeaf<Object, Rectangle> n = (NonLeaf<Object, Rectangle>) node;
+            if (!isRoot) {
+                assertTrue("non-leaf node has " + n.count() + " children, less than minChildren="
+                        + minChildren, n.count() >= minChildren);
+            }
+            for (int i = 0; i < n.count(); i++) {
+                assertMinChildrenRespected(n.child(i), minChildren, false);
+            }
+        }
+    }
+
     private static Func2<Point, Circle, Double> distanceCircleToPoint = new Func2<Point, Circle, Double>() {
         @Override
         public Double call(Point point, Circle circle) {
