@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -110,12 +111,40 @@ public final class NonLeafHelper {
         else {
             List<Node<T, S>> nodes = Util.remove(children, removeTheseNodes);
             nodes.addAll(addTheseNodes);
-            if (nodes.isEmpty())
-                return new NodeAndEntries<>(Optional.empty(), addTheseEntries,
-                        countDeleted);
-            else {
+            if (nodes.size() < node.context().minChildren()) {
+                // this node has fallen below minChildren so it must be
+                // dissolved: all entries in its remaining children (which may
+                // themselves be non-leaf nodes) are collected and passed up
+                // to be redistributed (re-added) higher up the tree, exactly
+                // as happens for leaves in LeafHelper.delete
+                List<Entry<T, S>> entries = new ArrayList<Entry<T, S>>(addTheseEntries);
+                entries.addAll(getEntries(nodes));
+                return new NodeAndEntries<>(Optional.empty(), entries, countDeleted);
+            } else {
                 NonLeaf<T, S> nd = node.context().factory().createNonLeaf(nodes, node.context());
                 return new NodeAndEntries<>(of(nd), addTheseEntries, countDeleted);
+            }
+        }
+    }
+
+    private static <T, S extends Geometry> List<Entry<T, S>> getEntries(
+            List<? extends Node<T, S>> nodes) {
+        List<Entry<T, S>> list = new ArrayList<Entry<T, S>>();
+        for (Node<T, S> node : nodes) {
+            addEntries(node, list);
+        }
+        return list;
+    }
+
+    private static <T, S extends Geometry> void addEntries(Node<T, S> node,
+            List<Entry<T, S>> list) {
+        if (node instanceof Leaf) {
+            list.addAll(((Leaf<T, S>) node).entries());
+        } else if (node instanceof NonLeaf) {
+            NonLeaf<T, S> n = (NonLeaf<T, S>) node;
+            int count = n.count();
+            for (int i = 0; i < count; i++) {
+                addEntries((Node<T, S>) n.child(i), list);
             }
         }
     }
