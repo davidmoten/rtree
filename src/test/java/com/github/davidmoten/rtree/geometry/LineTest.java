@@ -9,6 +9,9 @@ import java.awt.geom.Line2D;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.geometry.internal.LineDouble;
+import com.github.davidmoten.rtree.geometry.internal.LineFloat;
+
 public final class LineTest {
 
     private static final double PRECISION = 0.00001;
@@ -220,6 +223,23 @@ public final class LineTest {
             
             assertTrue(line.intersects(horizontalLine.mbr()));
         }
+    }
+
+    @Test
+    public void testLineFloatStoresCoordinatesAsFloatNotDouble() throws NoSuchFieldException {
+        // https://github.com/davidmoten/rtree/issues/89
+        for (String field : new String[] { "x1", "y1", "x2", "y2" }) {
+            assertEquals(float.class, LineFloat.class.getDeclaredField(field).getType());
+        }
+        for (String field : new String[] { "x1", "y1", "x2", "y2" }) {
+            assertEquals(double.class, LineDouble.class.getDeclaredField(field).getType());
+        }
+    }
+
+    @Test
+    public void testLineFloatIsNotDoublePrecision() {
+        assertFalse(Geometries.line(1f, 2f, 3f, 4f).isDoublePrecision());
+        assertTrue(Geometries.line(1d, 2d, 3d, 4d).isDoublePrecision());
     }
 
 }
