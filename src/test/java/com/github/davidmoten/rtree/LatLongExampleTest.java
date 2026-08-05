@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -100,6 +101,17 @@ public class LatLongExampleTest {
         assertEquals("Canberra", result);
     }
 
+    @Test
+    public void testCreateBoundsNearDateline() {
+        // reproduces issue 87: a bounding box near the dateline used to throw
+        // IllegalArgumentException because the westward point wraps around to
+        // a positive longitude, making x1 > x2 for the plain rectangle() call
+        Position from = Position.create(-16.796686666666666, -179.99983333333333);
+        Rectangle r = createBounds(from, 10);
+        assertTrue(r.x2() >= r.x1());
+        assertTrue(r.y2() >= r.y1());
+    }
+
     private static Rectangle createBounds(final Position from, final double distanceKm) {
         // this calculates a pretty accurate bounding box. Depending on the
         // performance you require you wouldn't have to be this accurate because
@@ -109,7 +121,8 @@ public class LatLongExampleTest {
         Position east = from.predict(distanceKm, 90);
         Position west = from.predict(distanceKm, 270);
 
-        return Geometries.rectangle(west.getLon(), south.getLat(), east.getLon(), north.getLat());
+        return Geometries.rectangleGeographic(west.getLon(), south.getLat(), east.getLon(),
+                north.getLat());
     }
 
     private static <T> GeoCircleValue<T> createGeoCircleValue(Point point, double radiusKm,
