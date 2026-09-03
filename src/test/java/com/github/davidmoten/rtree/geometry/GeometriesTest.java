@@ -97,6 +97,26 @@ public class GeometriesTest {
     }
 
     @Test
+    public void testRectangleLatLongCrossingEquatorNorthToSouth() {
+        // entry point is north of the equator, exit point is south of it so
+        // latitude decreases from lat1 to lat2 (see issue 173)
+        Rectangle r = Geometries.rectangleGeographic(10, 5, 20, -5);
+        assertEquals(10, r.x1(), PRECISION);
+        assertEquals(20, r.x2(), PRECISION);
+        assertEquals(-5, r.y1(), PRECISION);
+        assertEquals(5, r.y2(), PRECISION);
+    }
+
+    @Test
+    public void testRectangleLatLongCrossingEquatorSouthToNorth() {
+        Rectangle r = Geometries.rectangleGeographic(10, -5, 20, 5);
+        assertEquals(10, r.x1(), PRECISION);
+        assertEquals(20, r.x2(), PRECISION);
+        assertEquals(-5, r.y1(), PRECISION);
+        assertEquals(5, r.y2(), PRECISION);
+    }
+
+    @Test
     public void testPointLatLong() {
         Point point = Geometries.pointGeographic(181, 25);
         assertEquals(-179, point.x(), PRECISION);
