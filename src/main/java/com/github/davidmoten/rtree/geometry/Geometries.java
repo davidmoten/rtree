@@ -51,7 +51,9 @@ public final class Geometries {
         if (x2 < x1) {
             x2 += 360;
         }
-        return rectangle(x1, lat1, x2, lat2);
+        float y1 = Math.min(lat1, lat2);
+        float y2 = Math.max(lat1, lat2);
+        return rectangle(x1, y1, x2, y2);
     }
 
     private static Rectangle rectangleDouble(double x1, double y1, double x2, double y2) {
