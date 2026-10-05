@@ -35,7 +35,7 @@ public final class LineDouble implements Line {
 
     @Override
     public double distance(Rectangle r) {
-        if (r.contains(x1, y1) || r.contains(x2, y2)) {
+        if (intersects(r)) {
             return 0;
         } else {
             double d1 = distance(r.x1(), r.y1(), r.x1(), r.y2());
