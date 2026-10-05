@@ -9,7 +9,30 @@ import java.awt.geom.Line2D;
 
 import org.junit.Test;
 
+import com.github.davidmoten.rtree.RTree;
+
 public final class LineTest {
+
+    @Test
+    public void crossingLinesHaveZeroDistanceToRectangle() {
+        Rectangle rectangle = Geometries.rectangle(0.0, 0.0, 1.0, 1.0);
+        Line[] lines = { Geometries.line(-1.0, 0.5, 2.0, 0.5),
+                Geometries.line(0.5, -1.0, 0.5, 2.0),
+                Geometries.line(-1f, 0.5f, 2f, 0.5f),
+                Geometries.line(0.5f, -1f, 0.5f, 2f) };
+        for (Line line : lines) {
+            assertTrue(line.intersects(rectangle));
+            assertEquals(0.0, line.distance(rectangle), PRECISION);
+        }
+    }
+
+    @Test
+    public void nearestRectangleIncludesCrossingLine() {
+        Line line = Geometries.line(-1.0, 0.5, 2.0, 0.5);
+        RTree<String, Line> tree = RTree.<String, Line>create().add("crossing", line);
+        assertEquals(1, tree.nearest(Geometries.rectangle(0.0, 0.0, 1.0, 1.0), 0.1, 10)
+                .toList().toBlocking().single().size());
+    }
 
     private static final double PRECISION = 0.00001;
 
